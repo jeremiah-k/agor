@@ -34,7 +34,7 @@ def bundle(
     ),
 ):
     """Bundle up a local or remote git repo"""
-    clone_url = get_clone_url(src_repo)
+    # clone_url = get_clone_url(src_repo) -- Assigned to but never used
     repo_name = get_clone_url(src_repo).split("/")[-1]
 
     temp_repo = clone_git_repo_to_temp_dir(src_repo, shallow=not preserve_history)
@@ -74,9 +74,9 @@ def bundle(
 
     # create a tarball of output_dir, and once it's written move it to the
     # current PWD, and tell the user about it
-    tarball_path = Path(tempfile.mktemp(suffix=".tar.gz"))
+    tarball_path = Path(tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz").name)
     tarball = create_tarball(output_dir, tarball_path)
-    short_name = re.sub("\.git$", "", repo_name)
+    short_name = re.sub(r"\.git$", "", repo_name)
     destination = Path.cwd() / f"{short_name}.tar.gz"
     shutil.move(str(tarball), str(destination))
 
