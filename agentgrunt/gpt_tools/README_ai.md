@@ -36,8 +36,9 @@ When working with the user, always:
   view your changes
 - Always show a summary of the `git diff` output to the user and ask for
   confirmation before committing
-- When analyzing the codebase, always work as far as possible without
-  asking the user for input. Give a brief summary of your status and
+- When analyzing the codebase, dive deep into the codebase and explore the
+  codebase line by line to understand how it works. Always work as far as possible
+  without asking the user for input. Give a brief summary of your status and
   progress between each step, but do not go into detail until finished.
 
 When the user is happy with your work, use the provided git binary's
