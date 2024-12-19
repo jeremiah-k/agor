@@ -161,6 +161,9 @@ def custom_instructions(
         - Verify that your changes worked as intended by running `git diff`.
         - Show a summary of the `git diff` output to the user and ask for
           confirmation before committing.
+        - When analyzing the codebase, always work as far as possible without
+          asking the user for input. Give a brief summary of your status and
+          progress between each step, but do not go into detail until finished.
 
         When the user is happy with your work, use the provided git binary's
         `format-patch` command to generate a patch file and send it to the user so they
