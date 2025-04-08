@@ -1,41 +1,55 @@
 name: ci
 
 on:
+  push:
+    branches: [ci-work]
   pull_request:
-  workflow_dispatch:
+    branches: [ci-work]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          ref: ${{ github.head_ref }}
-      - name: Set up Python and install Poetry
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Install trunk
         run: |
-          python --version
-          pip install poetry
-          poetry --version
-      - name: Install dependencies and validate
-        run: |
-          poetry install
-          poetry check
-          poetry lock
+          curl https://get.trunk.io -fsSL | bash
+          export PATH="$HOME/.trunk/bin:$PATH"
+
       - name: Run trunk check
-        run: poetry run trunk check
+        run: |
+          export PATH="$HOME/.trunk/bin:$PATH"
+          poetry run trunk check
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          ref: ${{ github.head_ref }}
-      - name: Set up Python and install Poetry
-        run: |
-          python --version
-          pip install poetry
-          poetry --version
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
       - name: Install dependencies
         run: poetry install
+
       - name: Run tests
         run: poetry run pytest
