@@ -23,6 +23,7 @@ dependencies = [
   "pytest",
   "tqdm",
   "typer",
+  "platformdirs (>=4.3.7,<5.0.0)",
 ]
 
 [project.scripts]
