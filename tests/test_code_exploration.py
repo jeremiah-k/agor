@@ -1,4 +1,4 @@
-from ..agentgrunt.gpt_tools.code_exploration import (
+from agentgrunt.gpt_tools.code_exploration import (
     extract_curly_brace_function,
     extract_function_content,
     extract_python_function,
@@ -6,7 +6,6 @@ from ..agentgrunt.gpt_tools.code_exploration import (
 
 
 def test_extract_python_function():
-    # Test case 1: Single-line signature
     content_single_line = [
         "def example_function(param1, param2):",
         "    return param1 + param2",
@@ -16,7 +15,6 @@ def test_extract_python_function():
         == content_single_line
     )
 
-    # Test case 2: Multi-line signature
     content_multi_line = [
         "def process_response(",
         "        self, response, level=0):",
@@ -27,7 +25,6 @@ def test_extract_python_function():
         == content_multi_line
     )
 
-    # Test case 3: Signature not found
     assert (
         extract_python_function("def nonexistent_function(", content_single_line)
         is None
@@ -35,7 +32,6 @@ def test_extract_python_function():
 
 
 def test_extract_curly_brace_function():
-    # Test case 1: Normal JavaScript function
     content_js = [
         "function exampleFunction(param1, param2) {",
         "    return param1 + param2;",
@@ -46,7 +42,6 @@ def test_extract_curly_brace_function():
         == content_js
     )
 
-    # Test case 2: Signature not found
     assert (
         extract_curly_brace_function("function nonexistentFunction(", content_js)
         is None
@@ -54,7 +49,6 @@ def test_extract_curly_brace_function():
 
 
 def test_extract_function_content():
-    # Test case 1: Python single-line signature
     content_python_single_line = [
         "def example_function(param1, param2):",
         "    return param1 + param2",
@@ -66,7 +60,6 @@ def test_extract_function_content():
         == content_python_single_line
     )
 
-    # Test case 2: JavaScript function
     content_js = [
         "function exampleFunction(param1, param2) {",
         "    return param1 + param2;",
