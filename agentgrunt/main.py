@@ -1,10 +1,12 @@
 import os
 import re
 import shutil
+import sys
 import tempfile
 from pathlib import Path
 from textwrap import dedent
 
+import pyperclip
 import typer
 from plumbum import local
 
@@ -133,7 +135,7 @@ def bundle(
     gpt_prompt = (
         dedent(
             """
-        Please extract the archive I've uploaded to /tmp, read the contents of
+        Please extract the archive I've uploaded, read the contents of
         tools_for_ai/README_ai.md in its entirety, and follow the directions
         listed inside that file.
         """
@@ -145,20 +147,51 @@ def bundle(
     print(final_msg)
     print(f"---\n{gpt_prompt}\n---")
 
-    if interactive and shutil.which("pbcopy"):
+    if interactive:
         # prompt user if they want to copy it and reveal the file, then do it if they say yes
-
         copy = (
             True if assume_yes else typer.confirm("Copy the message to your clipboard?")
         )
         if copy:
-            pbcopy = local["pbcopy"]
-            (pbcopy << gpt_prompt)()
-        open_finder = (
-            True if assume_yes else typer.confirm("Reveal the file in Finder?")
-        )
-        if open_finder:
-            local["open"]("-R", destination)
+            # Try to copy using pyperclip first
+            try:
+                pyperclip.copy(gpt_prompt)
+                print("Message copied to clipboard!")
+            except Exception as e:
+                print(f"Failed to copy with pyperclip: {e}")
+                # Try platform-specific clipboard commands as fallbacks
+                if shutil.which("pbcopy"):  # macOS
+                    try:
+                        pbcopy = local["pbcopy"]
+                        (pbcopy << gpt_prompt)()
+                        print("Message copied to clipboard using pbcopy!")
+                    except Exception as e2:
+                        print(f"Failed to copy with pbcopy: {e2}")
+                elif shutil.which("xclip"):  # Linux with X11
+                    try:
+                        xclip = local["xclip"]
+                        (xclip["-selection", "clipboard"] << gpt_prompt)()
+                        print("Message copied to clipboard using xclip!")
+                    except Exception as e2:
+                        print(f"Failed to copy with xclip: {e2}")
+                elif shutil.which("wl-copy"):  # Linux with Wayland
+                    try:
+                        wlcopy = local["wl-copy"]
+                        (wlcopy << gpt_prompt)()
+                        print("Message copied to clipboard using wl-copy!")
+                    except Exception as e2:
+                        print(f"Failed to copy with wl-copy: {e2}")
+                else:
+                    print(
+                        "No clipboard command found. Please copy the message manually."
+                    )
+        # Only show the Finder prompt on macOS
+        if sys.platform == "darwin":
+            open_finder = (
+                True if assume_yes else typer.confirm("Reveal the file in Finder?")
+            )
+            if open_finder:
+                local["open"]("-R", destination)
 
 
 @app.command()
@@ -223,9 +256,39 @@ def custom_instructions(
 
     print(instructions)
 
-    if copy and shutil.which("pbcopy"):
-        pbcopy = local["pbcopy"]
-        (pbcopy << instructions)()
+    if copy:
+        # Try to copy using pyperclip first
+        try:
+            pyperclip.copy(instructions)
+            print("Instructions copied to clipboard!")
+        except Exception as e:
+            print(f"Failed to copy with pyperclip: {e}")
+            # Try platform-specific clipboard commands as fallbacks
+            if shutil.which("pbcopy"):  # macOS
+                try:
+                    pbcopy = local["pbcopy"]
+                    (pbcopy << instructions)()
+                    print("Instructions copied to clipboard using pbcopy!")
+                except Exception as e2:
+                    print(f"Failed to copy with pbcopy: {e2}")
+            elif shutil.which("xclip"):  # Linux with X11
+                try:
+                    xclip = local["xclip"]
+                    (xclip["-selection", "clipboard"] << instructions)()
+                    print("Instructions copied to clipboard using xclip!")
+                except Exception as e2:
+                    print(f"Failed to copy with xclip: {e2}")
+            elif shutil.which("wl-copy"):  # Linux with Wayland
+                try:
+                    wlcopy = local["wl-copy"]
+                    (wlcopy << instructions)()
+                    print("Instructions copied to clipboard using wl-copy!")
+                except Exception as e2:
+                    print(f"Failed to copy with wl-copy: {e2}")
+            else:
+                print(
+                    "No clipboard command found. Please copy the instructions manually."
+                )
 
 
 def cli():

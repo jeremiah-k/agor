@@ -6,7 +6,10 @@ build-backend = "poetry.core.masonry.api"
 name = "agentgrunt"
 version = "0.1.6"
 description = "Agent Grunt"
-authors = [{ name = "Nik V <github@nikvdp.com>" }, { name = "Jeremiah K. <jeremiahk@gmx.com>" }]
+authors = [
+  { name = "Nik V <github@nikvdp.com>" },
+  { name = "Jeremiah K. <jeremiahk@gmx.com>" },
+]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -16,6 +19,7 @@ dependencies = [
   "httpx",
   "plumbum",
   "pydantic",
+  "pyperclip",
   "pytest",
   "tqdm",
   "typer",
