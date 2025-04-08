@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+          cache: poetry
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+      - name: Run lint
+        run: poetry run trunk check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+          cache: poetry
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+      - name: Run tests
+        run: poetry run pytest
