@@ -1,7 +1,6 @@
 name: ci
 
 on:
-  push:
   pull_request:
   workflow_dispatch:
 
@@ -10,19 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-          cache: poetry
-      - name: Install Poetry
-        run: pip install poetry
-      - name: Install dependencies
-        run: poetry install
-      - name: Validate pyproject.toml
-        run: poetry check
-      - name: Regenerate lockfile
-        run: poetry lock --no-update
+          ref: ${{ github.head_ref }}
+      - name: Set up Python and install Poetry
+        run: |
+          python --version
+          pip install poetry
+          poetry --version
+      - name: Install dependencies and validate
+        run: |
+          poetry install
+          poetry check
+          poetry lock --no-update
       - name: Run trunk check
         run: poetry run trunk check
 
@@ -30,13 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-          cache: poetry
-      - name: Install Poetry
-        run: pip install poetry
+          ref: ${{ github.head_ref }}
+      - name: Set up Python and install Poetry
+        run: |
+          python --version
+          pip install poetry
+          poetry --version
       - name: Install dependencies
         run: poetry install
       - name: Run tests
