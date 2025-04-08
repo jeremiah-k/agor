@@ -1,6 +1,6 @@
-# 🕵🧰 AgentGrunt (v0.1.6)
+# 🕵🧰 AgentGrunt (with mods)
 
-> This is a fork of the original AgentGrunt with added branch selection features. You can now bundle specific branches, multiple branches, or all branches from a repository.
+> This is a fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) with added branch selection features. You can now bundle specific branches, multiple branches, or all branches from a repository.
 
 Use OpenAI's [Code Interpreter](https://openai.com/blog/chatgpt-plugins#code-interpreter) to edit and commit code across your entire git repo (even non-python repos)!
 
