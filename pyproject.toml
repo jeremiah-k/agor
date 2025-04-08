@@ -6,7 +6,10 @@ build-backend = "poetry.core.masonry.api"
 name = "agentgrunt"
 version = "0.1.6"
 description = "Agent Grunt"
-authors = ["jeremiah-k <your@email.com>"]
+authors = [
+  { name = "nikvdp" },
+  { name = "Jeremiah K." }
+]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.11"
