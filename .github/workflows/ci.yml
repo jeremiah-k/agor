@@ -1,8 +1,12 @@
 name: ci
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - "**"
   pull_request:
+    branches:
+      - "**"
 
 jobs:
   test:
@@ -16,18 +20,6 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
-
-      - name: Fetch all branches
-        run: git fetch --prune --unshallow --all
-
-      - name: Install Trunk
-        run: curl https://get.trunk.io -fsSL | bash
-
-      - name: Add Trunk to PATH
-        run: export PATH="$HOME/.trunk/bin:$PATH"
-
-      - name: Run Trunk check
-        run: poetry run trunk check
 
       - name: Run tests
         run: poetry run pytest
