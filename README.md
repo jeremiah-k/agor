@@ -77,6 +77,7 @@ Now do the following:
 You'll see ChatGPT start to do some work, and after a few moments you'll be greeted with a message saying "Code Interpreter is now running AgentGrunt!" followed by a hotkey menu similar to the below:
 
 ```text
+a ) analyze codebase
 c ) continue
 d ) download changes as patch
 dr) download entire repo
