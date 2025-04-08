@@ -15,11 +15,15 @@ jobs:
         with:
           python-version: 3.x
           cache: poetry
+      - name: Install Poetry
+        run: pip install poetry
       - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install
-      - name: Run lint
+        run: poetry install
+      - name: Validate pyproject.toml
+        run: poetry check
+      - name: Regenerate lockfile
+        run: poetry lock --no-update
+      - name: Run trunk check
         run: poetry run trunk check
 
   test:
@@ -31,9 +35,9 @@ jobs:
         with:
           python-version: 3.x
           cache: poetry
+      - name: Install Poetry
+        run: pip install poetry
       - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install
+        run: poetry install
       - name: Run tests
         run: poetry run pytest
