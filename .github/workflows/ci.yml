@@ -1,55 +1,33 @@
 name: ci
 
 on:
-  push:
-    branches: [ci-work]
+  workflow_dispatch:
   pull_request:
-    branches: [ci-work]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Poetry
-        run: pipx install poetry
-
-      - name: Install dependencies
-        run: poetry install
-
-      - name: Install trunk
-        run: |
-          curl https://get.trunk.io -fsSL | bash
-          export PATH="$HOME/.trunk/bin:$PATH"
-
-      - name: Run trunk check
-        run: |
-          export PATH="$HOME/.trunk/bin:$PATH"
-          poetry run trunk check
-
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
       - name: Install Poetry
         run: pipx install poetry
 
       - name: Install dependencies
         run: poetry install
+
+      - name: Fetch all branches
+        run: git fetch --prune --unshallow --all
+
+      - name: Install Trunk
+        run: curl https://get.trunk.io -fsSL | bash
+
+      - name: Add Trunk to PATH
+        run: export PATH="$HOME/.trunk/bin:$PATH"
+
+      - name: Run Trunk check
+        run: poetry run trunk check
 
       - name: Run tests
         run: poetry run pytest
