@@ -21,6 +21,28 @@ def is_termux():
     return "com.termux" in os.environ.get("HOME", "")
 
 
+def get_downloads_dir():
+    """Get the Downloads directory path based on the platform"""
+    if is_termux():
+        # For Termux, use ~/storage/downloads
+        storage_downloads = os.path.expanduser("~/storage/downloads")
+        if os.path.exists(storage_downloads):
+            return storage_downloads
+
+    # For other environments, use standard Downloads directories
+    home_dir = os.path.expanduser("~")
+    downloads_dir = os.path.join(home_dir, "Downloads")
+    if os.path.exists(downloads_dir):
+        return downloads_dir
+
+    downloads_dir = os.path.join(home_dir, "Download")
+    if os.path.exists(downloads_dir):
+        return downloads_dir
+
+    # Fallback to current directory
+    return os.getcwd()
+
+
 def copy_to_clipboard(text):
     """Copy text to clipboard with platform-specific handling"""
     # First try pyperclip as it works on many platforms
@@ -188,7 +210,17 @@ def bundle(
     )
     tarball = create_tarball(output_dir, tarball_path)
     short_name = re.sub(r"\.git$", "", repo_name)
-    destination = Path.cwd() / f"{short_name}.tar.gz"
+
+    # Use Downloads directory when running in Termux
+    if is_termux():
+        # Get the Downloads directory path
+        downloads_dir = get_downloads_dir()
+        destination = Path(downloads_dir) / f"{short_name}.tar.gz"
+        print(f"Running in Termux, saving to Downloads: {destination}")
+    else:
+        # Use current directory for other platforms
+        destination = Path.cwd() / f"{short_name}.tar.gz"
+
     shutil.move(str(tarball), str(destination))
 
     final_msg = (
