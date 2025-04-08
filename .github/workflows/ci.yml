@@ -1,5 +1,9 @@
 name: ci
 
+# Limit permissions to minimum required
+permissions:
+  contents: read
+
 on:
   push:
     branches:

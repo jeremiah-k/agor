@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.scripts]
-agentgrunt = "agentgrunt.cli:app"
+agentgrunt = "agentgrunt.main:app"
 
 [tool.trunk]
 enabled = true

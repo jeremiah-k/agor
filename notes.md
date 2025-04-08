@@ -24,7 +24,7 @@ some strategies that seem to work:
     > itself, which made it write up a nice set of assertions and then
     > coutnerarguments
 
-### Improvement Ideas
+## Improvement Ideas
 
 - It often forgets about the hotkeys, however if I use one it looks more
   carefully at the prior context and figures it out again. Should consider

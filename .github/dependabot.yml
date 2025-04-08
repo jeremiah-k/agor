@@ -20,13 +20,13 @@ updates:
           - "*"
     versioning-strategy: increase
     commit-message:
-      prefix: "deps"
+      prefix: deps
       include: scope
 
     pull-request-branch-name:
       separator: "-"
-      prefix: "dependabot"
+      prefix: dependabot
 
     labels:
-      - "dependencies"
-      - "dependabot"
+      - dependencies
+      - dependabot
