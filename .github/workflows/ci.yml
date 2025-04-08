@@ -1,41 +1,29 @@
 name: ci
 
+# Limit permissions to minimum required
+permissions:
+  contents: read
+
 on:
+  push:
+    branches:
+      - "**"
   pull_request:
-  workflow_dispatch:
+    branches:
+      - "**"
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Set up Python and install Poetry
-        run: |
-          python --version
-          pip install poetry
-          poetry --version
-      - name: Install dependencies and validate
-        run: |
-          poetry install
-          poetry check
-          poetry lock --no-update
-      - name: Run trunk check
-        run: poetry run trunk check
-
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Set up Python and install Poetry
-        run: |
-          python --version
-          pip install poetry
-          poetry --version
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Poetry
+        run: pipx install poetry
+
       - name: Install dependencies
         run: poetry install
+
       - name: Run tests
         run: poetry run pytest

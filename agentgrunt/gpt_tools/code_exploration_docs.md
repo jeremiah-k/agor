@@ -1,3 +1,5 @@
+# Code Exploration Tools
+
 - bfs_find(base, pattern): Finds filenames matching a pattern using breadth-first search. Use to locate specific files in a directory structure.
 - grep(file_path, pattern, recursive): Searches for a pattern in a file or directory (optionally recursively). Use to locate specific content within files. Use this as a last resort, instead preferng the provided git binary's `git grep` feature
 - tree(directory, prefix, depth_remaining): Prints a directory tree. Use to visualize directory structures.

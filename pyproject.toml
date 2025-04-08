@@ -1,26 +1,36 @@
-[tool.poetry]
-name = "agentgrunt"
-version = "0.1.6"
-description = ""
-authors = ["Nik V <github@nikvdp.com>"]
-license = "MIT"
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = ">=3.9"
-typer = "^0.9.0"
-pydantic = "^2.1.1"
-plumbum = "^1.8.2"
-tqdm = "^4.65.0"
-httpx = "^0.24.1"
-
-[tool.poetry.group.dev.dependencies]
-ipython = "^8.14.0"
-pytest = "^7.4.0"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.scripts]
-agentgrunt = "agentgrunt.main:cli"
+[project]
+name = "agentgrunt"
+version = "0.1.6"
+description = "Agent Grunt"
+authors = [{ name = "Nik V <github@nikvdp.com>" }, { name = "Jeremiah K. <jeremiahk@gmx.com>" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+  "fastapi",
+  "httpx",
+  "plumbum",
+  "pydantic",
+  "pytest",
+  "tqdm",
+  "typer",
+]
+
+[project.scripts]
+agentgrunt = "agentgrunt.main:app"
+
+[tool.trunk]
+enabled = true
+
+[tool.coverage.run]
+branch = true
+source = ["agentgrunt"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

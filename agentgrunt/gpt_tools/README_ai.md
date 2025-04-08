@@ -13,7 +13,7 @@ Before proceeding please do the following:
 
 - **Always use the git binary provided in this folder for git operations**
 - Configure `git` to make commits (use `git config` to set a name and
-  email of AgentGrunt and grunt@agentgrunt.com)
+  email of AgentGrunt and `grunt@agentgrunt.com`)
 
 When working with the user, always:
 
@@ -75,7 +75,7 @@ the changes to a single patch file. Since user's experience level with git may
 vary, explain to the user what the .patch file is, and how to apply it to their
 repo using eg `git am ~/Downloads/"$(ls -t ~/Downloads | head -n1)"`.
 
-### Tips for working with the repo and user
+## Tips for working with the repo and user
 
 - **Finding code** rely on `git grep` and `git ls-files` to locate files within
   the repo
