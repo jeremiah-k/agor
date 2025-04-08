@@ -1,8 +1,8 @@
 import os
+import shutil
 import tarfile
 import tempfile
 from pathlib import Path
-from typing import Union
 from urllib.parse import urlparse
 
 from plumbum.cmd import git
@@ -55,7 +55,13 @@ def get_clone_url(val: str) -> str:
         raise ValueError(f"'{val}' is not a valid GitHub URL.")
 
 
-def clone_git_repo_to_temp_dir(git_repo: str, shallow: bool = True) -> Path:
+def clone_git_repo_to_temp_dir(
+    git_repo: str,
+    shallow: bool = True,
+    branch: str = None,
+    all_branches: bool = False,
+    branches: list = None,
+) -> Path:
     is_local = True
     if is_github_url(git_repo):
         # Clone the repo to a temporary directory
@@ -75,14 +81,70 @@ def clone_git_repo_to_temp_dir(git_repo: str, shallow: bool = True) -> Path:
 
     # Clone the git repo to the temporary directory
     clone_command = ["clone"]
-    if shallow:
+
+    # Handle branch selection
+    if all_branches:
+        # For all branches, we need to fetch everything
+        print("Cloning all branches with --bare option")
+        # Using --bare instead of --mirror for better compatibility
+        clone_command.append("--bare")
+    elif branches and len(branches) > 0:
+        # For multiple specific branches, we'll clone and then fetch each branch
+        print(f"Cloning multiple branches: {branches}")
+        if shallow:
+            clone_command.extend(["--depth", "5"])  # TODO: make this configurable
+        # We'll initially clone the first branch
+        if branches[0]:
+            print(f"Initially cloning branch: {branches[0]}")
+            clone_command.extend(["--branch", branches[0]])
+    elif branch:
+        # For a single specific branch
+        print(f"Cloning single branch: {branch}")
+        if shallow:
+            clone_command.extend(["--depth", "5"])  # TODO: make this configurable
+        clone_command.extend(["--branch", branch])
+    elif shallow:
+        # Default behavior (current branch for local repos or default branch for remote repos)
         clone_command.extend(["--depth", "5"])  # TODO: make this configurable
         if is_local:
             checked_out_branch = git["rev-parse", "--abbrev-ref", "HEAD"](
                 cwd=local_repo.resolve()
             ).strip()
             if checked_out_branch:
+                print(
+                    f"Cloning default branch: {checked_out_branch} (current branch in local repo)"
+                )
                 clone_command.extend(["--branch", checked_out_branch])
+        else:
+            # For remote repos, try to determine the default branch
+            try:
+                # Use ls-remote to get the HEAD reference without needing a local clone
+                head_ref = git[
+                    "ls-remote", "--symref", get_clone_url(git_repo), "HEAD"
+                ]()
+                # Parse the output to get the default branch name
+                default_branch = None
+                for line in head_ref.splitlines():
+                    if "ref:" in line and "HEAD" in line:
+                        # Format is typically: ref: refs/heads/main\tHEAD
+                        parts = line.split()
+                        if len(parts) >= 2:
+                            ref_path = parts[1]
+                            default_branch = ref_path.split("/")[-1]
+                            break
+
+                if default_branch:
+                    print(
+                        f"Cloning default branch from remote repository: {default_branch}"
+                    )
+                else:
+                    print(
+                        "Cloning default branch from remote repository (branch name could not be determined)"
+                    )
+            except Exception as e:
+                print(
+                    f"Cloning default branch from remote repository (error determining branch name: {e})"
+                )
 
     clone_command.extend(
         [
@@ -91,6 +153,133 @@ def clone_git_repo_to_temp_dir(git_repo: str, shallow: bool = True) -> Path:
         ]
     )
     git[clone_command]()
+
+    # If multiple branches were specified, fetch them after the initial clone
+    if branches and len(branches) > 1 and not all_branches:
+        print("Fetching additional branches after initial clone")
+        for additional_branch in branches[1:]:
+            if additional_branch:
+                print(f"Fetching branch: {additional_branch}")
+                git["fetch", "origin", additional_branch](cwd=temp_dir)
+                # Create local branch tracking the remote branch
+                print(f"Creating local branch for: {additional_branch}")
+                git["checkout", "-b", additional_branch, f"origin/{additional_branch}"](
+                    cwd=temp_dir
+                )
+
+        # Return to the first branch
+        if branches[0]:
+            print(f"Returning to first branch: {branches[0]}")
+            git["checkout", branches[0]](cwd=temp_dir)
+
+    # If all branches were specified, convert bare repo to normal repo with all branches
+    if all_branches:
+        print("Converting bare repo to normal repo with all branches")
+        try:
+            # List all remote branches
+            try:
+                # For bare repos, we need to use a different approach to list branches
+                branches_output = git[
+                    "for-each-ref", "--format=%(refname:short)", "refs/heads/"
+                ](cwd=temp_dir)
+                if branches_output.strip():
+                    print(f"Available branches in repository:\n{branches_output}")
+                else:
+                    # Try alternative method
+                    branches_output = git["branch"](cwd=temp_dir)
+                    if branches_output.strip():
+                        print(f"Available branches in repository:\n{branches_output}")
+                    else:
+                        print(
+                            "No branches found using standard methods, trying remote branches..."
+                        )
+                        branches_output = git[
+                            "for-each-ref", "--format=%(refname:short)", "refs/remotes/"
+                        ](cwd=temp_dir)
+                        if branches_output.strip():
+                            print(f"Available remote branches:\n{branches_output}")
+                        else:
+                            print("No branches found in repository")
+                            branches_output = ""
+            except Exception as e:
+                print(f"Error listing branches: {e}")
+                try:
+                    # Try alternative method for listing branches
+                    branches_output = git["show-ref", "--heads"](cwd=temp_dir)
+                    print(f"Branches found using show-ref:\n{branches_output}")
+                except Exception as e2:
+                    print(f"Error listing branches with alternative method: {e2}")
+                    branches_output = ""
+
+            # Create a new temp directory for the full repo
+            full_repo_dir = Path(tempfile.mkdtemp())
+
+            # Clone the bare repo to a normal repo with all branches
+            git["clone", str(temp_dir), str(full_repo_dir)]()
+
+            # Fetch all branches
+            try:
+                git["fetch", "--all"](cwd=full_repo_dir)
+                print("Successfully fetched all branches")
+            except Exception as e:
+                print(f"Error fetching all branches: {e}")
+
+            # Get all branch names (strip origin/ prefix and remove HEAD)
+            branch_lines = branches_output.strip().split("\n")
+            branch_names = []
+            for line in branch_lines:
+                branch = line.strip()
+                if branch and "HEAD" not in branch:
+                    # Remove 'origin/' prefix
+                    branch_name = branch.replace("origin/", "").strip()
+                    if branch_name:  # Only add non-empty branch names
+                        branch_names.append(branch_name)
+
+            # Create local branches for all remote branches
+            if branch_names:
+                print(
+                    f"Found {len(branch_names)} branches to process: {', '.join(branch_names)}"
+                )
+                for branch_name in branch_names:
+                    try:
+                        print(f"Creating local branch for: {branch_name}")
+                        git["checkout", "-b", branch_name, f"origin/{branch_name}"](
+                            cwd=full_repo_dir
+                        )
+                    except Exception as e:
+                        # Check if the error is because the branch already exists
+                        if "already exists" in str(e):
+                            print(
+                                f"Branch {branch_name} already exists, checking it out"
+                            )
+                            try:
+                                # Just checkout the existing branch
+                                git["checkout", branch_name](cwd=full_repo_dir)
+                            except Exception as e2:
+                                print(
+                                    f"Error checking out existing branch {branch_name}: {e2}"
+                                )
+                        else:
+                            print(f"Error creating branch {branch_name}: {e}")
+            else:
+                print("No valid branch names found to process")
+
+            # Checkout the default branch (usually main or master)
+            default_branch = "main"
+            try:
+                git["checkout", default_branch](cwd=full_repo_dir)
+            except Exception:
+                try:
+                    git["checkout", "master"](cwd=full_repo_dir)
+                except Exception as e:
+                    print(f"Error checking out default branch: {e}")
+
+            # Replace the temp_dir with the full repo dir
+            shutil.rmtree(temp_dir)
+            temp_dir = full_repo_dir
+        except Exception as e:
+            print(f"Error processing all branches: {e}")
+
     git["gc"](cwd=temp_dir)
 
     return temp_dir
@@ -108,7 +297,8 @@ def tar_directory(path_to_directory: Path, compression="gz") -> Path:
         )
 
     # Create a temporary tar file
-    tar_file = tempfile.mktemp(suffix=f".tar.{compression}")
+    tar_fd, tar_file = tempfile.mkstemp(suffix=f".tar.{compression}")
+    os.close(tar_fd)  # Close the file descriptor
 
     # Get the total number of files to compress for progress reporting
     total_files = sum(len(files) for _, _, files in os.walk(path_to_directory))
@@ -117,7 +307,7 @@ def tar_directory(path_to_directory: Path, compression="gz") -> Path:
         with tqdm(
             total=total_files, desc=f"Compressing {path_to_directory.name}"
         ) as pbar:
-            for root, dirs, files in os.walk(path_to_directory):
+            for root, _dirs, files in os.walk(path_to_directory):
                 for file in files:
                     absolute_file_path = os.path.join(root, file)
                     relative_file_path = os.path.relpath(

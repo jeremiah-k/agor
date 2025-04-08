@@ -1,11 +1,10 @@
-import shutil
-import httpx
-from pathlib import Path
 import os
-import tempfile
+import shutil
 import tarfile
+from pathlib import Path
+
+import httpx
 from tqdm import tqdm
-from typing import Tuple, List
 
 
 def move_directory(src_dir: Path, dest_dir: Path):
@@ -60,11 +59,11 @@ def create_tarball(dir_to_tar: Path, tar_file_path: Path, compression="gz") -> P
     with tarfile.open(tar_file_path, f"w:{compression}") as tar:
         with tqdm(
             total=total_files,
-            desc=f"Compressing source dir",
+            desc="Compressing source dir",
             ncols=80,
             unit="file",
         ) as pbar:
-            for root, dirs, files in os.walk(dir_to_tar):
+            for root, _dirs, files in os.walk(dir_to_tar):
                 for file in files:
                     absolute_file_path = os.path.join(root, file)
                     relative_file_path = os.path.relpath(absolute_file_path, dir_to_tar)

@@ -1,4 +1,6 @@
-# 🕵🧰 AgentGrunt ️
+# 🕵🧰 AgentGrunt (v0.1.6)
+
+> This is a fork of the original AgentGrunt with added branch selection features. You can now bundle specific branches, multiple branches, or all branches from a repository.
 
 Use OpenAI's [Code Interpreter](https://openai.com/blog/chatgpt-plugins#code-interpreter) to edit and commit code across your entire git repo (even non-python repos)!
 
@@ -6,15 +8,11 @@ Use OpenAI's [Code Interpreter](https://openai.com/blog/chatgpt-plugins#code-int
 
 AgentGrunt packs up the following: a codebase you specify, a specially prepared `git` binary that runs well in Code Interpreter's environment, and some prompts and code exploration tools into a single file that you can load into Code Interpreter.
 
-Upload the archive, paste in a two sentence prompt, wait a bit, and then sit back and relax while GPT4.5<sup><a href="https://twitter.com/swyx/status/1678512823457165312?s=20">\*</a></sup> writes, edit, and commits your code for you. Once GPT has finished making your changes, press `d` from the hotkey menu and ChatGPT will send you a file you can use to apply the commits GPT made (with all their metadata!) directly into your copy of the repo.
+Upload the archive, paste in a two sentence prompt, wait a bit, and then sit back and relax while GPT4.5 writes, edit, and commits your code for you. Once GPT has finished making your changes, press `d` from the hotkey menu and ChatGPT will send you a file you can use to apply the commits GPT made (with all their metadata!) directly into your copy of the repo.
 
-<p align="center">
-  <a href="http://nik.tw/gruntvid" target="_blank">
-    <img width="75%" src="http://nik.tw/gruntthumb"/>
-  </a>
-</p>
+![AgentGrunt Demo](http://nik.tw/gruntthumb)
 
-## Features:
+## Features
 
 - automatically installs `git` into Code Interpreter and configures it for code exploration
 - built in hotkey menu for easy usage
@@ -22,7 +20,7 @@ Upload the archive, paste in a two sentence prompt, wait a bit, and then sit bac
 
 ## Installation
 
-#### Prereqs:
+### Prerequisites
 
 - a valid ChatGPT Plus subscription and Code Interpreter enabled in ChatGPT's settings
 - a working installation of python 3.9 (or newer)
@@ -36,7 +34,7 @@ pip install agentgrunt
 
 If all goes well running `agentgrunt --help` will output something like this:
 
-```
+```text
 Usage: agentgrunt [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -52,10 +50,22 @@ Commands:
 To start editing a repo with `agentgrunt` use `agentgrunt`'s `bundle` command:
 
 ```shell
+# Bundle the default branch (current branch for local repos)
 agentgrunt bundle <path-to-your-repo>
+
+# Bundle a specific branch
+agentgrunt bundle <path-to-your-repo> --branch <branch-name>
+
+# Bundle multiple specific branches
+agentgrunt bundle <path-to-your-repo> --branches branch1,branch2,branch3
+
+# Bundle all branches
+agentgrunt bundle <path-to-your-repo> --all-branches
 ```
 
 It will do some work and then print out some instructions. When the process has completed you'll have a new file called `<your-repo-name>.tar.gz` in your current folder.
+
+By default, AgentGrunt bundles only the current branch (for local repos) or the default branch (for remote repos). You can use the branch options to include specific branches or all branches in the bundle, which can be useful when you need to work with multiple branches or want to perform operations across branches.
 
 Now do the following:
 
@@ -66,8 +76,8 @@ Now do the following:
 
 You'll see ChatGPT start to do some work, and after a few moments you'll be greeted with a message saying "Code Interpreter is now running AgentGrunt!" followed by a hotkey menu similar to the below:
 
-```
-c ) continue 
+```text
+c ) continue
 d ) download changes as patch
 dr) download entire repo
 m ) show diff of last change

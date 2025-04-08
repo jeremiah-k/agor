@@ -1,7 +1,7 @@
 from ..agentgrunt.gpt_tools.code_exploration import (
+    extract_curly_brace_function,
     extract_function_content,
     extract_python_function,
-    extract_curly_brace_function,
 )
 
 
@@ -30,7 +30,7 @@ def test_extract_python_function():
     # Test case 3: Signature not found
     assert (
         extract_python_function("def nonexistent_function(", content_single_line)
-        == None
+        is None
     )
 
 
@@ -49,7 +49,7 @@ def test_extract_curly_brace_function():
     # Test case 2: Signature not found
     assert (
         extract_curly_brace_function("function nonexistentFunction(", content_js)
-        == None
+        is None
     )
 
 
