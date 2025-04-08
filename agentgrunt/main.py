@@ -14,6 +14,14 @@ from .utils import create_tarball, download_file, move_directory
 app = typer.Typer(add_completion=False)
 
 
+# Define option for branches outside the function to avoid B008 warning
+branches_option = typer.Option(
+    None,
+    "--branches",
+    help="Specify multiple branches to bundle (comma-separated list)",
+)
+
+
 @app.command()
 def bundle(
     src_repo: str = typer.Argument(
@@ -26,18 +34,47 @@ def bundle(
         "-p",
         help="Preserve the full git history (defaults to shallow clone to save space)",
     ),
+    branch: str = typer.Option(
+        None,
+        "--branch",
+        "-b",
+        help="Specify a single branch to bundle (defaults to the current branch for local repos)",
+    ),
+    all_branches: bool = typer.Option(
+        False,
+        "--all-branches",
+        "-a",
+        help="Bundle all branches from the repository",
+    ),
+    branches: list[str] = branches_option,
     interactive: bool = typer.Option(
-        True, "--no-interactive", "-b", help="don't ask questions (batch) mode"
+        True, "--no-interactive", help="don't ask questions (batch) mode"
     ),
     assume_yes: bool = typer.Option(
         False, "--assume-yes", "-y", help="assume yes for all prompts"
     ),
 ):
-    """Bundle up a local or remote git repo"""
+    """Bundle up a local or remote git repo.
+
+    By default, bundles only the current branch for local repos or the default branch for remote repos.
+    Use --branch to specify a single branch, --branches for multiple specific branches,
+    or --all-branches to include all branches in the repository.
+    """
     # clone_url = get_clone_url(src_repo) -- Assigned to but never used
     repo_name = get_clone_url(src_repo).split("/")[-1]
 
-    temp_repo = clone_git_repo_to_temp_dir(src_repo, shallow=not preserve_history)
+    # Process branches parameter if provided
+    branch_list = None
+    if branches:
+        branch_list = [b.strip() for b in branches]
+
+    temp_repo = clone_git_repo_to_temp_dir(
+        src_repo,
+        shallow=not preserve_history,
+        branch=branch,
+        all_branches=all_branches,
+        branches=branch_list,
+    )
     print(  # "\033[92m" +
         f"Preparing to build '{repo_name}'..."
         # + "\033[0m"
@@ -74,7 +111,9 @@ def bundle(
 
     # create a tarball of output_dir, and once it's written move it to the
     # current PWD, and tell the user about it
-    tarball_path = Path(tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz").name)
+    tarball_path = Path(
+        tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz").name
+    )
     tarball = create_tarball(output_dir, tarball_path)
     short_name = re.sub(r"\.git$", "", repo_name)
     destination = Path.cwd() / f"{short_name}.tar.gz"

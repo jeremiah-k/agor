@@ -20,9 +20,9 @@ some strategies that seem to work:
     > stepping through each of it's assertions, guessing how they could be wrong, and
     > attempting to test your assumptions by furhter explorastion of the code base.
     > and once you are sure you have a clear plan let me know
-    it was medium succesful. the interesting bit was asking it to criticize
-    itself, which made it write up a nice set of assertions and then
-    coutnerarguments
+    > it was medium succesful. the interesting bit was asking it to criticize
+    > itself, which made it write up a nice set of assertions and then
+    > coutnerarguments
 
 ### Improvement Ideas
 
