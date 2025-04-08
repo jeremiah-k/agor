@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 from textwrap import dedent
 
+import platformdirs
 import pyperclip
 import typer
 from plumbum import local
@@ -19,6 +20,36 @@ from .utils import create_tarball, download_file, move_directory
 def is_termux():
     """Check if running in Termux environment"""
     return "com.termux" in os.environ.get("HOME", "")
+
+
+def get_downloads_dir():
+    """Get the Downloads directory path based on the platform"""
+    if is_termux():
+        # For Termux, use ~/storage/downloads
+        storage_downloads = os.path.expanduser("~/storage/downloads")
+        if os.path.exists(storage_downloads):
+            return storage_downloads
+
+    # For other environments, use platformdirs to get the standard downloads directory
+    try:
+        downloads_dir = platformdirs.user_downloads_dir()
+        if os.path.exists(downloads_dir):
+            return downloads_dir
+    except Exception:
+        pass
+
+    # Fallback to standard Downloads directories
+    home_dir = os.path.expanduser("~")
+    downloads_dir = os.path.join(home_dir, "Downloads")
+    if os.path.exists(downloads_dir):
+        return downloads_dir
+
+    downloads_dir = os.path.join(home_dir, "Download")
+    if os.path.exists(downloads_dir):
+        return downloads_dir
+
+    # Fallback to current directory
+    return os.getcwd()
 
 
 def copy_to_clipboard(text):
@@ -188,7 +219,42 @@ def bundle(
     )
     tarball = create_tarball(output_dir, tarball_path)
     short_name = re.sub(r"\.git$", "", repo_name)
-    destination = Path.cwd() / f"{short_name}.tar.gz"
+
+    # Determine where to save the bundled file
+    if is_termux():
+        # For Termux, always use the Downloads directory for easier access
+        downloads_dir = get_downloads_dir()
+        destination = Path(downloads_dir) / f"{short_name}.tar.gz"
+        print(f"Running in Termux, saving to Downloads: {destination}")
+    else:
+        # For other platforms, ask the user where to save
+        if interactive and not assume_yes:
+            # Ask if they want to save to current directory
+            save_to_current = typer.confirm(
+                "Save the bundled file to the current directory?", default=True
+            )
+
+            if not save_to_current:
+                # Ask if they want to save to Downloads directory
+                save_to_downloads = typer.confirm(
+                    "Save the bundled file to your Downloads directory?", default=True
+                )
+
+                if save_to_downloads:
+                    downloads_dir = get_downloads_dir()
+                    destination = Path(downloads_dir) / f"{short_name}.tar.gz"
+                    print(f"Saving to Downloads: {destination}")
+                else:
+                    # Use current directory as fallback
+                    destination = Path.cwd() / f"{short_name}.tar.gz"
+                    print(f"Saving to current directory: {destination}")
+            else:
+                # Use current directory
+                destination = Path.cwd() / f"{short_name}.tar.gz"
+        else:
+            # In non-interactive mode, use current directory
+            destination = Path.cwd() / f"{short_name}.tar.gz"
+
     shutil.move(str(tarball), str(destination))
 
     final_msg = (
