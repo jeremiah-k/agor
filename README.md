@@ -26,10 +26,12 @@ Upload the archive, paste in a two sentence prompt, wait a bit, and then sit bac
 - a working installation of python 3.9 (or newer)
 - a git repository that you'd like Code Interpreter to work on with you
 
-Once you have those in place, run:
+Once you have those in place, run these to install:
 
 ```shell
-pip install agentgrunt
+git clone https://github.com/jeremiah-k/agentgrunt.git
+cd agentgrunt
+pipx install .
 ```
 
 If all goes well running `agentgrunt --help` will output something like this:
