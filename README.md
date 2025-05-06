@@ -10,8 +10,6 @@ AgentGrunt packs up the following: a codebase you specify, a specially prepared 
 
 Upload the archive, paste in a two sentence prompt, wait a bit, and then sit back and relax while GPT4.5 writes, edit, and commits your code for you. Once GPT has finished making your changes, press `d` from the hotkey menu and ChatGPT will send you a file you can use to apply the commits GPT made (with all their metadata!) directly into your copy of the repo.
 
-![AgentGrunt Demo](http://nik.tw/gruntthumb)
-
 ## Features
 
 - automatically installs `git` into Code Interpreter and configures it for code exploration
