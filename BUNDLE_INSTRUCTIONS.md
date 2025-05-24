@@ -107,4 +107,10 @@ agor bundle ~/my-project
 
 ---
 
+## 🙏 Attribution
+
+**AgentOrchestrator is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+
+---
+
 **Ready to bundle your project? Install AGOR and create your first bundle!**

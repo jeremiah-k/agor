@@ -158,4 +158,10 @@ agor/
 
 ---
 
+## 🙏 Attribution
+
+**AgentOrchestrator is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+
+---
+
 **Ready to orchestrate? Load the full instructions and begin coordinating your development project!**

@@ -6,6 +6,8 @@
 
 AGOR runs on Linux, macOS, and Windows.
 
+> **⚠️ Status Note**: Bundle Mode is well-tested and works reliably. Agent Mode is mostly untested and currently a work in progress.
+
 ## 🚀 Quick Start
 
 ### Agent Mode (For AI Agents with Git Access)
@@ -210,6 +212,28 @@ agor/
 
 - **Repository**: <https://github.com/jeremiah-k/agor>
 - **License**: MIT License
+
+## 🙏 Attribution
+
+**AgentOrchestrator is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+
+### Original AgentGrunt
+
+- **Creator**: [@nikvdp](https://github.com/nikvdp) (Nik V)
+- **Repository**: <https://github.com/nikvdp/agentgrunt>
+- **License**: MIT License
+- **Core Contributions**: Code bundling concept, git integration, AI instruction framework
+
+### AgentOrchestrator Enhancements
+
+- **Enhanced by**: [@jeremiah-k](https://github.com/jeremiah-k) (Jeremiah K)
+- **Repository**: <https://github.com/jeremiah-k/agor>
+- **License**: MIT License
+- **Additions**: Multi-agent coordination, strategic planning, prompt engineering, dual deployment modes
+
+### Additional Inspiration
+
+- **[@NickADobos](https://twitter.com/NickADobos)** - "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept
 
 ---
 
