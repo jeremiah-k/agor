@@ -22,7 +22,7 @@ else:
         __version__ = version("agor")
     except PackageNotFoundError:
         # If all else fails, use hardcoded version
-        __version__ = "0.1.1"
+        __version__ = "0.1.2"
 
 __author__ = "Jeremiah K."
 __email__ = "jeremiahk@gmx.com"
