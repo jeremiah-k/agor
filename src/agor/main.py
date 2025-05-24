@@ -151,6 +151,12 @@ def bundle(
         "-m",
         help="Bundle only main/master branch",
     ),
+    all_branches: bool = typer.Option(
+        False,
+        "--all-branches",
+        "-a",
+        help="[DEPRECATED] Bundle all branches (this is now the default behavior)",
+    ),
     branches: list[str] = branches_option,
     interactive: bool = typer.Option(
         True, "--no-interactive", help="don't ask questions (batch) mode"
@@ -165,6 +171,12 @@ def bundle(
     Use -m/--main-only to bundle only main/master branch.
     Use -b/--branches to bundle main/master plus specified additional branches.
     """
+    # Handle deprecated -a/--all-branches flag
+    if all_branches:
+        print("⚠️  WARNING: The -a/--all-branches flag is deprecated.")
+        print("   All branches are now bundled by default. You can remove this flag.")
+        print()
+
     # clone_url = get_clone_url(src_repo) -- Assigned to but never used
     repo_name = get_clone_url(src_repo).split("/")[-1]
 
