@@ -31,7 +31,7 @@ cd agor
 
 ### Strategic Planning
 - **Project breakdown** into manageable, coordinated tasks
-- **Architecture analysis** and implementation planning  
+- **Architecture analysis** and implementation planning
 - **Risk assessment** with mitigation strategies
 - **Dependency mapping** and execution sequencing
 
@@ -58,7 +58,7 @@ cd agor
 Like a conductor leading a symphony orchestra, AgentOrchestrator coordinates multiple AI agents, each with specialized skills, to create harmonious development workflows:
 
 - **🎻 Frontend Agents** - User interface specialists
-- **🎺 Backend Agents** - Server-side logic experts  
+- **🎺 Backend Agents** - Server-side logic experts
 - **🥁 Database Agents** - Data architecture specialists
 - **🎹 Testing Agents** - Quality assurance focused
 - **🎸 DevOps Agents** - Deployment and infrastructure
@@ -98,7 +98,7 @@ rb) rollback planning
 ### Large-Scale Refactoring
 Coordinate multiple specialized agents for database, API, frontend, and testing aspects of major codebase refactoring.
 
-### Feature Development  
+### Feature Development
 Break down complex features into coordinated tasks with clear handoff points between frontend, backend, and testing agents.
 
 ### System Integration
@@ -116,7 +116,7 @@ AgentOrchestrator represents a new paradigm: **coordinated multi-agent project e
 
 Foundation for:
 - **Enterprise-scale AI development teams**
-- **Automated project planning and execution**  
+- **Automated project planning and execution**
 - **Quality-assured multi-agent workflows**
 - **Scalable development process automation**
 
@@ -154,6 +154,27 @@ pipx install .
 
 ---
 
-**Ready to orchestrate your development project? Choose your deployment mode and begin coordinating!**
+## 🙏 Attribution & License
 
-*Evolved from the original AgentGrunt concept by [@nikvdp](https://github.com/nikvdp). Multi-agent coordination capabilities by [@jeremiah-k](https://github.com/jeremiah-k).*
+**AgentOrchestrator** is a comprehensive enhancement and evolution of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) project created by [@nikvdp](https://github.com/nikvdp).
+
+### Original Project
+- **AgentGrunt** by [@nikvdp](https://github.com/nikvdp) - The foundational concept and implementation
+- **License**: MIT License
+- **Repository**: https://github.com/nikvdp/agentgrunt
+
+### This Enhancement
+- **AgentOrchestrator (AGOR)** by [@jeremiah-k](https://github.com/jeremiah-k)
+- **Enhancements**: Multi-agent coordination, project planning, dual deployment modes
+- **License**: MIT License (maintaining original license)
+- **Repository**: https://github.com/jeremiah-k/agor
+
+### Key Contributions
+- **Original AgentGrunt**: Code bundling, git integration, basic AI instructions
+- **AgentOrchestrator**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks
+
+We're grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this enhanced coordination platform possible.
+
+---
+
+**Ready to orchestrate your development project? Choose your deployment mode and begin coordinating!**

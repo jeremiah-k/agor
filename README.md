@@ -210,6 +210,23 @@ The tool provides a foundation for:
 
 ---
 
-*Original AgentGrunt concept by [@nikvdp](https://github.com/nikvdp). Multi-agent coordination enhancements and project planning capabilities added by [@jeremiah-k](https://github.com/jeremiah-k).*
+## 🙏 Attribution & License
 
-*Inspiration from [@NickADobos](https://twitter.com/NickADobos)' "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" thread.*
+**This project is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+
+### Original AgentGrunt
+- **Creator**: [@nikvdp](https://github.com/nikvdp)
+- **Repository**: https://github.com/nikvdp/agentgrunt
+- **License**: MIT License
+- **Core Contributions**: Innovative code bundling concept, git integration, basic AI instruction framework
+
+### AgentOrchestrator Enhancements
+- **Enhanced by**: [@jeremiah-k](https://github.com/jeremiah-k)
+- **Repository**: https://github.com/jeremiah-k/agor
+- **License**: MIT License (maintaining original)
+- **Major Additions**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks, dual deployment modes
+
+### Additional Inspiration
+- **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
+
+**We're deeply grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this comprehensive coordination platform possible.**
