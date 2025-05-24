@@ -7,7 +7,7 @@
 
 **INITIALIZATION:**
 
-1. Configure git: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@orchestrator.ai`
+1. Configure git: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@example.local`
 2. Start with codebase analysis using `a` command
 3. Never initialize new git repos - always work with provided/cloned repos
 

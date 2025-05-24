@@ -334,7 +334,7 @@ def custom_instructions(
         Before proceeding, please:
         - **Always use the git binary provided in this folder for git operations**
         - Configure `git` to make commits (use `git config` to set a name and
-          email of AgentOrchestrator and agor@orchestrator.ai)
+          email of AgentOrchestrator and agor@example.local)
 
         When working with the user, always:
         - Use `git ls-files` to get the layout of the codebase at the start

@@ -30,7 +30,7 @@ cd [PROJECT_NAME]
 
 ### 4. Initialize AgentOrchestrator
 
-- Configure git identity: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@orchestrator.ai`
+- Configure git identity: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@example.local`
 - Load code exploration tools from `../agor/src/agor/tools/`
 - Start with comprehensive codebase analysis using the `a` command
 
