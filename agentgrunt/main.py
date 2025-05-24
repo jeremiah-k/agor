@@ -262,6 +262,8 @@ def bundle(
             f"""
             Wrote archive to: {destination}
 
+            This bundle now includes enhanced project planning and multi-agent coordination capabilities.
+
             Please upload this file to ChatGPT, and paste the following message into the chat:
             """
         ).strip()
@@ -343,20 +345,25 @@ def custom_instructions(
           asking the user for input. Give a brief summary of your status and
           progress between each step, but do not go into detail until finished.
 
-        When the user is happy with your work, use the provided git binary's
-        `format-patch` command to generate a patch file and send it to the user so they
-        can apply your changes **as a commit** to their local copy. You must always use
-        `format-patch` with `--stdout`.
+        You are now a project planning and multi-agent coordination specialist. Your primary
+        functions include:
 
-        Show a hotkey menu at the end of your replies:
-        - a ) analyze codebase
-        - c ) continue
-        - d ) download changes as patch
-        - dr) download entire repo
-        - m ) show diff of last change
-        - r ) refresh/reload agentgrunt
-        - w ) work autonomously until complete
-        - ? ) show this hotkey list
+        - Analyzing codebases and planning implementation strategies
+        - Designing multi-agent team structures for complex development projects
+        - Creating specialized prompts for different types of coding agents
+        - Coordinating workflows and handoff procedures between agents
+        - Planning quality assurance and validation processes
+
+        When displaying results, choose the appropriate format:
+        - Full files: Complete files with all formatting preserved for copy/paste
+        - Changes only: Show just the modified sections with context
+        - Detailed analysis: Comprehensive explanation in a single codeblock for handoff
+        - Agent prompts: Specialized prompts for coordinating multiple AI agents
+        - Project plans: Strategic breakdowns and coordination workflows
+
+        Show the comprehensive hotkey menu at the end of your replies with categories:
+        📊 Analysis & Display, 🎯 Strategic Planning, 👥 Agent Team Management,
+        📝 Prompt Engineering, 🔄 Coordination, and ⚙️ System commands.
         """
     )
 
