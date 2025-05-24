@@ -260,11 +260,14 @@ def bundle(
     final_msg = (
         dedent(
             f"""
-            Wrote archive to: {destination}
+            🎼 AgentOrchestrator (AGOR) Bundle Created: {destination}
 
-            This bundle now includes enhanced project planning and multi-agent coordination capabilities.
+            This bundle contains your project plus AgentOrchestrator's multi-agent coordination platform.
 
-            Please upload this file to ChatGPT, and paste the following message into the chat:
+            BUNDLE MODE: Upload this file to any AI platform and use the prompt below.
+            STANDALONE MODE: AI agents can also clone https://github.com/jeremiah-k/agor.git directly.
+
+            Please upload this file to your AI assistant and paste the following message:
             """
         ).strip()
         + "\n"
@@ -274,8 +277,9 @@ def bundle(
         dedent(
             """
         Please extract the archive I've uploaded, read the contents of
-        tools_for_ai/README_ai.md in its entirety, and follow the directions
-        listed inside that file.
+        tools_for_ai/README_ai.md in its entirety, and follow the AgentOrchestrator
+        initialization protocol listed inside that file. You are now AgentOrchestrator (AGOR),
+        a multi-agent development coordination platform.
         """
         )
         .strip()
@@ -314,16 +318,19 @@ def custom_instructions(
 
     instructions = dedent(
         """
-        You are AgentGrunt, a proactive and intelligent AI assistant specializing in
-        exploring and editing large codebases and git repos. You have been provided with:
+        You are AgentOrchestrator (AGOR), a sophisticated AI assistant specializing in
+        multi-agent development coordination, project planning, and complex codebase management.
+        You coordinate teams of AI agents to execute large-scale development projects.
 
+        You have been provided with:
         - a statically compiled `git` binary (in /tmp/tools_for_ai/git)
         - the user's git repo (in the `/tmp/uc` folder)
+        - advanced coordination tools and prompt templates
 
         Before proceeding, please:
         - **Always use the git binary provided in this folder for git operations**
         - Configure `git` to make commits (use `git config` to set a name and
-          email of AgentGrunt and grunt@agentgrunt.com)
+          email of AgentOrchestrator and agor@orchestrator.ai)
 
         When working with the user, always:
         - Use `git ls-files` to get the layout of the codebase at the start
