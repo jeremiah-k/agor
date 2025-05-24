@@ -1,40 +1,56 @@
-# AgentOrchestrator (AGOR) - Standalone Mode Instructions
+# AgentOrchestrator (AGOR) - Agent Mode Instructions
 
 ## Quick Start for AI Agents
 
-If you're an AI agent being asked to use AgentOrchestrator, follow these steps:
+**Agent Mode** is for AI agents with git access (Augment Code, Jules by Google, etc.)
 
-### 1. Clone AgentOrchestrator
+### Step 1: Clone AGOR Repository
 
 ```bash
+# Clone AGOR repository (no installation needed)
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
 ```
 
-### 2. Load the Instructions
-
-Read and follow the comprehensive instructions in:
+### Step 2: Learn the Protocol
 
 ```bash
+# Read the comprehensive AI instructions
 cat src/agor/tools/README_ai.md
+
+# This file contains the complete AGOR protocol and capabilities
 ```
 
-### 3. Clone Target Project
+### Step 3: Receive User Instructions
 
-When the user specifies a project to work on:
+The user will provide:
+
+- Target repository URL or local path
+- Specific project goals and requirements
+- Any constraints or preferences
+
+### Step 4: Clone Target Project
 
 ```bash
+# Clone the user's project (in a separate directory)
 git clone [USER_SPECIFIED_REPO_URL]
 cd [PROJECT_NAME]
 ```
 
-### 4. Initialize AgentOrchestrator
+### Step 5: Initialize AGOR Protocol
 
-- Configure git identity: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@example.local`
-- Load code exploration tools from `../agor/src/agor/tools/`
-- Start with comprehensive codebase analysis using the `a` command
+```bash
+# Configure git identity for any commits
+git config --global user.name "AgentOrchestrator"
+git config --global user.email "agor@example.local"
 
-### 5. Begin Orchestration
+# Load AGOR tools from the cloned repository
+# Tools are available in ../agor/src/agor/tools/
+
+# Start with comprehensive codebase analysis using 'a' command
+```
+
+### Step 6: Begin Orchestration
 
 You now have access to all AgentOrchestrator capabilities:
 
@@ -44,68 +60,79 @@ You now have access to all AgentOrchestrator capabilities:
 - Quality assurance and validation planning
 - Risk assessment and mitigation strategies
 
-## Key Differences from Bundle Mode
+## Agent Mode vs Bundle Mode
 
-**Standalone Mode Advantages:**
+**Agent Mode (This Mode) - For AI Agents with Git Access:**
 
-- Can work with any repository URL
-- No file size limitations
-- Can clone multiple related repositories
-- Full git history and branch access
-- Can install additional tools as needed
+- **No installation required** - just clone the AGOR repository
+- **Direct repository access** - can work with any repository URL
+- **No file size limitations** - full repository access
+- **Can clone multiple repositories** for complex projects
+- **Full git history and branch access**
+- **Real-time updates** - can pull latest AGOR improvements
+- **For**: Augment Code, Jules by Google, other advanced AI agents
 
-**Bundle Mode Advantages:**
+**Bundle Mode - For Upload-Based AI Platforms:**
 
-- Works with any AI platform that accepts file uploads
-- No need for git access or internet connectivity
-- Faster startup (no cloning required)
-- Guaranteed tool availability
+- **Requires local installation** - user installs AGOR locally
+- **File upload workflow** - user bundles project and uploads .tar.gz
+- **Works with upload-only platforms** like ChatGPT
+- **Self-contained** - everything bundled in one file
+- **For**: ChatGPT and other platforms without git access
 
 ## Usage Examples
 
-### Example 1: Analyze and Plan a Project
+### Example 1: Single Project Analysis
 
 ```bash
-# Clone AgentOrchestrator
+# Agent clones AGOR repository
 git clone https://github.com/jeremiah-k/agor.git
+cd agor
 
-# Clone target project
+# Agent learns the protocol
+cat src/agor/tools/README_ai.md
+
+# User provides target project
+# Agent clones target project
 git clone https://github.com/user/project.git
-
-# Load AGOR and analyze
 cd project
-# Follow the comprehensive instructions in agor/src/agor/tools/README_ai.md
+
+# Agent applies AGOR protocol
+# Start with 'a' command for codebase analysis
 ```
 
 ### Example 2: Multi-Repository Coordination
 
 ```bash
-# Clone AgentOrchestrator
-git clone https://github.com/jeremiah-k/agor.git
+# Agent has AGOR repository cloned
+cd agor
 
-# Clone multiple related projects
+# User requests work on multiple related projects
+# Agent clones all related repositories
 git clone https://github.com/user/frontend.git
 git clone https://github.com/user/backend.git
 git clone https://github.com/user/shared-lib.git
 
-# Coordinate across all repositories using AGOR tools
+# Agent coordinates across all repositories using AGOR tools
+# Apply strategic planning and team coordination across projects
 ```
 
 ## Integration with AI Platforms
 
-### For ChatGPT/Claude/Other AI Assistants:
+### For AI Agents with Git Access (Augment Code, Jules, etc.):
 
-1. User provides this instruction file or repository URL
-2. AI clones the repository and loads instructions
-3. AI follows the comprehensive README_ai.md instructions
-4. AI can then work with any target project the user specifies
+1. **User provides AGOR repository URL** to the AI agent
+2. **Agent clones AGOR repository** and learns the protocol
+3. **User specifies target project** and requirements
+4. **Agent clones target project** and applies AGOR capabilities
+5. **Agent coordinates development** using AGOR tools and frameworks
 
 ### For Automated Systems:
 
-1. Include AgentOrchestrator as a dependency or submodule
-2. Load the instruction set programmatically
-3. Use the prompt templates and coordination frameworks
-4. Integrate with existing CI/CD or development workflows
+1. **Include AGOR as git submodule** in automated workflows
+2. **Load instruction set programmatically** from AGOR tools
+3. **Use prompt templates and coordination frameworks** for AI orchestration
+4. **Integrate with CI/CD pipelines** for automated project coordination
 
 ## File Structure Reference
 
