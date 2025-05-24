@@ -127,9 +127,9 @@ agor/
 ├── AGOR_README.md (this file)
 ├── AGOR_INSTRUCTIONS.md (standalone mode guide)
 ├── README.md (original project info)
-├── agentgrunt/
+├── src/agor/
 │   ├── main.py (CLI tool)
-│   └── gpt_tools/
+│   └── tools/
 │       ├── README_ai.md (comprehensive AI instructions)
 │       ├── code_exploration.py (analysis tools)
 │       ├── agent_prompt_templates.py (prompt generators)
@@ -149,8 +149,8 @@ pipx install .
 ## 📖 Documentation
 
 - **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Standalone mode setup
-- **[agentgrunt/gpt_tools/README_ai.md](agentgrunt/gpt_tools/README_ai.md)** - Complete AI instructions
-- **[agentgrunt/gpt_tools/code_exploration_docs.md](agentgrunt/gpt_tools/code_exploration_docs.md)** - Tool reference
+- **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI instructions
+- **[src/agor/tools/code_exploration_docs.md](src/agor/tools/code_exploration_docs.md)** - Tool reference
 
 ---
 

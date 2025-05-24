@@ -13,7 +13,7 @@ cd agor
 ### 2. Load the Instructions
 Read and follow the comprehensive instructions in:
 ```bash
-cat agentgrunt/gpt_tools/README_ai.md
+cat src/agor/tools/README_ai.md
 ```
 
 ### 3. Clone Target Project
@@ -25,7 +25,7 @@ cd [PROJECT_NAME]
 
 ### 4. Initialize AgentOrchestrator
 - Configure git identity: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@orchestrator.ai`
-- Load code exploration tools from `../agor/agentgrunt/gpt_tools/`
+- Load code exploration tools from `../agor/src/agor/tools/`
 - Start with comprehensive codebase analysis using the `a` command
 
 ### 5. Begin Orchestration
@@ -63,7 +63,7 @@ git clone https://github.com/user/project.git
 
 # Load AGOR and analyze
 cd project
-# Follow the comprehensive instructions in agor/agentgrunt/gpt_tools/README_ai.md
+# Follow the comprehensive instructions in agor/src/agor/tools/README_ai.md
 ```
 
 ### Example 2: Multi-Repository Coordination
@@ -99,7 +99,7 @@ git clone https://github.com/user/shared-lib.git
 agor/
 ├── AGOR_INSTRUCTIONS.md (this file)
 ├── README.md (project overview)
-├── agentgrunt/gpt_tools/
+├── src/agor/tools/
 │   ├── README_ai.md (comprehensive AI instructions)
 │   ├── code_exploration.py (analysis tools)
 │   ├── agent_prompt_templates.py (prompt generators)
@@ -110,10 +110,10 @@ agor/
 
 ## Support and Documentation
 
-- **Full Documentation**: See `agentgrunt/gpt_tools/README_ai.md`
-- **Prompt Templates**: See `agentgrunt/gpt_tools/agent_prompt_templates.py`
-- **Planning Frameworks**: See `agentgrunt/gpt_tools/project_planning_templates.py`
-- **Tool Reference**: See `agentgrunt/gpt_tools/code_exploration_docs.md`
+- **Full Documentation**: See `src/agor/tools/README_ai.md`
+- **Prompt Templates**: See `src/agor/tools/agent_prompt_templates.py`
+- **Planning Frameworks**: See `src/agor/tools/project_planning_templates.py`
+- **Tool Reference**: See `src/agor/tools/code_exploration_docs.md`
 
 ---
 

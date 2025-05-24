@@ -146,12 +146,12 @@ AgentGrunt creates a comprehensive project planning bundle that includes:
 4. **Code exploration utilities** for deep codebase analysis
 5. **Multi-agent coordination templates** for complex project workflows
 
-The [`gpt_tools`](agentgrunt/gpt_tools) folder contains:
-- [`README_ai.md`](agentgrunt/gpt_tools/README_ai.md) - Comprehensive AI instructions with multi-agent capabilities
-- [`code_exploration.py`](agentgrunt/gpt_tools/code_exploration.py) - Advanced code analysis functions
-- [`agent_prompt_templates.py`](agentgrunt/gpt_tools/agent_prompt_templates.py) - Specialized prompt generators
-- [`project_planning_templates.py`](agentgrunt/gpt_tools/project_planning_templates.py) - Project coordination frameworks
-- [`code_exploration_docs.md`](agentgrunt/gpt_tools/code_exploration_docs.md) - Detailed tool documentation
+The [`tools`](src/agor/tools) folder contains:
+- [`README_ai.md`](src/agor/tools/README_ai.md) - Comprehensive AI instructions with multi-agent capabilities
+- [`code_exploration.py`](src/agor/tools/code_exploration.py) - Advanced code analysis functions
+- [`agent_prompt_templates.py`](src/agor/tools/agent_prompt_templates.py) - Specialized prompt generators
+- [`project_planning_templates.py`](src/agor/tools/project_planning_templates.py) - Project coordination frameworks
+- [`code_exploration_docs.md`](src/agor/tools/code_exploration_docs.md) - Detailed tool documentation
 
 This creates a complete project planning environment that can coordinate multiple AI agents working together on complex development tasks.
 

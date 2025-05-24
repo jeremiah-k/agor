@@ -1,53 +1,13 @@
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[project]
-name = "agor"
-version = "1.0.0"
-description = "AgentOrchestrator - Multi-Agent Development Coordination Platform (Enhanced fork of AgentGrunt)"
-authors = [
-  { name = "Jeremiah K. <jeremiahk@gmx.com>" },
-]
-license = "MIT"
-readme = "AGOR_README.md"
-homepage = "https://github.com/jeremiah-k/agor"
-repository = "https://github.com/jeremiah-k/agor"
-keywords = ["ai", "agents", "coordination", "project-planning", "development", "orchestration", "agentgrunt"]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Intended Audience :: Developers",
-  "Topic :: Software Development :: Libraries :: Python Modules",
-  "Topic :: Software Development :: Quality Assurance",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-]
-requires-python = ">=3.11"
-
-dependencies = [
-  "fastapi",
-  "httpx",
-  "plumbum",
-  "pydantic",
-  "pyperclip",
-  "pytest",
-  "tqdm",
-  "typer",
-  "platformdirs (>=4.3.7,<5.0.0)",
-]
-
-[project.scripts]
-agor = "agentgrunt.main:app"
-agentgrunt = "agentgrunt.main:app"  # Backward compatibility
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.trunk]
 enabled = true
 
 [tool.coverage.run]
 branch = true
-source = ["agentgrunt"]
+source = ["src/agor"]
 
 [tool.coverage.report]
 show_missing = true

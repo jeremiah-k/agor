@@ -185,21 +185,21 @@ def bundle(
 
     output_dir = Path(tempfile.mkdtemp())
     output_dir.mkdir(parents=True, exist_ok=True)
-    gpt_tools_dir = Path(__file__).parent / "gpt_tools"
+    tools_dir = Path(__file__).parent / "tools"
 
     # use shutil to move the temp_repo dir into output_dir/project
     project_dir = output_dir / "project"
     move_directory(temp_repo, project_dir)
 
-    # copy all files in gpt_tools to output_dir
-    shutil.copytree(gpt_tools_dir, output_dir / "tools_for_ai")
+    # copy all files in tools to output_dir
+    shutil.copytree(tools_dir, output_dir / "tools_for_ai")
 
     # download the linux git binary, make it executable
     git_binary_url = "https://github.com/nikvdp/1bin/releases/download/v0.0.40/git"
 
     git_cache_dir = (
         Path(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")))
-        / "agentgrunt"
+        / "agor"
         / "git_binary"
     )
     git_cache_dir.mkdir(parents=True, exist_ok=True)

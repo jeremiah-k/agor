@@ -1,4 +1,4 @@
-from agentgrunt.gpt_tools.code_exploration import (
+from agor.tools.code_exploration import (
     extract_curly_brace_function,
     extract_function_content,
     extract_python_function,
