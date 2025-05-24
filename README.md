@@ -75,22 +75,19 @@ Commands:
 To start editing a repo with `agentgrunt` use `agentgrunt`'s `bundle` command:
 
 ```shell
-# Bundle the default branch (current branch for local repos)
-agentgrunt bundle <path-to-your-repo>
+# Bundle all branches (default)
+agor bundle <path-to-your-repo>
 
-# Bundle a specific branch
-agentgrunt bundle <path-to-your-repo> --branch <branch-name>
+# Bundle only main/master branch
+agor bundle <path-to-your-repo> -m
 
-# Bundle multiple specific branches
-agentgrunt bundle <path-to-your-repo> --branches branch1,branch2,branch3
-
-# Bundle all branches
-agentgrunt bundle <path-to-your-repo> --all-branches
+# Bundle main/master plus specific additional branches
+agor bundle <path-to-your-repo> -b feature1,feature2,hotfix
 ```
 
 It will do some work and then print out some instructions. When the process has completed you'll have a new file called `<your-repo-name>.tar.gz` in your current folder.
 
-By default, AgentGrunt bundles only the current branch (for local repos) or the default branch (for remote repos). You can use the branch options to include specific branches or all branches in the bundle, which can be useful when you need to work with multiple branches or want to perform operations across branches.
+By default, AGOR bundles ALL branches from the repository. Use -m to bundle only main/master, or -b to bundle main/master plus specific additional branches.
 
 Now do the following:
 

@@ -11,10 +11,17 @@
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
 pipx install .
+
+# Bundle all branches (default)
 agor bundle /path/to/your/project
 
+# Bundle only main/master
+agor bundle /path/to/your/project -m
+
+# Bundle main/master + specific branches
+agor bundle /path/to/your/project -b feature1,feature2
+
 # Upload the generated .tar.gz file to your AI assistant
-# Use the provided prompt to activate AgentOrchestrator
 ```
 
 ### Standalone Mode (AI Clones Directly)

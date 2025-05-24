@@ -121,14 +121,15 @@ app = typer.Typer(add_completion=False)
 branches_option = typer.Option(
     None,
     "--branches",
-    help="Specify multiple branches to bundle (comma-separated list)",
+    "-b",
+    help="Specify additional branches to bundle with main/master (comma-separated list)",
 )
 
 
 @app.command()
 def bundle(
     src_repo: str = typer.Argument(
-        help="a local git repo or github url to agentgrunt-ify",
+        help="a local git repo or github url to bundle",
         callback=valid_git_repo,
     ),
     preserve_history: bool = typer.Option(
@@ -137,17 +138,11 @@ def bundle(
         "-p",
         help="Preserve the full git history (defaults to shallow clone to save space)",
     ),
-    branch: str = typer.Option(
-        None,
-        "--branch",
-        "-b",
-        help="Specify a single branch to bundle (defaults to the current branch for local repos)",
-    ),
-    all_branches: bool = typer.Option(
+    main_only: bool = typer.Option(
         False,
-        "--all-branches",
-        "-a",
-        help="Bundle all branches from the repository",
+        "--main-only",
+        "-m",
+        help="Bundle only main/master branch",
     ),
     branches: list[str] = branches_option,
     interactive: bool = typer.Option(
@@ -159,9 +154,9 @@ def bundle(
 ):
     """Bundle up a local or remote git repo.
 
-    By default, bundles only the current branch for local repos or the default branch for remote repos.
-    Use --branch to specify a single branch, --branches for multiple specific branches,
-    or --all-branches to include all branches in the repository.
+    By default, bundles ALL branches from the repository.
+    Use -m/--main-only to bundle only main/master branch.
+    Use -b/--branches to bundle main/master plus specified additional branches.
     """
     # clone_url = get_clone_url(src_repo) -- Assigned to but never used
     repo_name = get_clone_url(src_repo).split("/")[-1]
@@ -171,13 +166,22 @@ def bundle(
     if branches:
         branch_list = [b.strip() for b in branches]
 
-    temp_repo = clone_git_repo_to_temp_dir(
-        src_repo,
-        shallow=not preserve_history,
-        branch=branch,
-        all_branches=all_branches,
-        branches=branch_list,
-    )
+    # Determine which branches to clone based on new simplified logic
+    if main_only:
+        print("Bundling only main/master branch")
+        temp_repo = clone_git_repo_to_temp_dir(
+            src_repo, shallow=not preserve_history, main_only=True
+        )
+    elif branch_list:
+        print(f"Bundling main/master plus additional branches: {branch_list}")
+        temp_repo = clone_git_repo_to_temp_dir(
+            src_repo, shallow=not preserve_history, branches=branch_list
+        )
+    else:
+        print("Bundling all branches from the repository (default)")
+        temp_repo = clone_git_repo_to_temp_dir(
+            src_repo, shallow=not preserve_history, all_branches=True
+        )
     print(  # "\033[92m" +
         f"Preparing to build '{repo_name}'..."
         # + "\033[0m"
