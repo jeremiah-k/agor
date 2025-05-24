@@ -1,6 +1,6 @@
 # 🚀 AgentGrunt: Multi-Agent Project Planning & Coordination
 
-> This is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) transformed into a comprehensive project planning and multi-agent coordination tool. Plan complex development projects, design agent teams, and generate specialized prompts for coordinated AI development workflows.
+> A comprehensive project planning and multi-agent coordination platform. Plan complex development projects, design agent teams, and generate specialized prompts for coordinated AI development workflows.
 
 Use with any AI platform that supports file uploads to plan implementations, coordinate multiple AI agents, and manage complex development projects across your entire git repository!
 
@@ -9,6 +9,7 @@ Use with any AI platform that supports file uploads to plan implementations, coo
 AgentGrunt now serves as a comprehensive project planning and multi-agent coordination platform. It bundles your codebase with advanced planning tools, agent coordination templates, and specialized prompt generators into a single file that transforms any AI assistant into a project planning specialist.
 
 Upload the archive to your preferred AI platform, and you'll have access to:
+
 - **Strategic project planning** with task breakdown and dependency mapping
 - **Multi-agent team design** with specialized roles and coordination workflows
 - **Prompt engineering tools** for creating agent-specific instructions
@@ -18,24 +19,28 @@ Upload the archive to your preferred AI platform, and you'll have access to:
 ## Features
 
 ### 🎯 Strategic Planning
+
 - **Project breakdown** into manageable tasks with clear dependencies
 - **Architecture analysis** and implementation planning
 - **Risk assessment** with mitigation strategies
 - **Timeline and resource planning**
 
-### 👥 Multi-Agent Coordination
+### 👥 Team Coordination
+
 - **Team structure design** with specialized agent roles
 - **Workflow orchestration** with handoff procedures
 - **Communication protocols** and synchronization points
 - **Quality gates** and validation checkpoints
 
 ### 📝 Prompt Engineering
+
 - **Specialized agent prompts** for different technical roles
 - **Context-rich handoff prompts** for seamless transitions
 - **Validation prompts** for quality assurance
 - **Integration prompts** for system coordination
 
 ### 🔧 Technical Capabilities
+
 - **Comprehensive codebase analysis** with git integration
 - **Multiple output formats** (full files, changes only, detailed analysis)
 - **Advanced code exploration tools** with language-specific analysis
@@ -52,8 +57,8 @@ Upload the archive to your preferred AI platform, and you'll have access to:
 Once you have those in place, run these to install:
 
 ```shell
-git clone https://github.com/jeremiah-k/agentgrunt.git
-cd agentgrunt
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
 pipx install .
 ```
 
@@ -75,22 +80,19 @@ Commands:
 To start editing a repo with `agentgrunt` use `agentgrunt`'s `bundle` command:
 
 ```shell
-# Bundle the default branch (current branch for local repos)
-agentgrunt bundle <path-to-your-repo>
+# Bundle all branches (default)
+agor bundle <path-to-your-repo>
 
-# Bundle a specific branch
-agentgrunt bundle <path-to-your-repo> --branch <branch-name>
+# Bundle only main/master branch
+agor bundle <path-to-your-repo> -m
 
-# Bundle multiple specific branches
-agentgrunt bundle <path-to-your-repo> --branches branch1,branch2,branch3
-
-# Bundle all branches
-agentgrunt bundle <path-to-your-repo> --all-branches
+# Bundle main/master plus specific additional branches
+agor bundle <path-to-your-repo> -b feature1,feature2,hotfix
 ```
 
 It will do some work and then print out some instructions. When the process has completed you'll have a new file called `<your-repo-name>.tar.gz` in your current folder.
 
-By default, AgentGrunt bundles only the current branch (for local repos) or the default branch (for remote repos). You can use the branch options to include specific branches or all branches in the bundle, which can be useful when you need to work with multiple branches or want to perform operations across branches.
+By default, AGOR bundles ALL branches from the repository. Use -m to bundle only main/master, or -b to bundle main/master plus specific additional branches.
 
 Now do the following:
 
@@ -131,6 +133,7 @@ rb) rollback planning
 Now you can plan complex projects, design agent teams, and coordinate multi-agent development workflows!
 
 When you need to implement the planned changes, use the various display options:
+
 - **`f`** for complete files ready for copy/paste into your IDE
 - **`co`** for focused change summaries
 - **`da`** for detailed analysis that can be handed off to other AI agents
@@ -146,36 +149,41 @@ AgentGrunt creates a comprehensive project planning bundle that includes:
 4. **Code exploration utilities** for deep codebase analysis
 5. **Multi-agent coordination templates** for complex project workflows
 
-The [`gpt_tools`](agentgrunt/gpt_tools) folder contains:
-- [`README_ai.md`](agentgrunt/gpt_tools/README_ai.md) - Comprehensive AI instructions with multi-agent capabilities
-- [`code_exploration.py`](agentgrunt/gpt_tools/code_exploration.py) - Advanced code analysis functions
-- [`agent_prompt_templates.py`](agentgrunt/gpt_tools/agent_prompt_templates.py) - Specialized prompt generators
-- [`project_planning_templates.py`](agentgrunt/gpt_tools/project_planning_templates.py) - Project coordination frameworks
-- [`code_exploration_docs.md`](agentgrunt/gpt_tools/code_exploration_docs.md) - Detailed tool documentation
+The [`tools`](src/agor/tools) folder contains:
+
+- [`README_ai.md`](src/agor/tools/README_ai.md) - Comprehensive AI instructions with multi-agent capabilities
+- [`code_exploration.py`](src/agor/tools/code_exploration.py) - Advanced code analysis functions
+- [`agent_prompt_templates.py`](src/agor/tools/agent_prompt_templates.py) - Specialized prompt generators
+- [`project_planning_templates.py`](src/agor/tools/project_planning_templates.py) - Project coordination frameworks
+- [`code_exploration_docs.md`](src/agor/tools/code_exploration_docs.md) - Detailed tool documentation
 
 This creates a complete project planning environment that can coordinate multiple AI agents working together on complex development tasks.
 
 ## Best Practices
 
 ### 🎯 Project Planning
+
 - **Start with strategic planning** (`sp`) to define clear goals and scope
 - **Break down complex projects** (`bp`) into manageable, coordinated tasks
 - **Analyze dependencies** (`dp`) before assigning work to different agents
 - **Plan quality gates** (`qg`) and validation checkpoints throughout the project
 
 ### 👥 Multi-Agent Coordination
+
 - **Design your team structure** (`ct`) based on project complexity and requirements
 - **Create clear handoff procedures** (`hp`) to ensure smooth agent transitions
 - **Establish communication protocols** (`tc`) for agent coordination
 - **Plan synchronization points** (`sy`) where agents align their progress
 
-### 📝 Prompt Engineering
+### 📝 Advanced Prompt Engineering
+
 - **Use context-rich prompts** (`cp`) that include relevant codebase knowledge
 - **Create specialized prompts** (`gp`) for different agent roles and responsibilities
 - **Design validation prompts** (`vp`) for quality assurance and code review
 - **Plan integration prompts** (`ip`) for system-wide coordination
 
 ### 🔧 Technical Implementation
+
 - **Analyze the codebase thoroughly** (`a`) before planning changes
 - **Use appropriate display formats** (`f`, `co`, `da`) based on your needs
 - **Refresh the context** (`r`) during long planning sessions
@@ -184,18 +192,23 @@ This creates a complete project planning environment that can coordinate multipl
 ## Use Cases
 
 ### 🏗️ Large-Scale Refactoring
+
 Plan and coordinate major codebase refactoring with multiple specialized agents handling different aspects (database, API, frontend, testing).
 
 ### 🚀 Feature Development
+
 Break down complex features into coordinated tasks with clear handoff points between frontend, backend, and testing agents.
 
 ### 🔧 System Integration
+
 Plan integration of new systems or services with specialized agents for different integration points and validation procedures.
 
 ### 📊 Code Quality Improvement
+
 Coordinate comprehensive code quality initiatives with agents focused on different aspects (security, performance, maintainability).
 
 ### 🎯 Technical Debt Reduction
+
 Systematically plan and execute technical debt reduction with coordinated efforts across multiple system components.
 
 ## Future Vision
@@ -203,6 +216,7 @@ Systematically plan and execute technical debt reduction with coordinated effort
 This enhanced AgentGrunt represents a new paradigm in AI-assisted development: **coordinated multi-agent project execution**. As AI agents become more capable and prevalent, the ability to plan, coordinate, and manage teams of specialized AI assistants will become increasingly valuable.
 
 The tool provides a foundation for:
+
 - **Enterprise-scale AI development teams**
 - **Automated project planning and execution**
 - **Quality-assured multi-agent workflows**
@@ -210,23 +224,9 @@ The tool provides a foundation for:
 
 ---
 
-## 🙏 Attribution & License
+## 📄 License
 
-**This project is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+**AgentOrchestrator (AGOR)** is released under the MIT License.
 
-### Original AgentGrunt
-- **Creator**: [@nikvdp](https://github.com/nikvdp)
-- **Repository**: https://github.com/nikvdp/agentgrunt
+- **Repository**: <https://github.com/jeremiah-k/agor>
 - **License**: MIT License
-- **Core Contributions**: Innovative code bundling concept, git integration, basic AI instruction framework
-
-### AgentOrchestrator Enhancements
-- **Enhanced by**: [@jeremiah-k](https://github.com/jeremiah-k)
-- **Repository**: https://github.com/jeremiah-k/agor
-- **License**: MIT License (maintaining original)
-- **Major Additions**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks, dual deployment modes
-
-### Additional Inspiration
-- **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
-
-**We're deeply grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this comprehensive coordination platform possible.**

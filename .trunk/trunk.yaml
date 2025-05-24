@@ -20,6 +20,13 @@ lint:
     - linters: [bandit]
       paths:
         - tests/**/*.py
+        - src/agor/main.py # Subprocess calls are intentional for CLI functionality
+    - linters: [markdownlint]
+      paths:
+        - src/agor/tools/code_exploration_docs.md # Multiple H1s are intentional for tool docs
+        - AGOR_INSTRUCTIONS.md # Trailing punctuation in headings is intentional
+        - src/agor/tools/README_ai.md # Code blocks without language are intentional
+
   enabled:
     - bandit@1.8.3
     - black@25.1.0

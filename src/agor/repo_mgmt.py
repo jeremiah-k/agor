@@ -61,6 +61,7 @@ def clone_git_repo_to_temp_dir(
     branch: str = None,
     all_branches: bool = False,
     branches: list = None,
+    main_only: bool = False,
 ) -> Path:
     is_local = True
     if is_github_url(git_repo):
@@ -82,27 +83,60 @@ def clone_git_repo_to_temp_dir(
     # Clone the git repo to the temporary directory
     clone_command = ["clone"]
 
-    # Handle branch selection
-    if all_branches:
+    # Handle branch selection with new simplified logic
+    if main_only:
+        # Clone only main/master branch
+        if shallow:
+            clone_command.extend(["--depth", "5"])  # TODO: make this configurable
+        # Try to determine main/master branch
+        if is_local:
+            # For local repos, check what the default branch is
+            try:
+                default_branch = (
+                    git["symbolic-ref", "refs/remotes/origin/HEAD"](
+                        cwd=local_repo.resolve()
+                    )
+                    .strip()
+                    .split("/")[-1]
+                )
+            except Exception:
+                # Fallback to common default branches
+                try:
+                    git["show-ref", "--verify", "--quiet", "refs/heads/main"](
+                        cwd=local_repo.resolve()
+                    )
+                    default_branch = "main"
+                except Exception:
+                    default_branch = "master"
+        else:
+            # For remote repos, try to get default branch
+            try:
+                head_ref = git[
+                    "ls-remote", "--symref", get_clone_url(git_repo), "HEAD"
+                ]()
+                default_branch = "main"  # Default fallback
+                for line in head_ref.splitlines():
+                    if "ref:" in line and "HEAD" in line:
+                        parts = line.split()
+                        if len(parts) >= 2:
+                            ref_path = parts[1]
+                            default_branch = ref_path.split("/")[-1]
+                            break
+            except Exception:
+                default_branch = "main"
+
+        print(f"Cloning only main/master branch: {default_branch}")
+        clone_command.extend(["--branch", default_branch])
+    elif branches and len(branches) > 0:
+        # Clone main/master plus additional branches - use all branches approach for simplicity
+        print(f"Cloning main/master plus additional branches: {branches}")
+        clone_command.append("--bare")
+        all_branches = True  # Set flag for later processing
+    elif all_branches:
         # For all branches, we need to fetch everything
         print("Cloning all branches with --bare option")
         # Using --bare instead of --mirror for better compatibility
         clone_command.append("--bare")
-    elif branches and len(branches) > 0:
-        # For multiple specific branches, we'll clone and then fetch each branch
-        print(f"Cloning multiple branches: {branches}")
-        if shallow:
-            clone_command.extend(["--depth", "5"])  # TODO: make this configurable
-        # We'll initially clone the first branch
-        if branches[0]:
-            print(f"Initially cloning branch: {branches[0]}")
-            clone_command.extend(["--branch", branches[0]])
-    elif branch:
-        # For a single specific branch
-        print(f"Cloning single branch: {branch}")
-        if shallow:
-            clone_command.extend(["--depth", "5"])  # TODO: make this configurable
-        clone_command.extend(["--branch", branch])
     elif shallow:
         # Default behavior (current branch for local repos or default branch for remote repos)
         clone_command.extend(["--depth", "5"])  # TODO: make this configurable
