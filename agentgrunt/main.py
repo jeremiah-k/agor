@@ -187,9 +187,9 @@ def bundle(
     output_dir.mkdir(parents=True, exist_ok=True)
     gpt_tools_dir = Path(__file__).parent / "gpt_tools"
 
-    # use shutil to move the temp_repo dir into output_dir/user_code
-    user_code_dir = output_dir / "uc"
-    move_directory(temp_repo, user_code_dir)
+    # use shutil to move the temp_repo dir into output_dir/project
+    project_dir = output_dir / "project"
+    move_directory(temp_repo, project_dir)
 
     # copy all files in gpt_tools to output_dir
     shutil.copytree(gpt_tools_dir, output_dir / "tools_for_ai")
@@ -324,7 +324,7 @@ def custom_instructions(
 
         You have been provided with:
         - a statically compiled `git` binary (in /tmp/tools_for_ai/git)
-        - the user's git repo (in the `/tmp/uc` folder)
+        - the user's git repo (in the `/tmp/project` folder)
         - advanced coordination tools and prompt templates
 
         Before proceeding, please:

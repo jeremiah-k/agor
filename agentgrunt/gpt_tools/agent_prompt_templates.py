@@ -6,34 +6,22 @@ for different types of coding agents in a multi-agent development environment.
 """
 
 def generate_specialist_prompt(role, context, task, handoff_requirements):
-    """Generate a prompt for a specialist agent (frontend, backend, etc.)"""
+    """Generate a focused prompt for a specialist agent"""
     return f"""
-You are a {role} specialist agent working as part of a coordinated development team.
+You are a {role} specialist in a coordinated development team.
 
-CONTEXT:
-{context}
+CONTEXT: {context}
+TASK: {task}
 
-YOUR SPECIFIC TASK:
-{task}
-
-HANDOFF REQUIREMENTS:
-When you complete your work, you must provide:
+DELIVERABLES:
 {handoff_requirements}
 
-WORKING GUIDELINES:
-- Focus exclusively on {role} concerns and best practices
-- Ensure your output integrates seamlessly with other team members' work
-- Follow established coding standards and patterns from the existing codebase
-- Document any assumptions or decisions that affect other team members
-- If you encounter issues outside your specialty, clearly flag them for appropriate team members
+FORMAT:
+- Complete working code with comments
+- List dependencies for other agents
+- Flag any issues outside your specialty
 
-DELIVERABLES FORMAT:
-- Provide complete, working code with all formatting preserved
-- Include clear comments explaining your implementation decisions
-- List any dependencies or requirements for other team members
-- Specify any testing or validation steps needed
-
-Remember: You are part of a team. Your success depends on clear communication and seamless integration with other agents' work.
+Focus on {role} best practices and seamless team integration.
 """
 
 def generate_handoff_prompt(from_agent, to_agent, work_completed, next_tasks, context):
@@ -41,207 +29,183 @@ def generate_handoff_prompt(from_agent, to_agent, work_completed, next_tasks, co
     return f"""
 AGENT HANDOFF: {from_agent} → {to_agent}
 
-WORK COMPLETED BY {from_agent.upper()}:
+COMPLETED WORK:
 {work_completed}
 
-CONTEXT FOR {to_agent.upper()}:
-{context}
-
-YOUR TASKS AS {to_agent.upper()}:
+YOUR TASKS:
 {next_tasks}
 
-HANDOFF ARTIFACTS:
-The previous agent has provided you with the following deliverables. Review them carefully before proceeding:
-- Code files (complete and ready for your modifications)
-- Documentation of decisions made
-- List of dependencies and requirements
-- Any issues or concerns flagged for your attention
+CONTEXT:
+{context}
 
-INTEGRATION REQUIREMENTS:
-- Build upon the previous agent's work without breaking existing functionality
-- Maintain consistency with established patterns and conventions
-- Validate that your changes work correctly with the provided code
-- Document any modifications or extensions you make
+REQUIREMENTS:
+- Review all provided materials first
+- Build upon previous work without breaking functionality
+- Document your changes and decisions
+- Prepare handoff materials for next agent
 
-COMMUNICATION:
-- Acknowledge receipt of handoff materials
-- Report any issues with the provided work immediately
-- Clearly document your additions and changes
-- Prepare clear handoff materials for the next agent in the workflow
-
-Begin by reviewing all provided materials, then proceed with your assigned tasks.
+ACKNOWLEDGE: Confirm receipt and report any issues immediately.
 """
 
 def generate_validation_prompt(code_to_review, validation_criteria, context):
     """Generate a prompt for code review and validation agents"""
     return f"""
-You are a Code Validation Agent responsible for ensuring quality and correctness.
-
-CONTEXT:
-{context}
+You are a Code Validation Agent.
 
 CODE TO REVIEW:
 {code_to_review}
 
-VALIDATION CRITERIA:
+CRITERIA:
 {validation_criteria}
 
-YOUR RESPONSIBILITIES:
-1. **Code Quality Review**:
-   - Check for adherence to coding standards and best practices
-   - Verify proper error handling and edge case coverage
-   - Ensure code is readable, maintainable, and well-documented
-   - Validate that naming conventions are consistent and meaningful
+CONTEXT:
+{context}
 
-2. **Functional Validation**:
-   - Verify that code meets specified requirements
-   - Check for logical errors or potential bugs
-   - Ensure proper integration with existing codebase
-   - Validate that all dependencies are properly handled
+CHECK:
+- Code quality and standards compliance
+- Functional correctness and requirements
+- Security vulnerabilities
+- Performance considerations
 
-3. **Security Assessment**:
-   - Identify potential security vulnerabilities
-   - Check for proper input validation and sanitization
-   - Verify secure handling of sensitive data
-   - Ensure authentication and authorization are properly implemented
-
-4. **Performance Considerations**:
-   - Identify potential performance bottlenecks
-   - Check for efficient algorithms and data structures
-   - Verify proper resource management
-   - Suggest optimizations where appropriate
-
-DELIVERABLES:
-- Detailed review report with specific findings
-- List of required fixes (if any) with clear explanations
-- Recommendations for improvements
-- Approval status (APPROVED / NEEDS_REVISION / REJECTED)
-
-If you find issues, provide specific, actionable feedback that the development agents can use to make corrections.
+DELIVER:
+- Review report with specific findings
+- Required fixes with explanations
+- Status: APPROVED / NEEDS_REVISION / REJECTED
 """
 
 def generate_integration_prompt(components, integration_requirements, context):
     """Generate a prompt for system integration agents"""
     return f"""
-You are a System Integration Agent responsible for ensuring all components work together seamlessly.
+You are a System Integration Agent.
+
+COMPONENTS:
+{components}
+
+REQUIREMENTS:
+{integration_requirements}
 
 CONTEXT:
 {context}
 
-COMPONENTS TO INTEGRATE:
-{components}
+TASKS:
+- Verify component compatibility and interfaces
+- Design and implement integration tests
+- Ensure proper data flow and communication
+- Validate deployment readiness
 
-INTEGRATION REQUIREMENTS:
-{integration_requirements}
-
-YOUR RESPONSIBILITIES:
-1. **Component Compatibility**:
-   - Verify that all components have compatible interfaces
-   - Check for version conflicts and dependency issues
-   - Ensure proper data flow between components
-   - Validate that communication protocols are correctly implemented
-
-2. **System Architecture**:
-   - Verify that the overall system architecture is sound
-   - Check for proper separation of concerns
-   - Ensure scalability and maintainability
-   - Validate that design patterns are consistently applied
-
-3. **Integration Testing**:
-   - Design and implement integration tests
-   - Verify end-to-end functionality
-   - Test error handling across component boundaries
-   - Validate performance under realistic conditions
-
-4. **Deployment Readiness**:
-   - Ensure all components are properly configured
-   - Verify that deployment scripts and configurations are correct
-   - Check for proper environment variable handling
-   - Validate that monitoring and logging are properly implemented
-
-DELIVERABLES:
-- Integration test suite with comprehensive coverage
-- Deployment configuration and scripts
-- Documentation of integration points and dependencies
-- Performance benchmarks and optimization recommendations
-- Go/no-go recommendation for deployment
-
-Focus on creating a robust, reliable system that can be confidently deployed to production.
+DELIVER:
+- Integration test suite
+- Deployment configuration
+- Performance benchmarks
+- Go/no-go recommendation
 """
 
 def generate_project_coordinator_prompt(project_overview, team_structure, current_phase):
     """Generate a prompt for project coordination agents"""
     return f"""
-You are a Project Coordination Agent responsible for orchestrating the entire development effort.
+You are a Project Coordination Agent.
 
-PROJECT OVERVIEW:
+PROJECT:
 {project_overview}
 
-TEAM STRUCTURE:
+TEAM:
 {team_structure}
 
-CURRENT PHASE:
+PHASE:
 {current_phase}
 
-YOUR RESPONSIBILITIES:
-1. **Team Coordination**:
-   - Monitor progress across all team members
-   - Identify and resolve blockers and dependencies
-   - Ensure clear communication between agents
-   - Coordinate handoffs and synchronization points
+RESPONSIBILITIES:
+- Monitor team progress and resolve blockers
+- Coordinate handoffs and synchronization
+- Ensure quality standards and code reviews
+- Manage risks and timeline
 
-2. **Quality Assurance**:
-   - Ensure all deliverables meet quality standards
-   - Coordinate code reviews and validation activities
-   - Monitor adherence to project standards and conventions
-   - Escalate quality issues that require attention
-
-3. **Risk Management**:
-   - Identify potential risks and issues early
-   - Coordinate mitigation strategies
-   - Monitor project timeline and resource allocation
-   - Communicate status and issues to stakeholders
-
-4. **Process Optimization**:
-   - Identify opportunities to improve team efficiency
-   - Suggest process improvements and optimizations
-   - Ensure best practices are followed consistently
-   - Facilitate knowledge sharing between team members
-
-DELIVERABLES:
-- Regular status reports with progress updates
+DELIVER:
+- Status reports and progress updates
 - Risk assessment and mitigation plans
-- Process improvement recommendations
-- Final project summary with lessons learned
-
-Your success is measured by the team's ability to deliver high-quality results on time and within scope.
+- Process improvements
+- Final project summary
 """
 
 def generate_context_prompt(codebase_analysis, project_goals, constraints):
     """Generate a context-rich prompt that includes codebase knowledge"""
     return f"""
-CODEBASE CONTEXT:
+CODEBASE:
 {codebase_analysis}
 
-PROJECT GOALS:
+GOALS:
 {project_goals}
 
-CONSTRAINTS AND REQUIREMENTS:
+CONSTRAINTS:
 {constraints}
 
-This context should be included in all agent prompts to ensure consistency and alignment with project objectives.
-
-KEY PATTERNS AND CONVENTIONS:
-- Follow existing code patterns and architectural decisions
-- Maintain consistency with established naming conventions
-- Respect existing error handling and logging patterns
-- Ensure compatibility with current dependencies and frameworks
-
-INTEGRATION POINTS:
-- Identify how your work connects with existing systems
-- Understand data flow and communication patterns
-- Respect existing API contracts and interfaces
+GUIDELINES:
+- Follow existing patterns and conventions
+- Respect API contracts and interfaces
+- Maintain system integrity and consistency
 - Consider impact on existing functionality
+"""
 
-Remember: Every change should enhance the system while maintaining its integrity and consistency.
+# DETAILED EXAMPLES FOR AGENT COORDINATION
+
+def get_example_handoff():
+    """Example of proper agent handoff format"""
+    return """
+EXAMPLE HANDOFF:
+
+AGENT HANDOFF: Backend Developer → Frontend Developer
+
+COMPLETED WORK:
+- Created user authentication API at /api/auth/login
+- Implemented JWT token generation and validation
+- Added user model with email/password fields
+- Database migrations completed
+- Files: src/auth/routes.py, src/models/user.py, migrations/001_users.sql
+
+FOR NEXT AGENT:
+- Create login form component
+- Implement token storage and management
+- Add authentication state to app
+- Handle login/logout user flows
+
+CONTEXT:
+- API returns {"token": "jwt_string", "user": {"id": 1, "email": "user@example.com"}}
+- Token expires in 24 hours
+- Use Authorization: Bearer <token> header for authenticated requests
+
+VALIDATION:
+- Test login form with valid/invalid credentials
+- Verify token persistence across browser sessions
+- Confirm protected routes redirect to login when unauthenticated
+"""
+
+def get_example_specialist_roles():
+    """Examples of specialist agent roles and responsibilities"""
+    return """
+SPECIALIST ROLE EXAMPLES:
+
+**BACKEND DEVELOPER:**
+- APIs, business logic, database integration
+- Delivers: API endpoints, data models, service layers
+- Handoff to: Frontend (API specs), Tester (test data)
+
+**FRONTEND DEVELOPER:**
+- UI components, user experience, API integration
+- Delivers: React components, state management, user flows
+- Handoff to: Tester (UI tests), DevOps (build artifacts)
+
+**TESTER:**
+- Test creation, validation, quality assurance
+- Delivers: Test suites, coverage reports, bug reports
+- Handoff to: Developer (fixes needed), DevOps (test automation)
+
+**DEVOPS:**
+- Deployment, infrastructure, monitoring
+- Delivers: CI/CD pipelines, deployment configs, monitoring setup
+- Handoff to: Team (deployment process), Reviewer (security audit)
+
+**REVIEWER:**
+- Code quality, security, performance optimization
+- Delivers: Review reports, approval status, improvement recommendations
+- Handoff to: Developer (fixes), Coordinator (approval for next phase)
 """
