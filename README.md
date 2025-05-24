@@ -1,107 +1,87 @@
-# 🚀 AgentGrunt: Multi-Agent Project Planning & Coordination
+# 🎼 AgentOrchestrator (AGOR)
 
-> A comprehensive project planning and multi-agent coordination platform. Plan complex development projects, design agent teams, and generate specialized prompts for coordinated AI development workflows.
+## Multi-Agent Development Coordination Platform
 
-Use with any AI platform that supports file uploads to plan implementations, coordinate multiple AI agents, and manage complex development projects across your entire git repository!
+> Transform any AI assistant into a sophisticated project planning and multi-agent coordination specialist. Plan complex development projects, design agent teams, and orchestrate coordinated AI development workflows.
 
-## Overview
+AGOR runs on Linux, macOS, and Windows.
 
-AgentGrunt now serves as a comprehensive project planning and multi-agent coordination platform. It bundles your codebase with advanced planning tools, agent coordination templates, and specialized prompt generators into a single file that transforms any AI assistant into a project planning specialist.
+## 🚀 Quick Start
 
-Upload the archive to your preferred AI platform, and you'll have access to:
+### Standalone Mode (Recommended)
 
-- **Strategic project planning** with task breakdown and dependency mapping
-- **Multi-agent team design** with specialized roles and coordination workflows
-- **Prompt engineering tools** for creating agent-specific instructions
-- **Quality assurance planning** with validation checkpoints and review processes
-- **Full codebase analysis** with implementation planning and risk assessment
+```bash
+# Install using pipx for isolated installation (recommended)
+pipx install agor
 
-## Features
+# AI agents can also clone and use directly
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
 
-### 🎯 Strategic Planning
+# Follow instructions in AGOR_INSTRUCTIONS.md
+# Load tools and coordinate your development project
+```
 
-- **Project breakdown** into manageable tasks with clear dependencies
+### Bundle Mode (Upload to AI)
+
+```bash
+# Install and bundle your project
+pipx install agor
+
+# Bundle all branches (default)
+agor bundle /path/to/your/project
+
+# Bundle only main/master
+agor bundle /path/to/your/project -m
+
+# Bundle main/master + specific branches
+agor bundle /path/to/your/project -b feature1,feature2
+
+# Upload the generated .tar.gz file to your AI assistant
+```
+
+## 🎯 Core Capabilities
+
+### Strategic Planning
+
+- **Project breakdown** into manageable, coordinated tasks
 - **Architecture analysis** and implementation planning
 - **Risk assessment** with mitigation strategies
-- **Timeline and resource planning**
+- **Dependency mapping** and execution sequencing
 
-### 👥 Team Coordination
+### Multi-Agent Coordination
 
 - **Team structure design** with specialized agent roles
 - **Workflow orchestration** with handoff procedures
 - **Communication protocols** and synchronization points
 - **Quality gates** and validation checkpoints
 
-### 📝 Prompt Engineering
+### Prompt Engineering
 
 - **Specialized agent prompts** for different technical roles
 - **Context-rich handoff prompts** for seamless transitions
 - **Validation prompts** for quality assurance
 - **Integration prompts** for system coordination
 
-### 🔧 Technical Capabilities
+### Advanced Analysis
 
 - **Comprehensive codebase analysis** with git integration
 - **Multiple output formats** (full files, changes only, detailed analysis)
-- **Advanced code exploration tools** with language-specific analysis
-- **Built-in hotkey menu** for efficient navigation
+- **Language-specific code exploration** tools
+- **Memory persistence** across sessions
 
-## Installation
+## 🎼 The Orchestration Metaphor
 
-### Prerequisites
+Like a conductor leading a symphony orchestra, AgentOrchestrator coordinates multiple AI agents, each with specialized skills, to create harmonious development workflows:
 
-- a valid ChatGPT Plus subscription and Code Interpreter enabled in ChatGPT's settings
-- a working installation of python 3.9 (or newer)
-- a git repository that you'd like Code Interpreter to work on with you
+- **🎻 Frontend Agents** - User interface specialists
+- **🎺 Backend Agents** - Server-side logic experts
+- **🥁 Database Agents** - Data architecture specialists
+- **🎹 Testing Agents** - Quality assurance focused
+- **🎸 DevOps Agents** - Deployment and infrastructure
+- **🎤 Integration Agents** - System coordination
 
-Once you have those in place, run these to install:
-
-```shell
-git clone https://github.com/jeremiah-k/agor.git
-cd agor
-pipx install .
-```
-
-If all goes well running `agentgrunt --help` will output something like this:
-
-```text
-Usage: agentgrunt [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  bundle               Bundle up a local or remote git repo
-  custom-instructions  Copy ChatGPT custom instructions to the clipboard
-```
-
-## Usage
-
-To start editing a repo with `agentgrunt` use `agentgrunt`'s `bundle` command:
-
-```shell
-# Bundle all branches (default)
-agor bundle <path-to-your-repo>
-
-# Bundle only main/master branch
-agor bundle <path-to-your-repo> -m
-
-# Bundle main/master plus specific additional branches
-agor bundle <path-to-your-repo> -b feature1,feature2,hotfix
-```
-
-It will do some work and then print out some instructions. When the process has completed you'll have a new file called `<your-repo-name>.tar.gz` in your current folder.
-
-By default, AGOR bundles ALL branches from the repository. Use -m to bundle only main/master, or -b to bundle main/master plus specific additional branches.
-
-Now do the following:
-
-- Copy the short prompt `agentgrunt` prints out to the clipboard (or just say `y` when prompted if on macOS)
-- Open up ChatGPT and start a new chat in Code Interpreter mode
-- Use the + button to upload the `<your-repo-name>.tar.gz` file AgentGrunt generated
-- Paste the prompt you copied a second ago into the chatbox and press send
-
-You'll see your AI assistant transform into a project planning specialist with a comprehensive hotkey menu organized into categories:
+## 📋 Comprehensive Hotkey Menu
 
 ```text
 📊 Analysis & Display:
@@ -130,97 +110,93 @@ sy) sync points        qg) quality gates
 rb) rollback planning
 ```
 
-Now you can plan complex projects, design agent teams, and coordinate multi-agent development workflows!
+## 🏗️ Use Cases
 
-When you need to implement the planned changes, use the various display options:
+### Large-Scale Refactoring
 
-- **`f`** for complete files ready for copy/paste into your IDE
-- **`co`** for focused change summaries
-- **`da`** for detailed analysis that can be handed off to other AI agents
-- **Agent prompts** for coordinating multiple AI assistants on complex projects
+Coordinate multiple specialized agents for database, API, frontend, and testing aspects of major codebase refactoring.
 
-## How it works
-
-AgentGrunt creates a comprehensive project planning bundle that includes:
-
-1. **Your complete codebase** with git history and branch information
-2. **Advanced planning tools** including project templates and coordination frameworks
-3. **Specialized prompt generators** for different types of AI agents
-4. **Code exploration utilities** for deep codebase analysis
-5. **Multi-agent coordination templates** for complex project workflows
-
-The [`tools`](src/agor/tools) folder contains:
-
-- [`README_ai.md`](src/agor/tools/README_ai.md) - Comprehensive AI instructions with multi-agent capabilities
-- [`code_exploration.py`](src/agor/tools/code_exploration.py) - Advanced code analysis functions
-- [`agent_prompt_templates.py`](src/agor/tools/agent_prompt_templates.py) - Specialized prompt generators
-- [`project_planning_templates.py`](src/agor/tools/project_planning_templates.py) - Project coordination frameworks
-- [`code_exploration_docs.md`](src/agor/tools/code_exploration_docs.md) - Detailed tool documentation
-
-This creates a complete project planning environment that can coordinate multiple AI agents working together on complex development tasks.
-
-## Best Practices
-
-### 🎯 Project Planning
-
-- **Start with strategic planning** (`sp`) to define clear goals and scope
-- **Break down complex projects** (`bp`) into manageable, coordinated tasks
-- **Analyze dependencies** (`dp`) before assigning work to different agents
-- **Plan quality gates** (`qg`) and validation checkpoints throughout the project
-
-### 👥 Multi-Agent Coordination
-
-- **Design your team structure** (`ct`) based on project complexity and requirements
-- **Create clear handoff procedures** (`hp`) to ensure smooth agent transitions
-- **Establish communication protocols** (`tc`) for agent coordination
-- **Plan synchronization points** (`sy`) where agents align their progress
-
-### 📝 Advanced Prompt Engineering
-
-- **Use context-rich prompts** (`cp`) that include relevant codebase knowledge
-- **Create specialized prompts** (`gp`) for different agent roles and responsibilities
-- **Design validation prompts** (`vp`) for quality assurance and code review
-- **Plan integration prompts** (`ip`) for system-wide coordination
-
-### 🔧 Technical Implementation
-
-- **Analyze the codebase thoroughly** (`a`) before planning changes
-- **Use appropriate display formats** (`f`, `co`, `da`) based on your needs
-- **Refresh the context** (`r`) during long planning sessions
-- **Document decisions and rationale** for future reference
-
-## Use Cases
-
-### 🏗️ Large-Scale Refactoring
-
-Plan and coordinate major codebase refactoring with multiple specialized agents handling different aspects (database, API, frontend, testing).
-
-### 🚀 Feature Development
+### Feature Development
 
 Break down complex features into coordinated tasks with clear handoff points between frontend, backend, and testing agents.
 
-### 🔧 System Integration
+### System Integration
 
-Plan integration of new systems or services with specialized agents for different integration points and validation procedures.
+Plan integration of new systems with specialized agents for different integration points and validation procedures.
 
-### 📊 Code Quality Improvement
+### Code Quality Initiatives
 
-Coordinate comprehensive code quality initiatives with agents focused on different aspects (security, performance, maintainability).
+Coordinate comprehensive quality improvements with agents focused on security, performance, and maintainability.
 
-### 🎯 Technical Debt Reduction
+### Technical Debt Reduction
 
-Systematically plan and execute technical debt reduction with coordinated efforts across multiple system components.
+Systematically plan and execute technical debt reduction across multiple system components.
 
-## Future Vision
+## 🔮 Future Vision
 
-This enhanced AgentGrunt represents a new paradigm in AI-assisted development: **coordinated multi-agent project execution**. As AI agents become more capable and prevalent, the ability to plan, coordinate, and manage teams of specialized AI assistants will become increasingly valuable.
+AgentOrchestrator represents a new paradigm: **coordinated multi-agent project execution**. As AI agents become more capable, the ability to plan, coordinate, and manage teams of specialized AI assistants becomes increasingly valuable.
 
-The tool provides a foundation for:
+Foundation for:
 
 - **Enterprise-scale AI development teams**
 - **Automated project planning and execution**
 - **Quality-assured multi-agent workflows**
 - **Scalable development process automation**
+
+## 🛠️ Installation
+
+### Regular Installation
+
+```bash
+# Install using pipx for isolated installation (recommended)
+pipx install agor
+```
+
+### Development Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
+
+# Install in development mode (use --force when testing changes)
+pipx install -e . --force
+```
+
+### Alternative Installation Methods
+
+```bash
+# Using pip (not recommended for regular use)
+pip install agor
+
+# From source
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
+pip install .
+```
+
+## 📁 Project Structure
+
+```text
+agor/
+├── README.md (this file)
+├── AGOR_INSTRUCTIONS.md (standalone mode guide)
+├── src/agor/
+│   ├── main.py (CLI tool)
+│   └── tools/
+│       ├── README_ai.md (comprehensive AI instructions)
+│       ├── code_exploration.py (analysis tools)
+│       ├── agent_prompt_templates.py (prompt generators)
+│       ├── project_planning_templates.py (coordination frameworks)
+│       └── code_exploration_docs.md (tool documentation)
+└── [configuration files]
+```
+
+## 📖 Documentation
+
+- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Standalone mode setup
+- **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI instructions
+- **[src/agor/tools/code_exploration_docs.md](src/agor/tools/code_exploration_docs.md)** - Tool reference
 
 ---
 
@@ -230,3 +206,7 @@ The tool provides a foundation for:
 
 - **Repository**: <https://github.com/jeremiah-k/agor>
 - **License**: MIT License
+
+---
+
+**Ready to orchestrate your development project? Choose your deployment mode and begin coordinating!**
