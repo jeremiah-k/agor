@@ -13,6 +13,7 @@ import pyperclip
 import typer
 from plumbum import local
 
+from . import __version__
 from .repo_mgmt import clone_git_repo_to_temp_dir, get_clone_url, valid_git_repo
 from .utils import create_tarball, download_file, move_directory
 
@@ -115,6 +116,12 @@ def copy_to_clipboard(text):
 
 
 app = typer.Typer(add_completion=False)
+
+
+@app.command()
+def version():
+    """Display AGOR version information"""
+    print(f"AgentOrchestrator (AGOR) v{__version__}")
 
 
 # Define option for branches outside the function to avoid B008 warning
