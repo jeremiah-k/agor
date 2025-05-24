@@ -18,7 +18,7 @@ else:
         __version__ = pkg_resources.get_distribution("agor").version
     except pkg_resources.DistributionNotFound:
         # If all else fails, use hardcoded version
-        __version__ = "0.1.0"
+        __version__ = "0.1.1"
 
 __author__ = "Jeremiah K."
 __email__ = "jeremiahk@gmx.com"
