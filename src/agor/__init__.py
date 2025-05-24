@@ -16,11 +16,13 @@ else:
     try:
         # Try modern importlib.metadata first (Python 3.8+)
         from importlib.metadata import version
+
         __version__ = version("agor")
     except ImportError:
         # Fall back to pkg_resources for older Python versions
         try:
             import pkg_resources
+
             __version__ = pkg_resources.get_distribution("agor").version
         except (ImportError, pkg_resources.DistributionNotFound):
             # If all else fails, use hardcoded version

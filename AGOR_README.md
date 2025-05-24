@@ -193,8 +193,6 @@ agor/
 └── [configuration files]
 ```
 
-
-
 ## 📖 Documentation
 
 - **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Standalone mode setup

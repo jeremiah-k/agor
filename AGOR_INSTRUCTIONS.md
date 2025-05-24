@@ -24,11 +24,13 @@ cd agor
 ### 2. Load the Instructions
 
 **If you installed from PyPI:**
+
 - The tools are available as part of the installed package
 - Use `agor --help` to see available commands
 - Access tools documentation through the package
 
 **If you cloned the repository:**
+
 ```bash
 cat src/agor/tools/README_ai.md
 ```
