@@ -1,7 +1,5 @@
 # AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform
 
-*Enhanced fork of the original AgentGrunt by [@nikvdp](https://github.com/nikvdp/agentgrunt)*
-
 **DEPLOYMENT MODE DETECTION:**
 First, determine your deployment mode:
 

@@ -154,26 +154,12 @@ pipx install .
 
 ---
 
-## 🙏 Attribution & License
+## 📄 License
 
-**AgentOrchestrator** is a comprehensive enhancement and evolution of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) project created by [@nikvdp](https://github.com/nikvdp).
+**AgentOrchestrator (AGOR)** is released under the MIT License.
 
-### Original Project
-- **AgentGrunt** by [@nikvdp](https://github.com/nikvdp) - The foundational concept and implementation
-- **License**: MIT License
-- **Repository**: https://github.com/nikvdp/agentgrunt
-
-### This Enhancement
-- **AgentOrchestrator (AGOR)** by [@jeremiah-k](https://github.com/jeremiah-k)
-- **Enhancements**: Multi-agent coordination, project planning, dual deployment modes
-- **License**: MIT License (maintaining original license)
 - **Repository**: https://github.com/jeremiah-k/agor
-
-### Key Contributions
-- **Original AgentGrunt**: Code bundling, git integration, basic AI instructions
-- **AgentOrchestrator**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks
-
-We're grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this enhanced coordination platform possible.
+- **License**: MIT License
 
 ---
 

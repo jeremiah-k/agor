@@ -8,7 +8,6 @@ version = "1.0.0"
 description = "AgentOrchestrator - Multi-Agent Development Coordination Platform (Enhanced fork of AgentGrunt)"
 authors = [
   { name = "Jeremiah K. <jeremiahk@gmx.com>" },
-  { name = "Nik V <github@nikvdp.com>" },
 ]
 license = "MIT"
 readme = "AGOR_README.md"

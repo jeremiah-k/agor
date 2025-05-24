@@ -1,6 +1,6 @@
 # 🚀 AgentGrunt: Multi-Agent Project Planning & Coordination
 
-> This is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) transformed into a comprehensive project planning and multi-agent coordination tool. Plan complex development projects, design agent teams, and generate specialized prompts for coordinated AI development workflows.
+> A comprehensive project planning and multi-agent coordination platform. Plan complex development projects, design agent teams, and generate specialized prompts for coordinated AI development workflows.
 
 Use with any AI platform that supports file uploads to plan implementations, coordinate multiple AI agents, and manage complex development projects across your entire git repository!
 
@@ -52,8 +52,8 @@ Upload the archive to your preferred AI platform, and you'll have access to:
 Once you have those in place, run these to install:
 
 ```shell
-git clone https://github.com/jeremiah-k/agentgrunt.git
-cd agentgrunt
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
 pipx install .
 ```
 
@@ -210,23 +210,9 @@ The tool provides a foundation for:
 
 ---
 
-## 🙏 Attribution & License
+## 📄 License
 
-**This project is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+**AgentOrchestrator (AGOR)** is released under the MIT License.
 
-### Original AgentGrunt
-- **Creator**: [@nikvdp](https://github.com/nikvdp)
-- **Repository**: https://github.com/nikvdp/agentgrunt
-- **License**: MIT License
-- **Core Contributions**: Innovative code bundling concept, git integration, basic AI instruction framework
-
-### AgentOrchestrator Enhancements
-- **Enhanced by**: [@jeremiah-k](https://github.com/jeremiah-k)
 - **Repository**: https://github.com/jeremiah-k/agor
-- **License**: MIT License (maintaining original)
-- **Major Additions**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks, dual deployment modes
-
-### Additional Inspiration
-- **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
-
-**We're deeply grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this comprehensive coordination platform possible.**
+- **License**: MIT License
