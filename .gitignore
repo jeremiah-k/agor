@@ -3,4 +3,8 @@ git
 .DS_*
 *.tar.gz
 dist/
+build/
+*.egg-info/
 .vscode/
+.coverage
+htmlcov/
