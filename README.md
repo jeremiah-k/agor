@@ -220,20 +220,18 @@ agor/
 - **Creator**: [@nikvdp](https://github.com/nikvdp) (Nik V)
 - **Repository**: <https://github.com/nikvdp/agentgrunt>
 - **License**: MIT License
-- **Core Contributions**: Innovative code bundling concept, git integration, basic AI instruction framework
+- **Core Contributions**: Code bundling concept, git integration, AI instruction framework
 
 ### AgentOrchestrator Enhancements
 
 - **Enhanced by**: [@jeremiah-k](https://github.com/jeremiah-k) (Jeremiah K)
 - **Repository**: <https://github.com/jeremiah-k/agor>
-- **License**: MIT License (maintaining original)
-- **Major Additions**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks, dual deployment modes
+- **License**: MIT License
+- **Additions**: Multi-agent coordination, strategic planning, prompt engineering, dual deployment modes
 
 ### Additional Inspiration
 
-- **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
-
-**We're deeply grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this comprehensive coordination platform possible.**
+- **[@NickADobos](https://twitter.com/NickADobos)** - "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept
 
 ---
 
