@@ -1,4 +1,5 @@
 # 🎼 AgentOrchestrator (AGOR)
+
 ## Multi-Agent Development Coordination Platform
 
 > Transform any AI assistant into a sophisticated project planning and multi-agent coordination specialist. Plan complex development projects, design agent teams, and orchestrate coordinated AI development workflows.
@@ -6,6 +7,7 @@
 ## 🚀 Quick Start
 
 ### Bundle Mode (Upload to AI)
+
 ```bash
 # Install and bundle your project
 git clone https://github.com/jeremiah-k/agor.git
@@ -25,6 +27,7 @@ agor bundle /path/to/your/project -b feature1,feature2
 ```
 
 ### Standalone Mode (AI Clones Directly)
+
 ```bash
 # AI agents can clone and use directly
 git clone https://github.com/jeremiah-k/agor.git
@@ -37,24 +40,28 @@ cd agor
 ## 🎯 Core Capabilities
 
 ### Strategic Planning
+
 - **Project breakdown** into manageable, coordinated tasks
 - **Architecture analysis** and implementation planning
 - **Risk assessment** with mitigation strategies
 - **Dependency mapping** and execution sequencing
 
 ### Multi-Agent Coordination
+
 - **Team structure design** with specialized agent roles
 - **Workflow orchestration** with handoff procedures
 - **Communication protocols** and synchronization points
 - **Quality gates** and validation checkpoints
 
 ### Prompt Engineering
+
 - **Specialized agent prompts** for different technical roles
 - **Context-rich handoff prompts** for seamless transitions
 - **Validation prompts** for quality assurance
 - **Integration prompts** for system coordination
 
 ### Advanced Analysis
+
 - **Comprehensive codebase analysis** with git integration
 - **Multiple output formats** (full files, changes only, detailed analysis)
 - **Language-specific code exploration** tools
@@ -73,7 +80,7 @@ Like a conductor leading a symphony orchestra, AgentOrchestrator coordinates mul
 
 ## 📋 Comprehensive Hotkey Menu
 
-```
+```text
 📊 Analysis & Display:
 a ) analyze codebase    f ) display full edited files
 co) show changes only   da) detailed analysis for handoff
@@ -103,18 +110,23 @@ rb) rollback planning
 ## 🏗️ Use Cases
 
 ### Large-Scale Refactoring
+
 Coordinate multiple specialized agents for database, API, frontend, and testing aspects of major codebase refactoring.
 
 ### Feature Development
+
 Break down complex features into coordinated tasks with clear handoff points between frontend, backend, and testing agents.
 
 ### System Integration
+
 Plan integration of new systems with specialized agents for different integration points and validation procedures.
 
 ### Code Quality Initiatives
+
 Coordinate comprehensive quality improvements with agents focused on security, performance, and maintainability.
 
 ### Technical Debt Reduction
+
 Systematically plan and execute technical debt reduction across multiple system components.
 
 ## 🔮 Future Vision
@@ -122,6 +134,7 @@ Systematically plan and execute technical debt reduction across multiple system 
 AgentOrchestrator represents a new paradigm: **coordinated multi-agent project execution**. As AI agents become more capable, the ability to plan, coordinate, and manage teams of specialized AI assistants becomes increasingly valuable.
 
 Foundation for:
+
 - **Enterprise-scale AI development teams**
 - **Automated project planning and execution**
 - **Quality-assured multi-agent workflows**
@@ -129,7 +142,7 @@ Foundation for:
 
 ## 📁 Project Structure
 
-```
+```text
 agor/
 ├── AGOR_README.md (this file)
 ├── AGOR_INSTRUCTIONS.md (standalone mode guide)
@@ -165,7 +178,7 @@ pipx install .
 
 **AgentOrchestrator (AGOR)** is released under the MIT License.
 
-- **Repository**: https://github.com/jeremiah-k/agor
+- **Repository**: <https://github.com/jeremiah-k/agor>
 - **License**: MIT License
 
 ---

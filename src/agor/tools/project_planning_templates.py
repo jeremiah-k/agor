@@ -5,6 +5,7 @@ This module contains templates and utilities for planning complex development
 projects that will be executed by teams of specialized AI agents.
 """
 
+
 def generate_project_breakdown_template():
     """Template for breaking down large projects into manageable tasks"""
     return """
@@ -61,6 +62,7 @@ def generate_project_breakdown_template():
 - **Escalation**: [Issue resolution process]
 """
 
+
 def generate_team_structure_template():
     """Template for defining multi-agent team structures"""
     return """
@@ -93,6 +95,7 @@ def generate_team_structure_template():
 - **Quality Gates**: Code complete → integration ready → review approved → deployment ready
 - **Escalation**: Technical → Architect, Quality → Reviewer, Timeline → Coordinator
 """
+
 
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""

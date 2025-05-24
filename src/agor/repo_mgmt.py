@@ -92,18 +92,28 @@ def clone_git_repo_to_temp_dir(
         if is_local:
             # For local repos, check what the default branch is
             try:
-                default_branch = git["symbolic-ref", "refs/remotes/origin/HEAD"](cwd=local_repo.resolve()).strip().split("/")[-1]
-            except:
+                default_branch = (
+                    git["symbolic-ref", "refs/remotes/origin/HEAD"](
+                        cwd=local_repo.resolve()
+                    )
+                    .strip()
+                    .split("/")[-1]
+                )
+            except Exception:
                 # Fallback to common default branches
                 try:
-                    git["show-ref", "--verify", "--quiet", "refs/heads/main"](cwd=local_repo.resolve())
+                    git["show-ref", "--verify", "--quiet", "refs/heads/main"](
+                        cwd=local_repo.resolve()
+                    )
                     default_branch = "main"
-                except:
+                except Exception:
                     default_branch = "master"
         else:
             # For remote repos, try to get default branch
             try:
-                head_ref = git["ls-remote", "--symref", get_clone_url(git_repo), "HEAD"]()
+                head_ref = git[
+                    "ls-remote", "--symref", get_clone_url(git_repo), "HEAD"
+                ]()
                 default_branch = "main"  # Default fallback
                 for line in head_ref.splitlines():
                     if "ref:" in line and "HEAD" in line:
@@ -112,7 +122,7 @@ def clone_git_repo_to_temp_dir(
                             ref_path = parts[1]
                             default_branch = ref_path.split("/")[-1]
                             break
-            except:
+            except Exception:
                 default_branch = "main"
 
         print(f"Cloning only main/master branch: {default_branch}")

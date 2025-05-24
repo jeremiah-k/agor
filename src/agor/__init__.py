@@ -2,7 +2,7 @@
 AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform
 
 A comprehensive project planning and multi-agent coordination platform.
-Plan complex development projects, design agent teams, and generate 
+Plan complex development projects, design agent teams, and generate
 specialized prompts for coordinated AI development workflows.
 """
 

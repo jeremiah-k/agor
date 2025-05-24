@@ -5,6 +5,7 @@ This module contains template functions for generating specialized prompts
 for different types of coding agents in a multi-agent development environment.
 """
 
+
 def generate_specialist_prompt(role, context, task, handoff_requirements):
     """Generate a focused prompt for a specialist agent"""
     return f"""
@@ -23,6 +24,7 @@ FORMAT:
 
 Focus on {role} best practices and seamless team integration.
 """
+
 
 def generate_handoff_prompt(from_agent, to_agent, work_completed, next_tasks, context):
     """Generate a handoff prompt for agent-to-agent transitions"""
@@ -46,6 +48,7 @@ REQUIREMENTS:
 
 ACKNOWLEDGE: Confirm receipt and report any issues immediately.
 """
+
 
 def generate_validation_prompt(code_to_review, validation_criteria, context):
     """Generate a prompt for code review and validation agents"""
@@ -72,6 +75,7 @@ DELIVER:
 - Required fixes with explanations
 - Status: APPROVED / NEEDS_REVISION / REJECTED
 """
+
 
 def generate_integration_prompt(components, integration_requirements, context):
     """Generate a prompt for system integration agents"""
@@ -100,7 +104,10 @@ DELIVER:
 - Go/no-go recommendation
 """
 
-def generate_project_coordinator_prompt(project_overview, team_structure, current_phase):
+
+def generate_project_coordinator_prompt(
+    project_overview, team_structure, current_phase
+):
     """Generate a prompt for project coordination agents"""
     return f"""
 You are a Project Coordination Agent.
@@ -127,6 +134,7 @@ DELIVER:
 - Final project summary
 """
 
+
 def generate_context_prompt(codebase_analysis, project_goals, constraints):
     """Generate a context-rich prompt that includes codebase knowledge"""
     return f"""
@@ -146,7 +154,9 @@ GUIDELINES:
 - Consider impact on existing functionality
 """
 
+
 # DETAILED EXAMPLES FOR AGENT COORDINATION
+
 
 def get_example_handoff():
     """Example of proper agent handoff format"""
@@ -178,6 +188,7 @@ VALIDATION:
 - Verify token persistence across browser sessions
 - Confirm protected routes redirect to login when unauthenticated
 """
+
 
 def get_example_specialist_roles():
     """Examples of specialist agent roles and responsibilities"""
