@@ -6,13 +6,27 @@
 
 ## 🚀 Quick Start
 
+AGOR runs on Linux, macOS, and Windows.
+
+### Standalone Mode (Recommended)
+
+```bash
+# Install using pipx for isolated installation (recommended)
+pipx install agor
+
+# AI agents can also clone and use directly
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
+
+# Follow instructions in AGOR_INSTRUCTIONS.md
+# Load tools and coordinate your development project
+```
+
 ### Bundle Mode (Upload to AI)
 
 ```bash
 # Install and bundle your project
-git clone https://github.com/jeremiah-k/agor.git
-cd agor
-pipx install .
+pipx install agor
 
 # Bundle all branches (default)
 agor bundle /path/to/your/project
@@ -24,17 +38,6 @@ agor bundle /path/to/your/project -m
 agor bundle /path/to/your/project -b feature1,feature2
 
 # Upload the generated .tar.gz file to your AI assistant
-```
-
-### Standalone Mode (AI Clones Directly)
-
-```bash
-# AI agents can clone and use directly
-git clone https://github.com/jeremiah-k/agor.git
-cd agor
-
-# Follow instructions in AGOR_INSTRUCTIONS.md
-# Load tools and coordinate your development project
 ```
 
 ## 🎯 Core Capabilities
@@ -140,6 +143,38 @@ Foundation for:
 - **Quality-assured multi-agent workflows**
 - **Scalable development process automation**
 
+## 🛠️ Installation
+
+### Regular Installation
+
+```bash
+# Install using pipx for isolated installation (recommended)
+pipx install agor
+```
+
+### Development Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
+
+# Install in development mode (use --force when testing changes)
+pipx install -e . --force
+```
+
+### Alternative Installation Methods
+
+```bash
+# Using pip (not recommended for regular use)
+pip install agor
+
+# From source
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
+pip install .
+```
+
 ## 📁 Project Structure
 
 ```text
@@ -158,13 +193,7 @@ agor/
 └── [configuration files]
 ```
 
-## 🛠️ Installation
 
-```bash
-git clone https://github.com/jeremiah-k/agor.git
-cd agor
-pipx install .
-```
 
 ## 📖 Documentation
 

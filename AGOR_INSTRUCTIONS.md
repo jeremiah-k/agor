@@ -2,9 +2,19 @@
 
 ## Quick Start for AI Agents
 
-If you're an AI agent being asked to use AgentOrchestrator, follow these steps:
+If you're an AI agent being asked to use AgentOrchestrator, you have two options:
 
-### 1. Clone AgentOrchestrator
+### Option 1: Install from PyPI (Recommended)
+
+```bash
+# Install using pipx for isolated installation (recommended)
+pipx install agor
+
+# Or using pip
+pip install agor
+```
+
+### Option 2: Clone and Use Directly
 
 ```bash
 git clone https://github.com/jeremiah-k/agor.git
@@ -13,8 +23,12 @@ cd agor
 
 ### 2. Load the Instructions
 
-Read and follow the comprehensive instructions in:
+**If you installed from PyPI:**
+- The tools are available as part of the installed package
+- Use `agor --help` to see available commands
+- Access tools documentation through the package
 
+**If you cloned the repository:**
 ```bash
 cat src/agor/tools/README_ai.md
 ```
@@ -31,7 +45,8 @@ cd [PROJECT_NAME]
 ### 4. Initialize AgentOrchestrator
 
 - Configure git identity: `git config --global user.name "AgentOrchestrator"` and `git config --global user.email agor@example.local`
-- Load code exploration tools from `../agor/src/agor/tools/`
+- **If using PyPI installation:** Tools are available through the `agor` command
+- **If using cloned repository:** Load code exploration tools from `../agor/src/agor/tools/`
 - Start with comprehensive codebase analysis using the `a` command
 
 ### 5. Begin Orchestration
@@ -48,11 +63,13 @@ You now have access to all AgentOrchestrator capabilities:
 
 **Standalone Mode Advantages:**
 
-- Can work with any repository URL
+- **PyPI Installation**: Simple `pipx install agor` - no cloning needed
+- **Direct Cloning**: Can work with any repository URL
 - No file size limitations
 - Can clone multiple related repositories
 - Full git history and branch access
 - Can install additional tools as needed
+- Recommended for most use cases
 
 **Bundle Mode Advantages:**
 
@@ -60,10 +77,26 @@ You now have access to all AgentOrchestrator capabilities:
 - No need for git access or internet connectivity
 - Faster startup (no cloning required)
 - Guaranteed tool availability
+- Secondary option for specific constraints
 
 ## Usage Examples
 
-### Example 1: Analyze and Plan a Project
+### Example 1: Analyze and Plan a Project (PyPI Installation)
+
+```bash
+# Install AgentOrchestrator
+pipx install agor
+
+# Clone target project
+git clone https://github.com/user/project.git
+cd project
+
+# Use AGOR tools
+agor --help
+# Follow the comprehensive instructions
+```
+
+### Example 1b: Analyze and Plan a Project (Direct Clone)
 
 ```bash
 # Clone AgentOrchestrator
@@ -80,8 +113,8 @@ cd project
 ### Example 2: Multi-Repository Coordination
 
 ```bash
-# Clone AgentOrchestrator
-git clone https://github.com/jeremiah-k/agor.git
+# Install AgentOrchestrator (if not already installed)
+pipx install agor
 
 # Clone multiple related projects
 git clone https://github.com/user/frontend.git
@@ -89,6 +122,7 @@ git clone https://github.com/user/backend.git
 git clone https://github.com/user/shared-lib.git
 
 # Coordinate across all repositories using AGOR tools
+# Use agor commands in each repository as needed
 ```
 
 ## Integration with AI Platforms
