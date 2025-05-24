@@ -1,5 +1,7 @@
 # AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform
 
+_Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
+
 **DEPLOYMENT MODE:**
 
 - **BUNDLE MODE**: User code in `project/` folder, use provided `git` binary (chmod 755 first)
