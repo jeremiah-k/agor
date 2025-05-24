@@ -8,36 +8,32 @@ AGOR runs on Linux, macOS, and Windows.
 
 ## 🚀 Quick Start
 
-### Standalone Mode (Recommended)
+### Agent Mode (For AI Agents with Git Access)
+
+**For Augment Code, Jules by Google, and other AI agents:**
 
 ```bash
-# Install using pipx for isolated installation (recommended)
-pipx install agor
-
-# AI agents can also clone and use directly
+# AI agent clones AGOR repository directly (no installation needed)
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
 
-# Follow instructions in AGOR_INSTRUCTIONS.md
-# Load tools and coordinate your development project
+# Agent learns the protocol from AGOR_INSTRUCTIONS.md
+# Then receives user instructions about target project
 ```
 
-### Bundle Mode (Upload to AI)
+### Bundle Mode (For ChatGPT Upload)
+
+**For ChatGPT and other upload-based AI platforms:**
 
 ```bash
-# Install and bundle your project
+# User installs AGOR locally
 pipx install agor
 
-# Bundle all branches (default)
+# Bundle your project for upload
 agor bundle /path/to/your/project
 
-# Bundle only main/master
-agor bundle /path/to/your/project -m
-
-# Bundle main/master + specific branches
-agor bundle /path/to/your/project -b feature1,feature2
-
-# Upload the generated .tar.gz file to your AI assistant
+# Upload the generated .tar.gz file to ChatGPT
+# ChatGPT extracts and follows embedded instructions
 ```
 
 ## 🎯 Core Capabilities
@@ -145,34 +141,36 @@ Foundation for:
 
 ## 🛠️ Installation
 
-### Regular Installation
+### For Bundle Mode (ChatGPT Upload)
+
+**Users need to install AGOR locally to create bundles:**
 
 ```bash
-# Install using pipx for isolated installation (recommended)
+# Install using pipx (recommended)
 pipx install agor
+
+# Or using pip
+pip install agor
+```
+
+### For Agent Mode (AI Agents)
+
+**No installation required - agents clone directly:**
+
+```bash
+# AI agents clone AGOR repository directly
+git clone https://github.com/jeremiah-k/agor.git
+cd agor
+# Follow AGOR_INSTRUCTIONS.md
 ```
 
 ### Development Installation
 
 ```bash
-# Clone the repository
+# For AGOR development
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
-
-# Install in development mode (use --force when testing changes)
 pipx install -e . --force
-```
-
-### Alternative Installation Methods
-
-```bash
-# Using pip (not recommended for regular use)
-pip install agor
-
-# From source
-git clone https://github.com/jeremiah-k/agor.git
-cd agor
-pip install .
 ```
 
 ## 📁 Project Structure
@@ -194,9 +192,15 @@ agor/
 
 ## 📖 Documentation
 
-- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Standalone mode setup
-- **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI instructions
-- **[src/agor/tools/code_exploration_docs.md](src/agor/tools/code_exploration_docs.md)** - Tool reference
+### Mode-Specific Instructions
+
+- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Agent Mode (for AI agents with git access)
+- **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode (for ChatGPT upload)
+
+### Technical Documentation
+
+- **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol and capabilities
+- **[src/agor/tools/code_exploration_docs.md](src/agor/tools/code_exploration_docs.md)** - Tool reference and API
 
 ---
 
