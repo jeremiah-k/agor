@@ -12,6 +12,11 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - [ ] **Understand user impact**: How will this affect existing AGOR users?
 - [ ] **Review related documentation**: Ensure you understand current behavior
 
+### Environment Setup
+- [ ] **Configure git identity**: Use `agor git-config --import-env` or set manually
+- [ ] **Verify attribution**: Ensure commits will be attributed correctly
+- [ ] **Check environment variables**: Set GIT_AUTHOR_NAME and GIT_AUTHOR_EMAIL if using --import-env
+
 ### Branch Management
 - [ ] **Create feature branch**: Use pattern `work-X.Y.Z-N` (e.g., `work-0.2.1-5`)
 - [ ] **Base on latest main**: Always start from up-to-date main branch

@@ -1,5 +1,7 @@
+import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -510,6 +512,145 @@ def custom_instructions(
     if copy:
         success, message = copy_to_clipboard(instructions)
         print(f"\n{message}")
+
+
+@app.command()
+def git_config(
+    import_env: bool = typer.Option(
+        False,
+        "--import-env",
+        help="Import git configuration from environment variables"
+    ),
+    name: Optional[str] = typer.Option(
+        None,
+        "--name",
+        help="Set git user.name (overrides environment)"
+    ),
+    email: Optional[str] = typer.Option(
+        None,
+        "--email",
+        help="Set git user.email (overrides environment)"
+    ),
+    global_config: bool = typer.Option(
+        False,
+        "--global",
+        help="Set configuration globally instead of for current repository"
+    ),
+    show: bool = typer.Option(
+        False,
+        "--show",
+        help="Show current git configuration"
+    )
+):
+    """Configure git user settings for AGOR development"""
+
+    if show:
+        print("🔍 Current Git Configuration:")
+        try:
+            current_name = subprocess.check_output(
+                ["git", "config", "user.name"],
+                stderr=subprocess.DEVNULL,
+                text=True
+            ).strip()
+            current_email = subprocess.check_output(
+                ["git", "config", "user.email"],
+                stderr=subprocess.DEVNULL,
+                text=True
+            ).strip()
+            print(f"   Name: {current_name}")
+            print(f"   Email: {current_email}")
+        except subprocess.CalledProcessError:
+            print("   No git configuration found")
+
+        # Show environment variables if available
+        env_name = os.getenv("GIT_AUTHOR_NAME") or os.getenv("GIT_USER_NAME")
+        env_email = os.getenv("GIT_AUTHOR_EMAIL") or os.getenv("GIT_USER_EMAIL")
+
+        if env_name or env_email:
+            print("\n🌍 Environment Variables:")
+            if env_name:
+                print(f"   GIT_AUTHOR_NAME/GIT_USER_NAME: {env_name}")
+            if env_email:
+                print(f"   GIT_AUTHOR_EMAIL/GIT_USER_EMAIL: {env_email}")
+
+        return
+
+    # Determine configuration values
+    config_name = name
+    config_email = email
+
+    if import_env:
+        # Import from environment variables
+        env_name = os.getenv("GIT_AUTHOR_NAME") or os.getenv("GIT_USER_NAME")
+        env_email = os.getenv("GIT_AUTHOR_EMAIL") or os.getenv("GIT_USER_EMAIL")
+
+        if env_name and not config_name:
+            config_name = env_name
+        if env_email and not config_email:
+            config_email = env_email
+
+        if not env_name and not env_email:
+            print("⚠️  No git environment variables found.")
+            print("   Set GIT_AUTHOR_NAME/GIT_USER_NAME and GIT_AUTHOR_EMAIL/GIT_USER_EMAIL")
+            print("   Or use --name and --email options")
+            return
+
+    if not config_name and not config_email:
+        print("❌ No configuration provided.")
+        print("   Use --import-env to import from environment")
+        print("   Or use --name and --email to set manually")
+        print("   Use --show to see current configuration")
+        return
+
+    # Apply git configuration
+    print("🔧 Setting up git configuration...")
+
+    config_scope = ["--global"] if global_config else []
+
+    try:
+        if config_name:
+            subprocess.run(
+                ["git", "config"] + config_scope + ["user.name", config_name],
+                check=True
+            )
+            print(f"✅ Set user.name: {config_name}")
+
+        if config_email:
+            subprocess.run(
+                ["git", "config"] + config_scope + ["user.email", config_email],
+                check=True
+            )
+            print(f"✅ Set user.email: {config_email}")
+
+        # Show repository info if in a git repo
+        try:
+            repo_root = subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"],
+                stderr=subprocess.DEVNULL,
+                text=True
+            ).strip()
+            repo_name = os.path.basename(repo_root)
+            current_branch = subprocess.check_output(
+                ["git", "branch", "--show-current"],
+                stderr=subprocess.DEVNULL,
+                text=True
+            ).strip()
+
+            print(f"\n📁 Repository: {repo_name}")
+            print(f"🌿 Current branch: {current_branch}")
+
+            if current_branch == "main":
+                print("💡 Ready to create feature branch when needed")
+
+        except subprocess.CalledProcessError:
+            scope_text = "globally" if global_config else "for current repository"
+            print(f"\nℹ️  Configuration applied {scope_text}")
+
+        print("\n🚀 Git configuration complete!")
+
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to set git configuration: {e}")
+        return
 
 
 def cli():

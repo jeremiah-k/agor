@@ -8,6 +8,10 @@
 # Install AGOR
 pipx install agor
 
+# Configure git (optional but recommended)
+agor git-config --import-env                # Import from environment variables
+agor git-config --name "Your Name" --email "your@email.com"  # Set manually
+
 # Bundle for your platform
 agor bundle /path/to/your/project -f zip    # Google AI Studio
 agor bundle /path/to/your/project           # ChatGPT (.tar.gz)
@@ -43,8 +47,8 @@ agor bundle /path/to/your/project -f zip
 
 **Git commands being simulated instead of executed**:
 ```
-Remind the AI: "You have a real, functional git binary at /tmp/agor_tools/git. 
-Please make it executable with 'chmod 755 /tmp/agor_tools/git' and use it 
+Remind the AI: "You have a real, functional git binary at /tmp/agor_tools/git.
+Please make it executable with 'chmod 755 /tmp/agor_tools/git' and use it
 directly. Do not simulate commands - execute them for real."
 ```
 
@@ -89,6 +93,44 @@ agor bundle /path/to/your/project
 - Use `.tar.gz` format
 - Ensure model supports function calling
 - Performance varies by model size and capabilities
+
+## ⚙️ Git Configuration
+
+AGOR includes built-in git configuration management to streamline development workflows:
+
+### Environment Variable Import
+```bash
+# Set environment variables (recommended)
+export GIT_AUTHOR_NAME="Your Name"
+export GIT_AUTHOR_EMAIL="your@email.com"
+# or
+export GIT_USER_NAME="Your Name"
+export GIT_USER_EMAIL="your@email.com"
+
+# Import from environment
+agor git-config --import-env
+```
+
+### Manual Configuration
+```bash
+# Set git configuration manually
+agor git-config --name "Your Name" --email "your@email.com"
+
+# Set globally (affects all repositories)
+agor git-config --name "Your Name" --email "your@email.com" --global
+```
+
+### View Configuration
+```bash
+# Show current git configuration and environment variables
+agor git-config --show
+```
+
+### Benefits
+- ✅ **Consistent attribution** across all development work
+- ✅ **Environment integration** with your existing development setup
+- ✅ **Repository awareness** shows current branch and repository info
+- ✅ **Flexible scope** configure per-repository or globally
 
 ## 🔧 Bundle Options
 
@@ -138,7 +180,7 @@ After uploading and initializing, AGOR will prompt for role selection:
 - Multi-agent strategy selection (`ss`, `pd`, `pl`, `sw`)
 - Team design and workflow orchestration (`ct`, `tm`)
 
-### 🔍 ANALYST/SOLO DEV  
+### 🔍 ANALYST/SOLO DEV
 **Best for**: Code analysis, implementation, solo work
 - Comprehensive codebase analysis (`a`, `f`, `co`)
 - Code exploration and investigation
@@ -236,7 +278,7 @@ agor bundle /path/to/your/project
 After successful bundle setup:
 
 1. **Explore [Multi-Agent Strategies](strategies.md)** - Learn coordination patterns
-2. **Master [Agent Handoffs](handoffs.md)** - Seamless agent transitions  
+2. **Master [Agent Handoffs](handoffs.md)** - Seamless agent transitions
 3. **Read [Complete AI Protocol](../src/agor/tools/README_ai.md)** - Full capabilities
 
 ---
