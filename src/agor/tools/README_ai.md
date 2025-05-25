@@ -22,18 +22,21 @@ Please select your role (a/b/c):
 **Based on selection, follow the appropriate initialization path:**
 
 ### Role A: PROJECT COORDINATOR
+
 - Focus on strategic planning and agent coordination
 - Initialize coordination system first
 - Emphasize planning tools and multi-agent strategies
 - Show strategic planning hotkeys prominently
 
 ### Role B: ANALYST/SOLO DEV
+
 - Focus on codebase analysis and direct code work
 - Perform immediate comprehensive codebase analysis
 - Emphasize code exploration tools and editing capabilities
 - Show analysis and editing hotkeys prominently
 
 ### Role C: AGENT WORKER
+
 - Minimal initialization, wait for coordinator instructions
 - Set up basic coordination files
 - Focus on receiving and executing specific tasks
@@ -52,19 +55,21 @@ Execute this sequence until a valid git repository is found:
 
 **STEP 2: GIT CONFIGURATION**
 
-- Use provided git binary: `/tmp/tools_for_ai/git` (make executable: `chmod 755`)
+- Use provided git binary: `/tmp/agor_tools/git` (make executable: `chmod 755`)
 - Configure: `git config user.name "AgentOrchestrator" && git config user.email "agor@example.local"`
 - Verify setup: `git status` and `git ls-files`
 
 **STEP 3: ROLE-BASED INITIALIZATION**
 
 ### For PROJECT COORDINATOR (Role A):
+
 1. **Quick Project Overview**: Basic structure and technology identification
 2. **Initialize Coordination System**: Create `.agor/` directory structure
 3. **Strategic Assessment**: Focus on architecture, dependencies, and planning needs
 4. **Present Planning Menu**: Emphasize strategic planning and coordination hotkeys
 
 ### For ANALYST/SOLO DEV (Role B):
+
 1. **Comprehensive Codebase Analysis**: Full technical deep-dive
    - Project Structure: Map directory tree and file organization
    - Technology Stack: Identify languages, frameworks, dependencies
@@ -77,6 +82,7 @@ Execute this sequence until a valid git repository is found:
 3. **Show Code Analysis Menu**: Emphasize analysis and editing hotkeys
 
 ### For AGENT WORKER (Role C):
+
 1. **Minimal Setup**: Basic git configuration and coordination files
 2. **Wait for Instructions**: Brief project overview, then standby mode
 3. **Show Agent Menu**: Emphasize coordination and handoff hotkeys
@@ -114,6 +120,7 @@ Execute this sequence until a valid git repository is found:
 **ROLE-SPECIFIC HOTKEY MENUS:**
 
 ### PROJECT COORDINATOR Menu (Role A):
+
 **🎯 Strategic Planning:**
 sp) strategic plan bp) break down project ar) architecture review dp) dependency planning rp) risk planning
 
@@ -130,6 +137,7 @@ wf) workflow design qg) quality gates eo) execution order init) initialize coord
 a ) analyze codebase da) detailed handoff
 
 ### ANALYST/SOLO DEV Menu (Role B):
+
 **📊 Analysis & Display:**
 a ) analyze codebase f ) full files co) changes only da) detailed handoff m ) show diff
 
@@ -146,6 +154,7 @@ doc) generate docs comment) add comments explain) code explanation
 sp) strategic plan bp) break down project
 
 ### AGENT WORKER Menu (Role C):
+
 **🤝 Coordination:**
 status) check coordination sync) update from main ch) checkpoint planning
 
@@ -193,11 +202,13 @@ If user selects a hotkey, respond accordingly.
 **AVAILABLE TOOLS:**
 
 **File System & Search:**
+
 - `bfs_find(base, pattern)` - Breadth-first search for files matching regex pattern
 - `grep(file_path, pattern, recursive=False)` - Search for regex pattern in files
 - `tree(directory, prefix="", depth=3)` - Generate directory tree structure (use instead of system `tree` command)
 
 **Code Analysis:**
+
 - `find_function_signatures(file_path, language)` - Find function/class definitions in source files
 - `extract_function_content(language, signature, content)` - Extract complete function code
 - `get_file_language(file_path)` - Determine programming language from file extension
@@ -206,9 +217,10 @@ If user selects a hotkey, respond accordingly.
 **Supported Languages:** python, javascript, typescript, c, cpp, java, ruby, go, rust, php, bash
 
 **Usage Examples:**
+
 ```python
-# Load the tools (they're in the bundle at tools_for_ai/code_exploration.py)
-exec(open('tools_for_ai/code_exploration.py').read())
+# Load the tools (they're in the bundle at agor_tools/code_exploration.py)
+exec(open('agor_tools/code_exploration.py').read())
 
 # Find all Python files
 python_files = bfs_find('.', r'\.py$')
@@ -293,6 +305,7 @@ All agents use the `.agor/` directory for coordination:
 5. **Coordinate**: Check other agents' memory files to avoid conflicts
 
 **AGENTCONVO.MD FORMAT:**
+
 ```
 [AGENT-ID] [TIMESTAMP] [STATUS/QUESTION/FINDING]
 
@@ -303,6 +316,7 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 ```
 
 **AGENT MEMORY FORMAT:**
+
 ```
 # Agent{N} Memory Log
 
