@@ -99,7 +99,7 @@ If user selects a hotkey, respond accordingly.
 **STRATEGY ACTIONS:**
 
 - **`ss`**: Analyze project and recommend optimal development strategy
-- **`pd`**: Set up Parallel Divergent strategy (3-5 independent agents)
+- **`pd`**: Set up Parallel Divergent strategy (multiple independent agents)
 - **`pl`**: Set up Pipeline strategy (sequential agent handoffs)
 - **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
 - **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
@@ -201,7 +201,7 @@ All agents use the `.agor/` directory for coordination:
 ├── memory.md              # Project-level decisions
 ├── agent1-memory.md       # Agent 1 private notes
 ├── agent2-memory.md       # Agent 2 private notes
-├── agent3-memory.md       # Agent 3 private notes
+├── agent{N}-memory.md     # Agent N private notes (as needed)
 └── strategy-active.md     # Current strategy details
 ```
 
@@ -251,7 +251,7 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 
 AGOR supports 5 multi-agent development strategies:
 
-🔄 **Parallel Divergent** (`pd`): 3-5 agents work independently, then peer review
+🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
 ⚡ **Pipeline** (`pl`): Sequential handoffs with specialization
 🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue
 ⚔️ **Red Team** (`rt`): Adversarial build/break cycles

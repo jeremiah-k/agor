@@ -147,7 +147,7 @@ PROJECT CONTEXT:
 
 AVAILABLE STRATEGIES:
 
-🔄 **Parallel Divergent** (3-5 agents)
+🔄 **Parallel Divergent** (2-6 agents)
 - Best for: Complex problems, multiple valid approaches
 - Process: Independent solutions → peer review → synthesis
 - Time: Medium (parallel execution + review)
@@ -177,7 +177,7 @@ Based on the project context, recommend the optimal strategy and explain why.
 """
 
 
-def generate_parallel_divergent_prompt(agent_id, mission, branch_name, total_agents=3):
+def generate_parallel_divergent_prompt(agent_id, mission, branch_name, total_agents):
     """Generate a prompt for parallel divergent strategy agents"""
     return f"""
 AGENT: {agent_id}
@@ -291,7 +291,7 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 ## Agent Assignments
 - Agent1: [Role/Branch]
 - Agent2: [Role/Branch]
-- Agent3: [Role/Branch]
+- Agent{N}: [Role/Branch] (as needed)
 
 ## Timeline
 - Phase 1: [Development phase]

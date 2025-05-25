@@ -107,7 +107,7 @@ Multiple agents work independently on the same problem, then converge through pe
 
 ## Phase 1: Divergent Execution (Parallel)
 ### Setup
-- **Agents**: 3-5 independent agents
+- **Agents**: Multiple independent agents (typically 2-5)
 - **Branches**: Each agent gets own branch (e.g., `solution-a`, `solution-b`, `solution-c`)
 - **Mission**: Identical problem statement and success criteria
 - **Isolation**: No coordination during execution phase
@@ -168,7 +168,8 @@ RECOMMENDATION:
 ## Team Size
 - **Optimal**: 3-4 agents (manageable review load)
 - **Minimum**: 2 agents (basic comparison)
-- **Maximum**: 5 agents (review complexity limit)
+- **Maximum**: 5-6 agents (review complexity limit)
+- **Flexible**: Scale based on problem complexity and available resources
 """
 
 
