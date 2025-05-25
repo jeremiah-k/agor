@@ -7,11 +7,12 @@ specialized prompts for coordinated AI development workflows.
 """
 
 import os
+
 try:
-    from importlib.metadata import version, PackageNotFoundError
+    from importlib.metadata import PackageNotFoundError, version
 except ImportError:
     # Fallback for Python < 3.8
-    from importlib_metadata import version, PackageNotFoundError
+    from importlib_metadata import PackageNotFoundError, version
 
 # First try to get version from environment variable (GitHub tag)
 if "GITHUB_REF_NAME" in os.environ:
