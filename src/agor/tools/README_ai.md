@@ -16,6 +16,7 @@ Execute this sequence until a valid git repository is found:
 7. **Never assume failure** - the git repository is always present in bundles
 
 **STEP 2: GIT CONFIGURATION**
+
 - Use provided git binary: `/tmp/tools_for_ai/git` (make executable: `chmod 755`)
 - Configure: `git config user.name "AgentOrchestrator" && git config user.email "agor@example.local"`
 - Verify setup: `git status` and `git ls-files`
@@ -32,6 +33,7 @@ Execute comprehensive analysis and generate structured findings report:
 7. **Development Setup**: Identify build systems, CI/CD, development tools
 
 **STEP 4: PRESENT FINDINGS & MENU**
+
 - Display organized analysis results in actionable format
 - Show comprehensive hotkey menu for user interaction
 - Establish working context for subsequent operations
@@ -39,6 +41,7 @@ Execute comprehensive analysis and generate structured findings report:
 ## CORE WORKFLOW PROTOCOL
 
 **REPOSITORY OPERATIONS:**
+
 1. Use `git ls-files` and `git grep` to map and search codebase
 2. Display complete files when investigating code
 3. Edit by targeting specific line ranges, keep code cells short (1-2 lines)
@@ -46,11 +49,13 @@ Execute comprehensive analysis and generate structured findings report:
 5. Update `.agor/memory.md` with decisions and progress
 
 **OUTPUT FORMATS:**
+
 - **`f`**: Complete files with all formatting preserved
 - **`co`**: Only changed sections with before/after context
 - **`da`**: Detailed analysis in single codeblock for agent handoff
 
 **DEPLOYMENT MODES:**
+
 - **BUNDLE MODE**: User code in `project/` folder, use provided `git` binary
 - **STANDALONE MODE**: Clone target project as specified by user
 

@@ -7,18 +7,16 @@ import platform
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 import platformdirs
 
 from .constants import TERMUX_INDICATORS
-from .exceptions import ClipboardError, PlatformError
 
 
 def is_termux() -> bool:
     """
     Check if running in Termux environment using multiple indicators.
-    
+
     Returns:
         True if running in Termux, False otherwise
     """
@@ -26,21 +24,21 @@ def is_termux() -> bool:
     home = os.environ.get("HOME", "")
     if any(indicator in home for indicator in TERMUX_INDICATORS):
         return True
-    
+
     # Check PATH environment variable
     path = os.environ.get("PATH", "")
     if any(indicator in path for indicator in TERMUX_INDICATORS):
         return True
-    
+
     # Check PREFIX environment variable (Termux-specific)
     prefix = os.environ.get("PREFIX", "")
     if "termux" in prefix.lower():
         return True
-    
+
     # Check if termux-specific commands exist
     if shutil.which("termux-info") or shutil.which("pkg"):
         return True
-    
+
     return False
 
 
@@ -62,7 +60,7 @@ def is_linux() -> bool:
 def get_downloads_dir() -> str:
     """
     Get the Downloads directory path based on the platform.
-    
+
     Returns:
         Path to the Downloads directory
     """
@@ -82,7 +80,7 @@ def get_downloads_dir() -> str:
 
     # Fallback to standard Downloads directories
     home_dir = os.path.expanduser("~")
-    
+
     # Try common Downloads directory names
     for downloads_name in ["Downloads", "Download"]:
         downloads_dir = os.path.join(home_dir, downloads_name)
@@ -96,21 +94,22 @@ def get_downloads_dir() -> str:
 def copy_to_clipboard(text: str) -> tuple[bool, str]:
     """
     Copy text to clipboard with platform-specific handling.
-    
+
     Args:
         text: Text to copy to clipboard
-        
+
     Returns:
         Tuple of (success: bool, message: str)
     """
     # First try pyperclip as it works on many platforms
     try:
         import pyperclip
+
         pyperclip.copy(text)
         return True, "📋 Copied to clipboard!"
     except Exception:
         pass
-    
+
     # Platform-specific fallbacks
     try:
         if is_termux():
@@ -137,9 +136,15 @@ def _copy_termux(text: str) -> tuple[bool, str]:
         )
         return True, "📋 Copied to clipboard using termux-api!"
     except subprocess.CalledProcessError as e:
-        return False, f"❌ Failed to copy with termux-api: {e}. Install with 'pkg install termux-api'"
+        return (
+            False,
+            f"❌ Failed to copy with termux-api: {e}. Install with 'pkg install termux-api'",
+        )
     except FileNotFoundError:
-        return False, "❌ termux-clipboard-set not found. Install with 'pkg install termux-api'"
+        return (
+            False,
+            "❌ termux-clipboard-set not found. Install with 'pkg install termux-api'",
+        )
 
 
 def _copy_windows(text: str) -> tuple[bool, str]:
@@ -154,7 +159,7 @@ def _copy_windows(text: str) -> tuple[bool, str]:
         return True, "📋 Copied to clipboard using PowerShell!"
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
-    
+
     # Try clip.exe
     try:
         subprocess.run(
@@ -189,7 +194,7 @@ def _copy_linux(text: str) -> tuple[bool, str]:
             return True, "📋 Copied to clipboard using xclip!"
         except subprocess.CalledProcessError:
             pass
-    
+
     # Try xsel
     if shutil.which("xsel"):
         try:
@@ -201,7 +206,7 @@ def _copy_linux(text: str) -> tuple[bool, str]:
             return True, "📋 Copied to clipboard using xsel!"
         except subprocess.CalledProcessError:
             pass
-    
+
     # Try wl-copy (Wayland)
     if shutil.which("wl-copy"):
         try:
@@ -213,17 +218,17 @@ def _copy_linux(text: str) -> tuple[bool, str]:
             return True, "📋 Copied to clipboard using wl-copy!"
         except subprocess.CalledProcessError:
             pass
-    
+
     return False, "❌ No clipboard command found. Install xclip, xsel, or wl-clipboard"
 
 
 def reveal_file_in_explorer(file_path: Path) -> bool:
     """
     Reveal file in system file explorer.
-    
+
     Args:
         file_path: Path to the file to reveal
-        
+
     Returns:
         True if successful, False otherwise
     """

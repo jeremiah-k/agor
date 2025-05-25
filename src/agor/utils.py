@@ -10,7 +10,6 @@ import httpx
 from tqdm import tqdm
 
 from .constants import (
-    ARCHIVE_EXTENSIONS,
     DEFAULT_COMPRESSION_FORMAT,
     DOWNLOAD_CHUNK_SIZE,
     PROGRESS_BAR_WIDTH,
@@ -30,7 +29,9 @@ def move_directory(src_dir: Path, dest_dir: Path):
     return dest_dir
 
 
-def download_file(url: str, dest_path: Path, expected_sha256: Optional[str] = None) -> Path:
+def download_file(
+    url: str, dest_path: Path, expected_sha256: Optional[str] = None
+) -> Path:
     """
     Download a file from URL with progress bar and optional integrity checking.
 
@@ -70,7 +71,9 @@ def download_file(url: str, dest_path: Path, expected_sha256: Optional[str] = No
             t.close()
 
             if total_size != 0 and t.n != total_size:
-                raise NetworkError(f"Download incomplete: expected {total_size} bytes, got {t.n}")
+                raise NetworkError(
+                    f"Download incomplete: expected {total_size} bytes, got {t.n}"
+                )
 
             # Verify integrity if expected hash provided
             if expected_sha256 and sha256_hash:
@@ -82,14 +85,18 @@ def download_file(url: str, dest_path: Path, expected_sha256: Optional[str] = No
                     )
 
     except httpx.HTTPError as e:
-        raise NetworkError(f"Failed to download {url}: {e}")
+        raise NetworkError(f"Failed to download {url}: {e}") from e
     except OSError as e:
-        raise NetworkError(f"Failed to save file to {dest_path}: {e}")
+        raise NetworkError(f"Failed to save file to {dest_path}: {e}") from e
 
     return dest_path
 
 
-def create_archive(dir_to_compress: Path, archive_path: Path, compression: str = DEFAULT_COMPRESSION_FORMAT) -> Path:
+def create_archive(
+    dir_to_compress: Path,
+    archive_path: Path,
+    compression: str = DEFAULT_COMPRESSION_FORMAT,
+) -> Path:
     """
     Create an archive (ZIP or TAR) from a directory.
 
@@ -123,14 +130,18 @@ def create_archive(dir_to_compress: Path, archive_path: Path, compression: str =
         if compression == "zip":
             return _create_zip_archive(dir_to_compress, archive_path, total_files)
         else:
-            return _create_tar_archive(dir_to_compress, archive_path, compression, total_files)
+            return _create_tar_archive(
+                dir_to_compress, archive_path, compression, total_files
+            )
     except Exception as e:
-        raise CompressionError(f"Failed to create archive: {e}")
+        raise CompressionError(f"Failed to create archive: {e}") from e
 
 
-def _create_zip_archive(dir_to_compress: Path, archive_path: Path, total_files: int) -> Path:
+def _create_zip_archive(
+    dir_to_compress: Path, archive_path: Path, total_files: int
+) -> Path:
     """Create a ZIP archive."""
-    with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         with tqdm(
             total=total_files,
             desc="📦 Creating ZIP archive",
@@ -140,13 +151,17 @@ def _create_zip_archive(dir_to_compress: Path, archive_path: Path, total_files: 
             for root, _dirs, files in os.walk(dir_to_compress):
                 for file in files:
                     absolute_file_path = os.path.join(root, file)
-                    relative_file_path = os.path.relpath(absolute_file_path, dir_to_compress)
+                    relative_file_path = os.path.relpath(
+                        absolute_file_path, dir_to_compress
+                    )
                     zipf.write(absolute_file_path, arcname=relative_file_path)
                     pbar.update()
     return archive_path
 
 
-def _create_tar_archive(dir_to_compress: Path, archive_path: Path, compression: str, total_files: int) -> Path:
+def _create_tar_archive(
+    dir_to_compress: Path, archive_path: Path, compression: str, total_files: int
+) -> Path:
     """Create a TAR archive with specified compression."""
     with tarfile.open(archive_path, f"w:{compression}") as tar:
         with tqdm(
@@ -158,7 +173,9 @@ def _create_tar_archive(dir_to_compress: Path, archive_path: Path, compression: 
             for root, _dirs, files in os.walk(dir_to_compress):
                 for file in files:
                     absolute_file_path = os.path.join(root, file)
-                    relative_file_path = os.path.relpath(absolute_file_path, dir_to_compress)
+                    relative_file_path = os.path.relpath(
+                        absolute_file_path, dir_to_compress
+                    )
                     tar.add(absolute_file_path, arcname=relative_file_path)
                     pbar.update()
     return archive_path

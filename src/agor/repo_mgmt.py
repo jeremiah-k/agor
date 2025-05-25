@@ -10,8 +10,6 @@ from plumbum.cmd import git
 from tqdm import tqdm
 
 from .constants import DEFAULT_SHALLOW_DEPTH
-from .exceptions import RepositoryError, ValidationError
-from .validation import validate_repository_url, validate_local_repository, validate_branch_list
 
 
 def is_github_url(value: str) -> bool:

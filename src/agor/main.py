@@ -1,4 +1,3 @@
-import json
 import re
 import shutil
 import sys
@@ -14,16 +13,20 @@ from .config import config
 from .constants import ARCHIVE_EXTENSIONS, DEFAULT_COMPRESSION_FORMAT, SUCCESS_MESSAGES
 from .exceptions import ValidationError
 from .git_binary import git_manager
-from .platform import copy_to_clipboard, get_downloads_dir, is_termux, reveal_file_in_explorer
+from .platform import (
+    copy_to_clipboard,
+    get_downloads_dir,
+    is_termux,
+    reveal_file_in_explorer,
+)
 from .repo_mgmt import clone_git_repo_to_temp_dir, get_clone_url, valid_git_repo
 from .utils import create_archive, move_directory
 from .validation import validate_compression_format
 
-
 app = typer.Typer(
     add_completion=False,
     help="🎼 AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform",
-    epilog="For more information, visit: https://github.com/jeremiah-k/agor"
+    epilog="For more information, visit: https://github.com/jeremiah-k/agor",
 )
 
 
@@ -35,8 +38,12 @@ def version():
 
 def config_cmd(
     show: bool = typer.Option(False, "--show", help="Show current configuration"),
-    set_key: Optional[str] = typer.Option(None, "--set", help="Set configuration key (format: key=value)"),
-    reset: bool = typer.Option(False, "--reset", help="Reset configuration to defaults"),
+    set_key: Optional[str] = typer.Option(
+        None, "--set", help="Set configuration key (format: key=value)"
+    ),
+    reset: bool = typer.Option(
+        False, "--reset", help="Reset configuration to defaults"
+    ),
 ):
     """Manage AGOR configuration settings"""
 
@@ -52,8 +59,15 @@ def config_cmd(
             key, value = set_key.split("=", 1)
 
             # Convert string values to appropriate types
-            if key in ["quiet", "preserve_history", "main_only", "interactive", "assume_yes", "clipboard_copy_default"]:
-                value = value.lower() in ('true', '1', 'yes', 'on')
+            if key in [
+                "quiet",
+                "preserve_history",
+                "main_only",
+                "interactive",
+                "assume_yes",
+                "clipboard_copy_default",
+            ]:
+                value = value.lower() in ("true", "1", "yes", "on")
             elif key in ["shallow_depth", "download_chunk_size", "progress_bar_width"]:
                 value = int(value)
 
@@ -128,15 +142,10 @@ def bundle(
     ),
     branches: Optional[List[str]] = branches_option,
     interactive: bool = typer.Option(
-        None,
-        "--no-interactive",
-        help="Disable interactive prompts (batch mode)"
+        None, "--no-interactive", help="Disable interactive prompts (batch mode)"
     ),
     assume_yes: bool = typer.Option(
-        None,
-        "--assume-yes",
-        "-y",
-        help="Assume 'yes' for all prompts"
+        None, "--assume-yes", "-y", help="Assume 'yes' for all prompts"
     ),
     quiet: bool = typer.Option(
         None,
@@ -158,10 +167,20 @@ def bundle(
         agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
     """
     # Apply configuration defaults with CLI overrides
-    compression_format = format or config.get("compression_format", DEFAULT_COMPRESSION_FORMAT)
-    preserve_hist = preserve_history if preserve_history is not None else config.get("preserve_history", False)
-    main_branch_only = main_only if main_only is not None else config.get("main_only", False)
-    is_interactive = interactive if interactive is not None else config.get("interactive", True)
+    compression_format = format or config.get(
+        "compression_format", DEFAULT_COMPRESSION_FORMAT
+    )
+    preserve_hist = (
+        preserve_history
+        if preserve_history is not None
+        else config.get("preserve_history", False)
+    )
+    main_branch_only = (
+        main_only if main_only is not None else config.get("main_only", False)
+    )
+    is_interactive = (
+        interactive if interactive is not None else config.get("interactive", True)
+    )
     auto_yes = assume_yes if assume_yes is not None else config.get("assume_yes", False)
     quiet_mode = quiet if quiet is not None else config.get("quiet", False)
 
@@ -170,14 +189,14 @@ def bundle(
         compression_format = validate_compression_format(compression_format)
     except ValidationError as e:
         print(f"❌ {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Get repository information
     repo_name = get_clone_url(src_repo).split("/")[-1]
     short_name = re.sub(r"\.git$", "", repo_name)
 
     if not quiet_mode:
-        print(f"🎼 AGOR Bundle Creation")
+        print("🎼 AGOR Bundle Creation")
         print(f"📁 Repository: {repo_name}")
         print(f"📦 Format: {compression_format.upper()}")
 
@@ -195,7 +214,9 @@ def bundle(
         )
     elif branch_list:
         if not quiet_mode:
-            print(f"📋 Bundling main/master plus additional branches: {', '.join(branch_list)}")
+            print(
+                f"📋 Bundling main/master plus additional branches: {', '.join(branch_list)}"
+            )
         temp_repo = clone_git_repo_to_temp_dir(
             src_repo, shallow=not preserve_hist, branches=branch_list
         )
@@ -240,7 +261,9 @@ def bundle(
 
     # Create archive with the specified format
     archive_extension = ARCHIVE_EXTENSIONS[compression_format]
-    archive_path = Path(tempfile.NamedTemporaryFile(delete=False, suffix=archive_extension).name)
+    archive_path = Path(
+        tempfile.NamedTemporaryFile(delete=False, suffix=archive_extension).name
+    )
 
     if not quiet_mode:
         print(f"📦 Creating {compression_format.upper()} archive...")
@@ -249,7 +272,7 @@ def bundle(
         create_archive(output_dir, archive_path, compression_format)
     except Exception as e:
         print(f"❌ Failed to create archive: {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Determine where to save the bundled file
     final_filename = f"{short_name}{archive_extension}"
@@ -265,15 +288,13 @@ def bundle(
         if is_interactive and not auto_yes:
             # Ask if they want to save to current directory
             save_to_current = typer.confirm(
-                "Save the bundled file to the current directory?",
-                default=True
+                "Save the bundled file to the current directory?", default=True
             )
 
             if not save_to_current:
                 # Ask if they want to save to Downloads directory
                 save_to_downloads = typer.confirm(
-                    "Save the bundled file to your Downloads directory?",
-                    default=True
+                    "Save the bundled file to your Downloads directory?", default=True
                 )
 
                 if save_to_downloads:
@@ -303,9 +324,9 @@ def bundle(
         print(f"📦 Format: {compression_format.upper()}")
         print(f"📏 Size: {destination.stat().st_size / 1024 / 1024:.1f} MB")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("🤖 AI ASSISTANT PROMPT")
-        print("="*60)
+        print("=" * 60)
 
     ai_prompt = (
         f"Extract the {compression_format.upper()} archive I've uploaded, "
@@ -316,7 +337,7 @@ def bundle(
 
     if not quiet_mode:
         print(ai_prompt)
-        print("="*60)
+        print("=" * 60)
 
     # Handle clipboard and file revelation
     if is_interactive:
@@ -346,7 +367,9 @@ def bundle(
         # In quiet mode, just print the essential info
         print(f"{destination}")
     else:
-        print(f"\n✅ Bundle creation complete! Upload {destination} to your AI assistant.")
+        print(
+            f"\n✅ Bundle creation complete! Upload {destination} to your AI assistant."
+        )
 
 
 @app.command()
