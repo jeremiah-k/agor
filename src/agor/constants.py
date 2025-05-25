@@ -28,6 +28,14 @@ ARCHIVE_EXTENSIONS = {
     "bz2": ".tar.bz2",
 }
 
+# Protocol version - increment when coordination protocols change
+# This is separate from AGOR version and tracks protocol compatibility
+PROTOCOL_VERSION = "1.0.0"
+
+# Version checking
+VERSION_CHECK_URL = "https://api.github.com/repos/jeremiah-k/agor/releases/latest"
+PROTOCOL_CHECK_URL = "https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/constants.py"
+
 # Error messages
 ERROR_MESSAGES = {
     "invalid_repo": "❌ Invalid repository. Please provide a valid git repository URL or local path.",

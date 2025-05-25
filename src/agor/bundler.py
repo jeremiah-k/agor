@@ -280,9 +280,11 @@ echo "🚀 Ready for development!"
         from datetime import datetime
 
         from .. import __version__
+        from ..constants import PROTOCOL_VERSION
 
         manifest = {
             "agor_version": __version__,
+            "protocol_version": PROTOCOL_VERSION,
             "bundle_created_at": datetime.now().isoformat(),
             "bundle_creator": {
                 "platform": platform.system(),
@@ -453,6 +455,7 @@ echo "🚀 Ready for development!"
 
 **Bundle Created**: {manifest['bundle_created_at']}
 **AGOR Version**: {manifest['agor_version']}
+**Protocol Version**: {manifest['protocol_version']}
 **Project**: {project_info.get('repository_name', 'Unknown')}
 **Current Branch**: {project_info.get('current_branch', 'Unknown')}
 

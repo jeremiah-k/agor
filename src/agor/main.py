@@ -660,12 +660,14 @@ def agent_manifest(
     import platform
     from datetime import datetime
     from pathlib import Path
+    from .constants import PROTOCOL_VERSION
 
     print("🤖 Generating AGOR Agent Manifest for Standalone Mode...")
 
     # Create manifest data
     manifest = {
         "agor_version": __version__,
+        "protocol_version": PROTOCOL_VERSION,
         "manifest_created_at": datetime.now().isoformat(),
         "created_for": "standalone_agent_mode",
         "creator_info": {
@@ -800,6 +802,7 @@ def agent_manifest(
 
 **Created**: {manifest['manifest_created_at']}
 **AGOR Version**: {manifest['agor_version']}
+**Protocol Version**: {manifest['protocol_version']}
 **Mode**: Standalone Agent (Direct Repository Access)
 **Project**: {project_info.get('repository_name', 'Unknown')}
 **Current Branch**: {project_info.get('current_branch', 'Unknown')}
@@ -877,11 +880,28 @@ def agent_manifest(
     print("   They can use it to understand the environment and setup requirements")
 
 
+@app.command()
+def version():
+    """Show version information and check for updates"""
+    from .version_check import display_version_info
+
+    display_version_info(check_updates=True)
+
+
 def cli():
     """Main CLI entry point"""
+    # Check for version updates for important commands
+    from .version_check import check_versions_if_needed
+
     if len(sys.argv) == 1:
         # Show help if no arguments provided
         sys.argv.append("--help")
+        check_versions_if_needed()
+    elif len(sys.argv) > 1:
+        command = sys.argv[1]
+        # Check versions for help, bundle, version commands - skip for config commands
+        if command in ["--help", "-h", "bundle", "version", "--version", "-v"]:
+            check_versions_if_needed()
 
     try:
         app()
