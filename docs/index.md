@@ -7,7 +7,7 @@
 ### "I need to get started with AGOR"
 
 - **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
-- **[docs/google-ai-studio.md](google-ai-studio.md)** - Free platform setup (Function Calling required)
+- **[docs/google-ai-studio.md](google-ai-studio.md)** - Google AI Studio setup (Function Calling required)
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
 
 ### "I need to understand roles and initialization"
@@ -64,7 +64,7 @@
 | ---------------------------------------------- | ------------------------ | ------------------------------------------- | ----- |
 | **[README.md](README.md)**                     | Documentation overview   | Navigation map, quick links                 | 51    |
 | **[quick-start.md](quick-start.md)**           | 5-minute setup guide     | Installation, bundling, platform setup      | ~200  |
-| **[google-ai-studio.md](google-ai-studio.md)** | Free platform guide      | Function Calling setup, troubleshooting     | ~300  |
+| **[google-ai-studio.md](google-ai-studio.md)** | Google AI Studio guide   | Function Calling setup, troubleshooting     | ~300  |
 | **[strategies.md](strategies.md)**             | Multi-agent coordination | 5 strategies with examples, decision matrix | ~400  |
 | **[handoffs.md](handoffs.md)**                 | Agent transition system  | Handoff creation, receiving, best practices | ~500  |
 

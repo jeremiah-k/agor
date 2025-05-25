@@ -12,14 +12,14 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 ### Bundle Mode (Upload to AI Platform)
 
-**For Google AI Studio (free), ChatGPT, and other upload-based platforms:**
+**For Google AI Studio, ChatGPT, and other upload-based platforms:**
 
 ```bash
 # Install AGOR locally
 pipx install agor
 
 # Bundle your project
-agor bundle /path/to/your/project -f zip    # For Google AI Studio (free)
+agor bundle /path/to/your/project -f zip    # For Google AI Studio
 agor bundle /path/to/your/project           # For ChatGPT (.tar.gz)
 
 # Upload bundle to your AI platform and follow embedded instructions
@@ -72,7 +72,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 **✅ Successfully Tested Platforms**
 
-- **Google AI Studio Pro** (free with Function Calling enabled, use `.zip` format)
+- **Google AI Studio Pro** (Function Calling enabled, use `.zip` format)
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
 - **Augment Code Remote Agents** (direct git access)
 - **Jules by Google** (direct git access)

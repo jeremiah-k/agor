@@ -33,7 +33,7 @@ agor bundle /path/to/your/project -b feature1,feature2
 ### Step 3: Upload to AI Platform
 
 1. **Upload the bundle file** to your chosen AI platform:
-   - **Google AI Studio**: Upload the .zip file (free with Pro models)
+   - **Google AI Studio**: Upload the .zip file (Pro models available)
    - **ChatGPT**: Upload the .tar.gz file (requires subscription)
    - **Other platforms**: Use appropriate format
 2. **Copy and paste the prompt** that AGOR generated
@@ -79,7 +79,7 @@ Based on your role selection, the AI will initialize with:
 - **Multiple format support** - .zip for Google AI Studio, .tar.gz for ChatGPT
 - **Self-contained** - everything bundled in one file including portable git binary
 - **✅ Successfully tested with**:
-  - **Google AI Studio Pro models** (free with Function Calling enabled, use .zip)
+  - **Google AI Studio Pro models** (Function Calling enabled, use .zip)
   - **ChatGPT** (requires subscription, use .tar.gz)
   - **Claude** and other platforms that accept file uploads
 

@@ -22,7 +22,7 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 
 ### Platform Guides
 
-- **[Google AI Studio Guide](google-ai-studio.md)** - Free platform setup and best practices
+- **[Google AI Studio Guide](google-ai-studio.md)** - Platform setup and best practices
 - **[ChatGPT Guide](chatgpt.md)** - Subscription platform optimization
 - **[Agent Mode Guide](agent-mode.md)** - For git-capable AI agents
 
@@ -50,7 +50,7 @@ Think of it as the difference between having one really smart developer versus h
 ## 🚀 Quick Navigation
 
 **New to AGOR?** → Start with [Quick Start Guide](quick-start.md)
-**Want to try for free?** → Check out [Google AI Studio Guide](google-ai-studio.md)
+**Want to get started quickly?** → Check out [Google AI Studio Guide](google-ai-studio.md)
 **Need help?** → Visit [Troubleshooting](troubleshooting.md)
 **Want to contribute?** → See [Feedback System](feedback.md)
 

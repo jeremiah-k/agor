@@ -1,13 +1,13 @@
 # 🆓 Google AI Studio Guide
 
-Google AI Studio provides a **free way** to use AGOR with Pro models - no subscription required! This guide will get you set up and running smoothly.
+Google AI Studio provides access to AGOR with Pro models - no subscription required! This guide will get you set up and running smoothly.
 
 ## 🎯 Why Google AI Studio?
 
-- **✅ Free access** to powerful Pro models
+- **✅ No subscription required** - Access powerful Pro models
 - **✅ Function Calling support** (essential for AGOR)
 - **✅ File upload capability** for bundles
-- **✅ No subscription fees** or usage limits for basic use
+- **✅ No usage limits** for basic use
 
 ## 🚀 Quick Setup
 
@@ -210,4 +210,4 @@ Google AI Studio works great for **single-agent workflows**, but you can also co
 
 ---
 
-**Ready to start coordinating with Google AI Studio?** Upload your first bundle and experience the power of free multi-agent development! 🚀
+**Ready to start coordinating with Google AI Studio?** Upload your first bundle and experience the power of multi-agent development! 🚀

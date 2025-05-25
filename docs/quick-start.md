@@ -15,7 +15,7 @@ By the end of this guide, you'll have:
 
 - **Python 3.10+** installed
 - **A development project** you want to coordinate
-- **AI platform access** (Google AI Studio is free!)
+- **AI platform access** (Google AI Studio recommended)
 
 ## 📦 Step 1: Install AGOR
 
@@ -36,7 +36,7 @@ agor --version
 # Navigate to your project
 cd /path/to/your/project
 
-# Bundle for Google AI Studio (free)
+# Bundle for Google AI Studio
 agor bundle . -f zip
 
 # Or bundle for ChatGPT
@@ -55,7 +55,7 @@ agor bundle .
 
 ## 🤖 Step 3: Choose Your AI Platform
 
-### Option A: Google AI Studio (Free!)
+### Option A: Google AI Studio
 
 1. **Visit [Google AI Studio](https://aistudio.google.com/)**
 2. **Create new chat** and **enable Function Calling** ⚠️
