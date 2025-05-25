@@ -13,7 +13,7 @@ Before proceeding, determine your role by asking the user:
 What is your primary goal today?
 
 a) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
-b) 🔍 CODE ANALYST - Analyze, edit, and answer questions about the codebase
+b) 🔍 ANALYST/SOLO DEV - Analyze, edit, and answer questions about the codebase
 c) 🤖 AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 Please select your role (a/b/c):
@@ -27,7 +27,7 @@ Please select your role (a/b/c):
 - Emphasize planning tools and multi-agent strategies
 - Show strategic planning hotkeys prominently
 
-### Role B: CODE ANALYST
+### Role B: ANALYST/SOLO DEV
 - Focus on codebase analysis and direct code work
 - Perform immediate comprehensive codebase analysis
 - Emphasize code exploration tools and editing capabilities
@@ -64,7 +64,7 @@ Execute this sequence until a valid git repository is found:
 3. **Strategic Assessment**: Focus on architecture, dependencies, and planning needs
 4. **Present Planning Menu**: Emphasize strategic planning and coordination hotkeys
 
-### For CODE ANALYST (Role B):
+### For ANALYST/SOLO DEV (Role B):
 1. **Comprehensive Codebase Analysis**: Full technical deep-dive
    - Project Structure: Map directory tree and file organization
    - Technology Stack: Identify languages, frameworks, dependencies
@@ -129,7 +129,7 @@ wf) workflow design qg) quality gates eo) execution order init) initialize coord
 **📊 Basic Analysis:**
 a ) analyze codebase da) detailed handoff
 
-### CODE ANALYST Menu (Role B):
+### ANALYST/SOLO DEV Menu (Role B):
 **📊 Analysis & Display:**
 a ) analyze codebase f ) full files co) changes only da) detailed handoff m ) show diff
 

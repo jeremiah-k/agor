@@ -42,10 +42,10 @@ ChatGPT will ask you to choose your primary role:
 - Emphasizes planning tools and multi-agent strategies
 - Best for: Project planning, team design, workflow orchestration
 
-**b) 🔍 CODE ANALYST** - Analyze, edit, and answer questions about the codebase
+**b) 🔍 ANALYST/SOLO DEV** - Analyze, edit, and answer questions about the codebase
 - Focus on detailed codebase analysis and direct code work
 - Emphasizes code exploration tools and editing capabilities
-- Best for: Code review, debugging, implementation, technical analysis
+- Best for: Code review, debugging, implementation, technical analysis, solo development
 
 **c) 🤖 AGENT WORKER** - Ready to receive specific tasks from project coordinator
 - Minimal initialization, waits for coordinator instructions

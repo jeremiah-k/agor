@@ -40,7 +40,7 @@ cd "$MAIN_PROJECT_DIR"
 
 # Ask user to select role:
 # a) PROJECT COORDINATOR - Plan and coordinate multi-agent development
-# b) CODE ANALYST - Analyze, edit, and answer questions about the codebase
+# b) ANALYST/SOLO DEV - Analyze, edit, and answer questions about the codebase
 # c) AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 # Initialize AGOR coordination in user's project
