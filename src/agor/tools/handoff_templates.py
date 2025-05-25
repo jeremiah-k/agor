@@ -8,7 +8,7 @@ including problem definition, progress made, commits, and next steps.
 import datetime
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 def get_git_context() -> Dict[str, str]:
@@ -16,44 +16,34 @@ def get_git_context() -> Dict[str, str]:
     try:
         # Get current branch
         branch = subprocess.check_output(
-            ["git", "branch", "--show-current"],
-            text=True,
-            stderr=subprocess.DEVNULL
+            ["git", "branch", "--show-current"], text=True, stderr=subprocess.DEVNULL
         ).strip()
 
         # Get git status
         status = subprocess.check_output(
-            ["git", "status", "--porcelain"],
-            text=True,
-            stderr=subprocess.DEVNULL
+            ["git", "status", "--porcelain"], text=True, stderr=subprocess.DEVNULL
         ).strip()
 
         # Get recent commits
         recent_commits = subprocess.check_output(
-            ["git", "log", "--oneline", "-10"],
-            text=True,
-            stderr=subprocess.DEVNULL
+            ["git", "log", "--oneline", "-10"], text=True, stderr=subprocess.DEVNULL
         ).strip()
 
         # Get current commit hash
         current_commit = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            text=True,
-            stderr=subprocess.DEVNULL
+            ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
 
         # Get uncommitted changes
         uncommitted = subprocess.check_output(
-            ["git", "diff", "--name-only"],
-            text=True,
-            stderr=subprocess.DEVNULL
+            ["git", "diff", "--name-only"], text=True, stderr=subprocess.DEVNULL
         ).strip()
 
         # Get staged changes
         staged = subprocess.check_output(
             ["git", "diff", "--cached", "--name-only"],
             text=True,
-            stderr=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL,
         ).strip()
 
         return {
@@ -61,8 +51,8 @@ def get_git_context() -> Dict[str, str]:
             "current_commit": current_commit,
             "status": status,
             "recent_commits": recent_commits,
-            "uncommitted_changes": uncommitted.split('\n') if uncommitted else [],
-            "staged_changes": staged.split('\n') if staged else [],
+            "uncommitted_changes": uncommitted.split("\n") if uncommitted else [],
+            "staged_changes": staged.split("\n") if staged else [],
         }
     except subprocess.CalledProcessError:
         return {
@@ -80,6 +70,7 @@ def get_agor_version() -> str:
     try:
         # Try to get version from package
         import pkg_resources
+
         return pkg_resources.get_distribution("agor").version
     except:
         try:
@@ -87,7 +78,7 @@ def get_agor_version() -> str:
             version = subprocess.check_output(
                 ["git", "describe", "--tags", "--abbrev=0"],
                 text=True,
-                stderr=subprocess.DEVNULL
+                stderr=subprocess.DEVNULL,
             ).strip()
             return version
         except subprocess.CalledProcessError:
@@ -104,7 +95,7 @@ def generate_handoff_document(
     context_notes: str,
     agent_role: str,
     handoff_reason: str,
-    estimated_completion: str = "Unknown"
+    estimated_completion: str = "Unknown",
 ) -> str:
     """Generate a comprehensive handoff document for agent transitions."""
 
@@ -354,10 +345,7 @@ This directory contains handoff documents for agent transitions.
     return handoff_dir
 
 
-def save_handoff_document(
-    handoff_content: str,
-    problem_summary: str
-) -> Path:
+def save_handoff_document(handoff_content: str, problem_summary: str) -> Path:
     """Save handoff document to .agor/handoffs/ directory."""
 
     handoff_dir = create_handoff_directory()
@@ -389,27 +377,24 @@ def update_handoff_index(filename: str, problem_summary: str, status: str):
         # Add to active handoffs
         content = content.replace(
             "## Active Handoffs\n- None currently",
-            f"## Active Handoffs\n- `{filename}` - {problem_summary}"
+            f"## Active Handoffs\n- `{filename}` - {problem_summary}",
         )
         if "- None currently" not in content and f"`{filename}`" not in content:
             content = content.replace(
                 "## Active Handoffs\n",
-                f"## Active Handoffs\n- `{filename}` - {problem_summary}\n"
+                f"## Active Handoffs\n- `{filename}` - {problem_summary}\n",
             )
     elif status == "completed":
         # Move from active to completed
-        content = content.replace(
-            f"- `{filename}` - {problem_summary}",
-            ""
-        )
+        content = content.replace(f"- `{filename}` - {problem_summary}", "")
         content = content.replace(
             "## Completed Handoffs\n- None yet",
-            f"## Completed Handoffs\n- `{filename}` - {problem_summary}"
+            f"## Completed Handoffs\n- `{filename}` - {problem_summary}",
         )
         if "- None yet" not in content and f"`{filename}`" not in content:
             content = content.replace(
                 "## Completed Handoffs\n",
-                f"## Completed Handoffs\n- `{filename}` - {problem_summary}\n"
+                f"## Completed Handoffs\n- `{filename}` - {problem_summary}\n",
             )
 
     index_file.write_text(content)

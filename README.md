@@ -40,11 +40,13 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ## 🎯 Core Capabilities
 
 **Role-Based Initialization**
+
 - **PROJECT COORDINATOR**: Strategic planning and team coordination
 - **ANALYST/SOLO DEV**: Deep codebase analysis and implementation
 - **AGENT WORKER**: Task execution and coordination handoffs
 
 **Multi-Agent Strategies**
+
 - **Parallel Divergent**: Independent exploration → peer review → synthesis
 - **Pipeline**: Sequential handoffs with specialization
 - **Swarm**: Dynamic task assignment for maximum parallelism
@@ -52,6 +54,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 - **Mob Programming**: Collaborative coding with rotating roles
 
 **Development Tools**
+
 - **Git integration** with portable binary (works in any environment)
 - **Codebase analysis** with language-specific exploration
 - **Memory persistence** and communication protocols
@@ -68,12 +71,14 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ## 🏢 Platform Support
 
 **✅ Successfully Tested Platforms**
+
 - **Google AI Studio Pro** (free with Function Calling enabled, use `.zip` format)
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
 - **Augment Code Remote Agents** (direct git access)
 - **Jules by Google** (direct git access)
 
 **Bundle Formats**
+
 - `.zip` - Optimized for Google AI Studio
 - `.tar.gz` - Standard format for ChatGPT and other platforms
 - `.tar.bz2` - High compression option

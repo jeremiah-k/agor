@@ -6,30 +6,33 @@ AGOR's real power comes from coordinating multiple AI agents using proven strate
 
 Each strategy is designed for specific scenarios and team dynamics. Choose based on your project needs, timeline, and coordination complexity.
 
-| Strategy | Best For | Team Size | Coordination Level |
-|----------|----------|-----------|-------------------|
-| **Parallel Divergent** | Exploration, Research | 2-4 agents | Medium |
-| **Pipeline** | Sequential Tasks | 3-6 agents | High |
-| **Swarm** | Parallel Work | 4-8 agents | Low |
-| **Red Team** | Quality Assurance | 2-4 agents | High |
-| **Mob Programming** | Learning, Complex Problems | 3-5 agents | Very High |
+| Strategy               | Best For                   | Team Size  | Coordination Level |
+| ---------------------- | -------------------------- | ---------- | ------------------ |
+| **Parallel Divergent** | Exploration, Research      | 2-4 agents | Medium             |
+| **Pipeline**           | Sequential Tasks           | 3-6 agents | High               |
+| **Swarm**              | Parallel Work              | 4-8 agents | Low                |
+| **Red Team**           | Quality Assurance          | 2-4 agents | High               |
+| **Mob Programming**    | Learning, Complex Problems | 3-5 agents | Very High          |
 
 ## 🔄 Parallel Divergent Strategy
 
 **"Multiple minds, better solutions"**
 
 ### How It Works
+
 1. **Divergent Phase**: Agents work independently on the same problem
 2. **Convergent Phase**: Agents review each other's solutions
 3. **Synthesis Phase**: Best ideas are combined into final solution
 
 ### Perfect For
+
 - **Feature design** with multiple possible approaches
 - **Architecture decisions** requiring different perspectives
 - **Problem-solving** where creativity is key
 - **Research phases** of development
 
 ### Example Workflow
+
 ```
 PROJECT COORDINATOR:
 1. sp → Create strategic plan
@@ -38,7 +41,7 @@ PROJECT COORDINATOR:
 
 AGENT TEAM:
 - Agent A: Frontend-focused approach
-- Agent B: Backend-optimized approach  
+- Agent B: Backend-optimized approach
 - Agent C: Performance-focused approach
 - Agent D: Security-focused approach
 
@@ -50,6 +53,7 @@ COORDINATION:
 ```
 
 ### Success Metrics
+
 - **Solution quality** improved through diverse perspectives
 - **Risk reduction** via multiple validation approaches
 - **Team learning** through exposure to different methods
@@ -59,18 +63,21 @@ COORDINATION:
 **"Assembly line for development"**
 
 ### How It Works
+
 1. **Sequential handoffs** between specialized agents
 2. **Clear interfaces** and deliverables at each stage
 3. **Quality gates** before work moves to next agent
 4. **Feedback loops** for continuous improvement
 
 ### Perfect For
+
 - **Feature development** with clear stages
 - **Bug fixes** requiring investigation → fix → testing
 - **Refactoring** with analysis → planning → implementation
 - **Integration projects** with multiple dependencies
 
 ### Example Workflow
+
 ```
 PIPELINE STAGES:
 
@@ -78,7 +85,7 @@ PIPELINE STAGES:
    → Analyzes requirements and codebase
    → Deliverable: Technical specification
 
-2. ARCHITECTURE AGENT (Design)  
+2. ARCHITECTURE AGENT (Design)
    → Designs solution architecture
    → Deliverable: Implementation plan
 
@@ -96,6 +103,7 @@ PIPELINE STAGES:
 ```
 
 ### Success Metrics
+
 - **Predictable delivery** through structured process
 - **Quality assurance** via stage gates
 - **Specialization benefits** from focused expertise
@@ -105,29 +113,32 @@ PIPELINE STAGES:
 **"Distributed intelligence"**
 
 ### How It Works
+
 1. **Shared task queue** with prioritized work items
 2. **Dynamic assignment** based on agent availability
 3. **Minimal coordination** overhead
 4. **Emergent organization** through self-selection
 
 ### Perfect For
+
 - **Large refactoring** with many independent tasks
 - **Bug fixing** across multiple components
 - **Documentation** updates and improvements
 - **Testing** coverage expansion
 
 ### Example Workflow
+
 ```
 TASK QUEUE SETUP:
 - Refactor user authentication (Priority: High)
-- Update API documentation (Priority: Medium)  
+- Update API documentation (Priority: Medium)
 - Add unit tests for utils (Priority: Medium)
 - Fix CSS styling issues (Priority: Low)
 - Optimize database queries (Priority: High)
 
 SWARM BEHAVIOR:
 Agent A: Claims "Refactor user authentication"
-Agent B: Claims "Optimize database queries"  
+Agent B: Claims "Optimize database queries"
 Agent C: Claims "Add unit tests for utils"
 Agent D: Claims "Update API documentation"
 
@@ -138,6 +149,7 @@ DYNAMIC REBALANCING:
 ```
 
 ### Success Metrics
+
 - **Throughput maximization** through parallel execution
 - **Flexibility** in handling changing priorities
 - **Load balancing** across available agents
@@ -147,18 +159,21 @@ DYNAMIC REBALANCING:
 **"Build it, break it, fix it"**
 
 ### How It Works
+
 1. **Blue Team** builds features and defenses
 2. **Red Team** attacks and finds vulnerabilities
 3. **Iterative cycles** of build → attack → improve
 4. **Adversarial validation** ensures robustness
 
 ### Perfect For
+
 - **Security-critical** applications
 - **Performance optimization** under stress
 - **API design** validation
 - **Error handling** improvement
 
 ### Example Workflow
+
 ```
 BLUE TEAM (Builders):
 - Implements authentication system
@@ -182,6 +197,7 @@ ITERATION CYCLE:
 ```
 
 ### Success Metrics
+
 - **Security posture** improvement through adversarial testing
 - **Robustness** under attack conditions
 - **Quality assurance** via systematic breaking attempts
@@ -191,24 +207,27 @@ ITERATION CYCLE:
 **"All minds on one problem"**
 
 ### How It Works
+
 1. **Collective problem-solving** with all agents engaged
 2. **Rotating roles** (Driver, Navigator, Observers)
 3. **Continuous discussion** and knowledge sharing
 4. **Real-time collaboration** on complex challenges
 
 ### Perfect For
+
 - **Complex algorithms** requiring deep thinking
 - **Learning new technologies** as a team
 - **Critical bug fixes** needing multiple perspectives
 - **Knowledge transfer** sessions
 
 ### Example Workflow
+
 ```
 ROLES ROTATION (15-minute intervals):
 
 Round 1:
 - Driver: Agent A (writes code)
-- Navigator: Agent B (guides direction)  
+- Navigator: Agent B (guides direction)
 - Observers: Agents C, D (suggest improvements)
 
 Round 2:
@@ -224,6 +243,7 @@ CONTINUOUS ACTIVITIES:
 ```
 
 ### Success Metrics
+
 - **Knowledge distribution** across all team members
 - **Code quality** through continuous review
 - **Problem-solving speed** via collective intelligence
@@ -245,7 +265,7 @@ You can combine strategies for complex projects:
 ```
 PROJECT PHASES:
 1. Parallel Divergent → Explore architecture options
-2. Pipeline → Implement chosen architecture  
+2. Pipeline → Implement chosen architecture
 3. Red Team → Validate security and robustness
 4. Swarm → Handle remaining tasks and polish
 ```
@@ -260,7 +280,7 @@ ss
 
 # Or directly initialize specific strategy
 pd  # Parallel Divergent
-pl  # Pipeline  
+pl  # Pipeline
 sw  # Swarm
 rt  # Red Team
 mb  # Mob Programming
@@ -269,6 +289,7 @@ mb  # Mob Programming
 ### Coordination Files
 
 Each strategy creates specific coordination files:
+
 - **`.agor/strategy-active.md`** - Current strategy details
 - **`.agor/agentconvo.md`** - Cross-agent communication
 - **`.agor/agent{N}-memory.md`** - Individual agent notes
@@ -276,6 +297,7 @@ Each strategy creates specific coordination files:
 ### Handoff Procedures
 
 Use AGOR's handoff prompts for smooth transitions:
+
 ```bash
 hp  # Generate handoff prompts
 da  # Detailed analysis for handoff
@@ -294,6 +316,7 @@ da  # Detailed analysis for handoff
 ### Continuous Improvement
 
 Use the `meta` hotkey to provide feedback on strategy effectiveness:
+
 - What worked well?
 - What coordination challenges emerged?
 - How could the strategy be improved?

@@ -485,6 +485,7 @@ Your insights are valuable for improving AGOR for future agents. The system will
 ## 🤝 HANDOFF PROCEDURES
 
 AGOR provides comprehensive handoff procedures for seamless agent transitions. Use these when:
+
 - You need to pass work to another agent
 - You're taking over work from another agent
 - You're switching roles mid-project
@@ -496,6 +497,7 @@ When you need to hand off work to another agent:
 
 1. **Use the `handoff` hotkey**
 2. **Provide comprehensive context**:
+
    - Problem description and goals
    - Work completed so far
    - Commits made (with git hashes)
@@ -517,6 +519,7 @@ When taking over work from another agent:
 1. **Use the `receive` hotkey**
 2. **Review the handoff document** thoroughly
 3. **Verify understanding** of:
+
    - The problem being solved
    - Work completed and current status
    - Technical context and decisions
@@ -528,6 +531,7 @@ When taking over work from another agent:
 ### Handoff Best Practices
 
 **For Handoff Creators:**
+
 - Be comprehensive - include everything the next agent needs to know
 - Document your reasoning and decision-making process
 - Include specific git commits and file changes
@@ -535,6 +539,7 @@ When taking over work from another agent:
 - Provide clear next steps with priorities
 
 **For Handoff Recipients:**
+
 - Read the entire handoff document before starting
 - Verify the current repository state matches the handoff
 - Ask questions if anything is unclear
@@ -544,6 +549,7 @@ When taking over work from another agent:
 ### Handoff Document Structure
 
 Each handoff includes:
+
 - **Problem Definition**: What we're trying to solve
 - **Work Completed**: Detailed list of accomplishments
 - **Commits Made**: Git history with explanations
@@ -556,6 +562,7 @@ Each handoff includes:
 ### Managing Handoffs (`handoffs` hotkey)
 
 Use the `handoffs` hotkey to:
+
 - List all active and completed handoffs
 - Review handoff history
 - Find specific handoff documents

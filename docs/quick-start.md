@@ -5,6 +5,7 @@ Get AGOR running in 5 minutes and experience the power of coordinated AI develop
 ## 🎯 What You'll Accomplish
 
 By the end of this guide, you'll have:
+
 - ✅ AGOR installed and working
 - ✅ Your first project bundled
 - ✅ An AI agent coordinating your development workflow
@@ -45,6 +46,7 @@ agor bundle .
 ```
 
 **What just happened?**
+
 - AGOR analyzed your project structure
 - Packaged your code with git history
 - Included a portable git binary
@@ -81,19 +83,25 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md
 AGOR will ask you to choose a role. Pick based on what you want to do:
 
 ### 📋 PROJECT COORDINATOR
+
 **"I want to plan and coordinate development"**
+
 - Strategic planning and project breakdown
 - Team design and workflow orchestration
 - Multi-agent strategy selection
 
 ### 🔍 ANALYST/SOLO DEV
+
 **"I want to analyze and work with code"**
+
 - Deep codebase analysis and exploration
 - Implementation and debugging
 - Technical deep-dives
 
 ### 🤖 AGENT WORKER
+
 **"I'm following instructions from a coordinator"**
+
 - Task execution and handoffs
 - Coordination communication
 - Status reporting
@@ -121,6 +129,7 @@ bp
 Let's walk through a typical coordination session:
 
 ### Planning Phase (PROJECT COORDINATOR)
+
 ```
 1. Type: sp
    → AGOR analyzes your project and creates strategic plan
@@ -136,6 +145,7 @@ Let's walk through a typical coordination session:
 ```
 
 ### Implementation Phase (ANALYST/SOLO DEV)
+
 ```
 1. Type: a
    → Comprehensive codebase analysis
@@ -153,14 +163,18 @@ Let's walk through a typical coordination session:
 ## 💡 Pro Tips
 
 ### Make It Executable (Google AI Studio)
+
 If you see command simulation instead of execution:
+
 ```
 chmod 755 /tmp/agor_tools/git
 /tmp/agor_tools/git status
 ```
 
 ### Switch Roles Mid-Session
+
 You can change roles by re-initializing:
+
 ```
 # Upload fresh bundle
 # Select different role
@@ -168,7 +182,9 @@ You can change roles by re-initializing:
 ```
 
 ### Provide Feedback
+
 Use the `meta` hotkey to help improve AGOR:
+
 ```
 meta
 → Report issues, suggest improvements, share success stories
@@ -186,11 +202,13 @@ Now that you have AGOR running, explore these advanced topics:
 ## 🆘 Need Help?
 
 **Something not working?**
+
 - Check [Troubleshooting Guide](troubleshooting.md)
 - Use the `meta` hotkey to report issues
 - Visit [GitHub Issues](https://github.com/jeremiah-k/agor/issues)
 
 **Want to understand more?**
+
 - Read [Core Concepts](roles.md)
 - Explore [Coordination Protocol](coordination.md)
 - Try [Advanced Strategies](strategies.md)
@@ -199,4 +217,4 @@ Now that you have AGOR running, explore these advanced topics:
 
 **Congratulations!** 🎉 You've just set up your first AI coordination workflow. Welcome to the future of development!
 
-*Ready to dive deeper? Check out the [Multi-Agent Strategies](strategies.md) to see what's possible.* 🚀
+_Ready to dive deeper? Check out the [Multi-Agent Strategies](strategies.md) to see what's possible._ 🚀
