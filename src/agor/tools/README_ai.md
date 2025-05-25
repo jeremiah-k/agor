@@ -11,7 +11,7 @@ Execute this sequence until a valid git repository is found:
 2. **Recursive Search**: Run `find /tmp -name ".git" -type d 2>/dev/null` to locate all git repositories
 3. **Directory Navigation**: Change to the directory containing `.git` and set as working directory
 4. **Verification**: Run `git ls-files` to confirm repository access and tracked files
-5. **Fallback Analysis**: If `git ls-files` returns empty, use `tree` command to examine structure
+5. **Fallback Analysis**: If `git ls-files` returns empty, use the provided `tree()` function to examine structure
 6. **Persistence**: Continue searching until a valid repository with tracked files is located
 7. **Never assume failure** - the git repository is always present in bundles
 
@@ -90,7 +90,38 @@ If user selects a hotkey, respond accordingly.
 - **`qg`**: Define quality gates and acceptance criteria
 - **`eo`**: Plan execution sequence considering dependencies
 
-**TOOLS:** `bfs_find()`, `grep()`, `tree()`, `find_function_signatures()`, `extract_function_content()`
+**AVAILABLE TOOLS:**
+
+**File System & Search:**
+- `bfs_find(base, pattern)` - Breadth-first search for files matching regex pattern
+- `grep(file_path, pattern, recursive=False)` - Search for regex pattern in files
+- `tree(directory, prefix="", depth=3)` - Generate directory tree structure (use instead of system `tree` command)
+
+**Code Analysis:**
+- `find_function_signatures(file_path, language)` - Find function/class definitions in source files
+- `extract_function_content(language, signature, content)` - Extract complete function code
+- `get_file_language(file_path)` - Determine programming language from file extension
+- `analyze_file_structure(file_path)` - Get comprehensive file analysis (lines, functions, imports)
+
+**Supported Languages:** python, javascript, typescript, c, cpp, java, ruby, go, rust, php, bash
+
+**Usage Examples:**
+```python
+# Load the tools (they're in the bundle at tools_for_ai/code_exploration.py)
+exec(open('tools_for_ai/code_exploration.py').read())
+
+# Find all Python files
+python_files = bfs_find('.', r'\.py$')
+
+# Search for function definitions
+functions = grep('.', r'def \w+', recursive=True)
+
+# Generate project tree
+project_structure = tree('.')
+
+# Analyze a specific file
+file_info = analyze_file_structure('src/main.py')
+```
 
 ## AGOR ARCHITECTURE OVERVIEW
 
