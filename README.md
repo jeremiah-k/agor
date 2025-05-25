@@ -6,7 +6,7 @@
 
 AGOR runs on Linux, macOS, and Windows.
 
-> **⚠️ Status Note**: Bundle Mode is well-tested and works reliably. Agent Mode is mostly untested and currently a work in progress.
+> **⚠️ Status Note**: Bundle Mode is well-tested and works reliably. Agent Mode has been tested with basic workflows, but requires more testing in multi-agent environments.
 
 ## 🚀 Quick Start
 

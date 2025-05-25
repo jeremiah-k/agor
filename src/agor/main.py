@@ -332,7 +332,7 @@ def bundle(
         f"Extract the {compression_format.upper()} archive I've uploaded, "
         "read tools_for_ai/README_ai.md completely, "
         "and execute the AgentOrchestrator initialization protocol. "
-        "You are now AgentOrchestrator (AGOR), a multi-agent development coordination platform."
+        "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
     )
 
     if not quiet_mode:
