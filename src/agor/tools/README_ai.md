@@ -171,6 +171,9 @@ wf) workflow design qg) quality gates eo) execution order init) initialize coord
 **📊 Basic Analysis:**
 a ) analyze codebase da) detailed handoff
 
+**🔄 Meta-Development:**
+meta) provide feedback on AGOR itself
+
 ### ANALYST/SOLO DEV Menu (Role B):
 
 **📊 Analysis & Display:**
@@ -188,6 +191,9 @@ doc) generate docs comment) add comments explain) code explanation
 **🎯 Planning Support:**
 sp) strategic plan bp) break down project
 
+**🔄 Meta-Development:**
+meta) provide feedback on AGOR itself
+
 ### AGENT WORKER Menu (Role C):
 
 **🤝 Coordination:**
@@ -201,6 +207,9 @@ task) receive task complete) mark complete handoff) prepare handoff
 
 **📊 Basic Analysis:**
 a ) analyze codebase f ) full files co) changes only
+
+**🔄 Meta-Development:**
+meta) provide feedback on AGOR itself
 
 **⚙️ System:**
 c ) continue r ) refresh w ) work autonomously ? ) help
@@ -435,3 +444,14 @@ VALIDATION:
 - Use short code cells (1-2 lines), verify with `/tmp/agor_tools/git diff`
 - Always show hotkey menu at end of replies
 - Track all decisions in `.agor/memory.md`
+- **Provide feedback on AGOR**: Use `meta` hotkey to report issues, suggestions, or exceptional workflows
+
+**META-DEVELOPMENT FEEDBACK:**
+
+As a development agent, your feedback helps AGOR evolve. Use the `meta` hotkey to:
+- Report bugs, unclear instructions, or workflow issues
+- Suggest improvements, new features, or better coordination patterns
+- Share workflows that worked exceptionally well
+- Provide technical implementation suggestions
+
+Your insights are valuable for improving AGOR for future agents. See `agor-meta.md` for the feedback template and guidelines.
