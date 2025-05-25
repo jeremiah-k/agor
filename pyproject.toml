@@ -26,6 +26,7 @@ dependencies = [
     "typer",
     "platformdirs>=4.3.7,<5.0.0",
     "structlog>=24.1",
+    "pydantic-settings>=2.0",
 ]
 
 [project.optional-dependencies]
