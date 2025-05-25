@@ -26,6 +26,11 @@ pipx install agor
 # Verify installation
 agor --version
 # Should output: agor, version 0.2.0
+
+# Configure git (optional but recommended)
+agor git-config --import-env  # Import from environment variables
+# or
+agor git-config --name "Your Name" --email "your@email.com"  # Set manually
 ```
 
 **Don't have pipx?** Install it first: `pip install pipx`

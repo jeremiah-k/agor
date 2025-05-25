@@ -1,5 +1,7 @@
+import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -292,7 +294,9 @@ def bundle(
             sqlite_url = config.get("sqlite_binary_url", settings.sqlite_binary_url)
 
             # Use cache directory for SQLite binary
-            sqlite_cache_dir = Path(platformdirs.user_cache_dir("agor")) / "sqlite_binary"
+            sqlite_cache_dir = (
+                Path(platformdirs.user_cache_dir("agor")) / "sqlite_binary"
+            )
             sqlite_cache_dir.mkdir(parents=True, exist_ok=True)
             sqlite_binary_cache_path = sqlite_cache_dir / "sqlite3"
 
@@ -331,6 +335,7 @@ def bundle(
         # Verify archive contents for debugging
         if not quiet_mode:
             from .utils import verify_archive_contents
+
             verify_archive_contents(archive_path)
 
     except Exception as e:
@@ -510,6 +515,366 @@ def custom_instructions(
     if copy:
         success, message = copy_to_clipboard(instructions)
         print(f"\n{message}")
+
+
+@app.command()
+def git_config(
+    import_env: bool = typer.Option(
+        False,
+        "--import-env",
+        help="Import git configuration from environment variables",
+    ),
+    name: Optional[str] = typer.Option(
+        None, "--name", help="Set git user.name (overrides environment)"
+    ),
+    email: Optional[str] = typer.Option(
+        None, "--email", help="Set git user.email (overrides environment)"
+    ),
+    global_config: bool = typer.Option(
+        False,
+        "--global",
+        help="Set configuration globally instead of for current repository",
+    ),
+    show: bool = typer.Option(False, "--show", help="Show current git configuration"),
+):
+    """Configure git user settings for AGOR development"""
+
+    if show:
+        print("🔍 Current Git Configuration:")
+        try:
+            current_name = subprocess.check_output(
+                ["git", "config", "user.name"], stderr=subprocess.DEVNULL, text=True
+            ).strip()
+            current_email = subprocess.check_output(
+                ["git", "config", "user.email"], stderr=subprocess.DEVNULL, text=True
+            ).strip()
+            print(f"   Name: {current_name}")
+            print(f"   Email: {current_email}")
+        except subprocess.CalledProcessError:
+            print("   No git configuration found")
+
+        # Show environment variables if available
+        env_name = os.getenv("GIT_AUTHOR_NAME") or os.getenv("GIT_USER_NAME")
+        env_email = os.getenv("GIT_AUTHOR_EMAIL") or os.getenv("GIT_USER_EMAIL")
+
+        if env_name or env_email:
+            print("\n🌍 Environment Variables:")
+            if env_name:
+                print(f"   GIT_AUTHOR_NAME/GIT_USER_NAME: {env_name}")
+            if env_email:
+                print(f"   GIT_AUTHOR_EMAIL/GIT_USER_EMAIL: {env_email}")
+
+        return
+
+    # Determine configuration values
+    config_name = name
+    config_email = email
+
+    if import_env:
+        # Import from environment variables
+        env_name = os.getenv("GIT_AUTHOR_NAME") or os.getenv("GIT_USER_NAME")
+        env_email = os.getenv("GIT_AUTHOR_EMAIL") or os.getenv("GIT_USER_EMAIL")
+
+        if env_name and not config_name:
+            config_name = env_name
+        if env_email and not config_email:
+            config_email = env_email
+
+        if not env_name and not env_email:
+            print("⚠️  No git environment variables found.")
+            print(
+                "   Set GIT_AUTHOR_NAME/GIT_USER_NAME and GIT_AUTHOR_EMAIL/GIT_USER_EMAIL"
+            )
+            print("   Or use --name and --email options")
+            return
+
+    if not config_name and not config_email:
+        print("❌ No configuration provided.")
+        print("   Use --import-env to import from environment")
+        print("   Or use --name and --email to set manually")
+        print("   Use --show to see current configuration")
+        return
+
+    # Apply git configuration
+    print("🔧 Setting up git configuration...")
+
+    config_scope = ["--global"] if global_config else []
+
+    try:
+        if config_name:
+            subprocess.run(
+                ["git", "config"] + config_scope + ["user.name", config_name],
+                check=True,
+            )
+            print(f"✅ Set user.name: {config_name}")
+
+        if config_email:
+            subprocess.run(
+                ["git", "config"] + config_scope + ["user.email", config_email],
+                check=True,
+            )
+            print(f"✅ Set user.email: {config_email}")
+
+        # Show repository info if in a git repo
+        try:
+            repo_root = subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"],
+                stderr=subprocess.DEVNULL,
+                text=True,
+            ).strip()
+            repo_name = os.path.basename(repo_root)
+            current_branch = subprocess.check_output(
+                ["git", "branch", "--show-current"],
+                stderr=subprocess.DEVNULL,
+                text=True,
+            ).strip()
+
+            print(f"\n📁 Repository: {repo_name}")
+            print(f"🌿 Current branch: {current_branch}")
+
+            if current_branch == "main":
+                print("💡 Ready to create feature branch when needed")
+
+        except subprocess.CalledProcessError:
+            scope_text = "globally" if global_config else "for current repository"
+            print(f"\nℹ️  Configuration applied {scope_text}")
+
+        print("\n🚀 Git configuration complete!")
+
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to set git configuration: {e}")
+        return
+
+
+@app.command()
+def agent_manifest(
+    copy: bool = typer.Option(
+        True, "--copy/--no-copy", help="Copy manifest to clipboard"
+    ),
+    format_type: str = typer.Option(
+        "markdown", "--format", help="Output format: markdown, json"
+    ),
+):
+    """Generate agent manifest for standalone mode"""
+    import json
+    import platform
+    from datetime import datetime
+    from pathlib import Path
+
+    print("🤖 Generating AGOR Agent Manifest for Standalone Mode...")
+
+    # Create manifest data
+    manifest = {
+        "agor_version": __version__,
+        "manifest_created_at": datetime.now().isoformat(),
+        "created_for": "standalone_agent_mode",
+        "creator_info": {
+            "platform": platform.system(),
+            "python_version": platform.python_version(),
+            "hostname": platform.node(),
+        },
+        "git_configuration": {},
+        "environment_info": {},
+        "project_info": {},
+        "setup_instructions": [],
+        "quick_start_commands": [],
+        "important_notes": [],
+    }
+
+    try:
+        # Get current git configuration
+        current_name = subprocess.check_output(
+            ["git", "config", "user.name"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+        current_email = subprocess.check_output(
+            ["git", "config", "user.email"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+
+        manifest["git_configuration"] = {
+            "user_name": current_name,
+            "user_email": current_email,
+            "captured_at": datetime.now().isoformat(),
+            "source": "current_system_config",
+        }
+
+    except subprocess.CalledProcessError:
+        manifest["git_configuration"] = {
+            "note": "No git configuration found on system",
+            "setup_required": True,
+        }
+
+    # Get project information if in a git repository
+    try:
+        repo_root = subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+
+        repo_name = Path(repo_root).name
+        current_branch = subprocess.check_output(
+            ["git", "branch", "--show-current"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+
+        recent_commits = (
+            subprocess.check_output(
+                ["git", "log", "--oneline", "-3"], stderr=subprocess.DEVNULL, text=True
+            )
+            .strip()
+            .split("\n")
+        )
+
+        manifest["project_info"] = {
+            "repository_name": repo_name,
+            "current_branch": current_branch,
+            "recent_commits": recent_commits,
+            "repository_root": repo_root,
+        }
+
+    except subprocess.CalledProcessError:
+        manifest["project_info"] = {
+            "note": "Not in a git repository",
+            "repository_name": "Unknown",
+        }
+
+    # Environment info
+    manifest["environment_info"] = {
+        "mode": "standalone_agent",
+        "working_directory": str(Path.cwd()),
+        "agor_available": True,
+        "git_binary_system": True,
+        "bundle_mode": False,
+    }
+
+    # Setup instructions
+    git_config = manifest["git_configuration"]
+    if git_config.get("user_name") and git_config.get("user_email"):
+        manifest["setup_instructions"] = [
+            "1. Clone AGOR repository: git clone https://github.com/jeremiah-k/agor.git",
+            "2. Git is already configured on this system",
+            "3. Use system git commands directly",
+            "4. Access AGOR tools in src/agor/tools/ directory",
+        ]
+
+        manifest["quick_start_commands"] = [
+            "git status",
+            "git config --list | grep user",
+            "ls src/agor/tools/",
+        ]
+    else:
+        manifest["setup_instructions"] = [
+            "1. Clone AGOR repository: git clone https://github.com/jeremiah-k/agor.git",
+            "2. Configure git: git config user.name 'Your Name'",
+            "3. Configure git: git config user.email 'your@email.com'",
+            "4. Access AGOR tools in src/agor/tools/ directory",
+        ]
+
+        manifest["quick_start_commands"] = [
+            "git config user.name 'Your Name'",
+            "git config user.email 'your@email.com'",
+            "git status",
+        ]
+
+    # Important notes
+    manifest["important_notes"] = [
+        "This is STANDALONE AGENT MODE - you have direct repository access",
+        "No bundle extraction needed - work directly with the repository",
+        "Use system git commands, not bundled git binary",
+        "AGOR tools are in src/agor/tools/ directory",
+        "Read src/agor/tools/README_ai.md for complete instructions",
+    ]
+
+    # Generate output based on format
+    if format_type.lower() == "json":
+        output = json.dumps(manifest, indent=2)
+        print("\n" + "=" * 60)
+        print("JSON MANIFEST")
+        print("=" * 60)
+        print(output)
+    else:
+        # Generate markdown format
+        git_config = manifest["git_configuration"]
+        project_info = manifest["project_info"]
+
+        output = f"""# 🤖 AGOR Agent Manifest - Standalone Mode
+
+**Created**: {manifest['manifest_created_at']}
+**AGOR Version**: {manifest['agor_version']}
+**Mode**: Standalone Agent (Direct Repository Access)
+**Project**: {project_info.get('repository_name', 'Unknown')}
+**Current Branch**: {project_info.get('current_branch', 'Unknown')}
+
+## 🔧 Git Configuration
+
+"""
+
+        if git_config.get("user_name") and git_config.get("user_email"):
+            output += f"""**System git configured**:
+- **Name**: {git_config['user_name']}
+- **Email**: {git_config['user_email']}
+- **Ready to use**: System git commands work directly
+"""
+        else:
+            output += """**Git setup required**:
+- Configure: `git config user.name "Your Name"`
+- Configure: `git config user.email "your@email.com"`
+"""
+
+        output += """
+
+## 🚀 Quick Start
+
+"""
+
+        for i, cmd in enumerate(manifest["quick_start_commands"], 1):
+            output += f"{i}. `{cmd}`\n"
+
+        output += """
+
+## 📋 Setup Instructions
+
+"""
+
+        for instruction in manifest["setup_instructions"]:
+            output += f"- {instruction}\n"
+
+        output += """
+
+## ⚠️ Important Notes
+
+"""
+
+        for note in manifest["important_notes"]:
+            output += f"- {note}\n"
+
+        output += f"""
+
+## 📊 Environment Info
+
+- **Mode**: {manifest['environment_info']['mode']}
+- **Working Directory**: {manifest['environment_info']['working_directory']}
+- **AGOR Available**: {'✅ Yes' if manifest['environment_info']['agor_available'] else '❌ No'}
+- **System Git**: {'✅ Available' if manifest['environment_info']['git_binary_system'] else '❌ Missing'}
+- **Bundle Mode**: {'✅ Yes' if manifest['environment_info']['bundle_mode'] else '❌ No (Standalone)'}
+
+---
+
+**Repository**: https://github.com/jeremiah-k/agor
+**Documentation**: src/agor/tools/README_ai.md
+"""
+
+        print("\n" + "=" * 60)
+        print("🤖 AGOR AGENT MANIFEST - STANDALONE MODE")
+        print("=" * 60)
+        print(output)
+
+    # Copy to clipboard if requested
+    if copy:
+        success, message = copy_to_clipboard(output)
+        print(f"\n{message}")
+
+    print("\n📝 Provide this manifest to AI agents working in standalone mode")
+    print("   They can use it to understand the environment and setup requirements")
 
 
 def cli():

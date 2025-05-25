@@ -156,18 +156,21 @@ agor bundle /path/to/your/project -f zip --sqlite
 ### SQLite Features
 
 **Structured Memory Storage**:
+
 - Agent memories with types (context, decision, learning, handoff)
 - Cross-agent coordination logs
 - Project state management
 - Advanced handoff tracking with relational data
 
 **Database Schema**:
+
 - `agent_memories` - Individual agent memory entries
 - `coordination_logs` - Cross-agent communication
 - `project_state` - Key-value project state storage
 - `handoffs` - Structured handoff records
 
 **Memory Commands Available**:
+
 - `mem-add`, `mem-get`, `mem-search` - Memory management
 - `coord-log`, `state-set`, `state-get` - Coordination and state
 - `handoff-create`, `handoff-status` - Database handoffs
@@ -185,12 +188,14 @@ agor bundle /path/to/your/project -f zip --sqlite
 ### When to Use SQLite Mode
 
 **Use SQLite Mode When**:
+
 - Working with multiple agents that need shared memory
 - Requiring structured queries across agent memories
 - Managing complex coordination workflows
 - Needing persistent state across sessions
 
 **Stick with Markdown When**:
+
 - Working solo or with simple coordination
 - Preferring human-readable memory files
 - Avoiding experimental features

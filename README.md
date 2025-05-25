@@ -23,6 +23,15 @@ agor bundle /path/to/your/project -f zip    # For Google AI Studio
 agor bundle /path/to/your/project           # For ChatGPT (.tar.gz)
 agor bundle /path/to/your/project --sqlite  # With SQLite memory (experimental)
 
+# Configure git for development
+agor git-config --import-env                # Import from environment variables
+agor git-config --name "Your Name" --email "your@email.com"  # Set manually
+agor git-config --show                      # Show current configuration
+
+# Generate agent manifest for standalone mode
+agor agent-manifest                         # Generate and copy manifest
+agor agent-manifest --format json          # JSON format
+
 # Upload bundle to your AI platform and follow embedded instructions
 ```
 
