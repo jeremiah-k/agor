@@ -19,21 +19,15 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 pipx install agor
 
 # Bundle your project
-agor bundle /path/to/your/project -f zip    # For Google AI Studio
-agor bundle /path/to/your/project           # For ChatGPT (.tar.gz)
-agor bundle /path/to/your/project --sqlite  # With SQLite memory (experimental)
-
-# Configure git for development
-agor git-config --import-env                # Import from environment variables
-agor git-config --name "Your Name" --email "your@email.com"  # Set manually
-agor git-config --show                      # Show current configuration
-
-# Generate agent manifest for standalone mode
-agor agent-manifest                         # Generate and copy manifest
-agor agent-manifest --format json          # JSON format
+agor bundle https://github.com/your-username/your-repo
+agor bundle /path/to/local/project
 
 # Upload bundle to your AI platform and follow embedded instructions
 ```
+
+**Bundle Options**: Use `-f zip` for Google AI Studio, `--sqlite` for memory features, `--branch` for specific branches
+
+> **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
 ### Agent Mode (Direct Git Access)
 
@@ -103,17 +97,22 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 **Code Quality Initiatives** - Coordinate security, performance, and maintainability improvements
 **Technical Debt Reduction** - Systematic planning and execution across components
 
-## 🔧 Installation
+## 🔧 Advanced Commands
 
 ```bash
-# Install AGOR
-pipx install agor
+# Git configuration management
+agor git-config --import-env                # Import from environment variables
+agor git-config --name "Your Name" --email "your@email.com"  # Set manually
+agor git-config --show                      # Show current configuration
 
-# Verify installation
-agor --version
+# Generate agent manifest for standalone mode
+agor agent-manifest                         # Generate and copy manifest
+agor agent-manifest --format json          # JSON format
 
-# Bundle a project
-agor bundle /path/to/project
+# Custom bundle options
+agor bundle repo --branch feature-branch   # Specific branch
+agor bundle repo --sqlite                   # With SQLite memory
+agor bundle repo -f zip                     # Google AI Studio format
 ```
 
 **Requirements**: Python 3.10+ | **Platforms**: Linux, macOS, Windows
@@ -131,4 +130,22 @@ agor bundle /path/to/project
 
 ## 🙏 Attribution
 
-Enhanced fork of [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp) | MIT License
+### Original AgentGrunt
+
+- **Created by**: [@nikvdp](https://github.com/nikvdp) (Nik Drobnyy)
+- **Repository**: <https://github.com/nikvdp/agentgrunt>
+- **License**: MIT License
+- **Core Contributions**: Innovative code bundling concept, git integration, basic AI instruction framework
+
+### AGOR Enhancements
+
+- **Enhanced by**: [@jeremiah-k](https://github.com/jeremiah-k) (Jeremiah K)
+- **Repository**: <https://github.com/jeremiah-k/agor>
+- **License**: MIT License (maintaining original)
+- **Major Additions**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks, dual deployment modes
+
+### Additional Inspiration
+
+- **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
+
+**We're deeply grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this comprehensive coordination platform possible.**
