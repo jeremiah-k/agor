@@ -7,18 +7,43 @@
 ### Step 1: Clone AGOR Repository
 
 ```bash
-# Clone AGOR repository (no installation needed)
+# Remember your main project directory
+MAIN_PROJECT_DIR=$(pwd)
+echo "Main project: $MAIN_PROJECT_DIR"
+
+# Clone AGOR to temporary location (don't interfere with main project)
+cd /tmp
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
-```
 
-### Step 2: Learn the Protocol
-
-```bash
-# Read the comprehensive AI instructions
+# Load AGOR protocol and capabilities
+cat AGOR_INSTRUCTIONS.md
 cat src/agor/tools/README_ai.md
 
-# This file contains the complete AGOR protocol and capabilities
+# Return to main project directory when ready to work
+# cd "$MAIN_PROJECT_DIR"
+```
+
+### Step 2: Understand the Workflow
+
+**Important**: AGOR is cloned to `/tmp` to avoid interfering with your main project. The workflow is:
+
+1. **Learn Protocol**: Read AGOR instructions (already done in Step 1)
+2. **Return to Main Project**: `cd "$MAIN_PROJECT_DIR"` when user gives you project instructions
+3. **Apply AGOR**: Use AGOR coordination protocols on the user's actual project
+4. **Reference AGOR**: Access AGOR tools from `/tmp/agor/` as needed
+
+```bash
+# When ready to work on user's project:
+cd "$MAIN_PROJECT_DIR"
+
+# Initialize AGOR coordination in user's project
+mkdir -p .agor
+echo "# Agent Communication Log" > .agor/agentconvo.md
+echo "# Project Memory" > .agor/memory.md
+
+# Use AGOR tools from temporary location
+# /tmp/agor/src/agor/tools/ contains all the templates and protocols
 ```
 
 ### Step 3: Receive User Instructions
