@@ -73,7 +73,7 @@ agor bundle .
 cd /tmp
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
-cat AGOR_INSTRUCTIONS.md
+cat src/agor/tools/AGOR_INSTRUCTIONS.md
 ```
 
 ## 🎭 Step 4: Select Your Role
@@ -125,7 +125,7 @@ Let's walk through a typical coordination session:
 1. Type: sp
    → AGOR analyzes your project and creates strategic plan
 
-2. Type: bp  
+2. Type: bp
    → Breaks down project into coordinated tasks
 
 3. Type: ss
@@ -197,6 +197,6 @@ Now that you have AGOR running, explore these advanced topics:
 
 ---
 
-**Congratulations!** 🎉 You've just set up your first AI coordination workflow. Welcome to the future of development! 
+**Congratulations!** 🎉 You've just set up your first AI coordination workflow. Welcome to the future of development!
 
 *Ready to dive deeper? Check out the [Multi-Agent Strategies](strategies.md) to see what's possible.* 🚀

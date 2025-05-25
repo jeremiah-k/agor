@@ -34,7 +34,7 @@ agor bundle /path/to/your/project           # For ChatGPT (.tar.gz)
 cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 
 # Load protocol and return to your project
-cat AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
+cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ```
 
 ## 🎯 Core Capabilities
@@ -105,8 +105,8 @@ agor bundle /path/to/project
 
 ## 📚 Documentation
 
-**[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Agent Mode setup
-**[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup
+**[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup
+**[BUNDLE_INSTRUCTIONS.md](src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup
 **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol
 **[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 
