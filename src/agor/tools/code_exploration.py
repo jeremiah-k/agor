@@ -82,7 +82,11 @@ def tree(directory: str, prefix: str = "", depth_remaining: int = 3) -> str:
     Returns:
         String representation of directory tree
     """
-    if depth_remaining < 0 or not os.path.exists(directory) or not os.path.isdir(directory):
+    if (
+        depth_remaining < 0
+        or not os.path.exists(directory)
+        or not os.path.isdir(directory)
+    ):
         return ""
 
     try:

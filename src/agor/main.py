@@ -11,9 +11,13 @@ import typer
 
 from . import __version__
 from .config import config
-from .constants import ARCHIVE_EXTENSIONS, DEFAULT_COMPRESSION_FORMAT, GIT_BINARY_URL, SUCCESS_MESSAGES
+from .constants import (
+    ARCHIVE_EXTENSIONS,
+    DEFAULT_COMPRESSION_FORMAT,
+    GIT_BINARY_URL,
+    SUCCESS_MESSAGES,
+)
 from .exceptions import ValidationError
-from .git_binary import git_manager
 from .platform import (
     copy_to_clipboard,
     get_downloads_dir,
@@ -248,9 +252,7 @@ def bundle(
         git_url = config.get("git_binary_url", GIT_BINARY_URL)
 
         # Use cache directory for git binary
-        git_cache_dir = (
-            Path(platformdirs.user_cache_dir("agor")) / "git_binary"
-        )
+        git_cache_dir = Path(platformdirs.user_cache_dir("agor")) / "git_binary"
         git_cache_dir.mkdir(parents=True, exist_ok=True)
         git_binary_cache_path = git_cache_dir / "git"
 

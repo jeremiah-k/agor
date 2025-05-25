@@ -1,10 +1,8 @@
 """
-Constants for AGOR to replace magic numbers and hard-coded values.
-"""
+Constants for AGOR - immutable values only.
 
-# Git operations
-DEFAULT_SHALLOW_DEPTH = 5  # Shallow clone gets last 5 commits instead of full history
-GIT_BINARY_URL = "https://github.com/nikvdp/1bin/releases/download/v0.0.40/git"
+Mutable configuration values have been moved to settings.py.
+"""
 
 # File operations
 DOWNLOAD_CHUNK_SIZE = 1024  # 1 Kibibyte chunks for downloads
@@ -12,7 +10,6 @@ PROGRESS_BAR_WIDTH = 80  # Consistent progress bar width
 
 # Compression formats
 SUPPORTED_COMPRESSION_FORMATS = ["zip", "gz", "bz2"]
-DEFAULT_COMPRESSION_FORMAT = "zip"
 
 # Platform detection
 TERMUX_INDICATORS = [
@@ -21,15 +18,8 @@ TERMUX_INDICATORS = [
     "termux",  # In various environment variables
 ]
 
-# Git binary integrity - verified SHA256 hash
-GIT_BINARY_SHA256 = "af17911884c5afcf5be1c2438483e8d65a82c6a80ed8a354b8d4f6e0b964978f"
-
-# CLI defaults
-DEFAULT_CLIPBOARD_COPY = True
-DEFAULT_INTERACTIVE = True
-DEFAULT_ASSUME_YES = False
-DEFAULT_PRESERVE_HISTORY = False
-DEFAULT_MAIN_ONLY = False
+# Note: Git binary settings moved to settings.py
+# Note: CLI defaults moved to settings.py
 
 # File extensions
 ARCHIVE_EXTENSIONS = {

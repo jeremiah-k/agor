@@ -33,14 +33,36 @@ agor bundle /path/to/your/project -b feature1,feature2
 2. **Copy and paste the prompt** that AGOR generated
 3. **ChatGPT will extract** the bundle and initialize AGOR protocol
 
-### Step 4: Begin Coordination
+### Step 4: Select Your Role
 
-ChatGPT will transform into AgentOrchestrator with access to:
+ChatGPT will ask you to choose your primary role:
+
+**a) 📋 PROJECT COORDINATOR** - Plan and coordinate multi-agent development
+
+- Focus on strategic planning and team coordination
+- Emphasizes planning tools and multi-agent strategies
+- Best for: Project planning, team design, workflow orchestration
+
+**b) 🔍 ANALYST/SOLO DEV** - Analyze, edit, and answer questions about the codebase
+
+- Focus on detailed codebase analysis and direct code work
+- Emphasizes code exploration tools and editing capabilities
+- Best for: Code review, debugging, implementation, technical analysis, solo development
+
+**c) 🤖 AGENT WORKER** - Ready to receive specific tasks from project coordinator
+
+- Minimal initialization, waits for coordinator instructions
+- Focus on executing specific tasks and coordination
+- Best for: Specialized development tasks, following coordinator plans
+
+### Step 5: Begin Work
+
+Based on your role selection, ChatGPT will initialize with:
 
 - Your complete project codebase
-- AGOR planning and coordination tools
-- Multi-agent prompt templates
-- Strategic planning frameworks
+- Role-appropriate AGOR tools and hotkeys
+- Coordination and communication capabilities
+- Strategic planning frameworks (if coordinator)
 
 ## Bundle Mode vs Agent Mode
 
