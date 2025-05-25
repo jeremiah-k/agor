@@ -332,7 +332,7 @@ def bundle(
         f"Extract the {compression_format.upper()} archive I've uploaded, "
         "read tools_for_ai/README_ai.md completely, "
         "and execute the AgentOrchestrator initialization protocol. "
-        "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
+        "You are now AgentOrchestrator (AGOR), a multi-agent development coordination platform."
     )
 
     if not quiet_mode:
@@ -341,13 +341,13 @@ def bundle(
 
     # Handle clipboard and file revelation
     if is_interactive:
-        # Always ask, but default to yes (unless auto_yes is set)
-        if not auto_yes:
-            should_copy = typer.confirm("Copy the AI prompt to clipboard?", default=True)
-        else:
-            should_copy = True
+        # Default to copying based on configuration
+        should_copy = config.get("clipboard_copy_default", True)
 
-        if should_copy:
+        if not auto_yes and not should_copy:
+            should_copy = typer.confirm("Copy the AI prompt to clipboard?")
+
+        if should_copy or auto_yes:
             success, message = copy_to_clipboard(ai_prompt)
             if not quiet_mode:
                 print(f"\n{message}")
