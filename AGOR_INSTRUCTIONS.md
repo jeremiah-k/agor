@@ -2,7 +2,7 @@
 
 ## Quick Start for AI Agents
 
-**Agent Mode** is for AI agents with git access (Augment Code, Jules by Google, etc.)
+**Agent Mode** is for AI agents with direct git access (Augment Code, Jules by Google, etc.)
 
 ### Step 1: Clone AGOR Repository
 
@@ -62,7 +62,7 @@ You now have access to all AgentOrchestrator capabilities:
 
 ## Agent Mode vs Bundle Mode
 
-**Agent Mode (This Mode) - For AI Agents with Git Access:**
+**Agent Mode (This Mode) - For AI Agents with Direct Git Access:**
 
 - **No installation required** - just clone the AGOR repository
 - **Direct repository access** - can work with any repository URL
@@ -78,7 +78,7 @@ You now have access to all AgentOrchestrator capabilities:
 - **File upload workflow** - user bundles project and uploads .tar.gz
 - **Works with upload-only platforms** like ChatGPT
 - **Self-contained** - everything bundled in one file
-- **For**: ChatGPT and other platforms without git access
+- **For**: ChatGPT and other AI agents that accept file uploads (.zip/.tar.gz)
 
 ## Usage Examples
 
@@ -119,7 +119,7 @@ git clone https://github.com/user/shared-lib.git
 
 ## Integration with AI Platforms
 
-### For AI Agents with Git Access (Augment Code, Jules, etc.):
+### For AI Agents with Direct Git Access (Augment Code, Jules, etc.):
 
 1. **User provides AGOR repository URL** to the AI agent
 2. **Agent clones AGOR repository** and learns the protocol

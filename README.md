@@ -10,7 +10,7 @@ AGOR runs on Linux, macOS, and Windows.
 
 ## 🚀 Quick Start
 
-### Agent Mode (For AI Agents with Git Access)
+### Agent Mode (For AI Agents with Direct Git Access)
 
 **For Augment Code, Jules by Google, and other AI agents:**
 
@@ -196,8 +196,8 @@ agor/
 
 ### Mode-Specific Instructions
 
-- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Agent Mode (for AI agents with git access)
-- **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode (for ChatGPT upload)
+- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Agent Mode (for AI agents with direct git access)
+- **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode (for AI agents that accept .zip/.tar.gz uploads)
 
 ### Technical Documentation
 
