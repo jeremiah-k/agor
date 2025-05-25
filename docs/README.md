@@ -2,6 +2,9 @@
 
 Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the platform that transforms AI assistants into sophisticated development coordinators.
 
+## 🤖 For AI Models: Start Here
+**[📋 Documentation Index](index.md)** - Token-efficient lookup designed for AI models. Find what you need without exploration overhead.
+
 ## 🗺️ Documentation Map
 
 ### Getting Started
