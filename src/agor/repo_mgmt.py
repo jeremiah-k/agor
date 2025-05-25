@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 import tarfile
 import tempfile
 from pathlib import Path
@@ -7,6 +8,10 @@ from urllib.parse import urlparse
 
 from plumbum.cmd import git
 from tqdm import tqdm
+
+from .constants import DEFAULT_SHALLOW_DEPTH
+from .exceptions import RepositoryError, ValidationError
+from .validation import validate_repository_url, validate_local_repository, validate_branch_list
 
 
 def is_github_url(value: str) -> bool:
@@ -87,7 +92,7 @@ def clone_git_repo_to_temp_dir(
     if main_only:
         # Clone only main/master branch
         if shallow:
-            clone_command.extend(["--depth", "5"])  # TODO: make this configurable
+            clone_command.extend(["--depth", str(DEFAULT_SHALLOW_DEPTH)])
         # Try to determine main/master branch
         if is_local:
             # For local repos, check what the default branch is
@@ -99,14 +104,14 @@ def clone_git_repo_to_temp_dir(
                     .strip()
                     .split("/")[-1]
                 )
-            except Exception:
+            except (OSError, subprocess.CalledProcessError):
                 # Fallback to common default branches
                 try:
                     git["show-ref", "--verify", "--quiet", "refs/heads/main"](
                         cwd=local_repo.resolve()
                     )
                     default_branch = "main"
-                except Exception:
+                except (OSError, subprocess.CalledProcessError):
                     default_branch = "master"
         else:
             # For remote repos, try to get default branch
@@ -122,7 +127,7 @@ def clone_git_repo_to_temp_dir(
                             ref_path = parts[1]
                             default_branch = ref_path.split("/")[-1]
                             break
-            except Exception:
+            except (OSError, subprocess.CalledProcessError):
                 default_branch = "main"
 
         print(f"Cloning only main/master branch: {default_branch}")
@@ -139,7 +144,7 @@ def clone_git_repo_to_temp_dir(
         clone_command.append("--bare")
     elif shallow:
         # Default behavior (current branch for local repos or default branch for remote repos)
-        clone_command.extend(["--depth", "5"])  # TODO: make this configurable
+        clone_command.extend(["--depth", str(DEFAULT_SHALLOW_DEPTH)])
         if is_local:
             checked_out_branch = git["rev-parse", "--abbrev-ref", "HEAD"](
                 cwd=local_repo.resolve()
