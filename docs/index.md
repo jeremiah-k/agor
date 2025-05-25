@@ -74,6 +74,7 @@
 | **[google-ai-studio.md](google-ai-studio.md)** | Google AI Studio guide   | Function Calling setup, troubleshooting     | ~300  |
 | **[strategies.md](strategies.md)**             | Multi-agent coordination | 5 strategies with examples, decision matrix | ~400  |
 | **[handoffs.md](handoffs.md)**                 | Agent transition system  | Handoff creation, receiving, best practices | ~500  |
+| **[agor-development-guide.md](agor-development-guide.md)** | Development checklist | For agents working on AGOR itself | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 
@@ -162,6 +163,7 @@ Platform-specific? → bundle-mode.md platform sections
 - Multi-agent strategies
 - Handoff system
 - Code exploration tools
+- AGOR development guide
 
 ### 📝 Referenced but Not Yet Created
 
