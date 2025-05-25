@@ -1,6 +1,6 @@
 # Code Exploration Tools Documentation
 
-This document provides detailed information about the code exploration tools available to AgentGrunt AI assistants.
+This document provides detailed information about the code exploration tools available to AGOR AI assistants.
 
 ## Available Functions
 

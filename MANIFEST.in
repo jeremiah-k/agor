@@ -1,5 +1,4 @@
 include LICENSE
-include AGOR_README.md
-include src/agor/tools/AGOR_INSTRUCTIONS.md
 include README.md
+include src/agor/tools/AGOR_INSTRUCTIONS.md
 recursive-include src/agor/tools *

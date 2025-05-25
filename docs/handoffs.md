@@ -232,7 +232,7 @@ When receiving a handoff:
 agor --version
 
 # If versions don't match, consider checking out the handoff version
-git checkout v0.1.5  # Example: checkout the version used in handoff
+git checkout v0.2.0  # Example: checkout the version used in handoff
 
 # Or update to latest if handoff is from newer version
 pipx upgrade agor
@@ -242,12 +242,12 @@ pipx upgrade agor
 
 **Same Major.Minor Version**: ✅ Fully compatible
 
-- Example: 0.1.4 ↔️ 0.1.5
+- Example: 0.2.0 ↔️ 0.2.1
 - All protocols and hotkeys should work identically
 
 **Different Minor Version**: ⚠️ Mostly compatible
 
-- Example: 0.1.x ↔️ 0.2.x
+- Example: 0.2.x ↔️ 0.3.x
 - Core protocols compatible, some new features may be missing
 
 **Different Major Version**: ❌ May have breaking changes
@@ -264,7 +264,7 @@ pipx upgrade agor
 pipx upgrade agor
 
 # Option 2: Use git to checkout handoff version
-git checkout v0.1.5  # Use version from handoff
+git checkout v0.2.0  # Use version from handoff
 ```
 
 **If you have newer AGOR version:**

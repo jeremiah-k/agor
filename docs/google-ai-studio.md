@@ -204,9 +204,9 @@ Google AI Studio works great for **single-agent workflows**, but you can also co
 
 ### Getting Help
 
-- **Check [Troubleshooting Guide](troubleshooting.md)** for detailed solutions
 - **Use the `meta` hotkey** to report issues directly
 - **Visit [GitHub Issues](https://github.com/jeremiah-k/agor/issues)** for community support
+- **Check [Complete AI Protocol](../src/agor/tools/README_ai.md)** for detailed instructions
 
 ---
 

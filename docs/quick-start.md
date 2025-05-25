@@ -25,7 +25,7 @@ pipx install agor
 
 # Verify installation
 agor --version
-# Should output: agor, version 0.1.5
+# Should output: agor, version 0.2.0
 ```
 
 **Don't have pipx?** Install it first: `pip install pipx`
@@ -212,22 +212,22 @@ db-stats   # View database statistics
 Now that you have AGOR running, explore these advanced topics:
 
 - **[Multi-Agent Strategies](strategies.md)** - Learn coordination patterns
-- **[Platform-Specific Guides](google-ai-studio.md)** - Optimize for your platform
-- **[Role Deep-Dive](roles.md)** - Master each role's capabilities
-- **[Troubleshooting](troubleshooting.md)** - Solve common issues
+- **[Google AI Studio Guide](google-ai-studio.md)** - Optimize for your platform
+- **[Agent Handoffs](handoffs.md)** - Master agent transitions
+- **[Complete AI Protocol](../src/agor/tools/README_ai.md)** - Comprehensive instructions
 
 ## 🆘 Need Help?
 
 **Something not working?**
 
-- Check [Troubleshooting Guide](troubleshooting.md)
 - Use the `meta` hotkey to report issues
 - Visit [GitHub Issues](https://github.com/jeremiah-k/agor/issues)
+- Check [Google AI Studio Guide](google-ai-studio.md) for platform-specific help
 
 **Want to understand more?**
 
-- Read [Core Concepts](roles.md)
-- Explore [Coordination Protocol](coordination.md)
+- Read [Complete AI Protocol](../src/agor/tools/README_ai.md)
+- Explore [Agent Handoffs](handoffs.md)
 - Try [Advanced Strategies](strategies.md)
 
 ---
