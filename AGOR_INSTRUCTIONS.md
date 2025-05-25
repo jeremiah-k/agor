@@ -30,12 +30,18 @@ cat src/agor/tools/README_ai.md
 
 1. **Learn Protocol**: Read AGOR instructions (already done in Step 1)
 2. **Return to Main Project**: `cd "$MAIN_PROJECT_DIR"` when user gives you project instructions
-3. **Apply AGOR**: Use AGOR coordination protocols on the user's actual project
-4. **Reference AGOR**: Access AGOR tools from `/tmp/agor/` as needed
+3. **Select Role**: Ask user to choose PROJECT COORDINATOR, CODE ANALYST, or AGENT WORKER
+4. **Apply AGOR**: Use AGOR coordination protocols on the user's actual project
+5. **Reference AGOR**: Access AGOR tools from `/tmp/agor/` as needed
 
 ```bash
 # When ready to work on user's project:
 cd "$MAIN_PROJECT_DIR"
+
+# Ask user to select role:
+# a) PROJECT COORDINATOR - Plan and coordinate multi-agent development
+# b) CODE ANALYST - Analyze, edit, and answer questions about the codebase
+# c) AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 # Initialize AGOR coordination in user's project
 mkdir -p .agor
