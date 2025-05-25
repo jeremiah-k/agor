@@ -10,8 +10,8 @@ from typing import Optional
 import platformdirs
 
 from .config import config
-from .constants import GIT_BINARY_SHA256, GIT_BINARY_URL
 from .exceptions import GitBinaryError
+from .settings import settings
 from .utils import download_file
 
 
@@ -75,11 +75,13 @@ class GitBinaryManager:
     def _try_download_binary(self) -> Optional[str]:
         """Try to download git binary."""
         try:
-            git_url = config.get("git_binary_url", GIT_BINARY_URL)
-            expected_hash = config.get("git_binary_sha256", GIT_BINARY_SHA256)
+            git_url = config.get("git_binary_url", settings.git_binary_url)
+            expected_hash = config.get("git_binary_sha256", settings.git_binary_sha256)
 
             # Only verify hash if it's not the placeholder
-            verify_hash = expected_hash if expected_hash != GIT_BINARY_SHA256 else None
+            verify_hash = (
+                expected_hash if expected_hash != settings.git_binary_sha256 else None
+            )
 
             download_file(git_url, self.cached_binary, verify_hash)
             self.cached_binary.chmod(0o755)
@@ -118,10 +120,10 @@ class GitBinaryManager:
 
     def _verify_binary_integrity(self, binary_path: Path) -> bool:
         """Verify binary integrity using SHA256."""
-        expected_hash = config.get("git_binary_sha256", GIT_BINARY_SHA256)
+        expected_hash = config.get("git_binary_sha256", settings.git_binary_sha256)
 
         # Skip verification if using placeholder hash
-        if expected_hash == GIT_BINARY_SHA256:
+        if expected_hash == settings.git_binary_sha256:
             return True
 
         try:

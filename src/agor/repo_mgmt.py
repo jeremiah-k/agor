@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from plumbum.cmd import git
 from tqdm import tqdm
 
-from .constants import DEFAULT_SHALLOW_DEPTH
+from .settings import settings
 
 
 def is_github_url(value: str) -> bool:
@@ -90,7 +90,7 @@ def clone_git_repo_to_temp_dir(
     if main_only:
         # Clone only main/master branch
         if shallow:
-            clone_command.extend(["--depth", str(DEFAULT_SHALLOW_DEPTH)])
+            clone_command.extend(["--depth", str(settings.default_shallow_depth)])
         # Try to determine main/master branch
         if is_local:
             # For local repos, check what the default branch is
@@ -142,7 +142,7 @@ def clone_git_repo_to_temp_dir(
         clone_command.append("--bare")
     elif shallow:
         # Default behavior (current branch for local repos or default branch for remote repos)
-        clone_command.extend(["--depth", str(DEFAULT_SHALLOW_DEPTH)])
+        clone_command.extend(["--depth", str(settings.default_shallow_depth)])
         if is_local:
             checked_out_branch = git["rev-parse", "--abbrev-ref", "HEAD"](
                 cwd=local_repo.resolve()

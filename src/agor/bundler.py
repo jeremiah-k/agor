@@ -213,7 +213,7 @@ async def create_bundle(
     Args:
         repo_url: Repository URL or local path
         output_path: Optional custom output path
-        **kwargs: Additional options for Orchestrator
+        **kwargs: Additional options for BundleBuilder
 
     Returns:
         Path to the created bundle file

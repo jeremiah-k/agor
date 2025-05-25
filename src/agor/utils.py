@@ -10,12 +10,12 @@ import httpx
 from tqdm import tqdm
 
 from .constants import (
-    DEFAULT_COMPRESSION_FORMAT,
     DOWNLOAD_CHUNK_SIZE,
     PROGRESS_BAR_WIDTH,
     SUPPORTED_COMPRESSION_FORMATS,
 )
 from .exceptions import CompressionError, NetworkError
+from .settings import settings
 
 
 def move_directory(src_dir: Path, dest_dir: Path):
@@ -95,7 +95,7 @@ def download_file(
 def create_archive(
     dir_to_compress: Path,
     archive_path: Path,
-    compression: str = DEFAULT_COMPRESSION_FORMAT,
+    compression: str = None,
 ) -> Path:
     """
     Create an archive (ZIP or TAR) from a directory.
@@ -112,6 +112,10 @@ def create_archive(
         CompressionError: If compression fails
         ValueError: If compression format is invalid
     """
+    # Use default compression format if none provided
+    if compression is None:
+        compression = settings.compression_format
+
     # Ensure the directory exists
     if not dir_to_compress.exists() or not dir_to_compress.is_dir():
         raise CompressionError(f"'{dir_to_compress}' is not a valid directory.")
