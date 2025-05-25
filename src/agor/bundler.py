@@ -168,6 +168,9 @@ class BundleBuilder:
         if agor_tools_src.exists():
             shutil.copytree(agor_tools_src, tools_dir)
 
+        # Capture current git configuration
+        await self._capture_git_config(tools_dir)
+
         # Download git binary
         try:
             git_binary_path = tools_dir / "git"
@@ -176,6 +179,91 @@ class BundleBuilder:
             log.info("Added git binary to bundle", path=str(git_binary_path))
         except Exception as e:
             log.warning("Failed to add git binary", error=str(e))
+
+    async def _capture_git_config(self, tools_dir: Path) -> None:
+        """Capture current git configuration and save it for agents."""
+        import subprocess
+        import json
+
+        git_config = {
+            "user_name": None,
+            "user_email": None,
+            "captured_at": None,
+            "environment_vars": {},
+            "setup_script": None
+        }
+
+        try:
+            # Get current git configuration
+            try:
+                git_config["user_name"] = subprocess.check_output(
+                    ["git", "config", "user.name"],
+                    stderr=subprocess.DEVNULL,
+                    text=True
+                ).strip()
+            except subprocess.CalledProcessError:
+                pass
+
+            try:
+                git_config["user_email"] = subprocess.check_output(
+                    ["git", "config", "user.email"],
+                    stderr=subprocess.DEVNULL,
+                    text=True
+                ).strip()
+            except subprocess.CalledProcessError:
+                pass
+
+            # Capture environment variables that might be relevant
+            import os
+            env_vars = [
+                "GIT_AUTHOR_NAME", "GIT_USER_NAME", "GIT_COMMITTER_NAME",
+                "GIT_AUTHOR_EMAIL", "GIT_USER_EMAIL", "GIT_COMMITTER_EMAIL"
+            ]
+
+            for var in env_vars:
+                value = os.getenv(var)
+                if value:
+                    git_config["environment_vars"][var] = value
+
+            # Add timestamp
+            from datetime import datetime
+            git_config["captured_at"] = datetime.now().isoformat()
+
+            # Generate setup script
+            if git_config["user_name"] and git_config["user_email"]:
+                git_config["setup_script"] = f'''#!/bin/bash
+# Git configuration captured during bundle creation
+# Run this script to apply the same git configuration
+
+echo "🔧 Setting up git configuration from bundle..."
+git config user.name "{git_config["user_name"]}"
+git config user.email "{git_config["user_email"]}"
+echo "✅ Git configured as: {git_config["user_name"]} <{git_config["user_email"]}>"
+echo "🚀 Ready for development!"
+'''
+
+            # Save git configuration
+            config_file = tools_dir / "git_config.json"
+            with open(config_file, "w") as f:
+                json.dump(git_config, f, indent=2)
+
+            # Save setup script if we have configuration
+            if git_config["setup_script"]:
+                setup_script = tools_dir / "setup_git.sh"
+                with open(setup_script, "w") as f:
+                    f.write(git_config["setup_script"])
+                setup_script.chmod(0o755)
+
+                log.info(
+                    "Captured git configuration",
+                    name=git_config["user_name"],
+                    email=git_config["user_email"]
+                )
+            else:
+                log.warning("No git configuration found to capture")
+
+        except Exception as e:
+            log.warning("Failed to capture git configuration", error=str(e))
 
     async def _download_git_binary(self, output_path: Path) -> None:
         """Download the portable git binary."""

@@ -20,6 +20,26 @@ If `/tmp/agor_tools/sqlite3` exists, you have database-based memory management a
 
 This is not a simulation - you have real capabilities!
 
+## 🔧 GIT CONFIGURATION SETUP
+
+**IMPORTANT: Set up git identity before making commits**
+
+Your bundle may include captured git configuration. To apply it:
+
+```bash
+# Apply git configuration from bundle (recommended)
+python /tmp/agor_tools/git_setup.py --apply-bundle
+
+# Or check what's available
+python /tmp/agor_tools/git_setup.py --show
+```
+
+If no captured configuration is available, you can:
+- Import from environment: `python /tmp/agor_tools/git_setup.py --import-env`
+- Set manually: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
+
+**This ensures proper commit attribution for all development work.**
+
 ## CRITICAL INITIALIZATION PROTOCOL
 
 **STEP 1: ROLE SELECTION**
