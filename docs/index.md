@@ -39,6 +39,12 @@
 - **[src/agor/tools/code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)** - Tool documentation
   - Functions: bfs_find(), grep(), tree(), find_function_signatures(), extract_function_content()
 
+### "I need database-based memory management"
+
+- **[src/agor/tools/sqlite_memory.py](../src/agor/tools/sqlite_memory.py)** - SQLite memory system (experimental)
+- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 590-662 - SQLite mode documentation
+- **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** Lines 142-198 - SQLite bundling
+
 ### "I need hotkey commands reference"
 
 - **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 120-220 - Role-specific menus
@@ -84,6 +90,7 @@
 | **[code_exploration.py](../src/agor/tools/code_exploration.py)**                     | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
 | **[code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)**           | Tool documentation  | Function reference, examples                 | 179   |
 | **[handoff_templates.py](../src/agor/tools/handoff_templates.py)**                   | Handoff generation  | generate_handoff_document, git_context       | ~400  |
+| **[sqlite_memory.py](../src/agor/tools/sqlite_memory.py)**                           | SQLite memory (exp) | SQLiteMemoryManager, database operations     | ~400  |
 | **[agent_prompt_templates.py](../src/agor/tools/agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
 | **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
 
@@ -111,6 +118,7 @@
 
 - **Communication**: .agor/agentconvo.md format and usage
 - **Memory**: .agor/memory.md and agent-specific files
+- **SQLite Memory**: .agor/memory.db database-based storage (experimental)
 - **Handoffs**: Complete transition procedures with git state
 - **Strategies**: 5 multi-agent patterns with implementation details
 

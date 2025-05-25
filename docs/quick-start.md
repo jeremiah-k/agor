@@ -42,6 +42,9 @@ agor bundle . -f zip
 # Or bundle for ChatGPT
 agor bundle .
 
+# Bundle with SQLite memory support (experimental)
+agor bundle . --sqlite
+
 # AGOR creates: your-project-agor-bundle.zip (or .tar.gz)
 ```
 
@@ -188,6 +191,20 @@ Use the `meta` hotkey to help improve AGOR:
 ```
 meta
 → Report issues, suggest improvements, share success stories
+```
+
+### Try SQLite Memory Mode (Experimental)
+
+If you bundled with `--sqlite`, you can use database-based memory:
+
+```
+# Check if SQLite is available
+ls -la /tmp/agor_tools/sqlite3
+
+# Use SQLite memory commands
+mem-add    # Add structured memory entries
+mem-search # Search across all memories
+db-stats   # View database statistics
 ```
 
 ## 🔄 What's Next?

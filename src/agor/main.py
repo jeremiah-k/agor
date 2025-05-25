@@ -157,6 +157,12 @@ def bundle(
         "-q",
         help="Minimal output mode",
     ),
+    include_sqlite: bool = typer.Option(
+        None,
+        "--sqlite",
+        "-s",
+        help="Include SQLite binary for database-based memory management (experimental)",
+    ),
 ):
     """
     Bundle a git repository into an archive for AI assistant upload.
@@ -187,6 +193,11 @@ def bundle(
     )
     auto_yes = assume_yes if assume_yes is not None else config.get("assume_yes", False)
     quiet_mode = quiet if quiet is not None else config.get("quiet", False)
+    sqlite_enabled = (
+        include_sqlite
+        if include_sqlite is not None
+        else config.get("include_sqlite", settings.include_sqlite)
+    )
 
     # Validate compression format
     try:
@@ -274,6 +285,36 @@ def bundle(
         if not quiet_mode:
             print(f"⚠️  Warning: Could not add git binary to bundle: {e}")
             print("   Bundle will still work if target system has git installed")
+
+    # Download and add SQLite binary to bundle if requested (experimental)
+    if sqlite_enabled:
+        try:
+            sqlite_url = config.get("sqlite_binary_url", settings.sqlite_binary_url)
+
+            # Use cache directory for SQLite binary
+            sqlite_cache_dir = Path(platformdirs.user_cache_dir("agor")) / "sqlite_binary"
+            sqlite_cache_dir.mkdir(parents=True, exist_ok=True)
+            sqlite_binary_cache_path = sqlite_cache_dir / "sqlite3"
+
+            # Download the SQLite binary only if it doesn't exist in the cache
+            if not sqlite_binary_cache_path.exists():
+                if not quiet_mode:
+                    print("📥 Downloading SQLite binary (experimental)...")
+                download_file(sqlite_url, sqlite_binary_cache_path)
+                sqlite_binary_cache_path.chmod(0o755)
+
+            # Copy the cached SQLite binary to the bundle
+            sqlite_dest = output_dir / "agor_tools" / "sqlite3"
+            shutil.copyfile(sqlite_binary_cache_path, sqlite_dest)
+            sqlite_dest.chmod(0o755)
+
+            if not quiet_mode:
+                print("📥 Added SQLite binary to bundle (experimental)")
+
+        except Exception as e:
+            if not quiet_mode:
+                print(f"⚠️  Warning: Could not add SQLite binary to bundle: {e}")
+                print("   Bundle will still work without SQLite database features")
 
     # Create archive with the specified format
     archive_extension = ARCHIVE_EXTENSIONS[compression_format]
