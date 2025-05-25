@@ -13,10 +13,9 @@ from . import __version__
 from .config import config
 from .constants import (
     ARCHIVE_EXTENSIONS,
-    DEFAULT_COMPRESSION_FORMAT,
-    GIT_BINARY_URL,
     SUCCESS_MESSAGES,
 )
+from .settings import settings
 from .exceptions import ValidationError
 from .platform import (
     copy_to_clipboard,
@@ -124,7 +123,7 @@ def bundle(
         None,
         "--format",
         "-f",
-        help=f"Archive format: {', '.join(ARCHIVE_EXTENSIONS.keys())} (default: {DEFAULT_COMPRESSION_FORMAT})",
+        help=f"Archive format: {', '.join(ARCHIVE_EXTENSIONS.keys())} (default: {settings.compression_format})",
     ),
     preserve_history: bool = typer.Option(
         None,
@@ -173,7 +172,7 @@ def bundle(
     """
     # Apply configuration defaults with CLI overrides
     compression_format = format or config.get(
-        "compression_format", DEFAULT_COMPRESSION_FORMAT
+        "compression_format", settings.compression_format
     )
     preserve_hist = (
         preserve_history
@@ -245,11 +244,11 @@ def bundle(
     move_directory(temp_repo, project_dir)
 
     # Copy all files in tools to output_dir
-    shutil.copytree(tools_dir, output_dir / "tools_for_ai")
+    shutil.copytree(tools_dir, output_dir / "agor_tools")
 
     # Download and add git binary to bundle (simple approach that works)
     try:
-        git_url = config.get("git_binary_url", GIT_BINARY_URL)
+        git_url = config.get("git_binary_url", settings.git_binary_url)
 
         # Use cache directory for git binary
         git_cache_dir = Path(platformdirs.user_cache_dir("agor")) / "git_binary"
@@ -264,7 +263,7 @@ def bundle(
             git_binary_cache_path.chmod(0o755)
 
         # Copy the cached git binary to the bundle
-        git_dest = output_dir / "tools_for_ai" / "git"
+        git_dest = output_dir / "agor_tools" / "git"
         shutil.copyfile(git_binary_cache_path, git_dest)
         git_dest.chmod(0o755)
 
@@ -347,7 +346,7 @@ def bundle(
 
     ai_prompt = (
         f"Extract the {compression_format.upper()} archive I've uploaded, "
-        "read tools_for_ai/README_ai.md completely, "
+        "read agor_tools/README_ai.md completely, "
         "and execute the AgentOrchestrator initialization protocol. "
         "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
     )
@@ -406,7 +405,7 @@ def custom_instructions(
         You coordinate teams of AI agents to execute large-scale development projects.
 
         You have been provided with:
-        - a statically compiled `git` binary (in /tmp/tools_for_ai/git)
+        - a statically compiled `git` binary (in /tmp/agor_tools/git)
         - the user's git repo (in the `/tmp/project` folder)
         - advanced coordination tools and prompt templates
 
