@@ -17,7 +17,7 @@ git clone https://github.com/jeremiah-k/agor.git
 cd agor
 
 # Load AGOR protocol and capabilities
-cat AGOR_INSTRUCTIONS.md
+cat src/agor/tools/AGOR_INSTRUCTIONS.md
 cat src/agor/tools/README_ai.md
 
 # Return to main project directory when ready to work
@@ -169,7 +169,7 @@ git clone https://github.com/user/shared-lib.git
 
 ```
 agor/
-├── AGOR_INSTRUCTIONS.md (this file)
+├── src/agor/tools/AGOR_INSTRUCTIONS.md (this file)
 ├── README.md (project overview)
 ├── src/agor/tools/
 │   ├── README_ai.md (comprehensive AI instructions)

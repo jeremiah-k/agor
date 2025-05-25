@@ -172,6 +172,11 @@ wf) workflow design qg) quality gates eo) execution order init) initialize coord
 **📊 Basic Analysis:**
 a ) analyze codebase da) detailed handoff
 
+**🤝 Handoff Procedures:**
+handoff) create handoff document for another agent
+receive) receive handoff from another agent
+handoffs) list all handoff documents
+
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -192,6 +197,11 @@ doc) generate docs comment) add comments explain) code explanation
 **🎯 Planning Support:**
 sp) strategic plan bp) break down project
 
+**🤝 Handoff Procedures:**
+handoff) create handoff document for another agent
+receive) receive handoff from another agent
+handoffs) list all handoff documents
+
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -208,6 +218,11 @@ task) receive task complete) mark complete handoff) prepare handoff
 
 **📊 Basic Analysis:**
 a ) analyze codebase f ) full files co) changes only
+
+**🤝 Handoff Procedures:**
+handoff) create handoff document for another agent
+receive) receive handoff from another agent
+handoffs) list all handoff documents
 
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
@@ -466,3 +481,89 @@ As a development agent, your feedback helps AGOR evolve. The `meta` hotkey provi
 - Technical implementation suggestions with code examples
 
 Your insights are valuable for improving AGOR for future agents. The system will guide you to the most appropriate feedback method based on your context.
+
+## 🤝 HANDOFF PROCEDURES
+
+AGOR provides comprehensive handoff procedures for seamless agent transitions. Use these when:
+
+- You need to pass work to another agent
+- You're taking over work from another agent
+- You're switching roles mid-project
+- You need to document current progress for future reference
+
+### Creating a Handoff (`handoff` hotkey)
+
+When you need to hand off work to another agent:
+
+1. **Use the `handoff` hotkey**
+2. **Provide comprehensive context**:
+
+   - Problem description and goals
+   - Work completed so far
+   - Commits made (with git hashes)
+   - Files modified
+   - Current status and progress
+   - Next steps planned
+   - Important context and gotchas
+   - Technical notes and decisions made
+
+3. **AGOR generates**:
+   - Complete handoff document in `.agor/handoffs/`
+   - Handoff prompt for the receiving agent
+   - Updates to coordination logs
+
+### Receiving a Handoff (`receive` hotkey)
+
+When taking over work from another agent:
+
+1. **Use the `receive` hotkey**
+2. **Review the handoff document** thoroughly
+3. **Verify understanding** of:
+
+   - The problem being solved
+   - Work completed and current status
+   - Technical context and decisions
+   - Next steps and priorities
+
+4. **Confirm receipt** in `.agor/agentconvo.md`
+5. **Continue the work** from where the previous agent left off
+
+### Handoff Best Practices
+
+**For Handoff Creators:**
+
+- Be comprehensive - include everything the next agent needs to know
+- Document your reasoning and decision-making process
+- Include specific git commits and file changes
+- Explain any workarounds or temporary solutions
+- Provide clear next steps with priorities
+
+**For Handoff Recipients:**
+
+- Read the entire handoff document before starting
+- Verify the current repository state matches the handoff
+- Ask questions if anything is unclear
+- Update the handoff document with your progress
+- Maintain the same level of documentation quality
+
+### Handoff Document Structure
+
+Each handoff includes:
+
+- **Problem Definition**: What we're trying to solve
+- **Work Completed**: Detailed list of accomplishments
+- **Commits Made**: Git history with explanations
+- **Files Modified**: What's been changed and why
+- **Current Status**: Where things stand now
+- **Next Steps**: Prioritized action items
+- **Technical Context**: Important implementation details
+- **Handoff Instructions**: How to continue the work
+
+### Managing Handoffs (`handoffs` hotkey)
+
+Use the `handoffs` hotkey to:
+
+- List all active and completed handoffs
+- Review handoff history
+- Find specific handoff documents
+- Update handoff status (active → completed)
