@@ -7,6 +7,8 @@
 AGOR runs on Linux, macOS, and Windows.
 
 > **⚠️ Status Note**: Bundle Mode is well-tested and works reliably. Agent Mode has been tested with basic workflows, but requires more testing in multi-agent environments.
+>
+> **🔬 Alpha Protocol**: The AGOR coordination protocol is actively evolving. We're continuously refining multi-agent strategies, communication patterns, and workflow templates based on real-world usage. **Want to help shape the future of AI coordination?** Please [open an issue](https://github.com/jeremiah-k/agor/issues), [start a discussion](https://github.com/jeremiah-k/agor/discussions), or [submit a PR](https://github.com/jeremiah-k/agor/pulls) with your ideas and feedback!
 
 ## 🚀 Quick Start
 
