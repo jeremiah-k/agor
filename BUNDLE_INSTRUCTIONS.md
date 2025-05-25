@@ -50,9 +50,9 @@ ChatGPT will transform into AgentOrchestrator with access to:
 - **File upload workflow** - user bundles project and uploads .tar.gz
 - **Works with upload-only platforms** like ChatGPT
 - **Self-contained** - everything bundled in one file
-- **For**: ChatGPT and other platforms without git access
+- **For**: ChatGPT and other AI agents that accept file uploads (.zip/.tar.gz)
 
-**Agent Mode - For AI Agents with Git Access:**
+**Agent Mode - For AI Agents with Direct Git Access:**
 
 - **No installation required** - just clone the AGOR repository
 - **Direct repository access** - can work with any repository URL

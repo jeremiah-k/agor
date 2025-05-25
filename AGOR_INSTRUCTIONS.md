@@ -2,23 +2,48 @@
 
 ## Quick Start for AI Agents
 
-**Agent Mode** is for AI agents with git access (Augment Code, Jules by Google, etc.)
+**Agent Mode** is for AI agents with direct git access (Augment Code, Jules by Google, etc.)
 
 ### Step 1: Clone AGOR Repository
 
 ```bash
-# Clone AGOR repository (no installation needed)
+# Remember your main project directory
+MAIN_PROJECT_DIR=$(pwd)
+echo "Main project: $MAIN_PROJECT_DIR"
+
+# Clone AGOR to temporary location (don't interfere with main project)
+cd /tmp
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
-```
 
-### Step 2: Learn the Protocol
-
-```bash
-# Read the comprehensive AI instructions
+# Load AGOR protocol and capabilities
+cat AGOR_INSTRUCTIONS.md
 cat src/agor/tools/README_ai.md
 
-# This file contains the complete AGOR protocol and capabilities
+# Return to main project directory when ready to work
+# cd "$MAIN_PROJECT_DIR"
+```
+
+### Step 2: Understand the Workflow
+
+**Important**: AGOR is cloned to `/tmp` to avoid interfering with your main project. The workflow is:
+
+1. **Learn Protocol**: Read AGOR instructions (already done in Step 1)
+2. **Return to Main Project**: `cd "$MAIN_PROJECT_DIR"` when user gives you project instructions
+3. **Apply AGOR**: Use AGOR coordination protocols on the user's actual project
+4. **Reference AGOR**: Access AGOR tools from `/tmp/agor/` as needed
+
+```bash
+# When ready to work on user's project:
+cd "$MAIN_PROJECT_DIR"
+
+# Initialize AGOR coordination in user's project
+mkdir -p .agor
+echo "# Agent Communication Log" > .agor/agentconvo.md
+echo "# Project Memory" > .agor/memory.md
+
+# Use AGOR tools from temporary location
+# /tmp/agor/src/agor/tools/ contains all the templates and protocols
 ```
 
 ### Step 3: Receive User Instructions
@@ -62,7 +87,7 @@ You now have access to all AgentOrchestrator capabilities:
 
 ## Agent Mode vs Bundle Mode
 
-**Agent Mode (This Mode) - For AI Agents with Git Access:**
+**Agent Mode (This Mode) - For AI Agents with Direct Git Access:**
 
 - **No installation required** - just clone the AGOR repository
 - **Direct repository access** - can work with any repository URL
@@ -78,7 +103,7 @@ You now have access to all AgentOrchestrator capabilities:
 - **File upload workflow** - user bundles project and uploads .tar.gz
 - **Works with upload-only platforms** like ChatGPT
 - **Self-contained** - everything bundled in one file
-- **For**: ChatGPT and other platforms without git access
+- **For**: ChatGPT and other AI agents that accept file uploads (.zip/.tar.gz)
 
 ## Usage Examples
 
@@ -119,7 +144,7 @@ git clone https://github.com/user/shared-lib.git
 
 ## Integration with AI Platforms
 
-### For AI Agents with Git Access (Augment Code, Jules, etc.):
+### For AI Agents with Direct Git Access (Augment Code, Jules, etc.):
 
 1. **User provides AGOR repository URL** to the AI agent
 2. **Agent clones AGOR repository** and learns the protocol

@@ -10,17 +10,26 @@ AGOR runs on Linux, macOS, and Windows.
 
 ## 🚀 Quick Start
 
-### Agent Mode (For AI Agents with Git Access)
+### Agent Mode (For AI Agents with Direct Git Access)
 
 **For Augment Code, Jules by Google, and other AI agents:**
 
 ```bash
-# AI agent clones AGOR repository directly (no installation needed)
+# Remember your main project directory
+MAIN_PROJECT_DIR=$(pwd)
+echo "Main project: $MAIN_PROJECT_DIR"
+
+# Clone AGOR to temporary location (don't interfere with main project)
+cd /tmp
 git clone https://github.com/jeremiah-k/agor.git
 cd agor
 
-# Agent learns the protocol from AGOR_INSTRUCTIONS.md
-# Then receives user instructions about target project
+# Load AGOR protocol and capabilities
+cat AGOR_INSTRUCTIONS.md
+cat src/agor/tools/README_ai.md
+
+# Return to main project directory when ready to work
+# cd "$MAIN_PROJECT_DIR"
 ```
 
 ### Bundle Mode (For ChatGPT Upload)
@@ -196,8 +205,8 @@ agor/
 
 ### Mode-Specific Instructions
 
-- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Agent Mode (for AI agents with git access)
-- **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode (for ChatGPT upload)
+- **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)** - Agent Mode (for AI agents with direct git access)
+- **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode (for AI agents that accept .zip/.tar.gz uploads)
 
 ### Technical Documentation
 

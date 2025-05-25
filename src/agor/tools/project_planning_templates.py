@@ -239,14 +239,14 @@ Many agents work on small, independent tasks that combine into emergent solution
 
 ## Task Queue Example
 ```
-[ ] Implement user authentication
+[ ] Implement core feature
 [ ] Add input validation
 [ ] Create error handling
-[ ] Write unit tests for auth
+[ ] Write unit tests
 [ ] Add logging
 [ ] Update documentation
-[✓] Setup database connection
-[✓] Create user model
+[✓] Setup data layer
+[✓] Create data models
 ```
 
 ## Agent Behavior
@@ -296,10 +296,10 @@ Two teams work adversarially: one builds, one breaks, forcing robust solutions.
 5. **Repeat**: Continue until red team can't break it
 
 ## Attack Vectors
-- **Security**: Authentication bypass, injection attacks
+- **Security**: Access control bypass, input validation failures
 - **Performance**: Load testing, resource exhaustion
 - **Logic**: Edge cases, race conditions
-- **Integration**: API misuse, dependency failures
+- **Integration**: Interface misuse, dependency failures
 
 ## Benefits
 - **Robustness**: Forces consideration of failure modes
@@ -337,10 +337,10 @@ All agents collaborate simultaneously on the same code, with rotating roles.
 
 ## Communication Protocol
 ```
-DRIVER: "I'm implementing the authentication check..."
-NAVIGATOR: "Let's add error handling for invalid tokens"
+DRIVER: "I'm implementing the validation logic..."
+NAVIGATOR: "Let's add error handling for edge cases"
 OBSERVER: "Consider using a try-catch block here"
-RESEARCHER: "The JWT library has a verify() method we should use"
+RESEARCHER: "The standard library has a validate() method we should use"
 ```
 
 ## Benefits
