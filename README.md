@@ -135,7 +135,7 @@ agor bundle repo -f zip                     # Google AI Studio format
 
 ### Original AgentGrunt
 
-- **Created by**: [@nikvdp](https://github.com/nikvdp) (Nik Drobnyy)
+- **Created by**: [@nikvdp](https://github.com/nikvdp)
 - **Repository**: <https://github.com/nikvdp/agentgrunt>
 - **License**: MIT License
 - **Core Contributions**: Innovative code bundling concept, git integration, basic AI instruction framework
