@@ -114,9 +114,10 @@ agor bundle /path/to/project
 ## 📚 Documentation
 
 **[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
+**[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
 **[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup
-**[BUNDLE_INSTRUCTIONS.md](src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup
 **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol
+**[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
 **[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 
 ## 🙏 Attribution

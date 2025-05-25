@@ -7,7 +7,7 @@
 ### "I need to get started with AGOR"
 
 - **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
-- **[docs/google-ai-studio.md](google-ai-studio.md)** - Google AI Studio setup (Function Calling required)
+- **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
 
 ### "I need to understand roles and initialization"
@@ -70,9 +70,11 @@
 | ---------------------------------------------- | ------------------------ | ------------------------------------------- | ----- |
 | **[README.md](README.md)**                     | Documentation overview   | Navigation map, quick links                 | 60    |
 | **[quick-start.md](quick-start.md)**           | 5-minute setup guide     | Installation, bundling, platform setup      | ~200  |
+| **[bundle-mode.md](bundle-mode.md)**           | Complete Bundle Mode guide | All platforms, models, troubleshooting    | ~300  |
 | **[google-ai-studio.md](google-ai-studio.md)** | Google AI Studio guide   | Function Calling setup, troubleshooting     | ~300  |
 | **[strategies.md](strategies.md)**             | Multi-agent coordination | 5 strategies with examples, decision matrix | ~400  |
 | **[handoffs.md](handoffs.md)**                 | Agent transition system  | Handoff creation, receiving, best practices | ~500  |
+| **[agor-development-guide.md](agor-development-guide.md)** | Development checklist | For agents working on AGOR itself | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 
@@ -110,8 +112,9 @@
 
 ### Platform-Specific Information
 
-- **Google AI Studio**: [docs/google-ai-studio.md](google-ai-studio.md) - Function Calling, .zip format
-- **ChatGPT**: [src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md) - .tar.gz format
+- **Bundle Mode**: [docs/bundle-mode.md](bundle-mode.md) - All platforms, models, formats
+- **Google AI Studio**: Gemini 2.5 Pro, Function Calling, .zip format
+- **ChatGPT**: GPT-4o, subscription required, .tar.gz format
 - **Agent Mode**: [src/agor/tools/AGOR_INSTRUCTIONS.md](../src/agor/tools/AGOR_INSTRUCTIONS.md) - Direct git access
 
 ### Coordination Protocols
@@ -144,9 +147,9 @@ Planning frameworks? → project_planning_templates.py
 
 ```
 First time? → quick-start.md
-Google AI Studio? → google-ai-studio.md
-Bundle Mode? → BUNDLE_INSTRUCTIONS.md
+Bundle Mode? → bundle-mode.md
 Agent Mode? → AGOR_INSTRUCTIONS.md
+Platform-specific? → bundle-mode.md platform sections
 ```
 
 ## 📊 Documentation Status
@@ -155,18 +158,18 @@ Agent Mode? → AGOR_INSTRUCTIONS.md
 
 - Core AI instructions (README_ai.md)
 - Quick start guide
+- Bundle Mode guide (all platforms)
 - Google AI Studio guide
 - Multi-agent strategies
 - Handoff system
 - Code exploration tools
+- AGOR development guide
 
 ### 📝 Referenced but Not Yet Created
 
-- Platform setup guide (platform-setup.md)
 - First coordination walkthrough (first-coordination.md)
 - Role deep-dive (roles.md)
 - Coordination protocol (coordination.md)
-- ChatGPT guide (chatgpt.md)
 - Agent mode guide (agent-mode.md)
 - Feedback system guide (feedback.md)
 - Troubleshooting guide (troubleshooting.md)
