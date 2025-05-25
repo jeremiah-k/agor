@@ -73,6 +73,9 @@ ct) create team tm) team manifest hp) handoff prompts
 **🔄 Coordination:**
 wf) workflow design qg) quality gates eo) execution order
 
+**⚡ Strategy Selection:**
+ss) strategy selection pd) parallel divergent pl) pipeline sw) swarm rt) red team mb) mob programming
+
 **⚙️ System:**
 c ) continue r ) refresh w ) work autonomously ? ) help
 
@@ -89,6 +92,15 @@ If user selects a hotkey, respond accordingly.
 - **`wf`**: Design workflow with handoff procedures
 - **`qg`**: Define quality gates and acceptance criteria
 - **`eo`**: Plan execution sequence considering dependencies
+
+**STRATEGY ACTIONS:**
+
+- **`ss`**: Analyze project and recommend optimal development strategy
+- **`pd`**: Set up Parallel Divergent strategy (3-5 independent agents)
+- **`pl`**: Set up Pipeline strategy (sequential agent handoffs)
+- **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
+- **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
+- **`mb`**: Set up Mob Programming strategy (collaborative coding)
 
 **AVAILABLE TOOLS:**
 

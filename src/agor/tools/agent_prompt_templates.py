@@ -135,6 +135,76 @@ DELIVER:
 """
 
 
+def generate_strategy_selection_prompt(project_complexity, team_size, timeline):
+    """Generate a prompt for selecting the optimal development strategy"""
+    return f"""
+STRATEGY SELECTION ANALYSIS
+
+PROJECT CONTEXT:
+- Complexity: {project_complexity}
+- Team Size: {team_size} agents
+- Timeline: {timeline}
+
+AVAILABLE STRATEGIES:
+
+🔄 **Parallel Divergent** (3-5 agents)
+- Best for: Complex problems, multiple valid approaches
+- Process: Independent solutions → peer review → synthesis
+- Time: Medium (parallel execution + review)
+
+⚡ **Pipeline** (3-4 agents)
+- Best for: Sequential dependencies, specialization
+- Process: Foundation → Enhancement → Refinement → Validation
+- Time: Medium (sequential but focused)
+
+🐝 **Swarm** (5-8 agents)
+- Best for: Many independent tasks, speed priority
+- Process: Task queue → dynamic assignment → emergence
+- Time: Fast (maximum parallelism)
+
+⚔️ **Red Team** (4-6 agents)
+- Best for: Security-critical, high-reliability systems
+- Process: Build → Break → Analyze → Harden → Repeat
+- Time: Slow (thorough validation)
+
+👥 **Mob Programming** (3-5 agents)
+- Best for: Complex problems, knowledge sharing
+- Process: Collaborative coding with rotating roles
+- Time: Medium (intensive collaboration)
+
+RECOMMENDATION:
+Based on the project context, recommend the optimal strategy and explain why.
+"""
+
+
+def generate_parallel_divergent_prompt(agent_id, mission, branch_name):
+    """Generate a prompt for parallel divergent strategy agents"""
+    return f"""
+PARALLEL DIVERGENT AGENT: {agent_id}
+
+MISSION:
+{mission}
+
+YOUR BRANCH: {branch_name}
+
+EXECUTION RULES:
+- Work INDEPENDENTLY - no coordination with other agents
+- Focus on YOUR solution approach
+- Document your design decisions
+- Implement complete, working solution
+- Prepare for peer review phase
+
+DELIVERABLES:
+- Working implementation
+- Design rationale document
+- Test coverage
+- Known limitations
+
+REVIEW PREPARATION:
+After completion, you will review other agents' solutions and propose synthesis.
+"""
+
+
 def generate_context_prompt(codebase_analysis, project_goals, constraints):
     """Generate a context-rich prompt that includes codebase knowledge"""
     return f"""
