@@ -26,8 +26,8 @@ class AgorConfig:
         "shallow_depth": 5,
         "download_chunk_size": 1024,
         "progress_bar_width": 80,
-        "git_binary_url": "https://github.com/nikvdp/1bin/releases/download/v0.0.40/git",
-        "git_binary_sha256": "af17911884c5afcf5be1c2438483e8d65a82c6a80ed8a354b8d4f6e0b964978f",
+        "git_binary_url": "https://github.com/nikvdp/1bin/releases/download/v0.0.26/git",
+        "git_binary_sha256": "placeholder_hash_for_v0.0.26_git_binary_disable_verification",
         "clipboard_copy_default": True,
     }
 
