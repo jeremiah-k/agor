@@ -14,8 +14,8 @@ from .constants import (
     PROGRESS_BAR_WIDTH,
     SUPPORTED_COMPRESSION_FORMATS,
 )
-from .settings import settings
 from .exceptions import CompressionError, NetworkError
+from .settings import settings
 
 
 def move_directory(src_dir: Path, dest_dir: Path):

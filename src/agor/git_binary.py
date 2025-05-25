@@ -10,8 +10,8 @@ from typing import Optional
 import platformdirs
 
 from .config import config
-from .settings import settings
 from .exceptions import GitBinaryError
+from .settings import settings
 from .utils import download_file
 
 
@@ -79,7 +79,9 @@ class GitBinaryManager:
             expected_hash = config.get("git_binary_sha256", settings.git_binary_sha256)
 
             # Only verify hash if it's not the placeholder
-            verify_hash = expected_hash if expected_hash != settings.git_binary_sha256 else None
+            verify_hash = (
+                expected_hash if expected_hash != settings.git_binary_sha256 else None
+            )
 
             download_file(git_url, self.cached_binary, verify_hash)
             self.cached_binary.chmod(0o755)

@@ -15,7 +15,6 @@ from .constants import (
     ARCHIVE_EXTENSIONS,
     SUCCESS_MESSAGES,
 )
-from .settings import settings
 from .exceptions import ValidationError
 from .platform import (
     copy_to_clipboard,
@@ -24,6 +23,7 @@ from .platform import (
     reveal_file_in_explorer,
 )
 from .repo_mgmt import clone_git_repo_to_temp_dir, get_clone_url, valid_git_repo
+from .settings import settings
 from .utils import create_archive, download_file, move_directory
 from .validation import validate_compression_format
 

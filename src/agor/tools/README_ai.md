@@ -132,6 +132,7 @@ chmod 755 /tmp/agor_tools/git
 6. Update `.agor/memory.md` with decisions and progress
 
 **GIT COMMAND EXAMPLES:**
+
 ```bash
 # Map codebase - EXECUTE THESE FOR REAL
 /tmp/agor_tools/git ls-files
@@ -448,10 +449,20 @@ VALIDATION:
 
 **META-DEVELOPMENT FEEDBACK:**
 
-As a development agent, your feedback helps AGOR evolve. Use the `meta` hotkey to:
-- Report bugs, unclear instructions, or workflow issues
-- Suggest improvements, new features, or better coordination patterns
-- Share workflows that worked exceptionally well
-- Provide technical implementation suggestions
+As a development agent, your feedback helps AGOR evolve. The `meta` hotkey provides multiple feedback pathways:
 
-Your insights are valuable for improving AGOR for future agents. See `agor-meta.md` for the feedback template and guidelines.
+**Choose Based on Your Situation:**
+
+1. **Working on different project** → Create GitHub issue with structured template
+2. **Working on AGOR itself** → Edit files directly and commit improvements
+3. **Have specific code fixes** → Generate copy-paste code blocks for manual implementation
+4. **Ongoing documentation** → Add entries to local `agor-meta.md` file
+
+**What to Report:**
+
+- Bugs, unclear instructions, or workflow issues
+- Improvements, new features, or better coordination patterns
+- Workflows that worked exceptionally well
+- Technical implementation suggestions with code examples
+
+Your insights are valuable for improving AGOR for future agents. The system will guide you to the most appropriate feedback method based on your context.
