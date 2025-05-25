@@ -125,11 +125,14 @@ Prioritized action items:
 
 ### 🧠 Technical Context
 Important implementation details:
-- Architecture decisions and rationale
-- Performance considerations
-- Security implications
-- Integration points
-- Workarounds and technical debt
+- **Git branch and commit information** - Exact repository state
+- **AGOR version used** - For protocol compatibility
+- **Uncommitted and staged changes** - Work in progress
+- **Architecture decisions and rationale**
+- **Performance considerations**
+- **Security implications**
+- **Integration points**
+- **Workarounds and technical debt**
 
 ### 🎯 Handoff Instructions
 How to continue the work:
@@ -161,6 +164,8 @@ How to continue the work:
 
 **Verify Everything**
 - Check that repository state matches handoff
+- Verify you're on the correct git branch and commit
+- Confirm AGOR version compatibility
 - Confirm all described changes are present
 - Test that current implementation works as described
 
@@ -173,6 +178,66 @@ How to continue the work:
 - Update handoff document with your progress
 - Follow the same documentation quality
 - Create your own handoff when passing work forward
+
+## 🔍 AGOR Version Compatibility
+
+Each handoff document includes the AGOR version used to create it. This is critical for maintaining protocol compatibility:
+
+### Why Version Matters
+- **Protocol Evolution**: AGOR coordination protocols evolve over time
+- **Hotkey Changes**: New hotkeys and commands are added in different versions
+- **Template Updates**: Handoff templates and procedures may change
+- **Feature Compatibility**: New features may not be available in older versions
+
+### Version Verification
+
+When receiving a handoff:
+
+```bash
+# Check your current AGOR version
+agor --version
+
+# If versions don't match, consider checking out the handoff version
+git checkout v0.1.5  # Example: checkout the version used in handoff
+
+# Or update to latest if handoff is from newer version
+pipx upgrade agor
+```
+
+### Version Compatibility Guidelines
+
+**Same Major.Minor Version**: ✅ Fully compatible
+- Example: 0.1.4 ↔️ 0.1.5
+- All protocols and hotkeys should work identically
+
+**Different Minor Version**: ⚠️ Mostly compatible
+- Example: 0.1.x ↔️ 0.2.x
+- Core protocols compatible, some new features may be missing
+
+**Different Major Version**: ❌ May have breaking changes
+- Example: 0.x.x ↔️ 1.x.x
+- Significant protocol changes possible, review carefully
+
+### Handling Version Mismatches
+
+**If you have older AGOR version:**
+```bash
+# Option 1: Upgrade to match or exceed handoff version
+pipx upgrade agor
+
+# Option 2: Use git to checkout handoff version
+git checkout v0.1.5  # Use version from handoff
+```
+
+**If you have newer AGOR version:**
+- Usually safe to proceed with newer version
+- New features will be available
+- Core protocols should remain compatible
+
+**If major version difference:**
+- Review handoff document carefully
+- Check for protocol changes in release notes
+- Consider using exact version match for critical handoffs
 
 ## 🔧 Advanced Handoff Patterns
 
@@ -189,7 +254,7 @@ COORDINATOR creates handoff for parallel work:
 For complex features requiring multiple passes:
 ```
 Round 1: ANALYST → Basic implementation
-Round 2: SECURITY AGENT → Security hardening  
+Round 2: SECURITY AGENT → Security hardening
 Round 3: PERFORMANCE AGENT → Optimization
 Round 4: INTEGRATION AGENT → System integration
 ```
