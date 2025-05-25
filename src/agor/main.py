@@ -881,30 +881,27 @@ def agent_manifest(
 
 
 @app.command()
-def version(
-    check_updates: bool = typer.Option(
-        True,
-        "--check-updates/--no-check-updates",
-        help="Check for available updates"
-    )
-):
+def version():
     """Show version information and check for updates"""
     from .version_check import display_version_info
 
-    display_version_info(check_updates=check_updates)
+    display_version_info(check_updates=True)
 
 
 def cli():
     """Main CLI entry point"""
-    # Check for version updates periodically (once per day)
+    # Check for version updates for important commands
     from .version_check import check_versions_if_needed
 
     if len(sys.argv) == 1:
         # Show help if no arguments provided
         sys.argv.append("--help")
-    elif len(sys.argv) > 1 and sys.argv[1] not in ["version", "--version", "-v", "--help", "-h"]:
-        # Only check versions for actual commands, not for version/help
         check_versions_if_needed()
+    elif len(sys.argv) > 1:
+        command = sys.argv[1]
+        # Check versions for help, bundle, version commands - skip for config commands
+        if command in ["--help", "-h", "bundle", "version", "--version", "-v"]:
+            check_versions_if_needed()
 
     try:
         app()

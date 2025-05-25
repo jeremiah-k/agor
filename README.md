@@ -102,7 +102,6 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ```bash
 # Version information and updates
 agor version                                # Show versions and check for updates
-agor version --no-check-updates             # Show versions only
 
 # Git configuration management
 agor git-config --import-env                # Import from environment variables
