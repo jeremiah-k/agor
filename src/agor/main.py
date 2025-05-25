@@ -327,6 +327,12 @@ def bundle(
 
     try:
         create_archive(output_dir, archive_path, compression_format)
+
+        # Verify archive contents for debugging
+        if not quiet_mode:
+            from .utils import verify_archive_contents
+            verify_archive_contents(archive_path)
+
     except Exception as e:
         print(f"❌ Failed to create archive: {e}")
         raise typer.Exit(1) from e

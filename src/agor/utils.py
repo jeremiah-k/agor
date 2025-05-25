@@ -130,6 +130,23 @@ def create_archive(
     # Get the total number of files to compress for progress reporting
     total_files = sum(len(files) for _, _, files in os.walk(dir_to_compress))
 
+    # Debug: Log directory contents to ensure consistency
+    print(f"📊 Archive creation debug: {compression.upper()} format")
+    print(f"📁 Source directory: {dir_to_compress}")
+    print(f"📄 Total files to archive: {total_files}")
+
+    # List some key directories to verify content
+    project_dir = dir_to_compress / "project"
+    if project_dir.exists():
+        git_dir = project_dir / ".git"
+        if git_dir.exists():
+            git_files = sum(len(files) for _, _, files in os.walk(git_dir))
+            print(f"📂 .git directory files: {git_files}")
+        else:
+            print("⚠️  No .git directory found in project")
+    else:
+        print("⚠️  No project directory found")
+
     try:
         if compression == "zip":
             return _create_zip_archive(dir_to_compress, archive_path, total_files)
@@ -145,6 +162,7 @@ def _create_zip_archive(
     dir_to_compress: Path, archive_path: Path, total_files: int
 ) -> Path:
     """Create a ZIP archive."""
+    files_added = 0
     with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         with tqdm(
             total=total_files,
@@ -159,7 +177,10 @@ def _create_zip_archive(
                         absolute_file_path, dir_to_compress
                     )
                     zipf.write(absolute_file_path, arcname=relative_file_path)
+                    files_added += 1
                     pbar.update()
+
+    print(f"✅ ZIP archive created: {files_added} files added")
     return archive_path
 
 
@@ -167,6 +188,7 @@ def _create_tar_archive(
     dir_to_compress: Path, archive_path: Path, compression: str, total_files: int
 ) -> Path:
     """Create a TAR archive with specified compression."""
+    files_added = 0
     with tarfile.open(archive_path, f"w:{compression}") as tar:
         with tqdm(
             total=total_files,
@@ -181,8 +203,61 @@ def _create_tar_archive(
                         absolute_file_path, dir_to_compress
                     )
                     tar.add(absolute_file_path, arcname=relative_file_path)
+                    files_added += 1
                     pbar.update()
+
+    print(f"✅ TAR.{compression.upper()} archive created: {files_added} files added")
     return archive_path
+
+
+def verify_archive_contents(archive_path: Path) -> dict:
+    """Verify archive contents and return statistics."""
+    archive_path = Path(archive_path)
+    stats = {
+        "total_files": 0,
+        "total_size": 0,
+        "has_project_dir": False,
+        "has_git_dir": False,
+        "has_agor_tools": False,
+        "file_list": []
+    }
+
+    try:
+        if archive_path.suffix == ".zip":
+            with zipfile.ZipFile(archive_path, "r") as zf:
+                file_list = zf.namelist()
+                stats["file_list"] = sorted(file_list)
+                stats["total_files"] = len(file_list)
+
+                for file_info in zf.filelist:
+                    stats["total_size"] += file_info.file_size
+
+        elif archive_path.suffix in [".gz", ".bz2"] or ".tar." in archive_path.name:
+            with tarfile.open(archive_path, "r") as tf:
+                file_list = tf.getnames()
+                stats["file_list"] = sorted(file_list)
+                stats["total_files"] = len(file_list)
+
+                for member in tf.getmembers():
+                    if member.isfile():
+                        stats["total_size"] += member.size
+
+        # Check for key directories
+        stats["has_project_dir"] = any(f.startswith("project/") for f in stats["file_list"])
+        stats["has_git_dir"] = any(f.startswith("project/.git/") for f in stats["file_list"])
+        stats["has_agor_tools"] = any(f.startswith("agor_tools/") for f in stats["file_list"])
+
+        print(f"📊 Archive verification for {archive_path.name}:")
+        print(f"   📄 Total files: {stats['total_files']}")
+        print(f"   📏 Total size: {stats['total_size']:,} bytes")
+        print(f"   📁 Has project/: {stats['has_project_dir']}")
+        print(f"   📂 Has .git/: {stats['has_git_dir']}")
+        print(f"   🛠️  Has agor_tools/: {stats['has_agor_tools']}")
+
+    except Exception as e:
+        print(f"❌ Error verifying archive {archive_path}: {e}")
+
+    return stats
 
 
 # Backward compatibility alias
