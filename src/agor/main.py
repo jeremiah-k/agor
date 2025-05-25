@@ -6,11 +6,12 @@ from pathlib import Path
 from textwrap import dedent
 from typing import List, Optional
 
+import platformdirs
 import typer
 
 from . import __version__
 from .config import config
-from .constants import ARCHIVE_EXTENSIONS, DEFAULT_COMPRESSION_FORMAT, SUCCESS_MESSAGES
+from .constants import ARCHIVE_EXTENSIONS, DEFAULT_COMPRESSION_FORMAT, GIT_BINARY_URL, SUCCESS_MESSAGES
 from .exceptions import ValidationError
 from .git_binary import git_manager
 from .platform import (
@@ -20,7 +21,7 @@ from .platform import (
     reveal_file_in_explorer,
 )
 from .repo_mgmt import clone_git_repo_to_temp_dir, get_clone_url, valid_git_repo
-from .utils import create_archive, move_directory
+from .utils import create_archive, download_file, move_directory
 from .validation import validate_compression_format
 
 app = typer.Typer(
@@ -242,17 +243,31 @@ def bundle(
     # Copy all files in tools to output_dir
     shutil.copytree(tools_dir, output_dir / "tools_for_ai")
 
-    # Get git binary using the new git manager with fallback strategy
+    # Download and add git binary to bundle (simple approach that works)
     try:
-        git_binary_path = git_manager.get_git_binary()
+        git_url = config.get("git_binary_url", GIT_BINARY_URL)
+
+        # Use cache directory for git binary
+        git_cache_dir = (
+            Path(platformdirs.user_cache_dir("agor")) / "git_binary"
+        )
+        git_cache_dir.mkdir(parents=True, exist_ok=True)
+        git_binary_cache_path = git_cache_dir / "git"
+
+        # Download the git binary only if it doesn't exist in the cache
+        if not git_binary_cache_path.exists():
+            if not quiet_mode:
+                print("📥 Downloading git binary...")
+            download_file(git_url, git_binary_cache_path)
+            git_binary_cache_path.chmod(0o755)
+
+        # Copy the cached git binary to the bundle
         git_dest = output_dir / "tools_for_ai" / "git"
+        shutil.copyfile(git_binary_cache_path, git_dest)
+        git_dest.chmod(0o755)
 
         if not quiet_mode:
-            print("📥 Adding git binary to bundle...")
-
-        # Copy the git binary to the bundle
-        shutil.copyfile(git_binary_path, git_dest)
-        git_dest.chmod(0o755)
+            print("📥 Added git binary to bundle")
 
     except Exception as e:
         if not quiet_mode:
