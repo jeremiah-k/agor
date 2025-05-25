@@ -39,16 +39,13 @@ Search for text patterns in files or directories. Use this as a last resort, pre
 **Returns:** List of tuples containing (file_path, line_number, matching_line)
 
 **Example:**
-``python
-
+```python
 # Search for function definitions in a file
-
 matches = grep("main.py", r"def \w+")
 
 # Recursively search for TODO comments
-
 todos = grep("/path/to/repo", r"TODO|FIXME", recursive=True)
-``
+```
 
 ### Directory Structure Functions
 
@@ -154,9 +151,9 @@ imports = grep(".", r"^(import|from|#include|require)", recursive=True)
 4. **Language-specific analysis** using appropriate function signature detection
 5. **Extract complete functions** when you need to understand implementation details
 
-## Integration with AgentGrunt
+## Integration with AGOR
 
-These tools are automatically available in the AgentGrunt environment. Use them to:
+These tools are automatically available in the AGOR environment. Use them to:
 
 - **Analyze codebases** before making changes
 - **Find related code** when implementing features

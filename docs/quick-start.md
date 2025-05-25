@@ -211,8 +211,8 @@ db-stats   # View database statistics
 
 Now that you have AGOR running, explore these advanced topics:
 
+- **[Bundle Mode Guide](bundle-mode.md)** - Complete platform setup and optimization
 - **[Multi-Agent Strategies](strategies.md)** - Learn coordination patterns
-- **[Google AI Studio Guide](google-ai-studio.md)** - Optimize for your platform
 - **[Agent Handoffs](handoffs.md)** - Master agent transitions
 - **[Complete AI Protocol](../src/agor/tools/README_ai.md)** - Comprehensive instructions
 
@@ -222,7 +222,7 @@ Now that you have AGOR running, explore these advanced topics:
 
 - Use the `meta` hotkey to report issues
 - Visit [GitHub Issues](https://github.com/jeremiah-k/agor/issues)
-- Check [Google AI Studio Guide](google-ai-studio.md) for platform-specific help
+- Check [Bundle Mode Guide](bundle-mode.md) for platform-specific help
 
 **Want to understand more?**
 
