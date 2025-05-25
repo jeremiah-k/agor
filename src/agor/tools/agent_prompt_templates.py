@@ -177,31 +177,130 @@ Based on the project context, recommend the optimal strategy and explain why.
 """
 
 
-def generate_parallel_divergent_prompt(agent_id, mission, branch_name):
+def generate_parallel_divergent_prompt(agent_id, mission, branch_name, total_agents=3):
     """Generate a prompt for parallel divergent strategy agents"""
     return f"""
-PARALLEL DIVERGENT AGENT: {agent_id}
+AGENT: {agent_id}
+BRANCH: {branch_name}
+STRATEGY: Parallel Divergent ({total_agents} agents working independently)
 
 MISSION:
 {mission}
 
-YOUR BRANCH: {branch_name}
+COORDINATION PROTOCOL:
+1. **Read First**: Check `.agor/agentconvo.md` and `.agor/{agent_id.lower()}-memory.md`
+2. **Communicate**: Post status updates to `.agor/agentconvo.md`
+3. **Document**: Update `.agor/{agent_id.lower()}-memory.md` with decisions and progress
+4. **Sync Often**: Pull from main branch frequently to stay current
+5. **Stay Independent**: Work on YOUR solution approach without coordinating
 
 EXECUTION RULES:
-- Work INDEPENDENTLY - no coordination with other agents
-- Focus on YOUR solution approach
-- Document your design decisions
+- Work INDEPENDENTLY - no coordination with other agents during development
+- Focus on YOUR unique solution approach
+- Document your design decisions in memory file
 - Implement complete, working solution
+- Commit frequently to your branch
 - Prepare for peer review phase
 
+COMMUNICATION FORMAT:
+```
+{agent_id}: [TIMESTAMP] - [STATUS/QUESTION/FINDING]
+```
+
+MEMORY FILE UPDATES:
+- Current task and approach
+- Key architectural decisions
+- Files modified with descriptions
+- Problems encountered and solutions
+- Notes for peer review phase
+
 DELIVERABLES:
-- Working implementation
-- Design rationale document
-- Test coverage
-- Known limitations
+- Working implementation on {branch_name}
+- Complete memory log in `.agor/{agent_id.lower()}-memory.md`
+- Communication entries in `.agor/agentconvo.md`
+- Design rationale and known limitations
 
 REVIEW PREPARATION:
 After completion, you will review other agents' solutions and propose synthesis.
+"""
+
+
+def generate_coordination_init_template():
+    """Generate template for initializing agent coordination system"""
+    return """
+# Agent Coordination Initialization
+
+## .agor/agentconvo.md Template
+```markdown
+# Agent Communication Log
+
+Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
+
+## Communication History
+[Messages will be added here as agents work]
+```
+
+## .agor/memory.md Template
+```markdown
+# Project Memory
+
+## Project Overview
+[High-level project description and goals]
+
+## Active Strategy
+[Current development strategy being used]
+
+## Key Decisions
+[Major architectural and implementation decisions]
+
+## Integration Notes
+[Notes about how agent work will be integrated]
+```
+
+## .agor/agent{N}-memory.md Template
+```markdown
+# Agent{N} Memory Log
+
+## Current Task
+[What you're working on]
+
+## Decisions Made
+- [Key architectural choices]
+- [Implementation approaches]
+
+## Files Modified
+- [List of changed files with brief description]
+
+## Problems Encountered
+- [Issues hit and how resolved]
+
+## Next Steps
+- [What needs to be done next]
+
+## Notes for Review
+- [Important points for peer review phase]
+```
+
+## .agor/strategy-active.md Template
+```markdown
+# Active Strategy Details
+
+## Strategy Type
+[Parallel Divergent / Pipeline / Swarm / Red Team / Mob Programming]
+
+## Agent Assignments
+- Agent1: [Role/Branch]
+- Agent2: [Role/Branch]
+- Agent3: [Role/Branch]
+
+## Timeline
+- Phase 1: [Development phase]
+- Phase 2: [Review/Integration phase]
+- Phase 3: [Finalization phase]
+
+## Success Criteria
+[How to measure success]
+```
 """
 
 
