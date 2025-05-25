@@ -17,8 +17,11 @@ pip install agor
 ### Step 2: Bundle Your Project
 
 ```bash
-# Bundle all branches (default)
+# Bundle all branches (default, creates .tar.gz)
 agor bundle /path/to/your/project
+
+# Bundle with .zip format (for Google AI Studio)
+agor bundle /path/to/your/project -f zip
 
 # Bundle only main/master branch
 agor bundle /path/to/your/project -m
@@ -27,15 +30,18 @@ agor bundle /path/to/your/project -m
 agor bundle /path/to/your/project -b feature1,feature2
 ```
 
-### Step 3: Upload to ChatGPT
+### Step 3: Upload to AI Platform
 
-1. **Upload the .tar.gz file** to ChatGPT using the file upload button
+1. **Upload the bundle file** to your chosen AI platform:
+   - **Google AI Studio**: Upload the .zip file (free with Pro models)
+   - **ChatGPT**: Upload the .tar.gz file (requires subscription)
+   - **Other platforms**: Use appropriate format
 2. **Copy and paste the prompt** that AGOR generated
-3. **ChatGPT will extract** the bundle and initialize AGOR protocol
+3. **The AI will extract** the bundle and initialize AGOR protocol
 
 ### Step 4: Select Your Role
 
-ChatGPT will ask you to choose your primary role:
+The AI will ask you to choose your primary role:
 
 **a) 📋 PROJECT COORDINATOR** - Plan and coordinate multi-agent development
 
@@ -57,7 +63,7 @@ ChatGPT will ask you to choose your primary role:
 
 ### Step 5: Begin Work
 
-Based on your role selection, ChatGPT will initialize with:
+Based on your role selection, the AI will initialize with:
 
 - Your complete project codebase
 - Role-appropriate AGOR tools and hotkeys
@@ -69,10 +75,13 @@ Based on your role selection, ChatGPT will initialize with:
 **Bundle Mode (This Mode) - For Upload-Based AI Platforms:**
 
 - **Requires local installation** - user installs AGOR locally
-- **File upload workflow** - user bundles project and uploads .tar.gz
-- **Works with upload-only platforms** like ChatGPT
-- **Self-contained** - everything bundled in one file
-- **For**: ChatGPT and other AI agents that accept file uploads (.zip/.tar.gz)
+- **File upload workflow** - user bundles project and uploads archive
+- **Multiple format support** - .zip for Google AI Studio, .tar.gz for ChatGPT
+- **Self-contained** - everything bundled in one file including portable git binary
+- **✅ Successfully tested with**:
+  - **Google AI Studio Pro models** (free with Function Calling enabled, use .zip)
+  - **ChatGPT** (requires subscription, use .tar.gz)
+  - **Claude** and other platforms that accept file uploads
 
 **Agent Mode - For AI Agents with Direct Git Access:**
 

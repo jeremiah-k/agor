@@ -34,9 +34,9 @@ cat src/agor/tools/README_ai.md
 # cd "$MAIN_PROJECT_DIR"
 ```
 
-### Bundle Mode (For ChatGPT Upload)
+### Bundle Mode (For AI Platform Upload)
 
-**For ChatGPT and other upload-based AI platforms:**
+**For ChatGPT, Google AI Studio, and other upload-based AI platforms:**
 
 ```bash
 # User installs AGOR locally
@@ -45,8 +45,9 @@ pipx install agor
 # Bundle your project for upload
 agor bundle /path/to/your/project
 
-# Upload the generated .tar.gz file to ChatGPT
-# ChatGPT extracts and follows embedded instructions
+# Upload the generated bundle to your AI platform
+# Supports .zip format for Google AI Studio (free with Pro models)
+# Supports .tar.gz format for ChatGPT and other platforms
 ```
 
 ## 🎯 Core Capabilities
