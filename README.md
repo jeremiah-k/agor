@@ -14,7 +14,7 @@ AGOR runs on Linux, macOS, and Windows.
 
 ### Agent Mode (For AI Agents with Direct Git Access)
 
-**For Augment Code, Jules by Google, and other AI agents:**
+**For Augment Code Remote Agents, Jules by Google, and other AI agents:**
 
 ```bash
 # Remember your main project directory
