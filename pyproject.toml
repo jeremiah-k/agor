@@ -1,6 +1,49 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "agor"
+version = "0.1.5"
+description = "AgentOrchestrator - Multi-Agent Development Coordination Platform"
+authors = [{name = "Jeremiah K.", email = "jeremiahk@gmx.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+    "Intended Audience :: Developers",
+]
+dependencies = [
+    "httpx",
+    "plumbum",
+    "pyperclip",
+    "tqdm",
+    "typer",
+    "platformdirs>=4.3.7,<5.0.0",
+    "structlog>=24.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy", "pre-commit", "pytest-tmp-git"]
+
+[project.scripts]
+agor = "agor.main:app"
+agentgrunt = "agor.main:app"
+
+[project.urls]
+"Bug Tracker" = "https://github.com/jeremiah-k/agor/issues"
+"Repository" = "https://github.com/jeremiah-k/agor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"agor.tools" = ["*.md", "*.py"]
 
 [tool.trunk]
 enabled = true
