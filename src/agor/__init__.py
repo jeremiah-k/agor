@@ -7,18 +7,22 @@ specialized prompts for coordinated AI development workflows.
 """
 
 import os
-import pkg_resources
+try:
+    from importlib.metadata import version, PackageNotFoundError
+except ImportError:
+    # Fallback for Python < 3.8
+    from importlib_metadata import version, PackageNotFoundError
 
 # First try to get version from environment variable (GitHub tag)
 if "GITHUB_REF_NAME" in os.environ:
     __version__ = os.environ.get("GITHUB_REF_NAME")
 else:
-    # Fall back to setup.cfg metadata using pkg_resources (compatible with PyInstaller)
+    # Fall back to package metadata using importlib.metadata (modern replacement for pkg_resources)
     try:
-        __version__ = pkg_resources.get_distribution("agor").version
-    except pkg_resources.DistributionNotFound:
+        __version__ = version("agor")
+    except PackageNotFoundError:
         # If all else fails, use hardcoded version
-        __version__ = "0.1.1"
+        __version__ = "0.1.2"
 
 __author__ = "Jeremiah K."
 __email__ = "jeremiahk@gmx.com"

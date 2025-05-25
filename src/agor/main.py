@@ -151,6 +151,12 @@ def bundle(
         "-m",
         help="Bundle only main/master branch",
     ),
+    all_branches: bool = typer.Option(
+        False,
+        "--all-branches",
+        "-a",
+        hidden=True,
+    ),
     branches: list[str] = branches_option,
     interactive: bool = typer.Option(
         True, "--no-interactive", help="don't ask questions (batch) mode"
