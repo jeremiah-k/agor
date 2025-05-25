@@ -20,6 +20,7 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 - **[Agent Mode Guide](agent-mode.md)** - For git-capable AI agents
 
 ### Advanced Topics
+- **[Agent Handoffs](handoffs.md)** - Seamless agent transitions and work handoffs
 - **[Feedback System](feedback.md)** - Help improve AGOR through structured feedback
 - **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
 - **[Contributing](contributing.md)** - How to contribute to AGOR development
@@ -33,7 +34,7 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 
 ## 🎯 What Makes AGOR Special?
 
-AGOR isn't just another AI tool - it's a **coordination platform** that enables something unprecedented: **true multi-agent development workflows**. 
+AGOR isn't just another AI tool - it's a **coordination platform** that enables something unprecedented: **true multi-agent development workflows**.
 
 Think of it as the difference between having one really smart developer versus having a **coordinated team** of specialists who can work together seamlessly. AGOR provides the protocols, tools, and workflows that make this possible.
 
