@@ -1,127 +1,89 @@
-import os
-import platform
+import json
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 from textwrap import dedent
+from typing import List, Optional
 
-import platformdirs
-import pyperclip
 import typer
-from plumbum import local
 
 from . import __version__
+from .config import config
+from .constants import ARCHIVE_EXTENSIONS, DEFAULT_COMPRESSION_FORMAT, SUCCESS_MESSAGES
+from .exceptions import ValidationError
+from .git_binary import git_manager
+from .platform import copy_to_clipboard, get_downloads_dir, is_termux, reveal_file_in_explorer
 from .repo_mgmt import clone_git_repo_to_temp_dir, get_clone_url, valid_git_repo
-from .utils import create_tarball, download_file, move_directory
+from .utils import create_archive, move_directory
+from .validation import validate_compression_format
 
 
-def is_termux():
-    """Check if running in Termux environment"""
-    return "com.termux" in os.environ.get("HOME", "")
-
-
-def get_downloads_dir():
-    """Get the Downloads directory path based on the platform"""
-    if is_termux():
-        # For Termux, use ~/storage/downloads
-        storage_downloads = os.path.expanduser("~/storage/downloads")
-        if os.path.exists(storage_downloads):
-            return storage_downloads
-
-    # For other environments, use platformdirs to get the standard downloads directory
-    try:
-        downloads_dir = platformdirs.user_downloads_dir()
-        if os.path.exists(downloads_dir):
-            return downloads_dir
-    except Exception:
-        pass
-
-    # Fallback to standard Downloads directories
-    home_dir = os.path.expanduser("~")
-    downloads_dir = os.path.join(home_dir, "Downloads")
-    if os.path.exists(downloads_dir):
-        return downloads_dir
-
-    downloads_dir = os.path.join(home_dir, "Download")
-    if os.path.exists(downloads_dir):
-        return downloads_dir
-
-    # Fallback to current directory
-    return os.getcwd()
-
-
-def copy_to_clipboard(text):
-    """Copy text to clipboard with platform-specific handling"""
-    # First try pyperclip as it works on many platforms
-    try:
-        pyperclip.copy(text)
-        return True, "Message copied to clipboard!"
-    except Exception:
-        # If pyperclip fails, try platform-specific methods
-        if is_termux():
-            # Termux environment
-            try:
-                subprocess.run(
-                    ["termux-clipboard-set"],
-                    input=text.encode("utf-8"),
-                    check=True,
-                )
-                return True, "Message copied to clipboard using termux-api!"
-            except Exception as e2:
-                return (
-                    False,
-                    f"Failed to copy with termux-api: {e2}. Install termux-api package with 'pkg install termux-api'.",
-                )
-        else:
-            # Other platforms
-            system = platform.system()
-            try:
-                if system == "Darwin":  # macOS
-                    subprocess.run("pbcopy", text=True, input=text, check=True)
-                    return True, "Message copied to clipboard using pbcopy!"
-                elif system == "Linux":  # Linux
-                    if shutil.which("xclip"):
-                        subprocess.run(
-                            ["xclip", "-selection", "clipboard"],
-                            input=text.encode("utf-8"),
-                            check=True,
-                        )
-                        return True, "Message copied to clipboard using xclip!"
-                    elif shutil.which("xsel"):
-                        subprocess.run(
-                            ["xsel", "--clipboard", "--input"],
-                            input=text.encode("utf-8"),
-                            check=True,
-                        )
-                        return True, "Message copied to clipboard using xsel!"
-                    elif shutil.which("wl-copy"):  # Wayland
-                        subprocess.run(
-                            ["wl-copy"],
-                            input=text.encode("utf-8"),
-                            check=True,
-                        )
-                        return True, "Message copied to clipboard using wl-copy!"
-                    else:
-                        return (
-                            False,
-                            "No clipboard command found. On Linux, install xclip, xsel, or wl-clipboard.",
-                        )
-                else:
-                    return False, f"Clipboard functionality not supported on {system}."
-            except Exception as e2:
-                return False, f"Failed to copy to clipboard: {e2}"
-
-
-app = typer.Typer(add_completion=False)
+app = typer.Typer(
+    add_completion=False,
+    help="🎼 AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform",
+    epilog="For more information, visit: https://github.com/jeremiah-k/agor"
+)
 
 
 @app.command()
 def version():
     """Display AGOR version information"""
-    print(f"AgentOrchestrator (AGOR) v{__version__}")
+    print(f"🎼 AgentOrchestrator (AGOR) v{__version__}")
+
+
+def config_cmd(
+    show: bool = typer.Option(False, "--show", help="Show current configuration"),
+    set_key: Optional[str] = typer.Option(None, "--set", help="Set configuration key (format: key=value)"),
+    reset: bool = typer.Option(False, "--reset", help="Reset configuration to defaults"),
+):
+    """Manage AGOR configuration settings"""
+
+    if reset:
+        config.reset()
+        print("🔄 Configuration reset to defaults!")
+        return
+
+    if set_key:
+        try:
+            if "=" not in set_key:
+                raise ValueError("Format must be key=value")
+            key, value = set_key.split("=", 1)
+
+            # Convert string values to appropriate types
+            if key in ["quiet", "preserve_history", "main_only", "interactive", "assume_yes", "clipboard_copy_default"]:
+                value = value.lower() in ('true', '1', 'yes', 'on')
+            elif key in ["shallow_depth", "download_chunk_size", "progress_bar_width"]:
+                value = int(value)
+
+            config.set(key, value)
+            print(f"✅ Set {key} = {value}")
+        except (ValueError, TypeError) as e:
+            print(f"❌ Error setting configuration: {e}")
+            return
+
+    if show or not (set_key or reset):
+        print("📋 Current AGOR Configuration:")
+        print("=" * 40)
+        current_config = config.show()
+        for key, value in current_config.items():
+            print(f"{key:25} = {value}")
+
+        print("\n🌍 Environment Variables:")
+        print("=" * 40)
+        env_vars = config.get_env_vars()
+        if env_vars:
+            for key, value in env_vars.items():
+                print(f"{key:25} = {value}")
+        else:
+            print("No AGOR environment variables set")
+
+        print(f"\n📁 Config file: {config.config_file}")
+
+
+# Register the config command with proper name
+config_cmd = app.command(name="config")(config_cmd)
 
 
 # Define option for branches outside the function to avoid B008 warning
@@ -136,17 +98,23 @@ branches_option = typer.Option(
 @app.command()
 def bundle(
     src_repo: str = typer.Argument(
-        help="a local git repo or github url to bundle",
+        help="Local git repository path or GitHub URL (supports user/repo shorthand)",
         callback=valid_git_repo,
     ),
+    format: str = typer.Option(
+        None,
+        "--format",
+        "-f",
+        help=f"Archive format: {', '.join(ARCHIVE_EXTENSIONS.keys())} (default: {DEFAULT_COMPRESSION_FORMAT})",
+    ),
     preserve_history: bool = typer.Option(
-        False,
+        None,
         "--preserve-history",
         "-p",
-        help="Preserve the full git history (defaults to shallow clone to save space)",
+        help="Preserve full git history (default: shallow clone to save space)",
     ),
     main_only: bool = typer.Option(
-        False,
+        None,
         "--main-only",
         "-m",
         help="Bundle only main/master branch",
@@ -156,171 +124,229 @@ def bundle(
         "--all-branches",
         "-a",
         hidden=True,
+        help="Legacy flag for backward compatibility",
     ),
-    branches: list[str] = branches_option,
+    branches: Optional[List[str]] = branches_option,
     interactive: bool = typer.Option(
-        True, "--no-interactive", help="don't ask questions (batch) mode"
+        None,
+        "--no-interactive",
+        help="Disable interactive prompts (batch mode)"
     ),
     assume_yes: bool = typer.Option(
-        False, "--assume-yes", "-y", help="assume yes for all prompts"
+        None,
+        "--assume-yes",
+        "-y",
+        help="Assume 'yes' for all prompts"
+    ),
+    quiet: bool = typer.Option(
+        None,
+        "--quiet",
+        "-q",
+        help="Minimal output mode",
     ),
 ):
-    """Bundle up a local or remote git repo.
-
-    By default, bundles ALL branches from the repository.
-    Use -m/--main-only to bundle only main/master branch.
-    Use -b/--branches to bundle main/master plus specified additional branches.
     """
-    # clone_url = get_clone_url(src_repo) -- Assigned to but never used
+    Bundle a git repository into an archive for AI assistant upload.
+
+    Creates a compressed archive containing your project plus AGOR's multi-agent
+    coordination tools. Supports ZIP (default), TAR.GZ, and TAR.BZ2 formats.
+
+    Examples:
+        agor bundle my-project                    # Bundle all branches as ZIP
+        agor bundle user/repo --format gz        # GitHub repo as TAR.GZ
+        agor bundle . -m --quiet                 # Main branch only, minimal output
+        agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
+    """
+    # Apply configuration defaults with CLI overrides
+    compression_format = format or config.get("compression_format", DEFAULT_COMPRESSION_FORMAT)
+    preserve_hist = preserve_history if preserve_history is not None else config.get("preserve_history", False)
+    main_branch_only = main_only if main_only is not None else config.get("main_only", False)
+    is_interactive = interactive if interactive is not None else config.get("interactive", True)
+    auto_yes = assume_yes if assume_yes is not None else config.get("assume_yes", False)
+    quiet_mode = quiet if quiet is not None else config.get("quiet", False)
+
+    # Validate compression format
+    try:
+        compression_format = validate_compression_format(compression_format)
+    except ValidationError as e:
+        print(f"❌ {e}")
+        raise typer.Exit(1)
+
+    # Get repository information
     repo_name = get_clone_url(src_repo).split("/")[-1]
+    short_name = re.sub(r"\.git$", "", repo_name)
+
+    if not quiet_mode:
+        print(f"🎼 AGOR Bundle Creation")
+        print(f"📁 Repository: {repo_name}")
+        print(f"📦 Format: {compression_format.upper()}")
 
     # Process branches parameter if provided
     branch_list = None
     if branches:
-        branch_list = [b.strip() for b in branches]
+        branch_list = [b.strip() for b in branches if b.strip()]
 
-    # Determine which branches to clone based on new simplified logic
-    if main_only:
-        print("Bundling only main/master branch")
+    # Determine which branches to clone
+    if main_branch_only:
+        if not quiet_mode:
+            print("📋 Bundling only main/master branch")
         temp_repo = clone_git_repo_to_temp_dir(
-            src_repo, shallow=not preserve_history, main_only=True
+            src_repo, shallow=not preserve_hist, main_only=True
         )
     elif branch_list:
-        print(f"Bundling main/master plus additional branches: {branch_list}")
+        if not quiet_mode:
+            print(f"📋 Bundling main/master plus additional branches: {', '.join(branch_list)}")
         temp_repo = clone_git_repo_to_temp_dir(
-            src_repo, shallow=not preserve_history, branches=branch_list
+            src_repo, shallow=not preserve_hist, branches=branch_list
         )
     else:
-        print("Bundling all branches from the repository (default)")
+        if not quiet_mode:
+            print("📋 Bundling all branches from the repository (default)")
         temp_repo = clone_git_repo_to_temp_dir(
-            src_repo, shallow=not preserve_history, all_branches=True
+            src_repo, shallow=not preserve_hist, all_branches=True
         )
-    print(  # "\033[92m" +
-        f"Preparing to build '{repo_name}'..."
-        # + "\033[0m"
-    )
 
+    if not quiet_mode:
+        print(f"⚙️  Preparing to build '{short_name}'...")
+
+    # Create output directory structure
     output_dir = Path(tempfile.mkdtemp())
     output_dir.mkdir(parents=True, exist_ok=True)
     tools_dir = Path(__file__).parent / "tools"
 
-    # use shutil to move the temp_repo dir into output_dir/project
+    # Move the cloned repo into output_dir/project
     project_dir = output_dir / "project"
     move_directory(temp_repo, project_dir)
 
-    # copy all files in tools to output_dir
+    # Copy all files in tools to output_dir
     shutil.copytree(tools_dir, output_dir / "tools_for_ai")
 
-    # download the linux git binary, make it executable
-    git_binary_url = "https://github.com/nikvdp/1bin/releases/download/v0.0.40/git"
+    # Get git binary using the new git manager with fallback strategy
+    try:
+        git_binary_path = git_manager.get_git_binary()
+        git_dest = output_dir / "tools_for_ai" / "git"
 
-    git_cache_dir = (
-        Path(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")))
-        / "agor"
-        / "git_binary"
-    )
-    git_cache_dir.mkdir(parents=True, exist_ok=True)
-    git_binary_dest_path = git_cache_dir / "git"
+        if not quiet_mode:
+            print("📥 Adding git binary to bundle...")
 
-    # Download the git binary only if it doesn't exist in the cache
-    if not git_binary_dest_path.exists():
-        download_file(git_binary_url, git_binary_dest_path)
-        git_binary_dest_path.chmod(0o755)
+        # Copy the git binary to the bundle
+        shutil.copyfile(git_binary_path, git_dest)
+        git_dest.chmod(0o755)
 
-    shutil.copyfile(git_binary_dest_path, output_dir / "tools_for_ai" / "git")
+    except Exception as e:
+        if not quiet_mode:
+            print(f"⚠️  Warning: Could not add git binary to bundle: {e}")
+            print("   Bundle will still work if target system has git installed")
 
-    # create a tarball of output_dir, and once it's written move it to the
-    # current PWD, and tell the user about it
-    tarball_path = Path(
-        tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz").name
-    )
-    tarball = create_tarball(output_dir, tarball_path)
-    short_name = re.sub(r"\.git$", "", repo_name)
+    # Create archive with the specified format
+    archive_extension = ARCHIVE_EXTENSIONS[compression_format]
+    archive_path = Path(tempfile.NamedTemporaryFile(delete=False, suffix=archive_extension).name)
+
+    if not quiet_mode:
+        print(f"📦 Creating {compression_format.upper()} archive...")
+
+    try:
+        create_archive(output_dir, archive_path, compression_format)
+    except Exception as e:
+        print(f"❌ Failed to create archive: {e}")
+        raise typer.Exit(1)
 
     # Determine where to save the bundled file
+    final_filename = f"{short_name}{archive_extension}"
+
     if is_termux():
         # For Termux, always use the Downloads directory for easier access
         downloads_dir = get_downloads_dir()
-        destination = Path(downloads_dir) / f"{short_name}.tar.gz"
-        print(f"Running in Termux, saving to Downloads: {destination}")
+        destination = Path(downloads_dir) / final_filename
+        if not quiet_mode:
+            print(f"📱 Running in Termux, saving to Downloads: {destination}")
     else:
         # For other platforms, ask the user where to save
-        if interactive and not assume_yes:
+        if is_interactive and not auto_yes:
             # Ask if they want to save to current directory
             save_to_current = typer.confirm(
-                "Save the bundled file to the current directory?", default=True
+                "Save the bundled file to the current directory?",
+                default=True
             )
 
             if not save_to_current:
                 # Ask if they want to save to Downloads directory
                 save_to_downloads = typer.confirm(
-                    "Save the bundled file to your Downloads directory?", default=True
+                    "Save the bundled file to your Downloads directory?",
+                    default=True
                 )
 
                 if save_to_downloads:
                     downloads_dir = get_downloads_dir()
-                    destination = Path(downloads_dir) / f"{short_name}.tar.gz"
-                    print(f"Saving to Downloads: {destination}")
+                    destination = Path(downloads_dir) / final_filename
+                    if not quiet_mode:
+                        print(f"💾 Saving to Downloads: {destination}")
                 else:
                     # Use current directory as fallback
-                    destination = Path.cwd() / f"{short_name}.tar.gz"
-                    print(f"Saving to current directory: {destination}")
+                    destination = Path.cwd() / final_filename
+                    if not quiet_mode:
+                        print(f"💾 Saving to current directory: {destination}")
             else:
                 # Use current directory
-                destination = Path.cwd() / f"{short_name}.tar.gz"
+                destination = Path.cwd() / final_filename
         else:
             # In non-interactive mode, use current directory
-            destination = Path.cwd() / f"{short_name}.tar.gz"
+            destination = Path.cwd() / final_filename
 
-    shutil.move(str(tarball), str(destination))
+    # Move the archive to the final destination
+    shutil.move(str(archive_path), str(destination))
 
-    final_msg = (
-        dedent(
-            f"""
-            🎼 AgentOrchestrator (AGOR) Bundle Created: {destination}
+    # Success message and prompt
+    if not quiet_mode:
+        print(f"\n{SUCCESS_MESSAGES['bundle_created']}")
+        print(f"📁 Location: {destination}")
+        print(f"📦 Format: {compression_format.upper()}")
+        print(f"📏 Size: {destination.stat().st_size / 1024 / 1024:.1f} MB")
 
-            This bundle contains your project plus AgentOrchestrator's multi-agent coordination platform.
+        print("\n" + "="*60)
+        print("🤖 AI ASSISTANT PROMPT")
+        print("="*60)
 
-            BUNDLE MODE: Upload this file to any AI platform and use the prompt below.
-            STANDALONE MODE: AI agents can also clone https://github.com/jeremiah-k/agor.git directly.
-
-            Please upload this file to your AI assistant and paste the following message:
-            """
-        ).strip()
-        + "\n"
+    ai_prompt = (
+        f"Extract the {compression_format.upper()} archive I've uploaded, "
+        "read tools_for_ai/README_ai.md completely, "
+        "and execute the AgentOrchestrator initialization protocol. "
+        "You are now AgentOrchestrator (AGOR), a multi-agent development coordination platform."
     )
 
-    gpt_prompt = (
-        dedent(
-            """
-        Please extract the archive I've uploaded, read the contents of
-        tools_for_ai/README_ai.md in its entirety, and follow the AgentOrchestrator
-        initialization protocol listed inside that file. You are now AgentOrchestrator (AGOR),
-        a multi-agent development coordination platform.
-        """
-        )
-        .strip()
-        .replace("\n", " ")
-    )
+    if not quiet_mode:
+        print(ai_prompt)
+        print("="*60)
 
-    print(final_msg)
-    print(f"---\n{gpt_prompt}\n---")
+    # Handle clipboard and file revelation
+    if is_interactive:
+        # Default to copying based on configuration
+        should_copy = config.get("clipboard_copy_default", True)
 
-    if interactive:
-        # prompt user if they want to copy it and reveal the file, then do it if they say yes
-        copy = (
-            True if assume_yes else typer.confirm("Copy the message to your clipboard?")
-        )
-        if copy:
-            success, message = copy_to_clipboard(gpt_prompt)
-            print(message)
-        # Only show the Finder prompt on macOS
-        if sys.platform == "darwin":
-            open_finder = (
-                True if assume_yes else typer.confirm("Reveal the file in Finder?")
-            )
-            if open_finder:
-                local["open"]("-R", destination)
+        if not auto_yes and not should_copy:
+            should_copy = typer.confirm("Copy the AI prompt to clipboard?")
+
+        if should_copy or auto_yes:
+            success, message = copy_to_clipboard(ai_prompt)
+            if not quiet_mode:
+                print(f"\n{message}")
+
+        # Offer to reveal file in system explorer
+        if not auto_yes:
+            reveal = typer.confirm("Open file location?")
+            if reveal:
+                if reveal_file_in_explorer(destination):
+                    if not quiet_mode:
+                        print("📂 File location opened!")
+                else:
+                    if not quiet_mode:
+                        print("⚠️  Could not open file location")
+
+    if quiet_mode:
+        # In quiet mode, just print the essential info
+        print(f"{destination}")
+    else:
+        print(f"\n✅ Bundle creation complete! Upload {destination} to your AI assistant.")
 
 
 @app.command()
@@ -328,10 +354,10 @@ def custom_instructions(
     copy: bool = typer.Option(
         True,
         "--copy/--no-copy",
-        help="Copy custom instructions to clipboard (macOS only)",
+        help="Copy custom instructions to clipboard",
     )
 ):
-    """Copy ChatGPT custom instructions to the clipboard"""
+    """Generate custom instructions for AI assistants"""
 
     instructions = dedent(
         """
@@ -344,7 +370,7 @@ def custom_instructions(
         - the user's git repo (in the `/tmp/project` folder)
         - advanced coordination tools and prompt templates
 
-        Before proceeding, please:
+        Before proceeding:
         - **Always use the git binary provided in this folder for git operations**
         - Configure `git` to make commits (use `git config` to set a name and
           email of AgentOrchestrator and agor@example.local)
@@ -391,22 +417,29 @@ def custom_instructions(
         """
     )
 
+    print("🤖 AGOR Custom Instructions for AI Assistants")
+    print("=" * 60)
     print(instructions)
 
     if copy:
         success, message = copy_to_clipboard(instructions)
-        print(message)
+        print(f"\n{message}")
 
 
 def cli():
-    import sys
-
+    """Main CLI entry point"""
     if len(sys.argv) == 1:
-        # show help even if user didn't pass --help
-        sys.argv += ["--help"]
+        # Show help if no arguments provided
+        sys.argv.append("--help")
+
+    try:
         app()
-    else:
-        app()
+    except KeyboardInterrupt:
+        print("\n❌ Operation cancelled by user")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
