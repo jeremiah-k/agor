@@ -40,6 +40,26 @@ If no captured configuration is available, you can:
 
 **This ensures proper commit attribution for all development work.**
 
+## 📝 AGENT MANIFEST
+
+**Check for bundled manifest first**: Look for `/tmp/agor_tools/AGENT_MANIFEST.md`
+
+If available, this manifest contains:
+- Git configuration captured during bundle creation
+- Available tools and their descriptions
+- Quick start commands specific to this bundle
+- Environment information and setup instructions
+
+```bash
+# Read the manifest if available
+cat /tmp/agor_tools/AGENT_MANIFEST.md
+
+# Or check the JSON version
+cat /tmp/agor_tools/agent_manifest.json
+```
+
+**For standalone mode**: Request the agent manifest from the developer using `agor agent-manifest`
+
 ## CRITICAL INITIALIZATION PROTOCOL
 
 **STEP 1: ROLE SELECTION**

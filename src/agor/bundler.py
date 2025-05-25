@@ -168,8 +168,9 @@ class BundleBuilder:
         if agor_tools_src.exists():
             shutil.copytree(agor_tools_src, tools_dir)
 
-        # Capture current git configuration
+        # Capture current git configuration and create agent manifest
         await self._capture_git_config(tools_dir)
+        await self._create_agent_manifest(tools_dir)
 
         # Download git binary
         try:
@@ -264,6 +265,241 @@ echo "🚀 Ready for development!"
 
         except Exception as e:
             log.warning("Failed to capture git configuration", error=str(e))
+
+    async def _create_agent_manifest(self, tools_dir: Path) -> None:
+        """Create comprehensive agent manifest with all essential information."""
+        import subprocess
+        import json
+        import platform
+        from datetime import datetime
+        from .. import __version__
+
+        manifest = {
+            "agor_version": __version__,
+            "bundle_created_at": datetime.now().isoformat(),
+            "bundle_creator": {
+                "platform": platform.system(),
+                "python_version": platform.python_version(),
+                "hostname": platform.node()
+            },
+            "git_configuration": {},
+            "environment_info": {},
+            "project_info": {},
+            "available_tools": [],
+            "setup_instructions": [],
+            "quick_start_commands": []
+        }
+
+        try:
+            # Load git configuration if available
+            git_config_file = tools_dir / "git_config.json"
+            if git_config_file.exists():
+                with open(git_config_file, "r") as f:
+                    manifest["git_configuration"] = json.load(f)
+
+            # Gather environment information
+            manifest["environment_info"] = {
+                "working_directory": str(Path.cwd()),
+                "bundle_format": self.compression_format,
+                "preserve_history": self.preserve_history,
+                "main_only": self.main_only,
+                "git_binary_included": True,
+                "sqlite_available": (tools_dir / "sqlite3").exists() or (tools_dir / "sqlite_memory.py").exists()
+            }
+
+            # Try to gather project information
+            try:
+                # Get repository information
+                repo_root = subprocess.check_output(
+                    ["git", "rev-parse", "--show-toplevel"],
+                    stderr=subprocess.DEVNULL,
+                    text=True
+                ).strip()
+
+                repo_name = Path(repo_root).name
+                current_branch = subprocess.check_output(
+                    ["git", "branch", "--show-current"],
+                    stderr=subprocess.DEVNULL,
+                    text=True
+                ).strip()
+
+                # Get recent commits
+                recent_commits = subprocess.check_output(
+                    ["git", "log", "--oneline", "-5"],
+                    stderr=subprocess.DEVNULL,
+                    text=True
+                ).strip().split("\n")
+
+                manifest["project_info"] = {
+                    "repository_name": repo_name,
+                    "current_branch": current_branch,
+                    "recent_commits": recent_commits,
+                    "repository_root": repo_root
+                }
+
+            except subprocess.CalledProcessError:
+                manifest["project_info"] = {
+                    "repository_name": "Unknown",
+                    "current_branch": "Unknown",
+                    "note": "Not a git repository or git not available"
+                }
+
+            # List available tools
+            tool_files = [
+                "git", "git_setup.py", "code_exploration.py", "sqlite_memory.py",
+                "agent_prompt_templates.py", "handoff_templates.py",
+                "project_planning_templates.py", "README_ai.md"
+            ]
+
+            for tool in tool_files:
+                tool_path = tools_dir / tool
+                if tool_path.exists():
+                    manifest["available_tools"].append({
+                        "name": tool,
+                        "path": f"/tmp/agor_tools/{tool}",
+                        "executable": tool_path.is_file() and tool_path.stat().st_mode & 0o111,
+                        "description": self._get_tool_description(tool)
+                    })
+
+            # Setup instructions
+            git_config = manifest["git_configuration"]
+            if git_config.get("user_name") and git_config.get("user_email"):
+                manifest["setup_instructions"] = [
+                    "1. Apply git configuration: python /tmp/agor_tools/git_setup.py --apply-bundle",
+                    "2. Verify git setup: python /tmp/agor_tools/git_setup.py --show",
+                    "3. Make git binary executable: chmod 755 /tmp/agor_tools/git",
+                    "4. Read full instructions: cat /tmp/agor_tools/README_ai.md"
+                ]
+
+                manifest["quick_start_commands"] = [
+                    "python /tmp/agor_tools/git_setup.py --apply-bundle",
+                    "chmod 755 /tmp/agor_tools/git",
+                    "/tmp/agor_tools/git status"
+                ]
+            else:
+                manifest["setup_instructions"] = [
+                    "1. Set up git configuration manually or from environment",
+                    "2. Make git binary executable: chmod 755 /tmp/agor_tools/git",
+                    "3. Configure git: python /tmp/agor_tools/git_setup.py --set 'Your Name' 'your@email.com'",
+                    "4. Read full instructions: cat /tmp/agor_tools/README_ai.md"
+                ]
+
+                manifest["quick_start_commands"] = [
+                    "chmod 755 /tmp/agor_tools/git",
+                    "python /tmp/agor_tools/git_setup.py --show",
+                    "python /tmp/agor_tools/git_setup.py --set 'Your Name' 'your@email.com'"
+                ]
+
+            # Save manifest
+            manifest_file = tools_dir / "agent_manifest.json"
+            with open(manifest_file, "w") as f:
+                json.dump(manifest, f, indent=2)
+
+            # Create human-readable manifest
+            readable_manifest = self._create_readable_manifest(manifest)
+            readable_file = tools_dir / "AGENT_MANIFEST.md"
+            with open(readable_file, "w") as f:
+                f.write(readable_manifest)
+
+            log.info(
+                "Created agent manifest",
+                tools_count=len(manifest["available_tools"]),
+                git_configured=bool(git_config.get("user_name"))
+            )
+
+        except Exception as e:
+            log.warning("Failed to create agent manifest", error=str(e))
+
+    def _get_tool_description(self, tool_name: str) -> str:
+        """Get description for a tool."""
+        descriptions = {
+            "git": "Portable git binary for version control operations",
+            "git_setup.py": "Git configuration management and setup",
+            "code_exploration.py": "Advanced code analysis and exploration tools",
+            "sqlite_memory.py": "SQLite-based memory management system",
+            "agent_prompt_templates.py": "Standardized prompt templates for agents",
+            "handoff_templates.py": "Agent handoff and coordination templates",
+            "project_planning_templates.py": "Project planning and breakdown templates",
+            "README_ai.md": "Complete AI agent instructions and protocol"
+        }
+        return descriptions.get(tool_name, "AGOR tool")
+
+    def _create_readable_manifest(self, manifest: dict) -> str:
+        """Create human-readable version of the manifest."""
+        git_config = manifest["git_configuration"]
+        project_info = manifest["project_info"]
+
+        readable = f"""# 🤖 AGOR Agent Manifest
+
+**Bundle Created**: {manifest['bundle_created_at']}
+**AGOR Version**: {manifest['agor_version']}
+**Project**: {project_info.get('repository_name', 'Unknown')}
+**Current Branch**: {project_info.get('current_branch', 'Unknown')}
+
+## 🔧 Git Configuration
+
+"""
+
+        if git_config.get("user_name") and git_config.get("user_email"):
+            readable += f"""**Ready to apply**: Git configuration captured from bundle creator
+- **Name**: {git_config['user_name']}
+- **Email**: {git_config['user_email']}
+- **Captured**: {git_config.get('captured_at', 'Unknown')}
+
+**Quick Setup**: `python /tmp/agor_tools/git_setup.py --apply-bundle`
+"""
+        else:
+            readable += """**Manual setup required**: No git configuration captured
+
+**Setup Options**:
+- Environment: `python /tmp/agor_tools/git_setup.py --import-env`
+- Manual: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
+"""
+
+        readable += f"""
+
+## 🛠️ Available Tools
+
+"""
+
+        for tool in manifest["available_tools"]:
+            executable_marker = " (executable)" if tool["executable"] else ""
+            readable += f"- **{tool['name']}**{executable_marker}: {tool['description']}\n"
+
+        readable += f"""
+
+## 🚀 Quick Start
+
+"""
+
+        for i, cmd in enumerate(manifest["quick_start_commands"], 1):
+            readable += f"{i}. `{cmd}`\n"
+
+        readable += f"""
+
+## 📋 Setup Instructions
+
+"""
+
+        for instruction in manifest["setup_instructions"]:
+            readable += f"- {instruction}\n"
+
+        readable += f"""
+
+## 📊 Environment Info
+
+- **Bundle Format**: {manifest['environment_info']['bundle_format']}
+- **Git Binary**: {'✅ Included' if manifest['environment_info']['git_binary_included'] else '❌ Missing'}
+- **SQLite Available**: {'✅ Yes' if manifest['environment_info']['sqlite_available'] else '❌ No'}
+- **Preserve History**: {'✅ Yes' if manifest['environment_info']['preserve_history'] else '❌ No'}
+- **Main Only**: {'✅ Yes' if manifest['environment_info']['main_only'] else '❌ No (all branches)'}
+
+---
+
+**For complete instructions, read**: `/tmp/agor_tools/README_ai.md`
+"""
+
+        return readable
 
     async def _download_git_binary(self, output_path: Path) -> None:
         """Download the portable git binary."""
