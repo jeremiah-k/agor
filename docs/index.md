@@ -68,7 +68,7 @@
 
 | File                                           | Purpose                  | Key Sections                                | Lines |
 | ---------------------------------------------- | ------------------------ | ------------------------------------------- | ----- |
-| **[README.md](README.md)**                     | Documentation overview   | Navigation map, quick links                 | 51    |
+| **[README.md](README.md)**                     | Documentation overview   | Navigation map, quick links                 | 60    |
 | **[quick-start.md](quick-start.md)**           | 5-minute setup guide     | Installation, bundling, platform setup      | ~200  |
 | **[google-ai-studio.md](google-ai-studio.md)** | Google AI Studio guide   | Function Calling setup, troubleshooting     | ~300  |
 | **[strategies.md](strategies.md)**             | Multi-agent coordination | 5 strategies with examples, decision matrix | ~400  |

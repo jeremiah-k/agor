@@ -1,6 +1,6 @@
 # Code Exploration Tools Documentation
 
-This document provides detailed information about the code exploration tools available to AgentGrunt AI assistants.
+This document provides detailed information about the code exploration tools available to AGOR AI assistants.
 
 ## Available Functions
 
@@ -18,16 +18,13 @@ Performs breadth-first search for filenames matching a pattern.
 **Returns:** List of file paths matching the pattern
 
 **Example:**
-``python
-
+```python
 # Find all Python files
-
 python_files = bfs_find("/path/to/repo", r"\.py$")
 
 # Find all test files
-
-test_files = bfs_find("/path/to/repo", r"test.\*\.py$")
-``
+test_files = bfs_find("/path/to/repo", r"test.*\.py$")
+```
 
 #### `grep(file_path: str, pattern: str, recursive: bool = False) -> List[Tuple[str, int, str]]`
 
@@ -68,13 +65,11 @@ Generate a visual directory tree representation.
 **Returns:** String representation of directory tree
 
 **Example:**
-``python
-
+```python
 # Show project structure
-
 structure = tree("/path/to/repo")
 print(structure)
-``
+```
 
 ### Function Analysis Functions
 
@@ -122,40 +117,34 @@ Extract functions from languages that use curly braces (JavaScript, C, C++, etc.
 
 ### Comprehensive Code Analysis
 
-``python
-
+```python
 # 1. Get file listing
-
 files = bfs_find(".", r"\.(py|js|cpp|h)$")
 
 # 2. Find all functions
-
 all_functions = []
 for file_path in files:
-if file_path.endswith('.py'):
-functions = find_function_signatures(file_path, 'python')
-elif file_path.endswith('.js'):
-functions = find_function_signatures(file_path, 'javascript') # ... handle other languages
-all_functions.extend([(file_path, f) for f in functions])
+    if file_path.endswith('.py'):
+        functions = find_function_signatures(file_path, 'python')
+    elif file_path.endswith('.js'):
+        functions = find_function_signatures(file_path, 'javascript')
+    # ... handle other languages
+    all_functions.extend([(file_path, f) for f in functions])
 
 # 3. Search for specific patterns
-
 api_calls = grep(".", r"requests\.|fetch\(", recursive=True)
 error_handling = grep(".", r"try:|except:|catch\(", recursive=True)
-``
+```
 
 ### Function Dependency Analysis
 
-``python
-
+```python
 # Find function calls to analyze dependencies
-
-function_calls = grep(".", r"(\w+)\s\*\(", recursive=True)
+function_calls = grep(".", r"(\w+)\s*\(", recursive=True)
 
 # Find imports and includes
-
 imports = grep(".", r"^(import|from|#include|require)", recursive=True)
-``
+```
 
 ## Best Practices
 

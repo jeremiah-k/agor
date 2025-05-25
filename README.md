@@ -21,6 +21,7 @@ pipx install agor
 # Bundle your project
 agor bundle /path/to/your/project -f zip    # For Google AI Studio
 agor bundle /path/to/your/project           # For ChatGPT (.tar.gz)
+agor bundle /path/to/your/project --sqlite  # With SQLite memory (experimental)
 
 # Upload bundle to your AI platform and follow embedded instructions
 ```
@@ -57,8 +58,9 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 - **Git integration** with portable binary (works in any environment)
 - **Codebase analysis** with language-specific exploration
-- **Memory persistence** and communication protocols
+- **Memory persistence** with markdown files or SQLite database (experimental)
 - **Quality gates** and validation checkpoints
+- **Cross-agent coordination** with structured handoff protocols
 
 ## 📊 Hotkey Interface
 
@@ -66,6 +68,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 **Strategy Selection**: `ss` strategy selection | `pd` parallel divergent | `pl` pipeline | `sw` swarm
 **Team Management**: `ct` create team | `tm` team manifest | `hp` handoff prompts
 **Analysis**: `a` analyze codebase | `f` full files | `co` changes only | `da` detailed handoff
+**Memory**: `mem-add` add memory | `mem-search` search memories | `db-stats` database stats (SQLite mode)
 **Coordination**: `init` initialize | `status` check state | `sync` update | `meta` provide feedback
 
 ## 🏢 Platform Support

@@ -24,7 +24,7 @@ lint:
     - linters: [markdownlint]
       paths:
         - src/agor/tools/code_exploration_docs.md # Multiple H1s are intentional for tool docs
-        - AGOR_INSTRUCTIONS.md # Trailing punctuation in headings is intentional
+        - src/agor/tools/AGOR_INSTRUCTIONS.md # Trailing punctuation in headings is intentional
         - src/agor/tools/README_ai.md # Code blocks without language are intentional
 
   enabled:
