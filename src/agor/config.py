@@ -7,7 +7,7 @@ Supports JSON config files with environment variable overrides.
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import platformdirs
 
@@ -48,7 +48,7 @@ class AgorConfig:
         # Load from JSON file if it exists
         if self.config_file.exists():
             try:
-                with open(self.config_file, 'r', encoding='utf-8') as f:
+                with open(self.config_file, "r", encoding="utf-8") as f:
                     file_config = json.load(f)
                     config.update(file_config)
             except (json.JSONDecodeError, OSError) as e:
@@ -61,12 +61,14 @@ class AgorConfig:
             if env_value is not None:
                 # Convert string values to appropriate types
                 if isinstance(config[key], bool):
-                    config[key] = env_value.lower() in ('true', '1', 'yes', 'on')
+                    config[key] = env_value.lower() in ("true", "1", "yes", "on")
                 elif isinstance(config[key], int):
                     try:
                         config[key] = int(env_value)
                     except ValueError:
-                        print(f"⚠️  Warning: Invalid integer value for {env_key}: {env_value}")
+                        print(
+                            f"⚠️  Warning: Invalid integer value for {env_key}: {env_value}"
+                        )
                 else:
                     config[key] = env_value
 
@@ -85,7 +87,7 @@ class AgorConfig:
         """Save current configuration to file."""
         self.config_dir.mkdir(parents=True, exist_ok=True)
         try:
-            with open(self.config_file, 'w', encoding='utf-8') as f:
+            with open(self.config_file, "w", encoding="utf-8") as f:
                 json.dump(self._config, f, indent=2)
         except OSError as e:
             print(f"❌ Error: Could not save config file {self.config_file}: {e}")
@@ -97,7 +99,9 @@ class AgorConfig:
             try:
                 self.config_file.unlink()
             except OSError as e:
-                print(f"⚠️  Warning: Could not remove config file {self.config_file}: {e}")
+                print(
+                    f"⚠️  Warning: Could not remove config file {self.config_file}: {e}"
+                )
 
     def show(self) -> Dict[str, Any]:
         """Return current configuration for display."""
