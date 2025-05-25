@@ -32,8 +32,11 @@ Execute comprehensive analysis and generate structured findings report:
 6. **Code Quality**: Assess structure, documentation, testing coverage
 7. **Development Setup**: Identify build systems, CI/CD, development tools
 
-**STEP 4: PRESENT FINDINGS & MENU**
+**STEP 4: INITIALIZE AGENT COORDINATION**
 
+- Create `.agor/` directory for agent coordination
+- Set up `agentconvo.md` for inter-agent communication
+- Initialize `memory.md` for project-level decisions
 - Display organized analysis results in actionable format
 - Show comprehensive hotkey menu for user interaction
 - Establish working context for subsequent operations
@@ -73,6 +76,9 @@ ct) create team tm) team manifest hp) handoff prompts
 **🔄 Coordination:**
 wf) workflow design qg) quality gates eo) execution order
 
+**⚡ Strategy Selection:**
+ss) strategy selection pd) parallel divergent pl) pipeline sw) swarm rt) red team mb) mob programming
+
 **⚙️ System:**
 c ) continue r ) refresh w ) work autonomously ? ) help
 
@@ -89,6 +95,21 @@ If user selects a hotkey, respond accordingly.
 - **`wf`**: Design workflow with handoff procedures
 - **`qg`**: Define quality gates and acceptance criteria
 - **`eo`**: Plan execution sequence considering dependencies
+
+**STRATEGY ACTIONS:**
+
+- **`ss`**: Analyze project and recommend optimal development strategy
+- **`pd`**: Set up Parallel Divergent strategy (multiple independent agents)
+- **`pl`**: Set up Pipeline strategy (sequential agent handoffs)
+- **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
+- **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
+- **`mb`**: Set up Mob Programming strategy (collaborative coding)
+
+**COORDINATION SETUP:**
+
+- **`init`**: Initialize .agor/ directory and coordination files
+- **`status`**: Check all agent memory files and communication log
+- **`sync`**: Pull latest changes and update coordination status
 
 **AVAILABLE TOOLS:**
 
@@ -168,7 +189,75 @@ graph TB
     style BUNDLE fill:#fff3e0
 ```
 
-## AGENT COORDINATION PROTOCOL
+## MULTI-AGENT COORDINATION PROTOCOL
+
+**AGENT MEMORY & COMMUNICATION SYSTEM:**
+
+All agents use the `.agor/` directory for coordination:
+
+```
+.agor/
+├── agentconvo.md          # Shared communication log
+├── memory.md              # Project-level decisions
+├── agent1-memory.md       # Agent 1 private notes
+├── agent2-memory.md       # Agent 2 private notes
+├── agent{N}-memory.md     # Agent N private notes (as needed)
+└── strategy-active.md     # Current strategy details
+```
+
+**AGENT COMMUNICATION PROTOCOL:**
+
+1. **Read First**: Always check `agentconvo.md` and your `agent{N}-memory.md` before starting
+2. **Communicate**: Post status, questions, and findings to `agentconvo.md`
+3. **Document**: Update your private memory file with decisions and progress
+4. **Sync Often**: Pull from main branch frequently to stay current
+5. **Coordinate**: Check other agents' memory files to avoid conflicts
+
+**AGENTCONVO.MD FORMAT:**
+```
+[AGENT-ID] [TIMESTAMP] [STATUS/QUESTION/FINDING]
+
+Agent1: 2024-01-15 14:30 - Starting E2EE extraction from e2ee-417-1 branch
+Agent2: 2024-01-15 14:35 - Found MatrixStore implementation in matrix_utils.py
+Agent3: 2024-01-15 14:40 - Question: Should we preserve existing login flow?
+Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
+```
+
+**AGENT MEMORY FORMAT:**
+```
+# Agent{N} Memory Log
+
+## Current Task
+[What you're working on]
+
+## Decisions Made
+- [Key architectural choices]
+- [Implementation approaches]
+
+## Files Modified
+- [List of changed files with brief description]
+
+## Problems Encountered
+- [Issues hit and how resolved]
+
+## Next Steps
+- [What needs to be done next]
+
+## Notes for Review
+- [Important points for peer review phase]
+```
+
+**DEVELOPMENT STRATEGIES:**
+
+AGOR supports 5 multi-agent development strategies:
+
+🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
+⚡ **Pipeline** (`pl`): Sequential handoffs with specialization
+🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue
+⚔️ **Red Team** (`rt`): Adversarial build/break cycles
+👥 **Mob Programming** (`mb`): Collaborative coding with rotating roles
+
+Use `ss` to analyze your project and get strategy recommendations.
 
 **HANDOFF FORMAT:**
 

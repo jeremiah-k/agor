@@ -135,6 +135,175 @@ DELIVER:
 """
 
 
+def generate_strategy_selection_prompt(project_complexity, team_size, timeline):
+    """Generate a prompt for selecting the optimal development strategy"""
+    return f"""
+STRATEGY SELECTION ANALYSIS
+
+PROJECT CONTEXT:
+- Complexity: {project_complexity}
+- Team Size: {team_size} agents
+- Timeline: {timeline}
+
+AVAILABLE STRATEGIES:
+
+🔄 **Parallel Divergent** (2-6 agents)
+- Best for: Complex problems, multiple valid approaches
+- Process: Independent solutions → peer review → synthesis
+- Time: Medium (parallel execution + review)
+
+⚡ **Pipeline** (3-4 agents)
+- Best for: Sequential dependencies, specialization
+- Process: Foundation → Enhancement → Refinement → Validation
+- Time: Medium (sequential but focused)
+
+🐝 **Swarm** (5-8 agents)
+- Best for: Many independent tasks, speed priority
+- Process: Task queue → dynamic assignment → emergence
+- Time: Fast (maximum parallelism)
+
+⚔️ **Red Team** (4-6 agents)
+- Best for: Security-critical, high-reliability systems
+- Process: Build → Break → Analyze → Harden → Repeat
+- Time: Slow (thorough validation)
+
+👥 **Mob Programming** (3-5 agents)
+- Best for: Complex problems, knowledge sharing
+- Process: Collaborative coding with rotating roles
+- Time: Medium (intensive collaboration)
+
+RECOMMENDATION:
+Based on the project context, recommend the optimal strategy and explain why.
+"""
+
+
+def generate_parallel_divergent_prompt(agent_id, mission, branch_name, total_agents):
+    """Generate a prompt for parallel divergent strategy agents"""
+    return f"""
+AGENT: {agent_id}
+BRANCH: {branch_name}
+STRATEGY: Parallel Divergent ({total_agents} agents working independently)
+
+MISSION:
+{mission}
+
+COORDINATION PROTOCOL:
+1. **Read First**: Check `.agor/agentconvo.md` and `.agor/{agent_id.lower()}-memory.md`
+2. **Communicate**: Post status updates to `.agor/agentconvo.md`
+3. **Document**: Update `.agor/{agent_id.lower()}-memory.md` with decisions and progress
+4. **Sync Often**: Pull from main branch frequently to stay current
+5. **Stay Independent**: Work on YOUR solution approach without coordinating
+
+EXECUTION RULES:
+- Work INDEPENDENTLY - no coordination with other agents during development
+- Focus on YOUR unique solution approach
+- Document your design decisions in memory file
+- Implement complete, working solution
+- Commit frequently to your branch
+- Prepare for peer review phase
+
+COMMUNICATION FORMAT:
+```
+{agent_id}: [TIMESTAMP] - [STATUS/QUESTION/FINDING]
+```
+
+MEMORY FILE UPDATES:
+- Current task and approach
+- Key architectural decisions
+- Files modified with descriptions
+- Problems encountered and solutions
+- Notes for peer review phase
+
+DELIVERABLES:
+- Working implementation on {branch_name}
+- Complete memory log in `.agor/{agent_id.lower()}-memory.md`
+- Communication entries in `.agor/agentconvo.md`
+- Design rationale and known limitations
+
+REVIEW PREPARATION:
+After completion, you will review other agents' solutions and propose synthesis.
+"""
+
+
+def generate_coordination_init_template():
+    """Generate template for initializing agent coordination system"""
+    return """
+# Agent Coordination Initialization
+
+## .agor/agentconvo.md Template
+```markdown
+# Agent Communication Log
+
+Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
+
+## Communication History
+[Messages will be added here as agents work]
+```
+
+## .agor/memory.md Template
+```markdown
+# Project Memory
+
+## Project Overview
+[High-level project description and goals]
+
+## Active Strategy
+[Current development strategy being used]
+
+## Key Decisions
+[Major architectural and implementation decisions]
+
+## Integration Notes
+[Notes about how agent work will be integrated]
+```
+
+## .agor/agent{N}-memory.md Template
+```markdown
+# Agent{N} Memory Log
+
+## Current Task
+[What you're working on]
+
+## Decisions Made
+- [Key architectural choices]
+- [Implementation approaches]
+
+## Files Modified
+- [List of changed files with brief description]
+
+## Problems Encountered
+- [Issues hit and how resolved]
+
+## Next Steps
+- [What needs to be done next]
+
+## Notes for Review
+- [Important points for peer review phase]
+```
+
+## .agor/strategy-active.md Template
+```markdown
+# Active Strategy Details
+
+## Strategy Type
+[Parallel Divergent / Pipeline / Swarm / Red Team / Mob Programming]
+
+## Agent Assignments
+- Agent1: [Role/Branch]
+- Agent2: [Role/Branch]
+- Agent{N}: [Role/Branch] (as needed)
+
+## Timeline
+- Phase 1: [Development phase]
+- Phase 2: [Review/Integration phase]
+- Phase 3: [Finalization phase]
+
+## Success Criteria
+[How to measure success]
+```
+"""
+
+
 def generate_context_prompt(codebase_analysis, project_goals, constraints):
     """Generate a context-rich prompt that includes codebase knowledge"""
     return f"""
