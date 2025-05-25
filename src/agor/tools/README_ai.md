@@ -217,9 +217,9 @@ All agents use the `.agor/` directory for coordination:
 ```
 [AGENT-ID] [TIMESTAMP] [STATUS/QUESTION/FINDING]
 
-Agent1: 2024-01-15 14:30 - Starting E2EE extraction from e2ee-417-1 branch
-Agent2: 2024-01-15 14:35 - Found MatrixStore implementation in matrix_utils.py
-Agent3: 2024-01-15 14:40 - Question: Should we preserve existing login flow?
+Agent1: 2024-01-15 14:30 - Starting feature extraction from feature-branch
+Agent2: 2024-01-15 14:35 - Found core implementation in utils.py
+Agent3: 2024-01-15 14:40 - Question: Should we preserve existing API interface?
 Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 ```
 
