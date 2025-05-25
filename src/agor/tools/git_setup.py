@@ -17,11 +17,7 @@ def run_command(cmd, check=True, capture_output=True):
     """Run a command and return the result."""
     try:
         result = subprocess.run(
-            cmd,
-            shell=True,
-            check=check,
-            capture_output=capture_output,
-            text=True
+            cmd, shell=True, check=check, capture_output=capture_output, text=True
         )
         return result.stdout.strip() if capture_output else None
     except subprocess.CalledProcessError as e:
@@ -41,14 +37,14 @@ def get_environment_config():
     """Get git configuration from environment variables."""
     # Check multiple possible environment variable names
     env_name = (
-        os.getenv("GIT_AUTHOR_NAME") or
-        os.getenv("GIT_USER_NAME") or
-        os.getenv("GIT_COMMITTER_NAME")
+        os.getenv("GIT_AUTHOR_NAME")
+        or os.getenv("GIT_USER_NAME")
+        or os.getenv("GIT_COMMITTER_NAME")
     )
     env_email = (
-        os.getenv("GIT_AUTHOR_EMAIL") or
-        os.getenv("GIT_USER_EMAIL") or
-        os.getenv("GIT_COMMITTER_EMAIL")
+        os.getenv("GIT_AUTHOR_EMAIL")
+        or os.getenv("GIT_USER_EMAIL")
+        or os.getenv("GIT_COMMITTER_EMAIL")
     )
     return env_name, env_email
 
@@ -216,10 +212,16 @@ def main():
         print()
         print("Usage:")
         print("  python git_setup.py --show                    # Show current config")
-        print("  python git_setup.py --apply-bundle           # Apply config from bundle")
-        print("  python git_setup.py --import-env              # Import from environment")
+        print(
+            "  python git_setup.py --apply-bundle           # Apply config from bundle"
+        )
+        print(
+            "  python git_setup.py --import-env              # Import from environment"
+        )
         print("  python git_setup.py --set 'Name' 'email@example.com'  # Set manually")
-        print("  python git_setup.py --set 'Name' 'email@example.com' --global  # Set globally")
+        print(
+            "  python git_setup.py --set 'Name' 'email@example.com' --global  # Set globally"
+        )
         return
 
     if "--show" in sys.argv:

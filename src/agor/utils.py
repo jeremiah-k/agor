@@ -219,7 +219,7 @@ def verify_archive_contents(archive_path: Path) -> dict:
         "has_project_dir": False,
         "has_git_dir": False,
         "has_agor_tools": False,
-        "file_list": []
+        "file_list": [],
     }
 
     try:
@@ -243,9 +243,15 @@ def verify_archive_contents(archive_path: Path) -> dict:
                         stats["total_size"] += member.size
 
         # Check for key directories
-        stats["has_project_dir"] = any(f.startswith("project/") for f in stats["file_list"])
-        stats["has_git_dir"] = any(f.startswith("project/.git/") for f in stats["file_list"])
-        stats["has_agor_tools"] = any(f.startswith("agor_tools/") for f in stats["file_list"])
+        stats["has_project_dir"] = any(
+            f.startswith("project/") for f in stats["file_list"]
+        )
+        stats["has_git_dir"] = any(
+            f.startswith("project/.git/") for f in stats["file_list"]
+        )
+        stats["has_agor_tools"] = any(
+            f.startswith("agor_tools/") for f in stats["file_list"]
+        )
 
         print(f"📊 Archive verification for {archive_path.name}:")
         print(f"   📄 Total files: {stats['total_files']}")

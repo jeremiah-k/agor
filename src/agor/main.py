@@ -294,7 +294,9 @@ def bundle(
             sqlite_url = config.get("sqlite_binary_url", settings.sqlite_binary_url)
 
             # Use cache directory for SQLite binary
-            sqlite_cache_dir = Path(platformdirs.user_cache_dir("agor")) / "sqlite_binary"
+            sqlite_cache_dir = (
+                Path(platformdirs.user_cache_dir("agor")) / "sqlite_binary"
+            )
             sqlite_cache_dir.mkdir(parents=True, exist_ok=True)
             sqlite_binary_cache_path = sqlite_cache_dir / "sqlite3"
 
@@ -333,6 +335,7 @@ def bundle(
         # Verify archive contents for debugging
         if not quiet_mode:
             from .utils import verify_archive_contents
+
             verify_archive_contents(archive_path)
 
     except Exception as e:
@@ -519,28 +522,20 @@ def git_config(
     import_env: bool = typer.Option(
         False,
         "--import-env",
-        help="Import git configuration from environment variables"
+        help="Import git configuration from environment variables",
     ),
     name: Optional[str] = typer.Option(
-        None,
-        "--name",
-        help="Set git user.name (overrides environment)"
+        None, "--name", help="Set git user.name (overrides environment)"
     ),
     email: Optional[str] = typer.Option(
-        None,
-        "--email",
-        help="Set git user.email (overrides environment)"
+        None, "--email", help="Set git user.email (overrides environment)"
     ),
     global_config: bool = typer.Option(
         False,
         "--global",
-        help="Set configuration globally instead of for current repository"
+        help="Set configuration globally instead of for current repository",
     ),
-    show: bool = typer.Option(
-        False,
-        "--show",
-        help="Show current git configuration"
-    )
+    show: bool = typer.Option(False, "--show", help="Show current git configuration"),
 ):
     """Configure git user settings for AGOR development"""
 
@@ -548,14 +543,10 @@ def git_config(
         print("🔍 Current Git Configuration:")
         try:
             current_name = subprocess.check_output(
-                ["git", "config", "user.name"],
-                stderr=subprocess.DEVNULL,
-                text=True
+                ["git", "config", "user.name"], stderr=subprocess.DEVNULL, text=True
             ).strip()
             current_email = subprocess.check_output(
-                ["git", "config", "user.email"],
-                stderr=subprocess.DEVNULL,
-                text=True
+                ["git", "config", "user.email"], stderr=subprocess.DEVNULL, text=True
             ).strip()
             print(f"   Name: {current_name}")
             print(f"   Email: {current_email}")
@@ -591,7 +582,9 @@ def git_config(
 
         if not env_name and not env_email:
             print("⚠️  No git environment variables found.")
-            print("   Set GIT_AUTHOR_NAME/GIT_USER_NAME and GIT_AUTHOR_EMAIL/GIT_USER_EMAIL")
+            print(
+                "   Set GIT_AUTHOR_NAME/GIT_USER_NAME and GIT_AUTHOR_EMAIL/GIT_USER_EMAIL"
+            )
             print("   Or use --name and --email options")
             return
 
@@ -611,14 +604,14 @@ def git_config(
         if config_name:
             subprocess.run(
                 ["git", "config"] + config_scope + ["user.name", config_name],
-                check=True
+                check=True,
             )
             print(f"✅ Set user.name: {config_name}")
 
         if config_email:
             subprocess.run(
                 ["git", "config"] + config_scope + ["user.email", config_email],
-                check=True
+                check=True,
             )
             print(f"✅ Set user.email: {config_email}")
 
@@ -627,13 +620,13 @@ def git_config(
             repo_root = subprocess.check_output(
                 ["git", "rev-parse", "--show-toplevel"],
                 stderr=subprocess.DEVNULL,
-                text=True
+                text=True,
             ).strip()
             repo_name = os.path.basename(repo_root)
             current_branch = subprocess.check_output(
                 ["git", "branch", "--show-current"],
                 stderr=subprocess.DEVNULL,
-                text=True
+                text=True,
             ).strip()
 
             print(f"\n📁 Repository: {repo_name}")
@@ -656,15 +649,11 @@ def git_config(
 @app.command()
 def agent_manifest(
     copy: bool = typer.Option(
-        True,
-        "--copy/--no-copy",
-        help="Copy manifest to clipboard"
+        True, "--copy/--no-copy", help="Copy manifest to clipboard"
     ),
     format_type: str = typer.Option(
-        "markdown",
-        "--format",
-        help="Output format: markdown, json"
-    )
+        "markdown", "--format", help="Output format: markdown, json"
+    ),
 ):
     """Generate agent manifest for standalone mode"""
     import json
@@ -682,40 +671,36 @@ def agent_manifest(
         "creator_info": {
             "platform": platform.system(),
             "python_version": platform.python_version(),
-            "hostname": platform.node()
+            "hostname": platform.node(),
         },
         "git_configuration": {},
         "environment_info": {},
         "project_info": {},
         "setup_instructions": [],
         "quick_start_commands": [],
-        "important_notes": []
+        "important_notes": [],
     }
 
     try:
         # Get current git configuration
         current_name = subprocess.check_output(
-            ["git", "config", "user.name"],
-            stderr=subprocess.DEVNULL,
-            text=True
+            ["git", "config", "user.name"], stderr=subprocess.DEVNULL, text=True
         ).strip()
         current_email = subprocess.check_output(
-            ["git", "config", "user.email"],
-            stderr=subprocess.DEVNULL,
-            text=True
+            ["git", "config", "user.email"], stderr=subprocess.DEVNULL, text=True
         ).strip()
 
         manifest["git_configuration"] = {
             "user_name": current_name,
             "user_email": current_email,
             "captured_at": datetime.now().isoformat(),
-            "source": "current_system_config"
+            "source": "current_system_config",
         }
 
     except subprocess.CalledProcessError:
         manifest["git_configuration"] = {
             "note": "No git configuration found on system",
-            "setup_required": True
+            "setup_required": True,
         }
 
     # Get project information if in a git repository
@@ -723,33 +708,33 @@ def agent_manifest(
         repo_root = subprocess.check_output(
             ["git", "rev-parse", "--show-toplevel"],
             stderr=subprocess.DEVNULL,
-            text=True
+            text=True,
         ).strip()
 
         repo_name = Path(repo_root).name
         current_branch = subprocess.check_output(
-            ["git", "branch", "--show-current"],
-            stderr=subprocess.DEVNULL,
-            text=True
+            ["git", "branch", "--show-current"], stderr=subprocess.DEVNULL, text=True
         ).strip()
 
-        recent_commits = subprocess.check_output(
-            ["git", "log", "--oneline", "-3"],
-            stderr=subprocess.DEVNULL,
-            text=True
-        ).strip().split("\n")
+        recent_commits = (
+            subprocess.check_output(
+                ["git", "log", "--oneline", "-3"], stderr=subprocess.DEVNULL, text=True
+            )
+            .strip()
+            .split("\n")
+        )
 
         manifest["project_info"] = {
             "repository_name": repo_name,
             "current_branch": current_branch,
             "recent_commits": recent_commits,
-            "repository_root": repo_root
+            "repository_root": repo_root,
         }
 
     except subprocess.CalledProcessError:
         manifest["project_info"] = {
             "note": "Not in a git repository",
-            "repository_name": "Unknown"
+            "repository_name": "Unknown",
         }
 
     # Environment info
@@ -758,7 +743,7 @@ def agent_manifest(
         "working_directory": str(Path.cwd()),
         "agor_available": True,
         "git_binary_system": True,
-        "bundle_mode": False
+        "bundle_mode": False,
     }
 
     # Setup instructions
@@ -768,26 +753,26 @@ def agent_manifest(
             "1. Clone AGOR repository: git clone https://github.com/jeremiah-k/agor.git",
             "2. Git is already configured on this system",
             "3. Use system git commands directly",
-            "4. Access AGOR tools in src/agor/tools/ directory"
+            "4. Access AGOR tools in src/agor/tools/ directory",
         ]
 
         manifest["quick_start_commands"] = [
             "git status",
             "git config --list | grep user",
-            "ls src/agor/tools/"
+            "ls src/agor/tools/",
         ]
     else:
         manifest["setup_instructions"] = [
             "1. Clone AGOR repository: git clone https://github.com/jeremiah-k/agor.git",
             "2. Configure git: git config user.name 'Your Name'",
             "3. Configure git: git config user.email 'your@email.com'",
-            "4. Access AGOR tools in src/agor/tools/ directory"
+            "4. Access AGOR tools in src/agor/tools/ directory",
         ]
 
         manifest["quick_start_commands"] = [
             "git config user.name 'Your Name'",
             "git config user.email 'your@email.com'",
-            "git status"
+            "git status",
         ]
 
     # Important notes
@@ -796,7 +781,7 @@ def agent_manifest(
         "No bundle extraction needed - work directly with the repository",
         "Use system git commands, not bundled git binary",
         "AGOR tools are in src/agor/tools/ directory",
-        "Read src/agor/tools/README_ai.md for complete instructions"
+        "Read src/agor/tools/README_ai.md for complete instructions",
     ]
 
     # Generate output based on format
@@ -835,7 +820,7 @@ def agent_manifest(
 - Configure: `git config user.email "your@email.com"`
 """
 
-        output += f"""
+        output += """
 
 ## 🚀 Quick Start
 
@@ -844,7 +829,7 @@ def agent_manifest(
         for i, cmd in enumerate(manifest["quick_start_commands"], 1):
             output += f"{i}. `{cmd}`\n"
 
-        output += f"""
+        output += """
 
 ## 📋 Setup Instructions
 
@@ -853,7 +838,7 @@ def agent_manifest(
         for instruction in manifest["setup_instructions"]:
             output += f"- {instruction}\n"
 
-        output += f"""
+        output += """
 
 ## ⚠️ Important Notes
 

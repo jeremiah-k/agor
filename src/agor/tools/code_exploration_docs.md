@@ -18,6 +18,7 @@ Performs breadth-first search for filenames matching a pattern.
 **Returns:** List of file paths matching the pattern
 
 **Example:**
+
 ```python
 # Find all Python files
 python_files = bfs_find("/path/to/repo", r"\.py$")
@@ -39,6 +40,7 @@ Search for text patterns in files or directories. Use this as a last resort, pre
 **Returns:** List of tuples containing (file_path, line_number, matching_line)
 
 **Example:**
+
 ```python
 # Search for function definitions in a file
 matches = grep("main.py", r"def \w+")
@@ -62,6 +64,7 @@ Generate a visual directory tree representation.
 **Returns:** String representation of directory tree
 
 **Example:**
+
 ```python
 # Show project structure
 structure = tree("/path/to/repo")

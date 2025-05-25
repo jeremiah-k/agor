@@ -13,6 +13,7 @@ _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt
 
 **SQLite Memory Mode (Experimental):**
 If `/tmp/agor_tools/sqlite3` exists, you have database-based memory management available:
+
 - **Structured memory storage** instead of markdown files
 - **Cross-agent coordination** with database logs
 - **Persistent state management** with SQL queries
@@ -35,6 +36,7 @@ python /tmp/agor_tools/git_setup.py --show
 ```
 
 If no captured configuration is available, you can:
+
 - Import from environment: `python /tmp/agor_tools/git_setup.py --import-env`
 - Set manually: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
 
@@ -45,6 +47,7 @@ If no captured configuration is available, you can:
 **Check for bundled manifest first**: Look for `/tmp/agor_tools/AGENT_MANIFEST.md`
 
 If available, this manifest contains:
+
 - Git configuration captured during bundle creation
 - Available tools and their descriptions
 - Quick start commands specific to this bundle
@@ -647,12 +650,14 @@ chmod 755 /tmp/agor_tools/sqlite3
 ### SQLite Memory Features
 
 **Structured Storage**:
+
 - Agent memories with types (context, decision, learning, handoff)
 - Coordination logs between agents
 - Project state management
 - Advanced handoff tracking with relational data
 
 **Database Schema**:
+
 - `agent_memories` - Individual agent memory entries
 - `coordination_logs` - Cross-agent communication
 - `project_state` - Key-value project state storage
@@ -661,25 +666,30 @@ chmod 755 /tmp/agor_tools/sqlite3
 ### SQLite Memory Commands
 
 **Memory Management**:
+
 - `mem-add` - Add memory entry with type and metadata
 - `mem-get` - Retrieve memories for specific agent or type
 - `mem-search` - Search memory content with SQL-like queries
 
 **Coordination**:
+
 - `coord-log` - Log coordination messages between agents
 - `state-set` - Set project state values
 - `state-get` - Retrieve project state
 
 **Handoffs**:
+
 - `handoff-create` - Create structured handoff in database
 - `handoff-status` - Update handoff status and assignment
 
 **Database Operations**:
+
 - `db-stats` - Show database statistics and record counts
 
 ### Using SQLite Memory Mode
 
 **Example Memory Operations**:
+
 ```python
 # Add a memory entry
 from agor_tools.sqlite_memory import get_memory_manager
@@ -696,6 +706,7 @@ mgr.log_coordination("agent-1", "agent-2", "handoff", "Passing frontend work")
 **Database Location**: `.agor/memory.db`
 
 **Important Notes**:
+
 - SQLite mode is **experimental** and not fully tested
 - Falls back to markdown files if SQLite is unavailable
 - Database is created automatically on first use

@@ -183,24 +183,22 @@ class BundleBuilder:
 
     async def _capture_git_config(self, tools_dir: Path) -> None:
         """Capture current git configuration and save it for agents."""
-        import subprocess
         import json
+        import subprocess
 
         git_config = {
             "user_name": None,
             "user_email": None,
             "captured_at": None,
             "environment_vars": {},
-            "setup_script": None
+            "setup_script": None,
         }
 
         try:
             # Get current git configuration
             try:
                 git_config["user_name"] = subprocess.check_output(
-                    ["git", "config", "user.name"],
-                    stderr=subprocess.DEVNULL,
-                    text=True
+                    ["git", "config", "user.name"], stderr=subprocess.DEVNULL, text=True
                 ).strip()
             except subprocess.CalledProcessError:
                 pass
@@ -209,16 +207,21 @@ class BundleBuilder:
                 git_config["user_email"] = subprocess.check_output(
                     ["git", "config", "user.email"],
                     stderr=subprocess.DEVNULL,
-                    text=True
+                    text=True,
                 ).strip()
             except subprocess.CalledProcessError:
                 pass
 
             # Capture environment variables that might be relevant
             import os
+
             env_vars = [
-                "GIT_AUTHOR_NAME", "GIT_USER_NAME", "GIT_COMMITTER_NAME",
-                "GIT_AUTHOR_EMAIL", "GIT_USER_EMAIL", "GIT_COMMITTER_EMAIL"
+                "GIT_AUTHOR_NAME",
+                "GIT_USER_NAME",
+                "GIT_COMMITTER_NAME",
+                "GIT_AUTHOR_EMAIL",
+                "GIT_USER_EMAIL",
+                "GIT_COMMITTER_EMAIL",
             ]
 
             for var in env_vars:
@@ -228,11 +231,14 @@ class BundleBuilder:
 
             # Add timestamp
             from datetime import datetime
+
             git_config["captured_at"] = datetime.now().isoformat()
 
             # Generate setup script
             if git_config["user_name"] and git_config["user_email"]:
-                git_config["setup_script"] = f'''#!/bin/bash
+                git_config[
+                    "setup_script"
+                ] = f"""#!/bin/bash
 # Git configuration captured during bundle creation
 # Run this script to apply the same git configuration
 
@@ -241,7 +247,7 @@ git config user.name "{git_config["user_name"]}"
 git config user.email "{git_config["user_email"]}"
 echo "✅ Git configured as: {git_config["user_name"]} <{git_config["user_email"]}>"
 echo "🚀 Ready for development!"
-'''
+"""
 
             # Save git configuration
             config_file = tools_dir / "git_config.json"
@@ -258,7 +264,7 @@ echo "🚀 Ready for development!"
                 log.info(
                     "Captured git configuration",
                     name=git_config["user_name"],
-                    email=git_config["user_email"]
+                    email=git_config["user_email"],
                 )
             else:
                 log.warning("No git configuration found to capture")
@@ -268,10 +274,11 @@ echo "🚀 Ready for development!"
 
     async def _create_agent_manifest(self, tools_dir: Path) -> None:
         """Create comprehensive agent manifest with all essential information."""
-        import subprocess
         import json
         import platform
+        import subprocess
         from datetime import datetime
+
         from .. import __version__
 
         manifest = {
@@ -280,14 +287,14 @@ echo "🚀 Ready for development!"
             "bundle_creator": {
                 "platform": platform.system(),
                 "python_version": platform.python_version(),
-                "hostname": platform.node()
+                "hostname": platform.node(),
             },
             "git_configuration": {},
             "environment_info": {},
             "project_info": {},
             "available_tools": [],
             "setup_instructions": [],
-            "quick_start_commands": []
+            "quick_start_commands": [],
         }
 
         try:
@@ -304,7 +311,8 @@ echo "🚀 Ready for development!"
                 "preserve_history": self.preserve_history,
                 "main_only": self.main_only,
                 "git_binary_included": True,
-                "sqlite_available": (tools_dir / "sqlite3").exists() or (tools_dir / "sqlite_memory.py").exists()
+                "sqlite_available": (tools_dir / "sqlite3").exists()
+                or (tools_dir / "sqlite_memory.py").exists(),
             }
 
             # Try to gather project information
@@ -313,53 +321,65 @@ echo "🚀 Ready for development!"
                 repo_root = subprocess.check_output(
                     ["git", "rev-parse", "--show-toplevel"],
                     stderr=subprocess.DEVNULL,
-                    text=True
+                    text=True,
                 ).strip()
 
                 repo_name = Path(repo_root).name
                 current_branch = subprocess.check_output(
                     ["git", "branch", "--show-current"],
                     stderr=subprocess.DEVNULL,
-                    text=True
+                    text=True,
                 ).strip()
 
                 # Get recent commits
-                recent_commits = subprocess.check_output(
-                    ["git", "log", "--oneline", "-5"],
-                    stderr=subprocess.DEVNULL,
-                    text=True
-                ).strip().split("\n")
+                recent_commits = (
+                    subprocess.check_output(
+                        ["git", "log", "--oneline", "-5"],
+                        stderr=subprocess.DEVNULL,
+                        text=True,
+                    )
+                    .strip()
+                    .split("\n")
+                )
 
                 manifest["project_info"] = {
                     "repository_name": repo_name,
                     "current_branch": current_branch,
                     "recent_commits": recent_commits,
-                    "repository_root": repo_root
+                    "repository_root": repo_root,
                 }
 
             except subprocess.CalledProcessError:
                 manifest["project_info"] = {
                     "repository_name": "Unknown",
                     "current_branch": "Unknown",
-                    "note": "Not a git repository or git not available"
+                    "note": "Not a git repository or git not available",
                 }
 
             # List available tools
             tool_files = [
-                "git", "git_setup.py", "code_exploration.py", "sqlite_memory.py",
-                "agent_prompt_templates.py", "handoff_templates.py",
-                "project_planning_templates.py", "README_ai.md"
+                "git",
+                "git_setup.py",
+                "code_exploration.py",
+                "sqlite_memory.py",
+                "agent_prompt_templates.py",
+                "handoff_templates.py",
+                "project_planning_templates.py",
+                "README_ai.md",
             ]
 
             for tool in tool_files:
                 tool_path = tools_dir / tool
                 if tool_path.exists():
-                    manifest["available_tools"].append({
-                        "name": tool,
-                        "path": f"/tmp/agor_tools/{tool}",
-                        "executable": tool_path.is_file() and tool_path.stat().st_mode & 0o111,
-                        "description": self._get_tool_description(tool)
-                    })
+                    manifest["available_tools"].append(
+                        {
+                            "name": tool,
+                            "path": f"/tmp/agor_tools/{tool}",
+                            "executable": tool_path.is_file()
+                            and tool_path.stat().st_mode & 0o111,
+                            "description": self._get_tool_description(tool),
+                        }
+                    )
 
             # Setup instructions
             git_config = manifest["git_configuration"]
@@ -368,26 +388,26 @@ echo "🚀 Ready for development!"
                     "1. Apply git configuration: python /tmp/agor_tools/git_setup.py --apply-bundle",
                     "2. Verify git setup: python /tmp/agor_tools/git_setup.py --show",
                     "3. Make git binary executable: chmod 755 /tmp/agor_tools/git",
-                    "4. Read full instructions: cat /tmp/agor_tools/README_ai.md"
+                    "4. Read full instructions: cat /tmp/agor_tools/README_ai.md",
                 ]
 
                 manifest["quick_start_commands"] = [
                     "python /tmp/agor_tools/git_setup.py --apply-bundle",
                     "chmod 755 /tmp/agor_tools/git",
-                    "/tmp/agor_tools/git status"
+                    "/tmp/agor_tools/git status",
                 ]
             else:
                 manifest["setup_instructions"] = [
                     "1. Set up git configuration manually or from environment",
                     "2. Make git binary executable: chmod 755 /tmp/agor_tools/git",
                     "3. Configure git: python /tmp/agor_tools/git_setup.py --set 'Your Name' 'your@email.com'",
-                    "4. Read full instructions: cat /tmp/agor_tools/README_ai.md"
+                    "4. Read full instructions: cat /tmp/agor_tools/README_ai.md",
                 ]
 
                 manifest["quick_start_commands"] = [
                     "chmod 755 /tmp/agor_tools/git",
                     "python /tmp/agor_tools/git_setup.py --show",
-                    "python /tmp/agor_tools/git_setup.py --set 'Your Name' 'your@email.com'"
+                    "python /tmp/agor_tools/git_setup.py --set 'Your Name' 'your@email.com'",
                 ]
 
             # Save manifest
@@ -404,7 +424,7 @@ echo "🚀 Ready for development!"
             log.info(
                 "Created agent manifest",
                 tools_count=len(manifest["available_tools"]),
-                git_configured=bool(git_config.get("user_name"))
+                git_configured=bool(git_config.get("user_name")),
             )
 
         except Exception as e:
@@ -420,7 +440,7 @@ echo "🚀 Ready for development!"
             "agent_prompt_templates.py": "Standardized prompt templates for agents",
             "handoff_templates.py": "Agent handoff and coordination templates",
             "project_planning_templates.py": "Project planning and breakdown templates",
-            "README_ai.md": "Complete AI agent instructions and protocol"
+            "README_ai.md": "Complete AI agent instructions and protocol",
         }
         return descriptions.get(tool_name, "AGOR tool")
 
@@ -456,7 +476,7 @@ echo "🚀 Ready for development!"
 - Manual: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
 """
 
-        readable += f"""
+        readable += """
 
 ## 🛠️ Available Tools
 
@@ -464,9 +484,11 @@ echo "🚀 Ready for development!"
 
         for tool in manifest["available_tools"]:
             executable_marker = " (executable)" if tool["executable"] else ""
-            readable += f"- **{tool['name']}**{executable_marker}: {tool['description']}\n"
+            readable += (
+                f"- **{tool['name']}**{executable_marker}: {tool['description']}\n"
+            )
 
-        readable += f"""
+        readable += """
 
 ## 🚀 Quick Start
 
@@ -475,7 +497,7 @@ echo "🚀 Ready for development!"
         for i, cmd in enumerate(manifest["quick_start_commands"], 1):
             readable += f"{i}. `{cmd}`\n"
 
-        readable += f"""
+        readable += """
 
 ## 📋 Setup Instructions
 
