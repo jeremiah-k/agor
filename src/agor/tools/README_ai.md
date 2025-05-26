@@ -213,7 +213,7 @@ chmod 755 /tmp/agor_tools/git
 sp) strategic plan ✅ bp) break down project ar) architecture review ✅ dp) dependency planning rp) risk planning
 
 **⚡ Strategy Selection:**
-ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team mb) mob programming
+ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team ✅ mb) mob programming ✅
 
 **👥 Team Design:**
 ct) create team tm) team manifest hp) handoff prompts as) assign specialists tc) team coordination
@@ -342,8 +342,10 @@ from agor.tools.project_planning_templates import generate_architecture_review_t
 print(generate_architecture_review_template())
 
 # For strategy initialization
-from agor.tools.strategy_protocols import initialize_parallel_divergent
+from agor.tools.strategy_protocols import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming
 result = initialize_parallel_divergent("task description", agent_count=3)
+result = initialize_red_team("secure feature", blue_team_size=3, red_team_size=3)
+result = initialize_mob_programming("complex algorithm", agent_count=4)
 ```
 
 **COORDINATION SETUP:**
