@@ -357,6 +357,345 @@ RESEARCHER: "The standard library has a validate() method we should use"
 """
 
 
+def generate_strategic_planning_template():
+    """Template for strategic planning (sp hotkey)"""
+    return """
+# Strategic Planning Template
+
+## Project Vision
+- **Mission**: [What are we building and why?]
+- **Success Metrics**: [How will we measure success?]
+- **Timeline**: [Key milestones and deadlines]
+- **Constraints**: [Budget, technical, resource limitations]
+
+## Stakeholder Analysis
+- **Primary Users**: [Who will use this?]
+- **Business Stakeholders**: [Who has decision authority?]
+- **Technical Stakeholders**: [Who needs to integrate/maintain?]
+- **Success Criteria**: [What does each stakeholder need?]
+
+## Technical Strategy
+- **Architecture Approach**: [Monolith, microservices, serverless, etc.]
+- **Technology Stack**: [Languages, frameworks, databases]
+- **Integration Points**: [External systems, APIs, dependencies]
+- **Scalability Requirements**: [Expected load, growth patterns]
+- **Security Requirements**: [Compliance, data protection, access control]
+
+## Risk Assessment
+### High Risk
+- **Technical Risks**: [Complex integrations, new technologies]
+- **Business Risks**: [Market changes, requirement volatility]
+- **Resource Risks**: [Key person dependencies, skill gaps]
+- **Mitigation Strategies**: [How to address each risk]
+
+### Medium Risk
+- **Integration Challenges**: [Third-party dependencies]
+- **Performance Concerns**: [Scalability unknowns]
+- **Timeline Pressures**: [Aggressive deadlines]
+
+## Resource Planning
+- **Team Composition**: [Required roles and skills]
+- **Development Strategy**: [Which multi-agent approach?]
+- **Infrastructure Needs**: [Hosting, tools, environments]
+- **External Dependencies**: [Third-party services, approvals]
+
+## Implementation Roadmap
+### Phase 1: Foundation (Weeks 1-2)
+- [ ] Architecture design and approval
+- [ ] Development environment setup
+- [ ] Core infrastructure implementation
+- [ ] Basic security framework
+
+### Phase 2: Core Features (Weeks 3-6)
+- [ ] Primary user workflows
+- [ ] Data layer implementation
+- [ ] API development
+- [ ] Integration with key systems
+
+### Phase 3: Enhancement (Weeks 7-8)
+- [ ] Advanced features
+- [ ] Performance optimization
+- [ ] Security hardening
+- [ ] User experience polish
+
+### Phase 4: Launch (Weeks 9-10)
+- [ ] Comprehensive testing
+- [ ] Documentation completion
+- [ ] Deployment and monitoring
+- [ ] User training and support
+
+## Quality Strategy
+- **Testing Approach**: [Unit, integration, end-to-end strategies]
+- **Code Review Process**: [Peer review, automated checks]
+- **Performance Benchmarks**: [Response times, throughput targets]
+- **Security Validation**: [Penetration testing, compliance checks]
+
+## Communication Plan
+- **Status Reporting**: [Frequency, format, audience]
+- **Decision Making**: [Who decides what, escalation paths]
+- **Change Management**: [How to handle scope changes]
+- **Stakeholder Updates**: [Regular communication schedule]
+
+## Success Metrics
+- **Technical Metrics**: [Performance, reliability, security]
+- **Business Metrics**: [User adoption, business value]
+- **Process Metrics**: [Delivery speed, quality, team satisfaction]
+- **Monitoring Strategy**: [How to track and report progress]
+"""
+
+
+def generate_architecture_review_template():
+    """Template for architecture review (ar hotkey)"""
+    return """
+# Architecture Review Template
+
+## System Overview
+- **Purpose**: [What does this system do?]
+- **Scope**: [What's included in this review?]
+- **Stakeholders**: [Who needs to approve this?]
+
+## Architecture Analysis
+### High-Level Design
+- **System Architecture**: [Monolith, microservices, serverless]
+- **Component Diagram**: [Major components and relationships]
+- **Data Flow**: [How data moves through the system]
+- **Integration Points**: [External systems and APIs]
+
+### Technology Stack
+- **Frontend**: [Languages, frameworks, libraries]
+- **Backend**: [Languages, frameworks, databases]
+- **Infrastructure**: [Cloud providers, deployment strategy]
+- **Monitoring**: [Logging, metrics, alerting]
+
+## Quality Attributes
+### Performance
+- **Response Time Requirements**: [Target latencies]
+- **Throughput Requirements**: [Requests per second]
+- **Scalability Strategy**: [Horizontal vs vertical scaling]
+- **Bottleneck Analysis**: [Potential performance issues]
+
+### Reliability
+- **Availability Requirements**: [Uptime targets]
+- **Fault Tolerance**: [How system handles failures]
+- **Disaster Recovery**: [Backup and recovery strategy]
+- **Monitoring Strategy**: [Health checks, alerting]
+
+### Security
+- **Authentication**: [User identity verification]
+- **Authorization**: [Access control strategy]
+- **Data Protection**: [Encryption, privacy compliance]
+- **Threat Model**: [Security risks and mitigations]
+
+### Maintainability
+- **Code Organization**: [Module structure, separation of concerns]
+- **Documentation**: [API docs, architecture decisions]
+- **Testing Strategy**: [Unit, integration, end-to-end]
+- **Deployment Process**: [CI/CD, environment management]
+
+## Risk Assessment
+### Technical Risks
+- **Complexity**: [Areas of high technical complexity]
+- **Dependencies**: [External system dependencies]
+- **Technology Maturity**: [New or unproven technologies]
+- **Performance**: [Scalability and performance risks]
+
+### Mitigation Strategies
+- **Proof of Concepts**: [Areas needing validation]
+- **Fallback Plans**: [Alternative approaches]
+- **Monitoring**: [Early warning systems]
+- **Documentation**: [Knowledge transfer strategies]
+
+## Recommendations
+### Approved Elements
+- [Architecture components that are approved as-is]
+
+### Required Changes
+- [Architecture elements that must be modified]
+- [Specific changes needed and rationale]
+
+### Suggested Improvements
+- [Optional enhancements for consideration]
+- [Future architecture evolution paths]
+
+## Action Items
+- [ ] **High Priority**: [Critical changes needed before implementation]
+- [ ] **Medium Priority**: [Important improvements to consider]
+- [ ] **Low Priority**: [Nice-to-have enhancements]
+
+## Sign-off
+- **Architect**: [Approval status and date]
+- **Technical Lead**: [Approval status and date]
+- **Security Review**: [Approval status and date]
+- **Performance Review**: [Approval status and date]
+"""
+
+
+def generate_team_creation_template():
+    """Template for creating and organizing development teams (ct hotkey)"""
+    return """
+# Team Creation Template
+
+## Team Structure Analysis
+
+### Project Requirements
+- **Project Type**: [Web app, API, Mobile, Desktop, etc.]
+- **Technology Stack**: [Languages, frameworks, databases]
+- **Complexity Level**: [Simple, Medium, Complex]
+- **Timeline**: [Duration and key milestones]
+- **Team Size**: [Available agents/developers]
+
+### Skill Requirements
+- **Frontend**: [UI/UX, React, Vue, Angular, etc.]
+- **Backend**: [API development, databases, server logic]
+- **DevOps**: [Deployment, CI/CD, infrastructure]
+- **Quality Assurance**: [Testing, validation, security]
+- **Architecture**: [System design, technical leadership]
+- **Specialized**: [Domain-specific expertise needed]
+
+## Team Composition Recommendations
+
+### Small Team (2-3 agents)
+- **Full-Stack Developer**: Frontend + Backend + Basic DevOps
+- **Quality Engineer**: Testing + Code Review + Documentation
+- **Optional: Specialist**: Domain expert or architect
+
+### Medium Team (4-6 agents)
+- **Frontend Developer**: UI/UX, client-side logic
+- **Backend Developer**: API, database, server logic
+- **DevOps Engineer**: Deployment, infrastructure, monitoring
+- **Quality Assurance**: Testing, validation, security review
+- **Architect/Lead**: Technical design, coordination
+- **Optional: Specialist**: Performance, security, or domain expert
+
+### Large Team (7+ agents)
+- **Frontend Team**: UI Developer + UX Developer + Frontend Architect
+- **Backend Team**: API Developer + Database Developer + Backend Architect
+- **Platform Team**: DevOps Engineer + Infrastructure Engineer
+- **Quality Team**: Test Engineer + Security Engineer + Performance Engineer
+- **Leadership**: Technical Lead + Project Coordinator
+- **Specialists**: Domain experts, consultants, integration specialists
+
+## Role Definitions
+
+### Core Development Roles
+- **Frontend Developer**: User interface, client-side logic, user experience
+- **Backend Developer**: Server logic, APIs, data processing, business rules
+- **Full-Stack Developer**: Both frontend and backend capabilities
+- **Mobile Developer**: iOS, Android, cross-platform mobile applications
+- **Database Developer**: Schema design, queries, optimization, data modeling
+
+### Platform & Operations Roles
+- **DevOps Engineer**: CI/CD, deployment, infrastructure, monitoring
+- **Infrastructure Engineer**: Cloud platforms, networking, scalability
+- **Security Engineer**: Security review, vulnerability assessment, compliance
+- **Performance Engineer**: Optimization, load testing, scalability analysis
+
+### Quality & Validation Roles
+- **Quality Assurance Engineer**: Test planning, execution, automation
+- **Test Automation Engineer**: Automated testing frameworks and scripts
+- **Code Reviewer**: Code quality, standards compliance, best practices
+- **Integration Tester**: System integration, end-to-end testing
+
+### Leadership & Coordination Roles
+- **Technical Lead**: Architecture decisions, technical direction, mentoring
+- **Project Coordinator**: Timeline management, resource allocation, communication
+- **Product Owner**: Requirements, priorities, stakeholder communication
+- **Architect**: System design, technology choices, technical standards
+
+### Specialized Roles
+- **Domain Expert**: Business logic, industry knowledge, requirements clarification
+- **UX/UI Designer**: User experience design, interface design, usability
+- **Data Scientist**: Analytics, machine learning, data processing
+- **Integration Specialist**: Third-party integrations, API connections
+
+## Team Assignment Matrix
+
+### By Project Type
+
+#### Web Application
+- **Required**: Frontend Dev, Backend Dev, DevOps, QA
+- **Recommended**: Full-Stack Dev, Security Engineer
+- **Optional**: UX Designer, Performance Engineer
+
+#### API/Microservices
+- **Required**: Backend Dev, DevOps, QA, Architect
+- **Recommended**: Security Engineer, Performance Engineer
+- **Optional**: Integration Specialist, Documentation Specialist
+
+#### Mobile Application
+- **Required**: Mobile Dev, Backend Dev, DevOps, QA
+- **Recommended**: UX Designer, Performance Engineer
+- **Optional**: Platform Specialist (iOS/Android), Security Engineer
+
+#### Data/Analytics Platform
+- **Required**: Data Engineer, Backend Dev, DevOps, QA
+- **Recommended**: Data Scientist, Performance Engineer
+- **Optional**: Database Specialist, Visualization Expert
+
+### By Complexity Level
+
+#### Simple Projects
+- **Team Size**: 2-3 agents
+- **Duration**: 1-4 weeks
+- **Roles**: Full-Stack Dev, QA, Optional Specialist
+- **Coordination**: Lightweight, daily check-ins
+
+#### Medium Projects
+- **Team Size**: 4-6 agents
+- **Duration**: 1-3 months
+- **Roles**: Specialized developers, dedicated QA, DevOps, Lead
+- **Coordination**: Regular standups, weekly reviews
+
+#### Complex Projects
+- **Team Size**: 7+ agents
+- **Duration**: 3+ months
+- **Roles**: Multiple specialists, dedicated teams, leadership layer
+- **Coordination**: Formal processes, multiple coordination levels
+
+## Communication Structure
+
+### Reporting Lines
+- **Technical Lead** ← All developers
+- **Project Coordinator** ← All team members
+- **Architect** ← Technical Lead, Senior Developers
+- **Product Owner** ← Project Coordinator, Technical Lead
+
+### Communication Channels
+- **Daily Standups**: Progress, blockers, coordination
+- **Weekly Reviews**: Sprint progress, quality metrics, adjustments
+- **Architecture Reviews**: Technical decisions, design changes
+- **Stakeholder Updates**: Progress reports, milestone achievements
+
+## Success Metrics
+
+### Team Performance
+- **Velocity**: Story points or tasks completed per sprint
+- **Quality**: Bug rates, code review feedback, test coverage
+- **Collaboration**: Communication effectiveness, knowledge sharing
+- **Delivery**: On-time delivery, scope completion, stakeholder satisfaction
+
+### Individual Performance
+- **Productivity**: Task completion, code quality, innovation
+- **Collaboration**: Peer feedback, mentoring, knowledge sharing
+- **Growth**: Skill development, learning, adaptability
+- **Leadership**: Initiative, problem-solving, team contribution
+
+## Risk Management
+
+### Common Team Risks
+- **Skill Gaps**: Missing expertise for critical components
+- **Communication Breakdown**: Poor coordination, information silos
+- **Resource Conflicts**: Competing priorities, availability issues
+- **Technical Debt**: Quality shortcuts, maintenance burden
+
+### Mitigation Strategies
+- **Cross-Training**: Knowledge sharing, skill development
+- **Clear Processes**: Defined workflows, communication protocols
+- **Regular Reviews**: Progress assessment, course correction
+- **Quality Focus**: Code reviews, testing, documentation
+"""
+
+
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""
     return """

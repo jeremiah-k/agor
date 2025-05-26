@@ -2,6 +2,8 @@
 
 _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
 
+**📚 DOCUMENTATION INDEX**: For comprehensive documentation and quick lookup, always check the **[Documentation Index](../../docs/index.md)** first. It provides token-efficient access to all AGOR resources, including strategy implementation, coordination protocols, and troubleshooting guides.
+
 ## ⚠️ CRITICAL: REAL GIT BINARY USAGE
 
 **You have a REAL, FUNCTIONAL git binary at `/tmp/agor_tools/git`**
@@ -208,13 +210,13 @@ chmod 755 /tmp/agor_tools/git
 ### PROJECT COORDINATOR Menu (Role A):
 
 **🎯 Strategic Planning:**
-sp) strategic plan bp) break down project ar) architecture review dp) dependency planning rp) risk planning
+sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp) dependency planning rp) risk planning
 
 **⚡ Strategy Selection:**
-ss) strategy selection pd) parallel divergent pl) pipeline sw) swarm rt) red team mb) mob programming
+ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team ✅ mb) mob programming ✅
 
 **👥 Team Design:**
-ct) create team tm) team manifest hp) handoff prompts as) assign specialists tc) team coordination
+ct) create team ✅ tm) team manifest hp) handoff prompts as) assign specialists tc) team coordination
 
 **🔄 Coordination:**
 wf) workflow design qg) quality gates eo) execution order init) initialize coordination
@@ -314,6 +316,45 @@ If user selects a hotkey, respond accordingly.
 - **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
 - **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
 - **`mb`**: Set up Mob Programming strategy (collaborative coding)
+
+**AGENT COORDINATION:**
+
+- **`discover_role`**: Discover your role and get concrete next actions
+- **`check_status`**: Check current strategy status and recent activity
+- **`initialize_strategy`**: Set up strategy with concrete implementation protocols
+
+**QUICK COORDINATION COMMANDS:**
+```python
+# For agents entering a project
+from agor.tools.agent_coordination import discover_my_role
+print(discover_my_role("agent1"))  # Gets concrete next actions
+
+# For strategy selection (ss hotkey)
+from agor.tools.strategy_protocols import strategy_selection
+print(strategy_selection("project analysis", team_size=3, complexity="medium"))
+
+# For strategic planning (sp hotkey)
+from agor.tools.project_planning_templates import generate_strategic_planning_template
+print(generate_strategic_planning_template())
+
+# For architecture review (ar hotkey)
+from agor.tools.project_planning_templates import generate_architecture_review_template
+print(generate_architecture_review_template())
+
+# For project breakdown (bp hotkey)
+from agor.tools.strategy_protocols import project_breakdown
+print(project_breakdown("build user authentication", complexity="medium"))
+
+# For team creation (ct hotkey)
+from agor.tools.strategy_protocols import create_team
+print(create_team("e-commerce platform", team_size=5, project_type="web_app"))
+
+# For strategy initialization
+from agor.tools.strategy_protocols import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming
+result = initialize_parallel_divergent("task description", agent_count=3)
+result = initialize_red_team("secure feature", blue_team_size=3, red_team_size=3)
+result = initialize_mob_programming("complex algorithm", agent_count=4)
+```
 
 **COORDINATION SETUP:**
 
@@ -473,6 +514,42 @@ AGOR supports 5 multi-agent development strategies:
 👥 **Mob Programming** (`mb`): Collaborative coding with rotating roles
 
 Use `ss` to analyze your project and get strategy recommendations.
+
+**STRATEGY IMPLEMENTATION:**
+
+Use the new strategy protocols for concrete implementation:
+
+```python
+# Initialize Parallel Divergent strategy
+from agor.tools.strategy_protocols import initialize_parallel_divergent
+result = initialize_parallel_divergent("implement user authentication", agent_count=3)
+print(result)
+
+# Initialize Pipeline strategy
+from agor.tools.strategy_protocols import initialize_pipeline
+result = initialize_pipeline("build REST API", stages=["Foundation", "Enhancement", "Testing"])
+print(result)
+
+# Initialize Swarm strategy
+from agor.tools.strategy_protocols import initialize_swarm
+tasks = ["Create user model", "Implement login", "Add validation", "Write tests"]
+result = initialize_swarm("user system", tasks, agent_count=4)
+print(result)
+```
+
+**AGENT COORDINATION:**
+
+Agents can discover their role and get next actions:
+
+```python
+# Discover your role in active strategy
+from agor.tools.agent_coordination import discover_my_role
+print(discover_my_role("agent1"))
+
+# Check current strategy status
+from agor.tools.agent_coordination import check_strategy_status
+print(check_strategy_status())
+```
 
 **HANDOFF FORMAT:**
 
