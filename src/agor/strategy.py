@@ -7,10 +7,11 @@ development strategies including Parallel Divergent, Pipeline, Swarm, etc.
 
 import json
 import subprocess
-import yaml
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional
+
+import yaml
 
 from .tools.sqlite_memory import SQLiteMemoryManager
 
@@ -71,8 +72,8 @@ class StrategyManager:
 
         print("✅ Parallel Divergent strategy initialized!")
         print(f"🌿 Agent branches: {', '.join(agent_branches.values())}")
-        print(f"📋 Next: Assign agents to their respective branches")
-        print(f"📖 Instructions: See .agor/agent-instructions/")
+        print("📋 Next: Assign agents to their respective branches")
+        print("📖 Instructions: See .agor/agent-instructions/")
 
     def show_status(self) -> None:
         """Display current coordination status."""
@@ -110,10 +111,7 @@ class StrategyManager:
         try:
             # Pull latest changes
             result = subprocess.run(
-                ["git", "pull"],
-                capture_output=True,
-                text=True,
-                cwd=self.project_root
+                ["git", "pull"], capture_output=True, text=True, cwd=self.project_root
             )
 
             if result.returncode == 0:
@@ -131,7 +129,7 @@ class StrategyManager:
                         existing = yaml.safe_load(f) or {}
                     sync_data.update(existing)
 
-                with open(sync_file, 'w') as f:
+                with open(sync_file, "w") as f:
                     yaml.dump(sync_data, f, default_flow_style=False)
 
             self._log_event("Synchronized coordination state")
@@ -146,11 +144,13 @@ class StrategyManager:
         print("=" * 50)
 
         # Basic project analysis
-        project_files = list(self.project_root.glob("**/*.py")) + \
-                       list(self.project_root.glob("**/*.js")) + \
-                       list(self.project_root.glob("**/*.ts")) + \
-                       list(self.project_root.glob("**/*.java")) + \
-                       list(self.project_root.glob("**/*.go"))
+        project_files = (
+            list(self.project_root.glob("**/*.py"))
+            + list(self.project_root.glob("**/*.js"))
+            + list(self.project_root.glob("**/*.ts"))
+            + list(self.project_root.glob("**/*.java"))
+            + list(self.project_root.glob("**/*.go"))
+        )
 
         file_count = len(project_files)
 
@@ -173,11 +173,11 @@ class StrategyManager:
         print("💡 To initialize recommended strategy:")
         best_strategy = recommendations[0][0]
         if "Parallel Divergent" in best_strategy:
-            print(f"   agor pd \"your-task-description\" --agents {team_size}")
+            print(f'   agor pd "your-task-description" --agents {team_size}')
         elif "Pipeline" in best_strategy:
-            print(f"   agor pl \"your-task-description\" --agents {team_size}")
+            print(f'   agor pl "your-task-description" --agents {team_size}')
         elif "Swarm" in best_strategy:
-            print(f"   agor sw \"your-task-description\" --agents {team_size}")
+            print(f'   agor sw "your-task-description" --agents {team_size}')
 
     def _create_agor_structure(self) -> None:
         """Create basic .agor directory structure."""
@@ -233,7 +233,7 @@ class StrategyManager:
                     ["git", "checkout", "-b", branch_name],
                     capture_output=True,
                     cwd=self.project_root,
-                    check=False  # Don't fail if branch exists
+                    check=False,  # Don't fail if branch exists
                 )
             except Exception:
                 pass  # Branch might already exist
@@ -244,7 +244,7 @@ class StrategyManager:
                 ["git", "checkout", "main"],
                 capture_output=True,
                 cwd=self.project_root,
-                check=False
+                check=False,
             )
         except Exception:
             try:
@@ -252,14 +252,16 @@ class StrategyManager:
                     ["git", "checkout", "master"],
                     capture_output=True,
                     cwd=self.project_root,
-                    check=False
+                    check=False,
                 )
             except Exception:
                 pass
 
         return agent_branches
 
-    def _init_pd_state_files(self, task: str, agents: int, agent_branches: Dict[str, str]) -> None:
+    def _init_pd_state_files(
+        self, task: str, agents: int, agent_branches: Dict[str, str]
+    ) -> None:
         """Initialize Parallel Divergent state files."""
         # Strategy configuration
         strategy_data = {
@@ -267,19 +269,19 @@ class StrategyManager:
             "task": task,
             "agents": list(agent_branches.keys()),
             "created": datetime.now().isoformat(),
-            "status": "initialized"
+            "status": "initialized",
         }
 
-        with open(self.state_dir / "strategy.json", 'w') as f:
+        with open(self.state_dir / "strategy.json", "w") as f:
             json.dump(strategy_data, f, indent=2)
 
         # Agent branches mapping
-        with open(self.state_dir / "agent_branches.json", 'w') as f:
+        with open(self.state_dir / "agent_branches.json", "w") as f:
             json.dump(agent_branches, f, indent=2)
 
         # Active tasks status
         active_tasks = {agent: "pending" for agent in agent_branches.keys()}
-        with open(self.state_dir / "active_tasks.json", 'w') as f:
+        with open(self.state_dir / "active_tasks.json", "w") as f:
             json.dump(active_tasks, f, indent=2)
 
         # Parallel Divergent evaluation template
@@ -309,7 +311,7 @@ class StrategyManager:
 *Add evaluation notes here as agents complete their work*
 """
 
-        with open(self.state_dir / "pd_evaluation.md", 'w') as f:
+        with open(self.state_dir / "pd_evaluation.md", "w") as f:
             f.write(pd_eval_content)
 
         # Sync flags
@@ -317,13 +319,15 @@ class StrategyManager:
             "pd_merge_pending": False,
             "last_sync": datetime.now().isoformat(),
             "agents_ready": 0,
-            "total_agents": agents
+            "total_agents": agents,
         }
 
-        with open(self.state_dir / "sync_flags.yaml", 'w') as f:
+        with open(self.state_dir / "sync_flags.yaml", "w") as f:
             yaml.dump(sync_data, f, default_flow_style=False)
 
-    def _create_agent_instructions(self, task: str, agents: int, agent_branches: Dict[str, str]) -> None:
+    def _create_agent_instructions(
+        self, task: str, agents: int, agent_branches: Dict[str, str]
+    ) -> None:
         """Create individual agent instruction files."""
         instructions_dir = self.agor_dir / "agent-instructions"
         instructions_dir.mkdir(exist_ok=True)
@@ -373,7 +377,7 @@ You are working **independently** with {agents-1} other agents on the same probl
 3. Focus on your unique approach to the problem
 """
 
-            with open(instructions_dir / f"{agent_id}-instructions.md", 'w') as f:
+            with open(instructions_dir / f"{agent_id}-instructions.md", "w") as f:
                 f.write(instruction_content)
 
     def _log_event(self, message: str) -> None:
@@ -382,10 +386,10 @@ You are working **independently** with {agents-1} other agents on the same probl
             return
 
         log_file = self.state_dir / "state.log"
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"[{timestamp}] {message}\n"
 
-        with open(log_file, 'a') as f:
+        with open(log_file, "a") as f:
             f.write(log_entry)
 
     def _show_agent_status(self) -> None:
@@ -400,7 +404,11 @@ You are working **independently** with {agents-1} other agents on the same probl
 
             print("\n👥 Agent Status:")
             for agent, status in tasks.items():
-                status_icon = "🟢" if status == "completed" else "🟡" if status == "in-progress" else "⚪"
+                status_icon = (
+                    "🟢"
+                    if status == "completed"
+                    else "🟡" if status == "in-progress" else "⚪"
+                )
                 print(f"   {status_icon} {agent}: {status}")
 
     def _show_recent_activity(self) -> None:
@@ -411,7 +419,7 @@ You are working **independently** with {agents-1} other agents on the same probl
         log_file = self.state_dir / "state.log"
         if log_file.exists():
             print("\n📝 Recent Activity:")
-            lines = log_file.read_text().strip().split('\n')
+            lines = log_file.read_text().strip().split("\n")
             for line in lines[-5:]:  # Show last 5 entries
                 if line.strip():
                     print(f"   {line}")
@@ -440,7 +448,7 @@ You are working **independently** with {agents-1} other agents on the same probl
             old_status = tasks[agent_id]
             tasks[agent_id] = status
 
-            with open(tasks_file, 'w') as f:
+            with open(tasks_file, "w") as f:
                 json.dump(tasks, f, indent=2)
 
             # Update sync flags if agent completed
@@ -466,7 +474,9 @@ You are working **independently** with {agents-1} other agents on the same probl
             with open(tasks_file) as f:
                 tasks = json.load(f)
 
-            completed_count = sum(1 for status in tasks.values() if status == "completed")
+            completed_count = sum(
+                1 for status in tasks.values() if status == "completed"
+            )
 
             with open(sync_file) as f:
                 sync_data = yaml.safe_load(f) or {}
@@ -474,7 +484,7 @@ You are working **independently** with {agents-1} other agents on the same probl
             sync_data["agents_ready"] = completed_count
             sync_data["last_update"] = datetime.now().isoformat()
 
-            with open(sync_file, 'w') as f:
+            with open(sync_file, "w") as f:
                 yaml.dump(sync_data, f, default_flow_style=False)
 
     def _check_merge_readiness(self) -> None:
@@ -489,13 +499,15 @@ You are working **independently** with {agents-1} other agents on the same probl
             with open(sync_file) as f:
                 sync_data = yaml.safe_load(f) or {}
 
-            completed_count = sum(1 for status in tasks.values() if status == "completed")
+            completed_count = sum(
+                1 for status in tasks.values() if status == "completed"
+            )
             total_agents = len(tasks)
 
             if completed_count == total_agents:
                 sync_data["pd_merge_pending"] = True
 
-                with open(sync_file, 'w') as f:
+                with open(sync_file, "w") as f:
                     yaml.dump(sync_data, f, default_flow_style=False)
 
                 self._log_event("All agents completed - merge phase ready")
@@ -505,7 +517,9 @@ You are working **independently** with {agents-1} other agents on the same probl
                 print("   2. Compare approaches in .agor/state/pd_evaluation.md")
                 print("   3. Merge best practices into final solution")
 
-    def _analyze_strategy_fit(self, complexity: str, team_size: int, file_count: int) -> List[tuple]:
+    def _analyze_strategy_fit(
+        self, complexity: str, team_size: int, file_count: int
+    ) -> List[tuple]:
         """Analyze and score different strategies for the project."""
         strategies = []
 
@@ -518,11 +532,13 @@ You are working **independently** with {agents-1} other agents on the same probl
         if file_count > 50:
             pd_score += 1
 
-        strategies.append((
-            "🔄 Parallel Divergent",
-            min(pd_score, 10),
-            "Multiple independent solutions, then peer review and synthesis"
-        ))
+        strategies.append(
+            (
+                "🔄 Parallel Divergent",
+                min(pd_score, 10),
+                "Multiple independent solutions, then peer review and synthesis",
+            )
+        )
 
         # Pipeline scoring
         pl_score = 6
@@ -533,11 +549,13 @@ You are working **independently** with {agents-1} other agents on the same probl
         if file_count > 20:
             pl_score += 1
 
-        strategies.append((
-            "⚡ Pipeline",
-            min(pl_score, 10),
-            "Sequential handoffs with specialization at each stage"
-        ))
+        strategies.append(
+            (
+                "⚡ Pipeline",
+                min(pl_score, 10),
+                "Sequential handoffs with specialization at each stage",
+            )
+        )
 
         # Swarm scoring
         sw_score = 5
@@ -548,11 +566,13 @@ You are working **independently** with {agents-1} other agents on the same probl
         if complexity == "simple":
             sw_score += 1
 
-        strategies.append((
-            "🐝 Swarm",
-            min(sw_score, 10),
-            "Dynamic task assignment from shared queue - great for many small tasks"
-        ))
+        strategies.append(
+            (
+                "🐝 Swarm",
+                min(sw_score, 10),
+                "Dynamic task assignment from shared queue - great for many small tasks",
+            )
+        )
 
         # Sort by score (descending)
         strategies.sort(key=lambda x: x[1], reverse=True)

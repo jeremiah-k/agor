@@ -8,16 +8,14 @@ This module provides concrete implementation protocols for AGOR's multi-agent st
 - Strategy Selection: Intelligent strategy recommendation
 """
 
-import json
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from ..project_planning_templates import (
+    generate_mob_programming_strategy,
     generate_parallel_divergent_strategy,
     generate_red_team_strategy,
-    generate_mob_programming_strategy
 )
 
 
@@ -36,7 +34,7 @@ class StrategyProtocol:
         # Create essential coordination files if they don't exist
         essential_files = {
             "agentconvo.md": "# Agent Communication Log\n\n",
-            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n"
+            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n",
         }
 
         for filename, default_content in essential_files.items():
@@ -114,7 +112,10 @@ Each agent should:
         self._create_agent_memory_templates(agent_count)
 
         # Log strategy initialization
-        self.log_communication("COORDINATOR", f"Initialized Parallel Divergent strategy: {task_description}")
+        self.log_communication(
+            "COORDINATOR",
+            f"Initialized Parallel Divergent strategy: {task_description}",
+        )
 
         return f"""✅ Parallel Divergent Strategy Initialized
 
@@ -135,25 +136,31 @@ Each agent should:
 **Ready for agent coordination!**
 """
 
-    def _generate_agent_assignments(self, agent_count: int, task_description: str) -> str:
+    def _generate_agent_assignments(
+        self, agent_count: int, task_description: str
+    ) -> str:
         """Generate agent assignments section."""
         assignments = []
 
         for i in range(1, agent_count + 1):
             agent_id = f"agent{i}"
             branch_name = f"solution-{agent_id}"
-            assignments.append(f"""
+            assignments.append(
+                f"""
 ### Agent{i} Assignment
 - **Agent ID**: {agent_id}
 - **Branch**: `{branch_name}`
 - **Memory File**: `.agor/{agent_id}-memory.md`
 - **Status**: ⚪ Not Started
 - **Mission**: {task_description} (independent approach)
-""")
+"""
+            )
 
         return "\n".join(assignments)
 
-    def _generate_individual_instructions(self, agent_count: int, task_description: str) -> str:
+    def _generate_individual_instructions(
+        self, agent_count: int, task_description: str
+    ) -> str:
         """Generate individual agent instructions."""
         instructions = []
 
@@ -235,12 +242,14 @@ When you finish your solution, post this to agentconvo.md:
 class RedTeamProtocol(StrategyProtocol):
     """Implementation protocol for Red Team strategy."""
 
-    def initialize_strategy(self, task: str, blue_team_size: int = 3, red_team_size: int = 3) -> str:
+    def initialize_strategy(
+        self, task: str, blue_team_size: int = 3, red_team_size: int = 3
+    ) -> str:
         """Initialize Red Team strategy with adversarial testing."""
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_red_team_strategy()
-        
+
         # Add concrete implementation details
         implementation_details = f"""
 ## RED TEAM IMPLEMENTATION PROTOCOL
@@ -315,27 +324,39 @@ When blue team signals completion, red team attack phase begins automatically.
         """Generate blue team assignments."""
         assignments = []
         for i in range(1, team_size + 1):
-            assignments.append(f"""
+            assignments.append(
+                f"""
 - **Blue Agent {i}**: Security-focused implementation of {task}
   - Branch: `blue-solution-{i}`
   - Focus: Secure coding practices and vulnerability prevention
-""")
+"""
+            )
         return "\n".join(assignments)
 
     def _generate_red_team_assignments(self, team_size: int, task: str) -> str:
         """Generate red team assignments."""
         assignments = []
-        attack_types = ["injection", "authentication", "authorization", "data-validation", "session-management"]
+        attack_types = [
+            "injection",
+            "authentication",
+            "authorization",
+            "data-validation",
+            "session-management",
+        ]
         for i in range(1, team_size + 1):
-            attack_focus = attack_types[(i-1) % len(attack_types)]
-            assignments.append(f"""
+            attack_focus = attack_types[(i - 1) % len(attack_types)]
+            assignments.append(
+                f"""
 - **Red Agent {i}**: Attack specialist for {task}
   - Focus: {attack_focus} vulnerabilities
   - Goal: Find and exploit security weaknesses
-""")
+"""
+            )
         return "\n".join(assignments)
 
-    def _generate_red_team_instructions(self, blue_size: int, red_size: int, task: str) -> str:
+    def _generate_red_team_instructions(
+        self, blue_size: int, red_size: int, task: str
+    ) -> str:
         """Generate detailed red team instructions."""
         return f"""
 ## DETAILED INSTRUCTIONS
@@ -431,10 +452,10 @@ class MobProgrammingProtocol(StrategyProtocol):
 
     def initialize_strategy(self, task: str, agent_count: int = 4) -> str:
         """Initialize Mob Programming strategy with role rotation."""
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_mob_programming_strategy()
-        
+
         # Add concrete implementation details
         implementation_details = f"""
 ## MOB PROGRAMMING IMPLEMENTATION PROTOCOL
@@ -503,7 +524,9 @@ MOB_SESSION_END: [session-number] - [progress] - [next-session-plan] - [timestam
         self._create_mob_coordination_files(agent_count)
 
         # Log strategy initialization
-        self.log_communication("COORDINATOR", f"Initialized Mob Programming strategy: {task}")
+        self.log_communication(
+            "COORDINATOR", f"Initialized Mob Programming strategy: {task}"
+        )
 
         return f"""✅ Mob Programming Strategy Initialized
 
@@ -532,12 +555,18 @@ MOB_SESSION_END: [session-number] - [progress] - [next-session-plan] - [timestam
     def _generate_mob_roles(self, agent_count: int) -> str:
         """Generate current mob role assignments."""
         roles = []
-        roles.append("- **Driver**: Agent1 - Controls keyboard, implements navigator's instructions")
-        roles.append("- **Navigator**: Agent2 - Provides strategic direction and detailed instructions")
-        
+        roles.append(
+            "- **Driver**: Agent1 - Controls keyboard, implements navigator's instructions"
+        )
+        roles.append(
+            "- **Navigator**: Agent2 - Provides strategic direction and detailed instructions"
+        )
+
         for i in range(3, agent_count + 1):
-            roles.append(f"- **Mob Member**: Agent{i} - Actively participates, provides ideas and feedback")
-        
+            roles.append(
+                f"- **Mob Member**: Agent{i} - Actively participates, provides ideas and feedback"
+            )
+
         return "\n".join(roles)
 
     def _generate_rotation_schedule(self, agent_count: int) -> str:
@@ -546,14 +575,18 @@ MOB_SESSION_END: [session-number] - [progress] - [next-session-plan] - [timestam
         for session in range(1, 5):  # Show first 4 rotations
             driver_idx = ((session - 1) % agent_count) + 1
             navigator_idx = (session % agent_count) + 1
-            schedule.append(f"**Session {session}**: Driver=Agent{driver_idx}, Navigator=Agent{navigator_idx}")
-        
-        schedule.append("**Pattern continues**: Each agent rotates through driver and navigator roles")
+            schedule.append(
+                f"**Session {session}**: Driver=Agent{driver_idx}, Navigator=Agent{navigator_idx}"
+            )
+
+        schedule.append(
+            "**Pattern continues**: Each agent rotates through driver and navigator roles"
+        )
         return "\n".join(schedule)
 
     def _generate_mob_instructions(self, agent_count: int, task: str) -> str:
         """Generate detailed mob programming instructions."""
-        return f"""
+        return """
 ## DETAILED MOB INSTRUCTIONS
 
 ### Session Structure (15 minutes each):
@@ -657,7 +690,9 @@ def initialize_parallel_divergent(task: str, agent_count: int = 3) -> str:
     return protocol.initialize_strategy(task, agent_count)
 
 
-def initialize_red_team(task: str, blue_team_size: int = 3, red_team_size: int = 3) -> str:
+def initialize_red_team(
+    task: str, blue_team_size: int = 3, red_team_size: int = 3
+) -> str:
     """Initialize Red Team strategy."""
     protocol = RedTeamProtocol()
     return protocol.initialize_strategy(task, blue_team_size, red_team_size)
@@ -669,12 +704,13 @@ def initialize_mob_programming(task: str, agent_count: int = 4) -> str:
     return protocol.initialize_strategy(task, agent_count)
 
 
-def select_strategy(project_analysis: str = "", team_size: int = 3, complexity: str = "medium") -> str:
+def select_strategy(
+    project_analysis: str = "", team_size: int = 3, complexity: str = "medium"
+) -> str:
     """Intelligent strategy selection based on project characteristics."""
-    
+
     # Import the strategy selection template
-    from ..agent_prompt_templates import generate_strategy_selection_prompt
-    
+
     # Analyze project characteristics
     analysis_factors = {
         "team_size": team_size,
@@ -682,12 +718,12 @@ def select_strategy(project_analysis: str = "", team_size: int = 3, complexity: 
         "project_type": _analyze_project_type(project_analysis),
         "collaboration_need": _analyze_collaboration_need(project_analysis, team_size),
         "quality_requirements": _analyze_quality_requirements(project_analysis),
-        "innovation_need": _analyze_innovation_need(project_analysis)
+        "innovation_need": _analyze_innovation_need(project_analysis),
     }
-    
+
     # Generate strategy recommendation
     recommendation = _generate_strategy_recommendation(analysis_factors)
-    
+
     # Create strategy selection document
     selection_content = f"""# Strategy Selection Analysis
 
@@ -714,13 +750,13 @@ def select_strategy(project_analysis: str = "", team_size: int = 3, complexity: 
 
 {_generate_alternative_strategies(analysis_factors)}
 """
-    
+
     # Save strategy selection analysis
     agor_dir = Path(".agor")
     agor_dir.mkdir(exist_ok=True)
     selection_file = agor_dir / "strategy-selection.md"
     selection_file.write_text(selection_content)
-    
+
     return f"""✅ Strategy Selection Complete
 
 **Recommended Strategy**: {recommendation.split(':')[0] if ':' in recommendation else recommendation}
@@ -745,15 +781,26 @@ def select_strategy(project_analysis: str = "", team_size: int = 3, complexity: 
 def _analyze_project_type(analysis: str) -> str:
     """Analyze project type from description."""
     analysis_lower = analysis.lower()
-    if any(word in analysis_lower for word in ["api", "backend", "service", "microservice"]):
+    if any(
+        word in analysis_lower for word in ["api", "backend", "service", "microservice"]
+    ):
         return "API/Backend"
-    elif any(word in analysis_lower for word in ["frontend", "ui", "interface", "react", "vue"]):
+    elif any(
+        word in analysis_lower
+        for word in ["frontend", "ui", "interface", "react", "vue"]
+    ):
         return "Frontend"
-    elif any(word in analysis_lower for word in ["fullstack", "full-stack", "web app", "application"]):
+    elif any(
+        word in analysis_lower
+        for word in ["fullstack", "full-stack", "web app", "application"]
+    ):
         return "Full-Stack"
     elif any(word in analysis_lower for word in ["mobile", "ios", "android", "app"]):
         return "Mobile"
-    elif any(word in analysis_lower for word in ["data", "analytics", "ml", "ai", "machine learning"]):
+    elif any(
+        word in analysis_lower
+        for word in ["data", "analytics", "ml", "ai", "machine learning"]
+    ):
         return "Data/Analytics"
     else:
         return "General Development"
@@ -772,9 +819,14 @@ def _analyze_collaboration_need(analysis: str, team_size: int) -> str:
 def _analyze_quality_requirements(analysis: str) -> str:
     """Analyze quality requirements from description."""
     analysis_lower = analysis.lower()
-    if any(word in analysis_lower for word in ["security", "secure", "critical", "production", "enterprise"]):
+    if any(
+        word in analysis_lower
+        for word in ["security", "secure", "critical", "production", "enterprise"]
+    ):
         return "High"
-    elif any(word in analysis_lower for word in ["prototype", "poc", "experiment", "quick"]):
+    elif any(
+        word in analysis_lower for word in ["prototype", "poc", "experiment", "quick"]
+    ):
         return "Low"
     else:
         return "Medium"
@@ -783,9 +835,15 @@ def _analyze_quality_requirements(analysis: str) -> str:
 def _analyze_innovation_need(analysis: str) -> str:
     """Analyze innovation requirements."""
     analysis_lower = analysis.lower()
-    if any(word in analysis_lower for word in ["innovative", "creative", "novel", "research", "experimental"]):
+    if any(
+        word in analysis_lower
+        for word in ["innovative", "creative", "novel", "research", "experimental"]
+    ):
         return "High"
-    elif any(word in analysis_lower for word in ["standard", "typical", "conventional", "maintenance"]):
+    elif any(
+        word in analysis_lower
+        for word in ["standard", "typical", "conventional", "maintenance"]
+    ):
         return "Low"
     else:
         return "Medium"
@@ -797,23 +855,23 @@ def _generate_strategy_recommendation(factors: Dict) -> str:
     complexity = factors["complexity"]
     quality_req = factors["quality_requirements"]
     innovation_need = factors["innovation_need"]
-    
+
     # High quality requirements suggest Red Team
     if quality_req == "High":
         return "Red Team Strategy: High quality requirements indicate need for adversarial testing and security focus"
-    
+
     # High innovation need suggests Parallel Divergent
     elif innovation_need == "High":
         return "Parallel Divergent Strategy: High innovation need benefits from multiple independent approaches"
-    
+
     # Large teams with high collaboration need suggest Mob Programming
     elif team_size >= 4 and factors["collaboration_need"] == "High":
         return "Mob Programming Strategy: Large team with high collaboration need benefits from shared knowledge"
-    
+
     # Medium teams with medium complexity suggest Parallel Divergent
     elif team_size >= 3 and complexity in ["medium", "complex"]:
         return "Parallel Divergent Strategy: Multiple agents can explore different approaches to complex problems"
-    
+
     # Default to Mob Programming for collaboration
     else:
         return "Mob Programming Strategy: Collaborative approach suitable for most development scenarios"
@@ -821,8 +879,8 @@ def _generate_strategy_recommendation(factors: Dict) -> str:
 
 def _generate_implementation_guidance(recommendation: str) -> str:
     """Generate implementation guidance for recommended strategy."""
-    strategy_name = recommendation.split(':')[0].strip()
-    
+    strategy_name = recommendation.split(":")[0].strip()
+
     if "Red Team" in strategy_name:
         return """
 ### Red Team Implementation:

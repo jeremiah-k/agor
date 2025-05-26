@@ -8,10 +8,13 @@ and continuous improvement processes.
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
-def manage_team(project_name: str = "Current Project", team_size: int = 4, management_focus: str = "performance") -> str:
+def manage_team(
+    project_name: str = "Current Project",
+    team_size: int = 4,
+    management_focus: str = "performance",
+) -> str:
     """Manage ongoing team coordination and performance (tm hotkey)."""
 
     # Import the team management template
@@ -388,17 +391,20 @@ def _generate_improvement_strategies(management_focus: str) -> str:
 - **Mentoring Programs**: Pair experienced with junior agents
 - **Team Building**: Activities to improve team cohesion
 - **Feedback Culture**: Regular feedback and improvement discussions
-"""
+""",
     }
 
-    return strategies.get(management_focus, """
+    return strategies.get(
+        management_focus,
+        """
 #### General Improvement Strategies
 - **Process Optimization**: Continuously improve development processes
 - **Skill Development**: Invest in team member growth
 - **Tool Enhancement**: Upgrade and optimize development tools
 - **Communication**: Improve team communication and coordination
 - **Quality Focus**: Maintain high standards for deliverables
-""")
+""",
+    )
 
 
 def _generate_communication_protocols() -> str:
@@ -570,7 +576,7 @@ def _generate_risk_monitoring() -> str:
 
 def _generate_contingency_planning(team_size: int) -> str:
     """Generate contingency planning."""
-    return f"""
+    return """
 #### Contingency Scenarios
 
 **Agent Unavailability**
@@ -772,7 +778,12 @@ def _create_team_management_files(team_size: int, project_name: str):
     # Create agent assignments file
     assignments_file = Path(".agor") / "agent-assignments.md"
     newline = chr(10)
-    agent_sections = newline.join([f"### Agent{i}{newline}- **Role**: [Assigned role]{newline}- **Current Task**: [Task description]{newline}- **Priority**: [High/Medium/Low]{newline}- **Estimated Completion**: [Date/time]{newline}- **Dependencies**: [What this task depends on]{newline}- **Blockers**: [Current blockers if any]{newline}" for i in range(1, team_size + 1)])
+    agent_sections = newline.join(
+        [
+            f"### Agent{i}{newline}- **Role**: [Assigned role]{newline}- **Current Task**: [Task description]{newline}- **Priority**: [High/Medium/Low]{newline}- **Estimated Completion**: [Date/time]{newline}- **Dependencies**: [What this task depends on]{newline}- **Blockers**: [Current blockers if any]{newline}"
+            for i in range(1, team_size + 1)
+        ]
+    )
 
     assignments_content = f"""
 # Agent Task Assignments

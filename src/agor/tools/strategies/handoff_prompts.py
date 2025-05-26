@@ -8,15 +8,17 @@ quality assurance, and specialized handoff scenarios.
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
-def generate_handoff_prompts(handoff_type: str = "standard", from_role: str = "developer", to_role: str = "reviewer", context: str = "") -> str:
+def generate_handoff_prompts(
+    handoff_type: str = "standard",
+    from_role: str = "developer",
+    to_role: str = "reviewer",
+    context: str = "",
+) -> str:
     """Generate handoff prompts and coordination templates (hp hotkey)."""
 
     # Import handoff templates
-    from ..agent_prompt_templates import generate_handoff_prompt, generate_specialist_prompt
-    from ..handoff_templates import generate_handoff_document, generate_receive_handoff_prompt
 
     # Generate comprehensive handoff guidance
     implementation_details = f"""
@@ -234,7 +236,9 @@ prompt = generate_handoff_prompt(
 """
 
 
-def _generate_handoff_prompt_templates(handoff_type: str, from_role: str, to_role: str) -> str:
+def _generate_handoff_prompt_templates(
+    handoff_type: str, from_role: str, to_role: str
+) -> str:
     """Generate handoff prompt templates."""
     if handoff_type == "emergency":
         return f"""
@@ -384,7 +388,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Configuration is documented
 - Dependencies are specified
 - Monitoring requirements defined
-"""
+""",
         },
         "reviewer": {
             "to_developer": """
@@ -433,10 +437,9 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Reproduction steps provided
 - Priority levels assigned
 """
-        }
+        },
     }
 
-    key = f"{from_role}_to_{to_role}"
     if from_role in role_prompts and f"to_{to_role}" in role_prompts[from_role]:
         return role_prompts[from_role][f"to_{to_role}"]
     else:
@@ -681,7 +684,7 @@ def _create_handoff_templates_directory():
 
 ## Action Items
 [To be filled by reviewer]
-"""
+""",
     }
 
     for filename, content in templates.items():

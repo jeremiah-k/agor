@@ -8,10 +8,14 @@ and handoff procedures.
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
-def design_workflow(project_description: str, team_size: int = 4, project_type: str = "web_app", complexity: str = "medium") -> str:
+def design_workflow(
+    project_description: str,
+    team_size: int = 4,
+    project_type: str = "web_app",
+    complexity: str = "medium",
+) -> str:
     """Design agent workflow and coordination patterns (wf hotkey)."""
 
     # Import the workflow template
@@ -188,7 +192,9 @@ RECOVERY_COMPLETE: [agent-id] - [resolution] - [lessons-learned] - [timestamp]
 """
 
 
-def _generate_workflow_phases(project_type: str, complexity: str, team_size: int) -> str:
+def _generate_workflow_phases(
+    project_type: str, complexity: str, team_size: int
+) -> str:
     """Generate workflow phases based on project characteristics."""
 
     if project_type == "api":
@@ -469,7 +475,7 @@ def _generate_workflow_quality_gates(complexity: str) -> str:
 
 def _generate_workflow_handoffs(project_type: str) -> str:
     """Generate handoff procedures for workflow."""
-    return f"""
+    return """
 #### Standard Handoff Procedure:
 1. **Completion Signal**: Agent signals phase completion with deliverables
 2. **Quality Check**: Next agent validates prerequisites and quality gates

@@ -29,6 +29,16 @@ def validate_repository_url(repo_url: str) -> str:
 
     repo_url = repo_url.strip()
 
+    # Check for local paths first
+    if repo_url.startswith(("/", "./", "../")) or Path(repo_url).exists():
+        # This is a local path, return as-is
+        return repo_url
+
+    # Check for SSH URLs (git@host:user/repo.git)
+    ssh_pattern = r"^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+:[a-zA-Z0-9._/-]+(?:\.git)?$"
+    if re.match(ssh_pattern, repo_url):
+        return repo_url
+
     # Check for GitHub shorthand (user/repo)
     github_shorthand_pattern = r"^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+$"
     if re.match(github_shorthand_pattern, repo_url):

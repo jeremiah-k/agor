@@ -30,11 +30,14 @@ ARCHIVE_EXTENSIONS = {
 
 # Protocol version - increment when coordination protocols change
 # This is separate from AGOR version and tracks protocol compatibility
-PROTOCOL_VERSION = "1.0.0"
+# 0.x.x = Development/testing phase, 1.0.0+ = Production-ready
+PROTOCOL_VERSION = "0.3.0"
 
 # Version checking
 VERSION_CHECK_URL = "https://api.github.com/repos/jeremiah-k/agor/releases/latest"
-PROTOCOL_CHECK_URL = "https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/constants.py"
+PROTOCOL_CHECK_URL = (
+    "https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/constants.py"
+)
 
 # Error messages
 ERROR_MESSAGES = {

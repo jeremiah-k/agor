@@ -7,12 +7,16 @@ based on project requirements, team size, and project type.
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
-def create_team(project_description: str, team_size: int = 4, project_type: str = "web_app", complexity: str = "medium") -> str:
+def create_team(
+    project_description: str,
+    team_size: int = 4,
+    project_type: str = "web_app",
+    complexity: str = "medium",
+) -> str:
     """Create team structure and coordination setup (ct hotkey)."""
-    
+
     # Generate team creation based on parameters
     team_details = f"""
 ## TEAM CREATION IMPLEMENTATION
@@ -76,19 +80,19 @@ TEAM_METRICS: [velocity] - [quality] - [collaboration-score] - [timestamp]
 4. **Begin Team Coordination**: Start with team standup and role confirmation
 5. **Monitor Team Performance**: Track metrics and optimize team dynamics
 """
-    
+
     # Save to team structure file
     agor_dir = Path(".agor")
     agor_dir.mkdir(exist_ok=True)
     team_file = agor_dir / "team-structure.md"
     team_file.write_text(team_details)
-    
+
     # Create team coordination files
     _create_team_coordination_files(team_size, project_type, project_description)
-    
+
     # Create individual agent memory files
     _create_agent_memory_files(team_size, project_type)
-    
+
     return f"""✅ Team Created Successfully
 
 **Project**: {project_description}
@@ -125,7 +129,7 @@ TEAM_METRICS: [velocity] - [quality] - [collaboration-score] - [timestamp]
 
 def _generate_team_structure(team_size: int, project_type: str, complexity: str) -> str:
     """Generate team structure based on size and project type."""
-    
+
     if team_size <= 3:
         return _generate_small_team_structure(team_size, project_type)
     elif team_size <= 6:
@@ -410,7 +414,7 @@ def _generate_large_team_structure(team_size: int, project_type: str) -> str:
 
 def _generate_role_assignments(team_size: int, project_type: str) -> str:
     """Generate detailed role assignments and responsibilities."""
-    return f"""
+    return """
 ### Detailed Role Assignments
 
 #### Role Definition Framework:
@@ -529,10 +533,12 @@ def _generate_performance_framework(team_size: int) -> str:
 """
 
 
-def _create_team_coordination_files(team_size: int, project_type: str, project_description: str):
+def _create_team_coordination_files(
+    team_size: int, project_type: str, project_description: str
+):
     """Create team coordination files."""
     agor_dir = Path(".agor")
-    
+
     # Team coordination file
     coordination_file = agor_dir / "team-coordination.md"
     coordination_content = f"""# Team Coordination
@@ -604,7 +610,7 @@ TEAM_DECISION: [decision] - [rationale] - [affected-agents] - [timestamp]
 - [Team strengths will be documented as they emerge]
 """
     coordination_file.write_text(coordination_content)
-    
+
     # Team standup file
     standup_file = agor_dir / "team-standup.md"
     standup_content = f"""# Daily Team Standup
@@ -645,7 +651,7 @@ TEAM_DECISION: [decision] - [rationale] - [affected-agents] - [timestamp]
 - **Action Items Created**: 0
 """
     standup_file.write_text(standup_content)
-    
+
     # Team decisions file
     decisions_file = agor_dir / "team-decisions.md"
     decisions_content = f"""# Team Decisions Log
@@ -718,14 +724,14 @@ TEAM_DECISION: [decision] - [rationale] - [affected-agents] - [timestamp]
 def _create_agent_memory_files(team_size: int, project_type: str):
     """Create individual agent memory files."""
     agor_dir = Path(".agor")
-    
+
     for i in range(1, team_size + 1):
         agent_id = f"agent{i}"
         memory_file = agor_dir / f"{agent_id}-memory.md"
-        
+
         # Determine role based on team size and position
         role = _get_agent_role(i, team_size, project_type)
-        
+
         memory_content = f"""# {agent_id.upper()} Memory File
 
 ## Agent Information
@@ -792,17 +798,47 @@ def _get_agent_role(agent_number: int, team_size: int, project_type: str) -> str
         roles = ["Lead Developer", "Full-Stack Developer", "QA/DevOps Engineer"]
     elif team_size <= 6:
         if project_type == "api":
-            roles = ["Technical Lead", "Backend Developer", "Database Engineer", "Security Engineer", "QA Engineer", "DevOps Engineer"]
+            roles = [
+                "Technical Lead",
+                "Backend Developer",
+                "Database Engineer",
+                "Security Engineer",
+                "QA Engineer",
+                "DevOps Engineer",
+            ]
         elif project_type == "web_app":
-            roles = ["Technical Lead", "Frontend Lead", "Backend Lead", "Full-Stack Developer", "QA Engineer", "DevOps Engineer"]
+            roles = [
+                "Technical Lead",
+                "Frontend Lead",
+                "Backend Lead",
+                "Full-Stack Developer",
+                "QA Engineer",
+                "DevOps Engineer",
+            ]
         else:
-            roles = ["Project Lead", "Senior Developer", "Developer", "Specialist", "QA Engineer", "Support Engineer"]
+            roles = [
+                "Project Lead",
+                "Senior Developer",
+                "Developer",
+                "Specialist",
+                "QA Engineer",
+                "Support Engineer",
+            ]
     else:
-        roles = ["Project Manager", "Technical Architect", "Frontend Lead", "Frontend Developer", "Backend Lead", "Backend Developer", "QA Lead", "DevOps Engineer"]
+        roles = [
+            "Project Manager",
+            "Technical Architect",
+            "Frontend Lead",
+            "Frontend Developer",
+            "Backend Lead",
+            "Backend Developer",
+            "QA Lead",
+            "DevOps Engineer",
+        ]
         # Extend roles if team is larger
         while len(roles) < team_size:
             roles.append(f"Developer {len(roles) - 6}")
-    
+
     return roles[min(agent_number - 1, len(roles) - 1)]
 
 
@@ -856,15 +892,18 @@ def _get_role_responsibilities(role: str, project_type: str) -> str:
 - **Stakeholder Communication**: Communicate with stakeholders and clients
 - **Resource Management**: Manage team resources and allocation
 - **Risk Management**: Identify and mitigate project risks
-"""
+""",
     }
-    
-    return responsibilities.get(role, f"""
+
+    return responsibilities.get(
+        role,
+        f"""
 - **Primary Responsibilities**: [Role-specific responsibilities for {role}]
 - **Secondary Responsibilities**: [Supporting duties and backup coverage]
 - **Collaboration**: [Key collaboration points with other team members]
 - **Decision Authority**: [Areas where this role has decision-making authority]
-""")
+""",
+    )
 
 
 def _get_team_summary(team_size: int, project_type: str, complexity: str) -> str:

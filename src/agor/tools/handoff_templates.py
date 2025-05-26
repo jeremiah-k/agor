@@ -72,7 +72,7 @@ def get_agor_version() -> str:
         import pkg_resources
 
         return pkg_resources.get_distribution("agor").version
-    except:
+    except Exception:
         try:
             # Try to get version from git tag
             version = subprocess.check_output(

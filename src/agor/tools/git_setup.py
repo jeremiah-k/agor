@@ -118,7 +118,7 @@ def get_repo_info():
             repo_name = os.path.basename(repo_root)
             current_branch = run_command("git branch --show-current", check=False)
             return repo_name, current_branch
-    except:
+    except Exception:
         pass
     return None, None
 

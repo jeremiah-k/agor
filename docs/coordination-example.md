@@ -23,6 +23,7 @@ print(result)
 ```
 
 **Output**:
+
 ```
 ✅ Parallel Divergent Strategy Initialized
 
@@ -54,7 +55,8 @@ print(guidance)
 ```
 
 **Output**:
-```
+
+````
 # 🤖 AGOR Agent Coordination
 
 ## Status: Strategy Active
@@ -82,7 +84,7 @@ cat .agor/agentconvo.md | tail -10
 
 # Check your memory file
 cat .agor/agent1-memory.md
-```
+````
 
 ### Step 3: Agent Execution
 
@@ -100,27 +102,34 @@ cat .agor/agent1-memory.md
 ```
 
 **Memory file content**:
+
 ```markdown
 # AGENT1 Memory Log
 
 ## Current Task
+
 [Describe the task you're working on]
 
 ## My Approach
+
 [Describe your unique approach to solving this problem]
 
 ## Decisions Made
+
 - [Key architectural choices]
 - [Implementation approaches]
 - [Technology decisions]
 
 ## Files Modified
+
 - [List of changed files with brief description]
 
 ## Problems Encountered
+
 - [Issues hit and how resolved]
 
 ## Next Steps
+
 - [ ] Planning complete
 - [ ] Core implementation
 - [ ] Testing complete
@@ -128,11 +137,13 @@ cat .agor/agent1-memory.md
 - [ ] Ready for review
 
 ## Notes for Review
+
 - [Important points for peer review phase]
 - [Innovative approaches used]
 - [Potential improvements]
 
 ## Status
+
 Current: Working on independent solution
 Phase: 1 - Divergent Execution
 ```
@@ -162,6 +173,7 @@ if transition == "transition_to_convergent":
 ```
 
 **Output**:
+
 ```
 ✅ Phase Transition Complete
 
@@ -180,22 +192,27 @@ Phase 2 is now active!
 ## Key Benefits
 
 ### 1. **Concrete Actions**
+
 - **Before**: "Work independently then peer review" (vague)
 - **After**: "Post to agentconvo.md: 'agent1: [timestamp] - CLAIMING ASSIGNMENT'" (specific)
 
 ### 2. **Automatic Coordination**
+
 - **Before**: Manual coordination and confusion about phase transitions
 - **After**: Automatic detection when all agents complete, automatic phase transition
 
 ### 3. **File Management**
+
 - **Before**: Agents unsure what files to create or check
 - **After**: Specific files created with templates, clear file structure
 
 ### 4. **State Tracking**
+
 - **Before**: No way to know current strategy state
 - **After**: `check_strategy_status()` shows current phase, recent activity, next actions
 
 ### 5. **Role Clarity**
+
 - **Before**: Generic "agent" role
 - **After**: Specific roles (divergent_worker, reviewer, synthesizer) with clear responsibilities
 
@@ -225,6 +242,7 @@ The new protocols **extend** rather than **replace** existing AGOR functionality
 ## Comparison: Before vs After
 
 ### Before (Documentation Only)
+
 ```
 Agent: "What should I do?"
 AGOR: "Use Parallel Divergent strategy"
@@ -235,6 +253,7 @@ AGOR: [No concrete answer]
 ```
 
 ### After (Implementation Protocols)
+
 ```python
 # Agent discovers role
 guidance = discover_my_role("agent1")

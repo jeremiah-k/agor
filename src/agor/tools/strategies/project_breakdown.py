@@ -7,16 +7,17 @@ based on project type, complexity, and team size.
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
-def project_breakdown(task_description: str, complexity: str = "medium", project_type: str = "auto") -> str:
+def project_breakdown(
+    task_description: str, complexity: str = "medium", project_type: str = "auto"
+) -> str:
     """Break down project into manageable tasks with agent assignments (bp hotkey)."""
-    
+
     # Auto-detect project type if not specified
     if project_type == "auto":
         project_type = _detect_project_type(task_description)
-    
+
     # Generate project breakdown based on type and complexity
     breakdown_details = f"""
 ## PROJECT BREAKDOWN IMPLEMENTATION
@@ -72,16 +73,16 @@ TASK_COMPLETED: [agent-id] - [task-name] - [deliverables] - [timestamp]
 4. **Monitor Progress**: Track task completion and adjust as needed
 5. **Quality Validation**: Ensure quality gates are met at each milestone
 """
-    
+
     # Save to project breakdown file
     agor_dir = Path(".agor")
     agor_dir.mkdir(exist_ok=True)
     breakdown_file = agor_dir / "project-breakdown.md"
     breakdown_file.write_text(breakdown_details)
-    
+
     # Create coordination files
     _create_task_coordination_files(task_description, project_type, complexity)
-    
+
     return f"""✅ Project Breakdown Complete
 
 **Project**: {task_description}
@@ -114,39 +115,67 @@ TASK_COMPLETED: [agent-id] - [task-name] - [deliverables] - [timestamp]
 def _detect_project_type(task_description: str) -> str:
     """Auto-detect project type from task description."""
     task_lower = task_description.lower()
-    
+
     # API/Backend detection
-    if any(word in task_lower for word in ["api", "backend", "service", "endpoint", "database", "server"]):
+    if any(
+        word in task_lower
+        for word in ["api", "backend", "service", "endpoint", "database", "server"]
+    ):
         return "api"
-    
+
     # Frontend detection
-    elif any(word in task_lower for word in ["frontend", "ui", "interface", "react", "vue", "angular", "website"]):
+    elif any(
+        word in task_lower
+        for word in [
+            "frontend",
+            "ui",
+            "interface",
+            "react",
+            "vue",
+            "angular",
+            "website",
+        ]
+    ):
         return "frontend"
-    
+
     # Full-stack detection
-    elif any(word in task_lower for word in ["fullstack", "full-stack", "web app", "application", "platform"]):
+    elif any(
+        word in task_lower
+        for word in ["fullstack", "full-stack", "web app", "application", "platform"]
+    ):
         return "web_app"
-    
+
     # Mobile detection
-    elif any(word in task_lower for word in ["mobile", "ios", "android", "app", "flutter", "react native"]):
+    elif any(
+        word in task_lower
+        for word in ["mobile", "ios", "android", "app", "flutter", "react native"]
+    ):
         return "mobile"
-    
+
     # Data/Analytics detection
-    elif any(word in task_lower for word in ["data", "analytics", "ml", "ai", "machine learning", "analysis"]):
+    elif any(
+        word in task_lower
+        for word in ["data", "analytics", "ml", "ai", "machine learning", "analysis"]
+    ):
         return "data"
-    
+
     # Security detection
-    elif any(word in task_lower for word in ["security", "auth", "authentication", "encryption", "secure"]):
+    elif any(
+        word in task_lower
+        for word in ["security", "auth", "authentication", "encryption", "secure"]
+    ):
         return "security"
-    
+
     # Default to generic
     else:
         return "generic"
 
 
-def _generate_task_breakdown(task_description: str, project_type: str, complexity: str) -> str:
+def _generate_task_breakdown(
+    task_description: str, project_type: str, complexity: str
+) -> str:
     """Generate task breakdown based on project characteristics."""
-    
+
     if project_type == "api":
         return _generate_api_task_breakdown(complexity)
     elif project_type == "frontend":
@@ -213,7 +242,7 @@ def _generate_api_task_breakdown(complexity: str) -> str:
    - Security vulnerability testing
    - Documentation validation
 """
-    
+
     if complexity == "complex":
         base_tasks += """
 
@@ -230,7 +259,7 @@ def _generate_api_task_breakdown(complexity: str) -> str:
    - Create alerting system
    - Optimize for high availability
 """
-    
+
     return base_tasks
 
 
@@ -647,7 +676,7 @@ def _generate_quality_checkpoints(complexity: str) -> str:
 - Documentation complete
 - Launch criteria met
 """
-    
+
     if complexity == "complex":
         base_checkpoints += """
 
@@ -657,7 +686,7 @@ def _generate_quality_checkpoints(complexity: str) -> str:
 - Performance optimization verified
 - Advanced security measures validated
 """
-    
+
     return base_checkpoints
 
 
@@ -751,10 +780,12 @@ def _generate_implementation_roadmap(project_type: str, complexity: str) -> str:
 """
 
 
-def _create_task_coordination_files(task_description: str, project_type: str, complexity: str):
+def _create_task_coordination_files(
+    task_description: str, project_type: str, complexity: str
+):
     """Create task coordination files."""
     agor_dir = Path(".agor")
-    
+
     # Task breakdown file
     task_breakdown_file = agor_dir / "task-breakdown.md"
     task_breakdown_content = f"""# Task Breakdown
@@ -806,7 +837,7 @@ TASK_COMPLETED: [agent-id] - [task-name] - [deliverables] - [timestamp]
 ```
 """
     task_breakdown_file.write_text(task_breakdown_content)
-    
+
     # Task dependencies file
     dependencies_file = agor_dir / "task-dependencies.md"
     dependencies_content = f"""# Task Dependencies
@@ -850,7 +881,7 @@ TASK_COMPLETED: [agent-id] - [task-name] - [deliverables] - [timestamp]
 - [Dependencies that have been satisfied]
 """
     dependencies_file.write_text(dependencies_content)
-    
+
     # Task progress file
     progress_file = agor_dir / "task-progress.md"
     progress_content = f"""# Task Progress Dashboard

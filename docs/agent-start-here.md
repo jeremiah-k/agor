@@ -11,6 +11,7 @@ print(discover_my_role("agent1"))  # Replace with your agent ID
 ```
 
 This will tell you:
+
 - What strategy is active (if any)
 - Your role in the current strategy
 - Concrete next actions to take
@@ -21,6 +22,7 @@ This will tell you:
 **Check the [Documentation Index](index.md)** - it's designed for token-efficient lookup:
 
 ### Common Needs:
+
 - **"What should I do?"** → Use `discover_my_role()` above
 - **"How do I start a strategy?"** → [Strategy Implementation](index.md#i-need-to-implementexecute-a-strategy)
 - **"How do I coordinate with other agents?"** → [Multi-agent Coordination](index.md#i-need-multi-agent-coordination-strategies)
@@ -30,6 +32,7 @@ This will tell you:
 ## 🔄 Strategy Quick Start
 
 ### Initialize a Strategy:
+
 ```python
 # Parallel Divergent (multiple independent solutions)
 from agor.tools.strategy_protocols import initialize_parallel_divergent
@@ -46,6 +49,7 @@ result = initialize_swarm("user system", tasks, agent_count=4)
 ```
 
 ### Check Current Status:
+
 ```python
 from agor.tools.agent_coordination import check_strategy_status
 print(check_strategy_status())

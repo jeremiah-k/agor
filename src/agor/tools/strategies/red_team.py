@@ -1,7 +1,7 @@
 """
 Red Team Strategy Implementation for AGOR.
 
-This strategy involves adversarial testing with a blue team (builders) and 
+This strategy involves adversarial testing with a blue team (builders) and
 red team (attackers) working in cycles to create secure, battle-tested code.
 """
 
@@ -27,7 +27,7 @@ class StrategyProtocol:
         # Create essential coordination files if they don't exist
         essential_files = {
             "agentconvo.md": "# Agent Communication Log\n\n",
-            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n"
+            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n",
         }
 
         for filename, default_content in essential_files.items():
@@ -48,12 +48,14 @@ class StrategyProtocol:
 class RedTeamProtocol(StrategyProtocol):
     """Implementation protocol for Red Team strategy."""
 
-    def initialize_strategy(self, task: str, blue_team_size: int = 3, red_team_size: int = 3) -> str:
+    def initialize_strategy(
+        self, task: str, blue_team_size: int = 3, red_team_size: int = 3
+    ) -> str:
         """Initialize Red Team strategy with adversarial testing."""
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_red_team_strategy()
-        
+
         # Add concrete implementation details
         implementation_details = f"""
 ## RED TEAM IMPLEMENTATION PROTOCOL
@@ -128,27 +130,39 @@ When blue team signals completion, red team attack phase begins automatically.
         """Generate blue team assignments."""
         assignments = []
         for i in range(1, team_size + 1):
-            assignments.append(f"""
+            assignments.append(
+                f"""
 - **Blue Agent {i}**: Security-focused implementation of {task}
   - Branch: `blue-solution-{i}`
   - Focus: Secure coding practices and vulnerability prevention
-""")
+"""
+            )
         return "\n".join(assignments)
 
     def _generate_red_team_assignments(self, team_size: int, task: str) -> str:
         """Generate red team assignments."""
         assignments = []
-        attack_types = ["injection", "authentication", "authorization", "data-validation", "session-management"]
+        attack_types = [
+            "injection",
+            "authentication",
+            "authorization",
+            "data-validation",
+            "session-management",
+        ]
         for i in range(1, team_size + 1):
-            attack_focus = attack_types[(i-1) % len(attack_types)]
-            assignments.append(f"""
+            attack_focus = attack_types[(i - 1) % len(attack_types)]
+            assignments.append(
+                f"""
 - **Red Agent {i}**: Attack specialist for {task}
   - Focus: {attack_focus} vulnerabilities
   - Goal: Find and exploit security weaknesses
-""")
+"""
+            )
         return "\n".join(assignments)
 
-    def _generate_red_team_instructions(self, blue_size: int, red_size: int, task: str) -> str:
+    def _generate_red_team_instructions(
+        self, blue_size: int, red_size: int, task: str
+    ) -> str:
         """Generate detailed red team instructions."""
         return f"""
 ## DETAILED INSTRUCTIONS
@@ -239,7 +253,9 @@ Cycle 1 - Attack Preparation
         red_memory.write_text(red_content)
 
 
-def initialize_red_team(task: str, blue_team_size: int = 3, red_team_size: int = 3) -> str:
+def initialize_red_team(
+    task: str, blue_team_size: int = 3, red_team_size: int = 3
+) -> str:
     """Initialize Red Team strategy."""
     protocol = RedTeamProtocol()
     return protocol.initialize_strategy(task, blue_team_size, red_team_size)

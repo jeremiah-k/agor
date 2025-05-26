@@ -27,7 +27,7 @@ class StrategyProtocol:
         # Create essential coordination files if they don't exist
         essential_files = {
             "agentconvo.md": "# Agent Communication Log\n\n",
-            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n"
+            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n",
         }
 
         for filename, default_content in essential_files.items():
@@ -50,10 +50,10 @@ class MobProgrammingProtocol(StrategyProtocol):
 
     def initialize_strategy(self, task: str, agent_count: int = 4) -> str:
         """Initialize Mob Programming strategy with role rotation."""
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_mob_programming_strategy()
-        
+
         # Add concrete implementation details
         implementation_details = f"""
 ## MOB PROGRAMMING IMPLEMENTATION PROTOCOL
@@ -122,7 +122,9 @@ MOB_SESSION_END: [session-number] - [progress] - [next-session-plan] - [timestam
         self._create_mob_coordination_files(agent_count)
 
         # Log strategy initialization
-        self.log_communication("COORDINATOR", f"Initialized Mob Programming strategy: {task}")
+        self.log_communication(
+            "COORDINATOR", f"Initialized Mob Programming strategy: {task}"
+        )
 
         return f"""✅ Mob Programming Strategy Initialized
 
@@ -151,12 +153,18 @@ MOB_SESSION_END: [session-number] - [progress] - [next-session-plan] - [timestam
     def _generate_mob_roles(self, agent_count: int) -> str:
         """Generate current mob role assignments."""
         roles = []
-        roles.append("- **Driver**: Agent1 - Controls keyboard, implements navigator's instructions")
-        roles.append("- **Navigator**: Agent2 - Provides strategic direction and detailed instructions")
-        
+        roles.append(
+            "- **Driver**: Agent1 - Controls keyboard, implements navigator's instructions"
+        )
+        roles.append(
+            "- **Navigator**: Agent2 - Provides strategic direction and detailed instructions"
+        )
+
         for i in range(3, agent_count + 1):
-            roles.append(f"- **Mob Member**: Agent{i} - Actively participates, provides ideas and feedback")
-        
+            roles.append(
+                f"- **Mob Member**: Agent{i} - Actively participates, provides ideas and feedback"
+            )
+
         return "\n".join(roles)
 
     def _generate_rotation_schedule(self, agent_count: int) -> str:
@@ -165,14 +173,18 @@ MOB_SESSION_END: [session-number] - [progress] - [next-session-plan] - [timestam
         for session in range(1, 5):  # Show first 4 rotations
             driver_idx = ((session - 1) % agent_count) + 1
             navigator_idx = (session % agent_count) + 1
-            schedule.append(f"**Session {session}**: Driver=Agent{driver_idx}, Navigator=Agent{navigator_idx}")
-        
-        schedule.append("**Pattern continues**: Each agent rotates through driver and navigator roles")
+            schedule.append(
+                f"**Session {session}**: Driver=Agent{driver_idx}, Navigator=Agent{navigator_idx}"
+            )
+
+        schedule.append(
+            "**Pattern continues**: Each agent rotates through driver and navigator roles"
+        )
         return "\n".join(schedule)
 
     def _generate_mob_instructions(self, agent_count: int, task: str) -> str:
         """Generate detailed mob programming instructions."""
-        return f"""
+        return """
 ## DETAILED MOB INSTRUCTIONS
 
 ### Session Structure (15 minutes each):
