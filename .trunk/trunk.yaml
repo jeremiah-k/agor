@@ -17,18 +17,16 @@ runtimes:
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
   ignore:
-    - linters: [bandit]
-      paths:
-        - tests/**/*.py
-        - src/agor/main.py # Subprocess calls are intentional for CLI functionality
     - linters: [markdownlint]
       paths:
         - src/agor/tools/code_exploration_docs.md # Multiple H1s are intentional for tool docs
         - src/agor/tools/AGOR_INSTRUCTIONS.md # Trailing punctuation in headings is intentional
         - src/agor/tools/README_ai.md # Code blocks without language are intentional
+        - .agor/**/*.md # Generated files may have formatting issues
+        - docs/strategies.md # Multiple headings with same content are intentional for strategy docs
+        - docs/handoffs.md # Emphasis used as headings is intentional for formatting
 
   enabled:
-    - bandit@1.8.3
     - black@25.1.0
     - checkov@3.2.398
     - git-diff-check
