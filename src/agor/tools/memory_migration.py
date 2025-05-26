@@ -354,9 +354,16 @@ class MemoryMigrationManager:
             return None
 
     def _extract_agent_id(self, filename: str) -> Optional[str]:
-        """Extract agent ID from filename like 'agent1-memory.md'."""
-        match = re.match(r'(agent\d+)-memory\.md', filename)
-        return match.group(1) if match else None
+        """Extract agent ID from filename like 'agent1-memory.md' or 'agent-1-memory.md'."""
+        # Handle both agent1-memory.md and agent-1-memory.md formats
+        match = re.match(r'(agent-?\d+)-memory\.md', filename)
+        if match:
+            agent_id = match.group(1)
+            # Normalize to agent-N format
+            if not agent_id.startswith('agent-'):
+                agent_id = agent_id.replace('agent', 'agent-')
+            return agent_id
+        return None
 
     def _map_section_to_memory_type(self, section_title: str) -> Optional[str]:
         """Map markdown section title to memory type."""
@@ -453,7 +460,7 @@ class MemoryMigrationManager:
         for log in coord_logs:
             timestamp = log["created_at"]
             from_agent = log["from_agent"]
-            message = log["message"]
+            message = log["content"]  # SQLite uses 'content' field
             content.append(f"[{from_agent}] [{timestamp}] - {message}")
 
         return "\n".join(content)
@@ -464,7 +471,7 @@ class MemoryMigrationManager:
         for log in coord_logs:
             timestamp = log["created_at"]
             from_agent = log["from_agent"]
-            message = log["message"]
+            message = log["content"]  # SQLite uses 'content' field
             entries.append(f"[{from_agent}] [{timestamp}] - {message}")
 
         return "\n".join(entries)
@@ -478,22 +485,41 @@ class MemoryMigrationManager:
         # Map project state fields to markdown sections
         if "task" in project_state:
             content.append("## Task")
-            content.append(project_state["task"])
+            content.append(str(project_state["task"]))
             content.append("")
 
         if "team_configuration" in project_state:
             content.append("## Team Configuration")
-            content.append(project_state["team_configuration"])
+            team_config = project_state["team_configuration"]
+            if isinstance(team_config, dict):
+                content.append(json.dumps(team_config, indent=2))
+            else:
+                content.append(str(team_config))
             content.append("")
 
         if "key_decisions" in project_state:
             content.append("## Key Decisions")
-            content.append(project_state["key_decisions"])
+            decisions = project_state["key_decisions"]
+            if isinstance(decisions, list):
+                for decision in decisions:
+                    content.append(f"- {decision}")
+            else:
+                content.append(str(decisions))
             content.append("")
 
         if "current_state" in project_state:
             content.append("## Current State")
-            content.append(project_state["current_state"])
+            content.append(str(project_state["current_state"]))
+            content.append("")
+
+        # Add any other fields as JSON
+        other_fields = {k: v for k, v in project_state.items()
+                       if k not in ["task", "team_configuration", "key_decisions", "current_state", "source", "migrated_at"]}
+        if other_fields:
+            content.append("## Additional Data")
+            content.append("```json")
+            content.append(json.dumps(other_fields, indent=2))
+            content.append("```")
             content.append("")
 
         return "\n".join(content)
