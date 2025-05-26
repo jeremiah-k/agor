@@ -400,10 +400,146 @@ def update_handoff_index(filename: str, problem_summary: str, status: str):
     index_file.write_text(content)
 
 
+def generate_completion_report(
+    original_task: str,
+    work_completed: List[str],
+    commits_made: List[str],
+    final_status: str,
+    files_modified: List[str],
+    results_summary: str,
+    agent_role: str,
+    coordinator_id: str,
+    issues_encountered: str = "None",
+    recommendations: str = "None",
+) -> str:
+    """Generate a completion report document to return to coordinator."""
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    git_context = get_git_context()
+    agor_version = get_agor_version()
+
+    return f"""# 🏁 Task Completion Report
+
+**Generated**: {timestamp}
+**From Agent Role**: {agent_role}
+**To Coordinator**: {coordinator_id}
+**AGOR Version**: {agor_version}
+**Task Status**: {final_status}
+
+## 🎯 Original Task
+
+{original_task}
+
+## ✅ Work Completed
+
+{chr(10).join(f"- {item}" for item in work_completed)}
+
+## 📝 Commits Made
+
+{chr(10).join(f"- `{commit}`" for commit in commits_made)}
+
+## 📊 Results Summary
+
+{results_summary}
+
+## 📁 Files Modified
+
+{chr(10).join(f"- `{file}`" for file in files_modified)}
+
+## 🔧 Technical Context
+
+### Git Repository State
+**Branch**: `{git_context['branch']}`
+**Current Commit**: `{git_context['current_commit']}`
+**Repository Status**: {'Clean' if not git_context['status'] else 'Has uncommitted changes'}
+
+### Recent Commit History
+```
+{git_context['recent_commits']}
+```
+
+## ⚠️ Issues Encountered
+
+{issues_encountered}
+
+## 💡 Recommendations
+
+{recommendations}
+
+## 🔄 Next Steps for Coordinator
+
+1. **Review Results**: Examine all completed work and commits
+2. **Verify Quality**: Test functionality and review code changes
+3. **Integration**: Merge changes if satisfactory
+4. **Documentation**: Update project documentation if needed
+5. **Assignment**: Assign next tasks or close this work stream
+
+## 📝 Coordinator Instructions
+
+### 1. Verification Steps
+```bash
+# Verify you're on the correct branch
+git checkout {git_context['branch']}
+
+# Review recent commits
+git log --oneline -10
+
+# Check current status
+git status
+
+# Review modified files
+{chr(10).join(f"# Examine {file}" for file in files_modified[:3])}
+```
+
+### 2. Quality Assurance
+- [ ] Review all commits for quality and completeness
+- [ ] Test functionality if applicable
+- [ ] Verify task requirements were met
+- [ ] Check for any technical debt or issues
+- [ ] Confirm documentation is updated
+
+### 3. Communication Protocol
+Update `.agor/agentconvo.md` with completion acknowledgment:
+```
+[COORDINATOR-ID] [{timestamp}] - TASK COMPLETED: {original_task[:50]}... - Status: {final_status}
+```
+
+### 4. Project Coordination
+- [ ] Mark task as complete in project tracking
+- [ ] Update team on completion status
+- [ ] Assign follow-up tasks if needed
+- [ ] Archive this handoff document
+
+---
+
+**Task Complete**: This completion report is ready for coordinator review and integration.
+"""
+
+
+def save_completion_report(report_content: str, task_summary: str, coordinator_id: str) -> Path:
+    """Save completion report document for coordinator review."""
+
+    handoff_dir = create_handoff_directory()
+
+    # Generate filename with timestamp and task summary
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    safe_summary = "".join(c for c in task_summary if c.isalnum() or c in "-_")[:30]
+    filename = f"{timestamp}_COMPLETED_{safe_summary}.md"
+
+    report_file = handoff_dir / filename
+    report_file.write_text(report_content)
+
+    # Update index
+    update_handoff_index(filename, f"COMPLETED: {task_summary}", "completed")
+
+    return report_file
+
+
 # Hotkey integration templates
 HANDOFF_HOTKEY_HELP = """
-🤝 **Handoff Commands:**
-handoff) create handoff document for another agent
-receive) receive handoff from another agent
-handoffs) list all handoff documents
+🤝 **Coordination Commands:**
+handoff) create work order for another agent
+receive) receive work order from another agent
+complete) create completion report for coordinator
+handoffs) list all coordination documents
 """

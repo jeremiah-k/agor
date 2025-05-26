@@ -44,26 +44,63 @@ If no captured configuration is available, you can:
 
 **This ensures proper commit attribution for all development work.**
 
-## 📝 AGENT MANIFEST
+## 📦 BUNDLE CONTENTS (What's Actually Included)
 
-**Check for bundled manifest first**: Look for `/tmp/agor_tools/AGENT_MANIFEST.md`
-
-If available, this manifest contains:
-
-- Git configuration captured during bundle creation
-- Available tools and their descriptions
-- Quick start commands specific to this bundle
-- Environment information and setup instructions
+**REALITY CHECK**: AGOR bundles do NOT include setup manifests. Here's what's actually in bundles:
 
 ```bash
-# Read the manifest if available
-cat /tmp/agor_tools/AGENT_MANIFEST.md
-
-# Or check the JSON version
-cat /tmp/agor_tools/agent_manifest.json
+# Bundle structure
+project/          # Your cloned repository
+agor_tools/       # AGOR coordination tools
+├── README_ai.md  # This file - agent instructions
+├── strategies/   # Multi-agent strategy modules
+├── *.py         # Coordination scripts and templates
+└── git          # Portable git binary
 ```
 
-**For standalone mode**: Request the agent manifest from the developer using `agor agent-manifest`
+**No setup manifests**: Bundles contain tools and instructions, not configuration manifests
+
+## 🤝 AGENT COORDINATION
+
+**CRITICAL**: Agent coordination uses **work orders** and **completion reports**.
+
+### 📝 Coordination System
+
+**Purpose**: Structured coordinator-agent communication
+**Location**: `.agor/handoffs/` directory
+**Format**: Structured markdown with git context, progress, and next steps
+
+```bash
+# Check for coordination documents
+ls .agor/handoffs/
+cat .agor/handoffs/index.md
+
+# Read a specific work order
+cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
+```
+
+### 🔄 Work Order & Completion Report Workflow
+
+**CRITICAL**: Agent coordination is a two-way process:
+
+#### 📤 Work Assignment (Coordinator → Agent)
+1. **Creating Work Orders**: Use `handoff` hotkey to generate work order
+2. **Agent Receipt**: Agent uses `receive` hotkey to accept work order
+3. **Communication**: Update `.agor/agentconvo.md` to confirm order receipt
+4. **Work Execution**: Follow next steps outlined in work order
+
+#### 📥 Task Completion (Agent → Coordinator)
+1. **Completion Report**: Use `complete` hotkey to generate completion report
+2. **Results Summary**: Include work completed, commits, issues, recommendations
+3. **Coordinator Review**: Coordinator reviews results and provides feedback
+4. **Integration**: Coordinator decides on integration and next steps
+
+#### 📝 Communication Protocol
+- **All coordination logged in**: `.agor/agentconvo.md`
+- **Work order**: `[COORDINATOR-ID] [timestamp] - WORK ORDER: description`
+- **Order receipt**: `[AGENT-ID] [timestamp] - ORDER RECEIVED: description`
+- **Task completion**: `[AGENT-ID] [timestamp] - TASK COMPLETED: description`
+- **Report review**: `[COORDINATOR-ID] [timestamp] - REPORT REVIEWED: status`
 
 ## CRITICAL INITIALIZATION PROTOCOL
 
