@@ -31,7 +31,7 @@ agor bundle /path/to/local/project
 
 ### Agent Mode (Direct Git Access)
 
-**For Augment Code Remote Agents, Jules by Google, and other git-capable agents paste this into your prompt:**
+**For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
 
 ```bash
 # Clone AGOR to temporary location
@@ -45,9 +45,24 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 **Role-Based Initialization**
 
+AGOR offers three primary roles when agents load the protocol:
+
+**🔹 Single Agent Workflow:**
+- **SOLO DEVELOPER**: Deep codebase analysis and implementation
+
+**🔹 Multi-Agent Workflow:**
 - **PROJECT COORDINATOR**: Strategic planning and team coordination
-- **ANALYST/SOLO DEV**: Deep codebase analysis and implementation
 - **AGENT WORKER**: Task execution and coordination handoffs
+
+## 🔄 Role × Mode Compatibility
+
+| Role | Standalone Mode | Bundled Mode | Best Use Cases |
+|------|----------------|--------------|----------------|
+| **SOLO DEVELOPER** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Solo development, code analysis, feature implementation |
+| **PROJECT COORDINATOR** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Multi-agent planning, strategy design, team coordination |
+| **AGENT WORKER** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Task execution, following coordinator instructions |
+
+> **💡 Key Point**: All roles work in both modes. The difference is **how changes are applied** - direct commits (if access available) vs. copy-paste codeblocks.
 
 **Multi-Agent Strategies**
 
@@ -65,6 +80,29 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 - **Quality gates** and validation checkpoints
 - **Cross-agent coordination** with structured handoff protocols
 
+## 🔄 Operational Modes
+
+**Fork of AgentGrunt** - AGOR is a fork of AgentGrunt that retains all of its capabilities, replacing patch downloads with full file output in codeblocks (preserving comments, formatting, etc.).
+
+### 🚀 Standalone Mode (Direct Git Access)
+
+**For agents with repository access** (Augment Code Remote Agents, Jules by Google, etc.)
+
+- **Direct commits**: Agents can make commits directly if they have commit access
+- **Fallback method**: Copy-paste codeblocks if no commit access
+- **Full git operations**: Branch creation, merging, pull requests
+- **Real-time collaboration**: Multiple agents working on live repositories
+- **No file size limits**: Complete repository access
+
+### 📦 Bundled Mode (Upload-Based Platforms)
+
+**For upload-based platforms** (Google AI Studio, ChatGPT, etc.)
+
+- **Copy-paste workflow**: Users manually copy edited files from agent output
+- **Manual commits**: Users handle git operations themselves
+- **Platform flexibility**: Works with any AI platform that accepts file uploads
+- **Free tier compatible**: Excellent for Google AI Studio Pro (free)
+
 ## 📊 Hotkey Interface
 
 **Strategic Planning**: `sp` strategic plan | `bp` break down project | `ar` architecture review
@@ -76,12 +114,17 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 ## 🏢 Platform Support
 
-**✅ Successfully Tested Platforms**
+**✅ Bundled Mode Platforms**
 
-- **Google AI Studio Pro** (Function Calling enabled, use `.zip` format)
+- **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - *Free tier available*
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
+- **Other upload-based platforms** (use appropriate format)
+
+**✅ Standalone Mode Platforms**
+
 - **Augment Code Remote Agents** (direct git access)
 - **Jules by Google** (direct git access)
+- **Any AI agent with git and shell access**
 
 **Bundle Formats**
 
@@ -124,6 +167,7 @@ agor bundle repo -f zip                     # Google AI Studio format
 
 ## 📚 Documentation
 
+**[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
 **[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
 **[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
 **[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup

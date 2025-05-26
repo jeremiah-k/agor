@@ -46,17 +46,21 @@ agor bundle /path/to/your/project --sqlite
 
 The AI will ask you to choose your primary role:
 
-**a) 📋 PROJECT COORDINATOR** - Plan and coordinate multi-agent development
+**🔹 Single Agent Mode:**
 
-- Focus on strategic planning and team coordination
-- Emphasizes planning tools and multi-agent strategies
-- Best for: Project planning, team design, workflow orchestration
-
-**b) 🔍 ANALYST/SOLO DEV** - Analyze, edit, and answer questions about the codebase
+**a) 🔍 SOLO DEVELOPER** - Analyze, edit, and answer questions about the codebase
 
 - Focus on detailed codebase analysis and direct code work
 - Emphasizes code exploration tools and editing capabilities
 - Best for: Code review, debugging, implementation, technical analysis, solo development
+
+**🔹 Multi-Agent Mode:**
+
+**b) 📋 PROJECT COORDINATOR** - Plan and coordinate multi-agent development
+
+- Focus on strategic planning and team coordination
+- Emphasizes planning tools and multi-agent strategies
+- Best for: Project planning, team design, workflow orchestration
 
 **c) 🤖 AGENT WORKER** - Ready to receive specific tasks from project coordinator
 

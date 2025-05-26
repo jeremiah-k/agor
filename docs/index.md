@@ -7,6 +7,7 @@
 ### "I need to get started with AGOR"
 
 - **[docs/agent-start-here.md](agent-start-here.md)** - **START HERE** - Agent entry point with immediate guidance
+- **[docs/usage-guide.md](usage-guide.md)** - **COMPREHENSIVE GUIDE** - Complete overview of modes, roles, and workflows
 - **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
 - **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
@@ -14,7 +15,7 @@
 ### "I need to understand roles and initialization"
 
 - **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** - Complete AI protocol (563 lines)
-  - Lines 18-40: Role selection (PROJECT COORDINATOR, ANALYST/SOLO DEV, AGENT WORKER)
+  - Lines 18-40: Role selection (SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER)
   - Lines 120-220: Role-specific hotkey menus
   - Lines 450-550: Handoff procedures and meta-development
 

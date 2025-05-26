@@ -18,14 +18,14 @@ AGOR's handoff system solves this by capturing **complete context** in a structu
 ### 1. Role Switching
 
 ```
-PROJECT COORDINATOR → ANALYST/SOLO DEV
+PROJECT COORDINATOR → SOLO DEVELOPER
 "I've planned the architecture, now I need someone to implement it"
 ```
 
 ### 2. Specialization Handoff
 
 ```
-ANALYST/SOLO DEV → AGENT WORKER (Security Specialist)
+SOLO DEVELOPER → AGENT WORKER (Security Specialist)
 "I've built the feature, now I need security review and hardening"
 ```
 

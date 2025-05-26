@@ -4,6 +4,8 @@
 
 **Agent Mode** is for AI agents with direct git access (Augment Code, Jules by Google, etc.)
 
+> **🔄 Fork of AgentGrunt**: AGOR is a fork of AgentGrunt that retains all capabilities, replacing patch downloads with full file output in codeblocks. In standalone mode, agents can make direct commits if they have commit access, or use copy-paste codeblocks as fallback.
+
 ### Step 1: Clone AGOR Repository
 
 ```bash
@@ -39,8 +41,10 @@ cat src/agor/tools/README_ai.md
 cd "$MAIN_PROJECT_DIR"
 
 # Ask user to select role:
-# a) PROJECT COORDINATOR - Plan and coordinate multi-agent development
-# b) ANALYST/SOLO DEV - Analyze, edit, and answer questions about the codebase
+# Single Agent Mode:
+# a) SOLO DEVELOPER - Analyze, edit, and answer questions about the codebase
+# Multi-Agent Mode:
+# b) PROJECT COORDINATOR - Plan and coordinate multi-agent development
 # c) AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 # Initialize AGOR coordination in user's project
@@ -93,23 +97,28 @@ You now have access to all AgentOrchestrator capabilities:
 
 ## Agent Mode vs Bundle Mode
 
-**Agent Mode (This Mode) - For AI Agents with Direct Git Access:**
+**Agent Mode (This Mode) - Standalone Operations with Direct Git Access:**
 
 - **No installation required** - just clone the AGOR repository
 - **Direct repository access** - can work with any repository URL
+- **Direct commits** - agents can commit, push, and manage git operations if they have commit access
+- **Fallback method** - copy-paste codeblocks if no commit access
 - **No file size limitations** - full repository access
 - **Can clone multiple repositories** for complex projects
 - **Full git history and branch access**
+- **Real-time collaboration** - multiple agents can work on same repository
 - **Real-time updates** - can pull latest AGOR improvements
-- **For**: Augment Code, Jules by Google, other advanced AI agents
+- **For**: Augment Code Remote Agents, Jules by Google, other advanced AI agents
 
-**Bundle Mode - For Upload-Based AI Platforms:**
+**Bundle Mode - Upload-Based Platforms with Manual Git Operations:**
 
 - **Requires local installation** - user installs AGOR locally
-- **File upload workflow** - user bundles project and uploads .tar.gz
-- **Works with upload-only platforms** like ChatGPT
+- **File upload workflow** - user bundles project and uploads to AI platform
+- **Copy-paste workflow** - agent provides edited files, user manually commits
+- **Works with upload-only platforms** like Google AI Studio, ChatGPT, Claude
 - **Self-contained** - everything bundled in one file
-- **For**: ChatGPT and other AI agents that accept file uploads (.zip/.tar.gz)
+- **Free tier compatible** - excellent for Google AI Studio Pro (free)
+- **For**: Any AI platform that accepts file uploads (.zip/.tar.gz)
 
 ## Usage Examples
 
