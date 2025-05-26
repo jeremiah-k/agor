@@ -44,20 +44,23 @@ This guide ensures consistency, quality, and proper protocol management when dev
   - They perform specific utility functions
   - They are documented in `--help` output
 
-#### 📋 Agent Manifests - TWO DIFFERENT TYPES
+#### 📋 Agent Coordination Documents
 
-**Bundle Manifests** (Setup Information):
-- **File**: `/tmp/agor_tools/AGENT_MANIFEST.md` (in bundles)
-- **Purpose**: Bundle setup and initialization
-- **Contains**: Git config, available tools, quick start commands
-- **Used for**: Agent setup when receiving a bundle
+**REALITY CHECK**: AGOR bundles do NOT include setup manifests. Agent coordination uses handoff documents only.
 
 **Handoff Documents** (Agent Coordination):
 - **Location**: `.agor/handoffs/` directory
 - **Purpose**: Agent-to-agent work transitions with complete context
 - **Contains**: Problem definition, progress, commits, next steps, git context
 - **Used for**: Multi-agent coordination and work handoffs
-- **Implementation**: `handoff_templates.py` (already complete)
+- **Implementation**: `handoff_templates.py` (complete)
+
+**Bundle Contents** (What's Actually in Bundles):
+- **Project files**: Cloned repository with git history
+- **AGOR tools**: `agor_tools/` directory with coordination scripts
+- **Git binary**: Portable git executable for bundle environments
+- **README**: `agor_tools/README_ai.md` with agent instructions
+- **NO MANIFESTS**: Bundles do not contain setup manifests
 
 #### 🏗️ File Structure Understanding
 

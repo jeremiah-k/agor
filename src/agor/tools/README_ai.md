@@ -44,20 +44,21 @@ If no captured configuration is available, you can:
 
 **This ensures proper commit attribution for all development work.**
 
-## 📝 BUNDLE MANIFEST (Setup Information)
+## 📦 BUNDLE CONTENTS (What's Actually Included)
 
-**For bundle mode**: Check for setup manifest in bundle
+**REALITY CHECK**: AGOR bundles do NOT include setup manifests. Here's what's actually in bundles:
 
 ```bash
-# Read the bundle setup manifest
-cat /tmp/agor_tools/AGENT_MANIFEST.md
-
-# Or check the JSON version
-cat /tmp/agor_tools/agent_manifest.json
+# Bundle structure
+project/          # Your cloned repository
+agor_tools/       # AGOR coordination tools
+├── README_ai.md  # This file - agent instructions
+├── strategies/   # Multi-agent strategy modules
+├── *.py         # Coordination scripts and templates
+└── git          # Portable git binary
 ```
 
-**Contains**: Git configuration, available tools, quick start commands, environment info
-**Purpose**: Bundle setup and initialization, NOT agent coordination
+**No setup manifests**: Bundles contain tools and instructions, not configuration manifests
 
 ## 🤝 AGENT COORDINATION & HANDOFFS
 
