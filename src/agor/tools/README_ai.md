@@ -13,13 +13,7 @@ _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt
 - **EXECUTE the actual binary**: `/tmp/agor_tools/git <command>`
 - **The git binary is portable and fully functional**
 
-**SQLite Memory Mode (Experimental):**
-If `/tmp/agor_tools/sqlite3` exists, you have database-based memory management available:
 
-- **Structured memory storage** instead of markdown files
-- **Cross-agent coordination** with database logs
-- **Persistent state management** with SQL queries
-- **Advanced handoff tracking** with relational data
 
 This is not a simulation - you have real capabilities!
 
@@ -104,6 +98,11 @@ cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
 
 ## CRITICAL INITIALIZATION PROTOCOL
 
+## SINGLE-AGENT vs MULTI-AGENT MODES
+Use Role A (Solo Developer) if you are working alone or performing deep code analysis.
+Use Role B (Project Coordinator) if planning or managing a multi-agent dev workflow.
+Use Role C (Agent Worker) if you are executing tasks delegated from another agent.
+
 **STEP 1: ROLE SELECTION**
 Before proceeding, determine your role by asking the user:
 
@@ -113,10 +112,16 @@ Before proceeding, determine your role by asking the user:
 What is your primary goal today?
 
 **🔹 Single Agent Mode:**
+
+### Role A: SOLO DEVELOPER
 a) 🔍 SOLO DEVELOPER - Analyze, edit, and answer questions about the codebase
 
 **🔹 Multi-Agent Mode:**
+
+### Role B: PROJECT COORDINATOR
 b) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
+
+### Role C: AGENT WORKER
 c) 🤖 AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 Please select your role (a/b/c):
@@ -124,19 +129,19 @@ Please select your role (a/b/c):
 
 **Based on selection, follow the appropriate initialization path:**
 
-### Role B: PROJECT COORDINATOR
-
-- Focus on strategic planning and agent coordination
-- Initialize coordination system first
-- Emphasize planning tools and multi-agent strategies
-- Show strategic planning hotkeys prominently
-
 ### Role A: SOLO DEVELOPER
 
 - Focus on codebase analysis and direct code work
 - Perform immediate comprehensive codebase analysis
 - Emphasize code exploration tools and editing capabilities
 - Show analysis and editing hotkeys prominently
+
+### Role B: PROJECT COORDINATOR
+
+- Focus on strategic planning and agent coordination
+- Initialize coordination system first
+- Emphasize planning tools and multi-agent strategies
+- Show strategic planning hotkeys prominently
 
 ### Role C: AGENT WORKER
 
@@ -269,9 +274,7 @@ handoff) create handoff document for another agent
 receive) receive handoff from another agent
 handoffs) list all handoff documents
 
-**🗄️ SQLite Memory (Experimental):**
-mem-add) add memory entry mem-search) search memories coord-log) log coordination
-state-set) set project state db-stats) database statistics
+
 
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
@@ -298,9 +301,7 @@ handoff) create handoff document for another agent
 receive) receive handoff from another agent
 handoffs) list all handoff documents
 
-**🗄️ SQLite Memory (Experimental):**
-mem-add) add memory entry mem-get) retrieve memories mem-search) search content
-state-get) get project state db-stats) database statistics
+
 
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
@@ -324,9 +325,7 @@ handoff) create handoff document for another agent
 receive) receive handoff from another agent
 handoffs) list all handoff documents
 
-**🗄️ SQLite Memory (Experimental):**
-mem-add) add memory entry coord-log) log coordination handoff-status) update handoff
-state-get) get project state db-stats) database statistics
+
 
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
@@ -909,67 +908,14 @@ chmod 755 /tmp/agor_tools/sqlite3
 /tmp/agor_tools/sqlite3 --version
 ```
 
-### SQLite Memory Features
+## 🗄️ ADVANCED: SQLite Memory System (Internal Use)
 
-**Structured Storage**:
+**NOTE**: This is an experimental internal system. Agents should use standard `.agor/memory.md` files for coordination.
 
-- Agent memories with types (context, decision, learning, handoff)
-- Coordination logs between agents
-- Project state management
-- Advanced handoff tracking with relational data
+If `/tmp/agor_tools/sqlite3` exists, advanced database-based memory management is available for internal AGOR operations. This system is primarily for:
 
-**Database Schema**:
+- Internal coordination logging
+- Advanced state management
+- System-level memory operations
 
-- `agent_memories` - Individual agent memory entries
-- `coordination_logs` - Cross-agent communication
-- `project_state` - Key-value project state storage
-- `handoffs` - Structured handoff records with full context
-
-### SQLite Memory Commands
-
-**Memory Management**:
-
-- `mem-add` - Add memory entry with type and metadata
-- `mem-get` - Retrieve memories for specific agent or type
-- `mem-search` - Search memory content with SQL-like queries
-
-**Coordination**:
-
-- `coord-log` - Log coordination messages between agents
-- `state-set` - Set project state values
-- `state-get` - Retrieve project state
-
-**Handoffs**:
-
-- `handoff-create` - Create structured handoff in database
-- `handoff-status` - Update handoff status and assignment
-
-**Database Operations**:
-
-- `db-stats` - Show database statistics and record counts
-
-### Using SQLite Memory Mode
-
-**Example Memory Operations**:
-
-```python
-# Add a memory entry
-from agor_tools.sqlite_memory import get_memory_manager
-mgr = get_memory_manager()
-mgr.add_memory("agent-1", "decision", "Chose React for frontend", {"confidence": 0.8})
-
-# Search memories
-results = mgr.search_memories("React", agent_id="agent-1")
-
-# Log coordination
-mgr.log_coordination("agent-1", "agent-2", "handoff", "Passing frontend work")
-```
-
-**Database Location**: `.agor/memory.db`
-
-**Important Notes**:
-
-- SQLite mode is **experimental** and not fully tested
-- Falls back to markdown files if SQLite is unavailable
-- Database is created automatically on first use
-- All operations are backwards compatible with file-based mode
+**For normal agent work, use the standard markdown-based coordination files in `.agor/` directory.**

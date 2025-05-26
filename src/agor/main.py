@@ -42,7 +42,7 @@ def init(
     task: str = typer.Argument(help="Task description for the strategy"),
     agents: int = typer.Option(3, "--agents", "-a", help="Number of agents (2-6)"),
 ):
-    """Initialize .agor/ directory and coordination files"""
+    """[AGENT] Initialize .agor/ directory and coordination files"""
     strategy_manager = StrategyManager()
     strategy_manager.init_coordination(task, agents)
 
@@ -52,21 +52,21 @@ def pd(
     task: str = typer.Argument(help="Task description for parallel divergent strategy"),
     agents: int = typer.Option(3, "--agents", "-a", help="Number of agents (2-6)"),
 ):
-    """Set up Parallel Divergent strategy (multiple independent agents)"""
+    """[AGENT] Set up Parallel Divergent strategy (multiple independent agents)"""
     strategy_manager = StrategyManager()
     strategy_manager.setup_parallel_divergent(task, agents)
 
 
 @app.command()
 def status():
-    """Check all agent memory files and communication log"""
+    """[AGENT] Check all agent memory files and communication log"""
     strategy_manager = StrategyManager()
     strategy_manager.show_status()
 
 
 @app.command()
 def sync():
-    """Pull latest changes and update coordination status"""
+    """[AGENT] Pull latest changes and update coordination status"""
     strategy_manager = StrategyManager()
     strategy_manager.sync_state()
 
@@ -78,7 +78,7 @@ def ss(
     ),
     team_size: int = typer.Option(3, help="Preferred team size"),
 ):
-    """Analyze project and recommend optimal development strategy"""
+    """[AGENT] Analyze project and recommend optimal development strategy"""
     strategy_manager = StrategyManager()
     strategy_manager.suggest_strategy(complexity, team_size)
 
@@ -88,7 +88,7 @@ def agent_status(
     agent_id: str = typer.Argument(help="Agent ID (e.g., agent1)"),
     status: str = typer.Argument(help="Status: pending, in-progress, completed"),
 ):
-    """Update agent status in coordination system"""
+    """[AGENT] Update agent status in coordination system"""
     strategy_manager = StrategyManager()
     strategy_manager.update_agent_status(agent_id, status)
 
@@ -102,7 +102,7 @@ def config_cmd(
         False, "--reset", help="Reset configuration to defaults"
     ),
 ):
-    """Manage AGOR configuration settings"""
+    """[CLI] Manage AGOR configuration settings"""
 
     if reset:
         config.reset()
@@ -218,7 +218,7 @@ def bundle(
     ),
 ):
     """
-    Bundle a git repository into an archive for AI assistant upload.
+    [CLI] Bundle a git repository into an archive for AI assistant upload.
 
     Creates a compressed archive containing your project plus AGOR's multi-agent
     coordination tools. Supports ZIP (default), TAR.GZ, and TAR.BZ2 formats.
@@ -499,7 +499,7 @@ def custom_instructions(
         help="Copy custom instructions to clipboard",
     )
 ):
-    """Generate custom instructions for AI assistants"""
+    """[AGENT] Generate custom instructions for AI assistants"""
 
     instructions = dedent(
         """
@@ -588,7 +588,7 @@ def git_config(
     ),
     show: bool = typer.Option(False, "--show", help="Show current git configuration"),
 ):
-    """Configure git user settings for AGOR development"""
+    """[CLI] Configure git user settings for AGOR development"""
 
     if show:
         print("🔍 Current Git Configuration:")
@@ -699,7 +699,7 @@ def git_config(
 
 @app.command()
 def version():
-    """Show version information and check for updates"""
+    """[CLI] Show version information and check for updates"""
     from .version_check import display_version_info
 
     display_version_info(check_updates=True)
@@ -714,7 +714,7 @@ def generate_agor_feedback(
         False, "--commit", help="Attempt to commit feedback directly to repository"
     ),
 ):
-    """Generate AGOR feedback and improvement suggestions"""
+    """[AGENT] Generate AGOR feedback and improvement suggestions"""
     import platform
     import subprocess
     from datetime import datetime

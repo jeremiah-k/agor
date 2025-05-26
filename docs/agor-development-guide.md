@@ -27,22 +27,26 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - Include coordination files, strategy modules, memory systems
 - Used by agents within `.agor/` coordination workflows
 
-#### 🤖 Hotkeys vs CLI Commands - CRITICAL DISTINCTION
+#### 🤖 CLI Commands vs Agent Hotkeys - CRITICAL DISTINCTION
 
-**❌ COMMON CONFUSION**: "Hotkeys like `pd`, `ss`, `init` are CLI commands"
+**THERE ARE TWO COMPLETELY DIFFERENT TYPES OF "COMMANDS":**
 
-**✅ REALITY**: Most "hotkeys" are **agent menu options**, not CLI commands
+**Real CLI Commands** (in `src/agor/main.py`):
+- **[CLI] Commands**: `bundle`, `config`, `git-config`, `version` - for developers using AGOR
+- **[AGENT] Commands**: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback` - for agents when they need CLI access
+- These are actual typer commands that can be run from terminal
+- They appear in `agor --help` output
+- Prefixed with [CLI] or [AGENT] to show intended user
 
-- **Agent Menu Hotkeys**: `pd`, `ss`, `init`, `a`, `f`, `mem-add`, `handoff`, etc.
-  - These are menu options agents use within coordination workflows
-  - They trigger agent actions and generate coordination files
-  - They are NOT direct CLI commands for users
-  - They work with files in `.agor/` directory
+**Agent Protocol Hotkeys** (in agent instructions):
+- **Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc.
+- These are menu options/verbal commands in agent workflow instructions
+- They are implemented as Python functions in `src/agor/tools/`
+- They are NOT CLI commands - they're protocol directives
+- They work within agent coordination workflows and `.agor/` files
+- They are documented in `README_ai.md` as workflow options
 
-- **Actual CLI Commands**: `bundle`, `version`, `config`, `git-config`
-  - These are commands users run from terminal
-  - They perform specific utility functions
-  - They are documented in `--help` output
+**KEY RULE**: CLI commands with [CLI] prefix don't appear in agent hotkey menus. Agent hotkeys are not CLI commands.
 
 #### 📋 Agent Coordination Documents
 
@@ -178,7 +182,7 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 
 ## 📊 Implementation Status Tracking
 
-**Last Updated**: 2025-05-26 18:25 UTC | **AGOR Version**: 0.2.4 | **Protocol Version**: 0.3.0 | **Latest**: Agent manifest protocol clarification - removed confusing CLI command, clarified handoff system
+**Last Updated**: 2025-01-27 16:15 UTC | **AGOR Version**: 0.2.5 | **Protocol Version**: 0.3.0 | **Latest**: Role Bootstrapping FIXED - restored mandatory role selection menu with proper headers and stop instructions
 
 > **🕐 Getting Current Date/Time Programmatically:**
 >
@@ -201,7 +205,7 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 | ----------------------- | ------------------------------------- | ------------------------------------ | ----------- |
 | **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`        | code_exploration.py                  | ✅ Complete |
 | **Handoff System**      | `handoff`, `receive`, `handoffs`      | handoff_templates.py                 | ✅ Complete |
-| **SQLite Memory**       | `mem-*`, `db-*`, `coord-*`, `state-*` | sqlite_memory.py                     | ✅ Complete |
+| **SQLite Memory**       | Internal system only                  | sqlite_memory.py                     | ✅ Complete (Internal) |
 | **Parallel Divergent**  | `pd`                                  | strategies/parallel_divergent.py     | ✅ Complete |
 | **Pipeline Strategy**   | `pl`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
 | **Swarm Strategy**      | `sw`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
@@ -252,6 +256,48 @@ All planned AGOR strategy modules have been implemented and are fully functional
 
 ## 🔍 Current Development Priorities
 
+### 🎯 CLI User/Agent Command Separation (✅ COMPLETED)
+
+**Status**: ✅ COMPLETED - Clear distinction implemented
+
+**Problem**: CLI mixed user-facing commands with agent coordination commands, causing confusion about what's for developers vs AI agents.
+
+**Solution Implemented**:
+- ✅ **Completed**: Added [CLI] prefixes to user commands: `bundle`, `config`, `git-config`, `version`
+- ✅ **Completed**: Added [AGENT] prefixes to agent commands: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback`
+- ✅ **Completed**: Updated development guide with clear distinction between CLI commands and agent hotkeys
+- ✅ **Completed**: Clarified that agent hotkeys (`a`, `f`, `co`, etc.) are protocol directives, not CLI commands
+
+**Implementation Details**:
+- **[CLI] Commands**: `bundle`, `config`, `git-config`, `version` - for developers using AGOR
+- **[AGENT] Commands**: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback` - for agents when they need CLI access
+- **Agent Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc. - protocol directives in agent instructions, NOT CLI commands
+
+**Key Achievement**: Eliminated confusion between CLI commands and agent protocol hotkeys. Future agents will clearly understand the distinction when reading the codebase.
+
+### 🔧 Role Bootstrapping Fix (✅ COMPLETED)
+
+**Problem**: Role selection menu was broken in bundle uploads - AI was skipping role selection and jumping to default initialization, creating a "jumbled mess" of output.
+
+**Root Cause Analysis**:
+1. **Bundle Creation**: Works correctly - copies README_ai.md to agor_tools/ and generates proper prompt
+2. **AI Prompt**: Works correctly - tells AI to "read agor_tools/README_ai.md completely"
+3. **Role Selection Instructions**: Were too weak - AI was ignoring "Before proceeding, determine your role"
+4. **Menu Structure**: Had confusing headers mixed into user-facing display
+
+**Solution Implemented**:
+- ✅ **Strong mandatory warnings**: Added explicit "DO NOT PROCEED WITHOUT ROLE SELECTION" instructions
+- ✅ **Preserved Role A/B/C headers**: Kept formal role identifiers as requested
+- ✅ **Clean menu display**: Role headers inside menu but properly formatted
+- ✅ **Stop instruction**: Added "STOP HERE AND WAIT FOR USER RESPONSE" after menu
+- ✅ **SINGLE-AGENT vs MULTI-AGENT guidance**: Clear workflow distinction
+
+**Files Modified**:
+- `src/agor/tools/README_ai.md` - Enhanced role selection protocol
+- `.agor/handoff/restore_role_boot.md` - Documentation of changes
+
+**Testing**: Role selection menu should now display properly when bundles are uploaded to AI platforms.
+
 ### 📝 Documentation Enhancement (High Priority)
 
 Based on comprehensive audit findings, the following documentation improvements are prioritized:
@@ -289,10 +335,11 @@ Based on comprehensive audit findings, the following documentation improvements 
 - **Issue**: Unclear how parameters translate to concrete states in `.agor/` files
 - **Action**: ✅ Added comprehensive parameter effects section with concrete file mapping
 
-#### 3. SQLite Memory Configuration
+#### 3. SQLite Memory System (Internal Use Only)
 
-- **Context**: Currently auto-activates if binary exists
-- **Consideration**: Project-level configuration for memory type selection
+- **Status**: Experimental internal system, not for agent use
+- **Purpose**: Advanced coordination logging and state management
+- **Agent Interface**: Removed from hotkey menus, agents use `.agor/memory.md`
 
 ### ✅ Completed Audit Items
 
