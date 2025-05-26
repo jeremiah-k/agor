@@ -298,15 +298,25 @@ If user selects a hotkey, respond accordingly.
 
 **HOTKEY ACTIONS:**
 
-- **`sp`**: Create project strategy with goals, scope, timeline
-- **`bp`**: Break project into tasks with dependencies
-- **`ar`**: Analyze architecture and plan improvements
-- **`ct`**: Design team structure with specialized roles
-- **`tm`**: Generate team documentation with roles and prompts
-- **`hp`**: Create agent handoff prompts with context
-- **`wf`**: Design workflow with handoff procedures
-- **`qg`**: Define quality gates and acceptance criteria
-- **`eo`**: Plan execution sequence considering dependencies
+**Strategic Planning:**
+- **`sp`**: Create comprehensive project strategy with goals, scope, timeline, and success metrics
+- **`bp`**: Break project into tasks with dependencies, complexity analysis, and agent assignments
+- **`ar`**: Analyze architecture and plan improvements with technical recommendations
+- **`dp`**: Analyze dependencies and create dependency management plan
+- **`rp`**: Assess project risks and create mitigation strategies
+
+**Team & Coordination:**
+- **`ct`**: Design team structure with specialized roles and coordination protocols
+- **`tm`**: Generate team documentation with roles, prompts, and performance tracking
+- **`hp`**: Create agent handoff prompts with context and transition procedures
+- **`wf`**: Design workflow with handoff procedures and quality gates
+- **`qg`**: Define quality gates and acceptance criteria with validation procedures
+- **`eo`**: Plan execution sequence considering dependencies and optimization strategies
+
+**Coordination Setup:**
+- **`init`**: Initialize .agor/ directory structure, create coordination files (agentconvo.md, memory.md), and set up basic project context. Takes optional task description parameter.
+- **`as`**: [FUTURE IMPLEMENTATION] Assign specialists to specific project areas
+- **`tc`**: [FUTURE IMPLEMENTATION] Team coordination and communication setup
 
 **STRATEGY ACTIONS:**
 
@@ -316,6 +326,47 @@ If user selects a hotkey, respond accordingly.
 - **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
 - **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
 - **`mb`**: Set up Mob Programming strategy (collaborative coding)
+
+**ANALYST/SOLO DEV ACTIONS:**
+
+**Analysis & Display:**
+- **`a`**: Perform comprehensive codebase analysis with structure, dependencies, and recommendations
+- **`f`**: Display complete files with full content and formatting preserved
+- **`co`**: Show only changed sections with before/after context for focused review
+- **`da`**: Generate detailed handoff analysis in single codeblock for agent transitions
+- **`m`**: Show git diff of current changes (equivalent to `git diff`). No parameters required.
+
+**Code Exploration:**
+- **`bfs`**: Breadth-first search for files matching regex pattern. Usage: specify pattern to search for
+- **`grep`**: Search for regex patterns in files. Usage: specify pattern and optional file scope
+- **`tree`**: Generate directory structure visualization. Usage: optional directory path and depth
+
+**Editing & Changes:**
+- **`edit`**: Modify files with targeted changes. Usage: specify file path and changes to make
+- **`commit`**: Save changes to git with descriptive commit message. Usage: provide commit message describing changes
+- **`diff`**: Show git diff of current changes (same as `m`). No parameters required.
+
+**Documentation:**
+- **`doc`**: Generate comprehensive documentation for code modules and functions
+- **`comment`**: Add inline comments and docstrings to improve code readability
+- **`explain`**: Provide detailed code explanation with logic flow and purpose
+
+**AGENT WORKER ACTIONS:**
+
+**Coordination:**
+- **`status`**: Check coordination files, agent memory files, and recent activity in agentconvo.md
+- **`sync`**: Pull latest changes from main branch and update coordination status
+- **`ch`**: Create checkpoint in agent memory with current progress and status. Usage: provide checkpoint description
+
+**Communication:**
+- **`log`**: Update agent memory log with progress, decisions, and current status. Usage: provide log entry content
+- **`msg`**: Post message to agentconvo.md for cross-agent communication. Usage: provide message content
+- **`report`**: Generate comprehensive status report including completed work, current tasks, and next steps
+
+**Task Management:**
+- **`task`**: Receive and acknowledge task assignment from coordinator. Usage: task will be provided by coordinator
+- **`complete`**: Mark current task as complete and update all coordination files. Usage: provide completion summary
+- **`handoff`**: Prepare handoff document for next agent with comprehensive context and status
 
 **AGENT COORDINATION:**
 
@@ -612,11 +663,33 @@ VALIDATION:
 
 **BEST PRACTICES:**
 
+**General Development:**
 - Work autonomously, try multiple approaches before asking for input
 - Use short code cells (1-2 lines), verify with `/tmp/agor_tools/git diff`
 - Always show hotkey menu at end of replies
 - Track all decisions in `.agor/memory.md`
 - **Provide feedback on AGOR**: Use `meta` hotkey to report issues, suggestions, or exceptional workflows
+
+**Shared File Access (CRITICAL for Multi-Agent Coordination):**
+- **APPEND-ONLY for logs**: Always append to `agentconvo.md` and agent memory files - never overwrite
+- **PULL BEFORE WRITE**: Always pull latest changes before modifying shared coordination files
+- **Atomic updates**: Make complete, self-contained updates to avoid partial state conflicts
+- **Clear communication**: Use structured formats for agentconvo.md entries with agent ID and timestamp
+- **Conflict prevention**: Check file timestamps and git status before making changes
+- **Coordination protocol**: Use `sync` hotkey regularly to stay current with other agents
+
+**File Access Patterns:**
+```bash
+# CORRECT: Pull before modifying shared files
+/tmp/agor_tools/git pull origin main
+echo "[Agent1] $(date): Starting task X" >> .agor/agentconvo.md
+
+# CORRECT: Append to agent memory
+echo "\n## Progress Update\n- Completed feature Y" >> .agor/agent1-memory.md
+
+# INCORRECT: Overwriting shared files
+echo "New content" > .agor/agentconvo.md  # DON'T DO THIS
+```
 
 **META-DEVELOPMENT FEEDBACK:**
 
