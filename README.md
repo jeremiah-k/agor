@@ -47,14 +47,22 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 AGOR offers three primary roles when agents load the protocol:
 
-**🔹 Single Agent Mode:**
-- **SOLO DEVELOPER**: Deep codebase analysis and implementation *(Perfect for bundled mode)*
+**🔹 Single Agent Workflow:**
+- **SOLO DEVELOPER**: Deep codebase analysis and implementation
 
-**🔹 Multi-Agent Mode:**
+**🔹 Multi-Agent Workflow:**
 - **PROJECT COORDINATOR**: Strategic planning and team coordination
 - **AGENT WORKER**: Task execution and coordination handoffs
 
-> **💡 Flexibility Note**: SOLO DEVELOPER excels in bundled mode (Google AI Studio, ChatGPT) but can also be incorporated into multi-agent teams when specialized analysis is needed.
+## 🔄 Role × Mode Compatibility
+
+| Role | Standalone Mode | Bundled Mode | Best Use Cases |
+|------|----------------|--------------|----------------|
+| **SOLO DEVELOPER** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Solo development, code analysis, feature implementation |
+| **PROJECT COORDINATOR** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Multi-agent planning, strategy design, team coordination |
+| **AGENT WORKER** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Task execution, following coordinator instructions |
+
+> **💡 Key Point**: All roles work in both modes. The difference is **how changes are applied** - direct commits (if access available) vs. copy-paste codeblocks.
 
 **Multi-Agent Strategies**
 

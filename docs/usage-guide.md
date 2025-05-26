@@ -68,7 +68,7 @@ agor bundle https://github.com/your-username/your-project
 
 ## 🎭 Role Selection Deep Dive
 
-### 🔍 SOLO DEVELOPER *(Single Agent)*
+### 🔍 SOLO DEVELOPER
 
 **Primary Purpose:** Deep codebase analysis and implementation
 
@@ -79,9 +79,10 @@ agor bundle https://github.com/your-username/your-project
 - Solo development work
 - Technical deep-dives
 
-**Single Agent Focus:**
-- **Perfect for bundled mode** with platforms like Google AI Studio
-- **Independent operation** - no coordination overhead
+**Works in Both Modes:**
+- **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
+- **Bundled Mode**: Copy-paste codeblocks with full formatting preservation
+- **Independent operation** - no coordination overhead required
 - **Can be incorporated** into multi-agent teams when specialized analysis is needed
 
 **Key Capabilities:**
@@ -96,7 +97,7 @@ agor bundle https://github.com/your-username/your-project
 3. Implement changes or provide detailed explanations
 4. Document findings and decisions
 
-### 📋 PROJECT COORDINATOR *(Multi-Agent)*
+### 📋 PROJECT COORDINATOR
 
 **Primary Purpose:** Strategic planning and team orchestration
 
@@ -106,7 +107,12 @@ agor bundle https://github.com/your-username/your-project
 - Breaking down complex requirements
 - Coordinating team activities
 
-**Multi-Agent Capabilities:**
+**Works in Both Modes:**
+- **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
+- **Bundled Mode**: Copy-paste codeblocks with strategic plans and coordination files
+- **Multi-agent coordination** capabilities available in both modes
+
+**Key Capabilities:**
 - Initialize coordination strategies (`pd`, `pl`, `sw`, `rt`, `mb`)
 - Create specialized agent teams (`ct`)
 - Design handoff procedures (`hp`)
@@ -118,7 +124,7 @@ agor bundle https://github.com/your-username/your-project
 3. Create specialized team (`ct`)
 4. Initialize strategy and coordinate agents
 
-### 🤖 AGENT WORKER *(Multi-Agent)*
+### 🤖 AGENT WORKER
 
 **Primary Purpose:** Task execution and coordination handoffs
 
@@ -128,8 +134,12 @@ agor bundle https://github.com/your-username/your-project
 - Following established workflows
 - Team coordination and communication
 
-**Multi-Agent Focus:**
-- Designed specifically for team environments
+**Works in Both Modes:**
+- **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
+- **Bundled Mode**: Copy-paste codeblocks with completed tasks
+- **Team coordination** capabilities available in both modes
+
+**Key Capabilities:**
 - Excels at receiving and executing handoffs
 - Maintains coordination with other agents
 - Reports progress and status
@@ -144,9 +154,9 @@ agor bundle https://github.com/your-username/your-project
 
 ### Google AI Studio Pro (Free Tier)
 
-**Recommended Setup:**
+**Setup:**
 - Use **Bundled Mode** with `.zip` format
-- Select **SOLO DEVELOPER** role for solo work
+- **Any role works** - choose based on your workflow needs
 - Enable Function Calling in your project settings
 - Use `--sqlite` flag for enhanced memory features
 
@@ -154,15 +164,18 @@ agor bundle https://github.com/your-username/your-project
 ```bash
 agor bundle your-project -f zip --sqlite
 # Upload to Google AI Studio Pro
-# Select SOLO DEVELOPER role
-# Work independently with copy-paste workflow
+# Select role based on your needs:
+# - SOLO DEVELOPER: For code analysis and implementation
+# - PROJECT COORDINATOR: For planning and strategy
+# - AGENT WORKER: For following specific instructions
+# All roles work with copy-paste workflow
 ```
 
-### Augment Code / Jules by Google
+### Augment Code Remote Agents / Jules by Google
 
-**Recommended Setup:**
+**Setup:**
 - Use **Standalone Mode** with direct git access
-- Any role works, but **PROJECT COORDINATOR** excels here
+- **Any role works** - choose based on your workflow needs
 - Full multi-agent capabilities available
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
@@ -177,11 +190,11 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 ### ChatGPT / Claude
 
-**Recommended Setup:**
+**Setup:**
 - Use **Bundled Mode** with `.tar.gz` format
-- Any role works well
+- **Any role works** - choose based on your workflow needs
 - Requires subscription for file uploads
-- Good for complex multi-agent planning
+- All roles work with copy-paste workflow
 
 **Workflow:**
 ```bash
@@ -224,14 +237,17 @@ agor bundle your-project -f tar.gz
 ### For Beginners
 
 1. **Start with Bundled Mode** using Google AI Studio Pro (free)
-2. **Choose SOLO DEVELOPER** role for simplicity
+2. **Choose any role** based on what you want to do:
+   - **SOLO DEVELOPER**: For code analysis and implementation
+   - **PROJECT COORDINATOR**: For planning and strategy
+   - **AGENT WORKER**: For following specific instructions
 3. **Use basic hotkeys**: `a` (analyze), `f` (full files), `status`
 4. **Practice with small projects** before attempting multi-agent workflows
 
 ### For Advanced Users
 
 1. **Try Standalone Mode** with git-capable agents
-2. **Experiment with PROJECT COORDINATOR** role
+2. **Experiment with different roles** based on your needs
 3. **Initialize multi-agent strategies** (`ss`, `pd`, `pl`)
 4. **Use advanced features**: SQLite memory, custom strategies
 
