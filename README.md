@@ -47,7 +47,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 **[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
 **[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup
 **[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol
-**[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
+**[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself (includes Core Context section)
 **[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 
 ## 🎯 Core Capabilities
@@ -159,10 +159,6 @@ agor version                                # Show versions and check for update
 agor git-config --import-env                # Import from environment variables
 agor git-config --name "Your Name" --email "your@email.com"  # Set manually
 agor git-config --show                      # Show current configuration
-
-# Generate agent manifest for standalone mode
-agor agent-manifest                         # Generate and copy manifest
-agor agent-manifest --format json          # JSON format
 
 # Custom bundle options
 agor bundle repo --branch feature-branch   # Specific branch
