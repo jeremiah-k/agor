@@ -60,47 +60,47 @@ agor_tools/       # AGOR coordination tools
 
 **No setup manifests**: Bundles contain tools and instructions, not configuration manifests
 
-## 🤝 AGENT COORDINATION & HANDOFFS
+## 🤝 AGENT COORDINATION
 
-**CRITICAL**: Agent coordination uses **handoff documents**, NOT setup manifests.
+**CRITICAL**: Agent coordination uses **work orders** and **completion reports**.
 
-### 📝 Handoff System
+### 📝 Coordination System
 
-**Purpose**: Agent-to-agent work transitions with complete context
+**Purpose**: Structured coordinator-agent communication
 **Location**: `.agor/handoffs/` directory
 **Format**: Structured markdown with git context, progress, and next steps
 
 ```bash
-# Check for active handoffs
+# Check for coordination documents
 ls .agor/handoffs/
 cat .agor/handoffs/index.md
 
-# Read a specific handoff document
+# Read a specific work order
 cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
 ```
 
-### 🔄 Bidirectional Handoff Workflow
+### 🔄 Work Order & Completion Report Workflow
 
 **CRITICAL**: Agent coordination is a two-way process:
 
-#### 📤 Task Assignment (Coordinator → Agent)
-1. **Creating Handoffs**: Use `handoff` hotkey to generate comprehensive handoff document
-2. **Agent Receipt**: Agent uses `receive` hotkey to accept work
-3. **Communication**: Update `.agor/agentconvo.md` to confirm handoff receipt
-4. **Work Execution**: Follow next steps outlined in handoff document
+#### 📤 Work Assignment (Coordinator → Agent)
+1. **Creating Work Orders**: Use `handoff` hotkey to generate work order
+2. **Agent Receipt**: Agent uses `receive` hotkey to accept work order
+3. **Communication**: Update `.agor/agentconvo.md` to confirm order receipt
+4. **Work Execution**: Follow next steps outlined in work order
 
 #### 📥 Task Completion (Agent → Coordinator)
-1. **Completion Handoff**: Use `complete` hotkey to generate completion document
+1. **Completion Report**: Use `complete` hotkey to generate completion report
 2. **Results Summary**: Include work completed, commits, issues, recommendations
 3. **Coordinator Review**: Coordinator reviews results and provides feedback
 4. **Integration**: Coordinator decides on integration and next steps
 
 #### 📝 Communication Protocol
-- **All handoffs logged in**: `.agor/agentconvo.md`
-- **Task assignment**: `[COORDINATOR-ID] [timestamp] - TASK ASSIGNED: description`
-- **Task receipt**: `[AGENT-ID] [timestamp] - HANDOFF RECEIVED: description`
+- **All coordination logged in**: `.agor/agentconvo.md`
+- **Work order**: `[COORDINATOR-ID] [timestamp] - WORK ORDER: description`
+- **Order receipt**: `[AGENT-ID] [timestamp] - ORDER RECEIVED: description`
 - **Task completion**: `[AGENT-ID] [timestamp] - TASK COMPLETED: description`
-- **Coordinator review**: `[COORDINATOR-ID] [timestamp] - TASK REVIEWED: status`
+- **Report review**: `[COORDINATOR-ID] [timestamp] - REPORT REVIEWED: status`
 
 ## CRITICAL INITIALIZATION PROTOCOL
 

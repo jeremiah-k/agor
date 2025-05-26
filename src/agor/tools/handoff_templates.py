@@ -400,7 +400,7 @@ def update_handoff_index(filename: str, problem_summary: str, status: str):
     index_file.write_text(content)
 
 
-def generate_completion_handoff(
+def generate_completion_report(
     original_task: str,
     work_completed: List[str],
     commits_made: List[str],
@@ -412,13 +412,13 @@ def generate_completion_handoff(
     issues_encountered: str = "None",
     recommendations: str = "None",
 ) -> str:
-    """Generate a completion handoff document to return to coordinator."""
+    """Generate a completion report document to return to coordinator."""
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
     agor_version = get_agor_version()
 
-    return f"""# 🏁 Task Completion Handoff
+    return f"""# 🏁 Task Completion Report
 
 **Generated**: {timestamp}
 **From Agent Role**: {agent_role}
@@ -512,12 +512,12 @@ Update `.agor/agentconvo.md` with completion acknowledgment:
 
 ---
 
-**Task Complete**: This work is ready for coordinator review and integration.
+**Task Complete**: This completion report is ready for coordinator review and integration.
 """
 
 
-def save_completion_handoff(handoff_content: str, task_summary: str, coordinator_id: str) -> Path:
-    """Save completion handoff document for coordinator review."""
+def save_completion_report(report_content: str, task_summary: str, coordinator_id: str) -> Path:
+    """Save completion report document for coordinator review."""
 
     handoff_dir = create_handoff_directory()
 
@@ -526,20 +526,20 @@ def save_completion_handoff(handoff_content: str, task_summary: str, coordinator
     safe_summary = "".join(c for c in task_summary if c.isalnum() or c in "-_")[:30]
     filename = f"{timestamp}_COMPLETED_{safe_summary}.md"
 
-    handoff_file = handoff_dir / filename
-    handoff_file.write_text(handoff_content)
+    report_file = handoff_dir / filename
+    report_file.write_text(report_content)
 
     # Update index
     update_handoff_index(filename, f"COMPLETED: {task_summary}", "completed")
 
-    return handoff_file
+    return report_file
 
 
 # Hotkey integration templates
 HANDOFF_HOTKEY_HELP = """
-🤝 **Handoff Commands:**
-handoff) create handoff document for another agent
-receive) receive handoff from another agent
-complete) create completion handoff for coordinator
-handoffs) list all handoff documents
+🤝 **Coordination Commands:**
+handoff) create work order for another agent
+receive) receive work order from another agent
+complete) create completion report for coordinator
+handoffs) list all coordination documents
 """

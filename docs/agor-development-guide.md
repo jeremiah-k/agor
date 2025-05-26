@@ -48,11 +48,11 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 **REALITY CHECK**: AGOR bundles do NOT include setup manifests. Agent coordination uses handoff documents only.
 
-**Handoff Documents** (Agent Coordination):
+**Work Orders & Completion Reports** (Agent Coordination):
 - **Location**: `.agor/handoffs/` directory
-- **Purpose**: Agent-to-agent work transitions with complete context
-- **Contains**: Problem definition, progress, commits, next steps, git context
-- **Used for**: Multi-agent coordination and work handoffs
+- **Work Orders**: Task assignments with context, requirements, next steps
+- **Completion Reports**: Results summary, commits, issues, recommendations
+- **Used for**: Multi-agent coordination and work transitions
 - **Implementation**: `handoff_templates.py` (complete)
 
 **Bundle Contents** (What's Actually in Bundles):
@@ -148,27 +148,27 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 5. **Commit and push frequently** - work can be lost in agent environments
 6. **Bidirectional workflow is required** - agents must report completion back to coordinators
 
-### 🔄 Bidirectional Handoff Workflow
+### 🔄 Work Order & Completion Report Workflow
 
 **CRITICAL**: Agent coordination is a two-way process:
 
-#### 📤 Coordinator → Agent (Task Assignment)
-- **Hotkey**: `handoff` - Create handoff document for agent
+#### 📤 Coordinator → Agent (Work Order)
+- **Hotkey**: `handoff` - Create work order for agent
 - **Contains**: Task description, context, requirements, next steps
 - **File**: `.agor/handoffs/YYYY-MM-DD_HHMMSS_task-summary.md`
 
-#### 📥 Agent → Coordinator (Task Completion)
-- **Hotkey**: `complete` - Create completion handoff for coordinator
+#### 📥 Agent → Coordinator (Completion Report)
+- **Hotkey**: `complete` - Create completion report for coordinator
 - **Contains**: Results summary, commits made, issues, recommendations
 - **File**: `.agor/handoffs/YYYY-MM-DD_HHMMSS_COMPLETED_task-summary.md`
 - **Purpose**: Coordinator review, quality assurance, integration decisions
 
 #### 📝 Communication Protocol
 - **All handoffs logged in**: `.agor/agentconvo.md`
-- **Task assignment**: `[COORDINATOR-ID] [timestamp] - TASK ASSIGNED: description`
-- **Task receipt**: `[AGENT-ID] [timestamp] - HANDOFF RECEIVED: description`
+- **Work order**: `[COORDINATOR-ID] [timestamp] - WORK ORDER: description`
+- **Order receipt**: `[AGENT-ID] [timestamp] - ORDER RECEIVED: description`
 - **Task completion**: `[AGENT-ID] [timestamp] - TASK COMPLETED: description`
-- **Coordinator review**: `[COORDINATOR-ID] [timestamp] - TASK REVIEWED: status`
+- **Coordinator review**: `[COORDINATOR-ID] [timestamp] - REPORT REVIEWED: status`
 
 ---
 
