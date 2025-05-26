@@ -44,9 +44,24 @@ If no captured configuration is available, you can:
 
 **This ensures proper commit attribution for all development work.**
 
+## 📝 BUNDLE MANIFEST (Setup Information)
+
+**For bundle mode**: Check for setup manifest in bundle
+
+```bash
+# Read the bundle setup manifest
+cat /tmp/agor_tools/AGENT_MANIFEST.md
+
+# Or check the JSON version
+cat /tmp/agor_tools/agent_manifest.json
+```
+
+**Contains**: Git configuration, available tools, quick start commands, environment info
+**Purpose**: Bundle setup and initialization, NOT agent coordination
+
 ## 🤝 AGENT COORDINATION & HANDOFFS
 
-**CRITICAL**: Agent "manifests" are **handoff documents** for multi-agent coordination, NOT setup instructions.
+**CRITICAL**: Agent coordination uses **handoff documents**, NOT setup manifests.
 
 ### 📝 Handoff System
 
