@@ -146,7 +146,3 @@ agor bundle repo -f zip                     # Google AI Studio format
 - **Repository**: <https://github.com/jeremiah-k/agor>
 - **License**: MIT License (maintaining original)
 - **Major Additions**: Multi-agent coordination, strategic planning, prompt engineering, quality assurance frameworks, dual deployment modes
-
-### Additional Inspiration
-
-- **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
