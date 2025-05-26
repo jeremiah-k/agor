@@ -1346,6 +1346,313 @@ def initialize_mob_programming(task: str, agent_count: int = 4) -> str:
     return protocol.initialize_strategy(task, agent_count)
 
 
+def project_breakdown(task_description: str, complexity: str = "medium") -> str:
+    """Generate project breakdown with task decomposition (bp hotkey)."""
+
+    # Import the project breakdown template
+    from .project_planning_templates import generate_project_breakdown_template
+
+    # Get the base template
+    template = generate_project_breakdown_template()
+
+    # Add concrete implementation guidance
+    implementation_guidance = f"""
+## IMPLEMENTATION GUIDANCE
+
+### Task: {task_description}
+### Complexity: {complexity}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## CONCRETE TASK BREAKDOWN
+
+{_generate_concrete_breakdown(task_description, complexity)}
+
+## AGENT ASSIGNMENT RECOMMENDATIONS
+
+{_generate_agent_assignments(task_description, complexity)}
+
+## EXECUTION SEQUENCE
+
+{_generate_execution_sequence(complexity)}
+
+## COORDINATION PROTOCOL
+
+### Communication:
+- Use `.agor/agentconvo.md` for cross-agent updates
+- Update individual `.agor/agent[N]-memory.md` files
+- Post task completion signals in agentconvo.md
+
+### Task Tracking:
+```
+TASK_START: [agent-id] - [task-name] - [timestamp]
+TASK_PROGRESS: [agent-id] - [task-name] - [percentage]% - [timestamp]
+TASK_COMPLETE: [agent-id] - [task-name] - [deliverables] - [timestamp]
+TASK_BLOCKED: [agent-id] - [task-name] - [blocker-description] - [timestamp]
+```
+
+### Handoff Triggers:
+- When task dependencies are met
+- When agent expertise is needed
+- When integration points are reached
+- When quality gates require validation
+
+## QUALITY GATES
+
+### Phase 1: Analysis Complete
+- [ ] Requirements documented and validated
+- [ ] Architecture design approved
+- [ ] Task dependencies mapped
+- [ ] Risk assessment completed
+
+### Phase 2: Design Complete
+- [ ] System design documented
+- [ ] API contracts defined
+- [ ] Database schema approved
+- [ ] Integration points specified
+
+### Phase 3: Implementation Complete
+- [ ] Core functionality implemented
+- [ ] Unit tests passing
+- [ ] Integration tests passing
+- [ ] Code review completed
+
+### Phase 4: Quality Complete
+- [ ] All tests passing
+- [ ] Performance benchmarks met
+- [ ] Security review completed
+- [ ] Documentation updated
+
+### Phase 5: Deployment Ready
+- [ ] Deployment scripts tested
+- [ ] Monitoring configured
+- [ ] Documentation complete
+- [ ] Stakeholder approval received
+
+## NEXT STEPS
+
+1. **Review breakdown** - Validate task decomposition with stakeholders
+2. **Assign agents** - Match tasks to agent expertise
+3. **Initialize coordination** - Set up .agor/ files and communication
+4. **Begin execution** - Start with Phase 1 tasks
+5. **Monitor progress** - Track completion and handle blockers
+"""
+
+    # Combine template with implementation
+    full_breakdown = template + implementation_guidance
+
+    # Save to project breakdown file
+    breakdown_file = Path(".agor") / "project-breakdown.md"
+    breakdown_file.parent.mkdir(exist_ok=True)
+    breakdown_file.write_text(full_breakdown)
+
+    return f"""✅ Project Breakdown Generated
+
+**Task**: {task_description}
+**Complexity**: {complexity}
+**File**: `.agor/project-breakdown.md`
+
+**Breakdown Includes**:
+- Concrete task decomposition
+- Agent assignment recommendations
+- Execution sequence and dependencies
+- Quality gates and checkpoints
+- Coordination protocols
+
+**Next Steps**:
+1. Review the breakdown in `.agor/project-breakdown.md`
+2. Assign tasks to appropriate agents
+3. Initialize coordination with `init` command
+4. Begin execution with Phase 1 tasks
+
+**Ready to coordinate project execution!**
+"""
+
+
+def _generate_concrete_breakdown(task_description: str, complexity: str) -> str:
+    """Generate concrete task breakdown based on description and complexity."""
+
+    # Analyze task type
+    task_lower = task_description.lower()
+
+    if any(word in task_lower for word in ["api", "backend", "service", "endpoint"]):
+        return _generate_api_breakdown(task_description, complexity)
+    elif any(word in task_lower for word in ["ui", "frontend", "interface", "component"]):
+        return _generate_frontend_breakdown(task_description, complexity)
+    elif any(word in task_lower for word in ["database", "data", "schema", "migration"]):
+        return _generate_database_breakdown(task_description, complexity)
+    elif any(word in task_lower for word in ["auth", "security", "login", "permission"]):
+        return _generate_security_breakdown(task_description, complexity)
+    else:
+        return _generate_generic_breakdown(task_description, complexity)
+
+
+def _generate_api_breakdown(task_description: str, complexity: str) -> str:
+    """Generate API-specific task breakdown."""
+    tasks = [
+        "**API Design**: Define endpoints, request/response schemas, error handling",
+        "**Data Models**: Create database models and validation logic",
+        "**Core Logic**: Implement business logic and data processing",
+        "**Authentication**: Add authentication and authorization",
+        "**Testing**: Unit tests, integration tests, API documentation",
+        "**Deployment**: Containerization, deployment scripts, monitoring"
+    ]
+
+    if complexity == "complex":
+        tasks.extend([
+            "**Performance**: Caching, optimization, load testing",
+            "**Security**: Security audit, penetration testing",
+            "**Documentation**: Comprehensive API docs, examples"
+        ])
+
+    return "\n".join(f"- {task}" for task in tasks)
+
+
+def _generate_frontend_breakdown(task_description: str, complexity: str) -> str:
+    """Generate frontend-specific task breakdown."""
+    tasks = [
+        "**UI Design**: Wireframes, mockups, design system components",
+        "**Component Development**: Reusable UI components and layouts",
+        "**State Management**: Application state, data flow, API integration",
+        "**User Experience**: Navigation, forms, error handling",
+        "**Testing**: Component tests, integration tests, accessibility",
+        "**Build & Deploy**: Build optimization, deployment pipeline"
+    ]
+
+    if complexity == "complex":
+        tasks.extend([
+            "**Performance**: Code splitting, lazy loading, optimization",
+            "**Accessibility**: WCAG compliance, screen reader support",
+            "**Internationalization**: Multi-language support, localization"
+        ])
+
+    return "\n".join(f"- {task}" for task in tasks)
+
+
+def _generate_database_breakdown(task_description: str, complexity: str) -> str:
+    """Generate database-specific task breakdown."""
+    tasks = [
+        "**Schema Design**: Tables, relationships, constraints, indexes",
+        "**Migration Scripts**: Database creation, data migration, rollback",
+        "**Data Access**: ORM setup, queries, stored procedures",
+        "**Data Validation**: Input validation, business rules, constraints",
+        "**Testing**: Data integrity tests, performance tests",
+        "**Backup & Recovery**: Backup strategy, disaster recovery"
+    ]
+
+    if complexity == "complex":
+        tasks.extend([
+            "**Performance**: Query optimization, indexing strategy, partitioning",
+            "**Security**: Access controls, encryption, audit logging",
+            "**Scalability**: Replication, sharding, connection pooling"
+        ])
+
+    return "\n".join(f"- {task}" for task in tasks)
+
+
+def _generate_security_breakdown(task_description: str, complexity: str) -> str:
+    """Generate security-specific task breakdown."""
+    tasks = [
+        "**Authentication**: User login, session management, password policies",
+        "**Authorization**: Role-based access, permissions, resource protection",
+        "**Input Validation**: Sanitization, injection prevention, data validation",
+        "**Secure Communication**: HTTPS, encryption, secure headers",
+        "**Testing**: Security tests, vulnerability scanning",
+        "**Monitoring**: Security logging, intrusion detection, alerting"
+    ]
+
+    if complexity == "complex":
+        tasks.extend([
+            "**Advanced Auth**: Multi-factor authentication, SSO, OAuth integration",
+            "**Compliance**: GDPR, SOC2, security audit preparation",
+            "**Threat Modeling**: Risk assessment, attack vector analysis"
+        ])
+
+    return "\n".join(f"- {task}" for task in tasks)
+
+
+def _generate_generic_breakdown(task_description: str, complexity: str) -> str:
+    """Generate generic task breakdown."""
+    tasks = [
+        "**Requirements Analysis**: Gather and document detailed requirements",
+        "**Architecture Design**: System design, component architecture",
+        "**Core Implementation**: Primary functionality development",
+        "**Integration**: Connect components, external services",
+        "**Testing**: Unit tests, integration tests, user acceptance",
+        "**Documentation**: Technical docs, user guides, deployment"
+    ]
+
+    if complexity == "complex":
+        tasks.extend([
+            "**Performance Optimization**: Profiling, optimization, scalability",
+            "**Security Review**: Security assessment, vulnerability testing",
+            "**Monitoring & Maintenance**: Logging, monitoring, support procedures"
+        ])
+
+    return "\n".join(f"- {task}" for task in tasks)
+
+
+def _generate_agent_assignments(task_description: str, complexity: str) -> str:
+    """Generate agent assignment recommendations."""
+
+    base_assignments = [
+        "**Analyst Agent**: Requirements analysis, stakeholder communication",
+        "**Architect Agent**: System design, technical architecture",
+        "**Developer Agent**: Core implementation, coding",
+        "**Tester Agent**: Test creation, quality assurance",
+        "**DevOps Agent**: Deployment, infrastructure, monitoring"
+    ]
+
+    if complexity == "complex":
+        base_assignments.extend([
+            "**Security Agent**: Security review, vulnerability assessment",
+            "**Performance Agent**: Optimization, scalability, benchmarking",
+            "**Documentation Agent**: Technical writing, user guides"
+        ])
+
+    return "\n".join(f"- {assignment}" for assignment in base_assignments)
+
+
+def _generate_execution_sequence(complexity: str) -> str:
+    """Generate execution sequence based on complexity."""
+
+    if complexity == "simple":
+        return """
+### Simple Project Sequence:
+1. **Analysis** (1-2 days): Requirements → Design
+2. **Implementation** (3-5 days): Development → Testing
+3. **Deployment** (1 day): Deploy → Monitor
+
+**Total Estimated Duration**: 5-8 days
+**Recommended Team Size**: 2-3 agents
+**Coordination Level**: Low (daily check-ins)
+"""
+    elif complexity == "complex":
+        return """
+### Complex Project Sequence:
+1. **Analysis Phase** (1-2 weeks): Requirements → Architecture → Planning
+2. **Design Phase** (1-2 weeks): Detailed design → Prototyping → Review
+3. **Implementation Phase** (3-6 weeks): Development → Integration → Testing
+4. **Quality Phase** (1-2 weeks): Security → Performance → Documentation
+5. **Deployment Phase** (1 week): Deploy → Monitor → Support
+
+**Total Estimated Duration**: 7-13 weeks
+**Recommended Team Size**: 5-8 agents
+**Coordination Level**: High (daily standups, weekly reviews)
+"""
+    else:  # medium
+        return """
+### Medium Project Sequence:
+1. **Analysis Phase** (3-5 days): Requirements → Architecture
+2. **Implementation Phase** (1-3 weeks): Development → Testing
+3. **Quality Phase** (3-5 days): Review → Optimization
+4. **Deployment Phase** (2-3 days): Deploy → Monitor
+
+**Total Estimated Duration**: 2-5 weeks
+**Recommended Team Size**: 3-5 agents
+**Coordination Level**: Medium (bi-daily check-ins)
+"""
+
+
 def strategy_selection(project_analysis: str = "", team_size: int = 3, complexity: str = "medium") -> str:
     """Analyze project and recommend optimal development strategy (ss hotkey)."""
 
