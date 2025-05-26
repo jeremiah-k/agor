@@ -26,6 +26,7 @@ from .platform import (
 )
 from .repo_mgmt import clone_git_repo_to_temp_dir, get_clone_url, valid_git_repo
 from .settings import settings
+from .strategy import StrategyManager
 from .utils import create_archive, download_file, move_directory
 from .validation import validate_compression_format
 
@@ -40,6 +41,60 @@ app = typer.Typer(
 def version():
     """Display AGOR version information"""
     print(f"🎼 AgentOrchestrator (AGOR) v{__version__}")
+
+
+@app.command()
+def init(
+    task: str = typer.Argument(help="Task description for the strategy"),
+    agents: int = typer.Option(3, "--agents", "-a", help="Number of agents (2-6)"),
+):
+    """Initialize .agor/ directory and coordination files"""
+    strategy_manager = StrategyManager()
+    strategy_manager.init_coordination(task, agents)
+
+
+@app.command()
+def pd(
+    task: str = typer.Argument(help="Task description for parallel divergent strategy"),
+    agents: int = typer.Option(3, "--agents", "-a", help="Number of agents (2-6)"),
+):
+    """Set up Parallel Divergent strategy (multiple independent agents)"""
+    strategy_manager = StrategyManager()
+    strategy_manager.setup_parallel_divergent(task, agents)
+
+
+@app.command()
+def status():
+    """Check all agent memory files and communication log"""
+    strategy_manager = StrategyManager()
+    strategy_manager.show_status()
+
+
+@app.command()
+def sync():
+    """Pull latest changes and update coordination status"""
+    strategy_manager = StrategyManager()
+    strategy_manager.sync_state()
+
+
+@app.command()
+def ss(
+    complexity: str = typer.Option("medium", help="Project complexity: simple, medium, complex"),
+    team_size: int = typer.Option(3, help="Preferred team size"),
+):
+    """Analyze project and recommend optimal development strategy"""
+    strategy_manager = StrategyManager()
+    strategy_manager.suggest_strategy(complexity, team_size)
+
+
+@app.command()
+def agent_status(
+    agent_id: str = typer.Argument(help="Agent ID (e.g., agent1)"),
+    status: str = typer.Argument(help="Status: pending, in-progress, completed"),
+):
+    """Update agent status in coordination system"""
+    strategy_manager = StrategyManager()
+    strategy_manager.update_agent_status(agent_id, status)
 
 
 def config_cmd(
