@@ -178,7 +178,7 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 
 ## 📊 Implementation Status Tracking
 
-**Last Updated**: 2025-05-26 18:25 UTC | **AGOR Version**: 0.2.4 | **Protocol Version**: 0.3.0 | **Latest**: Agent manifest protocol clarification - removed confusing CLI command, clarified handoff system
+**Last Updated**: 2025-05-26 19:45 UTC | **AGOR Version**: 0.2.4 | **Protocol Version**: 0.3.0 | **Latest**: CLI User/Agent Command Separation - distinguishing user-facing bundling commands from agent coordination commands
 
 > **🕐 Getting Current Date/Time Programmatically:**
 >
@@ -251,6 +251,42 @@ All planned AGOR strategy modules have been implemented and are fully functional
 **Next Phase**: Maintenance, documentation improvements, and community feedback integration.
 
 ## 🔍 Current Development Priorities
+
+### 🎯 CLI User/Agent Command Separation (IN PROGRESS)
+
+**Status**: 🟡 PARTIALLY COMPLETED by previous agent, needs continuation
+
+**Problem**: CLI mixes user-facing commands (bundle, config, version) with agent coordination commands (init, pd, ss, status), causing confusion about what's for developers vs AI agents.
+
+**Solution in Progress**:
+- ✅ **Started**: Adding [USER] and [AGENT] prefixes to command help text in `src/agor/main.py`
+- ✅ **Completed**: User commands marked with "[USER]" prefix
+- 🟡 **In Progress**: Agent commands being marked with "[AGENT]" prefix
+- ⏳ **Pending**: Documentation updates to explain the distinction
+- ⏳ **Pending**: Consider architectural separation (separate CLI vs internal functions)
+
+**User-Facing Commands** (for developers using AGOR):
+- `bundle` - Create bundles for AI upload
+- `config` - Manage settings
+- `git-config` - Set up git
+- `version` - Check version
+- `custom-instructions` - Generate AI instructions
+- `generate-agor-feedback` - Feedback system
+
+**Agent-Only Commands** (for AI agents in coordination mode):
+- `init` - Initialize coordination
+- `pd` - Parallel divergent strategy
+- `ss` - Strategy selection
+- `status` - Check agent status
+- `sync` - Sync coordination
+- `agent-status` - Update agent status
+
+**Next Steps**:
+1. Complete [AGENT] prefix additions to remaining commands
+2. Update documentation to explain user vs agent command distinction
+3. Consider architectural improvements (separate internal functions from CLI)
+4. Test CLI help output for clarity
+5. Update development guide with final implementation
 
 ### 📝 Documentation Enhancement (High Priority)
 
