@@ -44,26 +44,31 @@ If no captured configuration is available, you can:
 
 **This ensures proper commit attribution for all development work.**
 
-## 📝 AGENT MANIFEST
+## 🤝 AGENT COORDINATION & HANDOFFS
 
-**Check for bundled manifest first**: Look for `/tmp/agor_tools/AGENT_MANIFEST.md`
+**CRITICAL**: Agent "manifests" are **handoff documents** for multi-agent coordination, NOT setup instructions.
 
-If available, this manifest contains:
+### 📝 Handoff System
 
-- Git configuration captured during bundle creation
-- Available tools and their descriptions
-- Quick start commands specific to this bundle
-- Environment information and setup instructions
+**Purpose**: Agent-to-agent work transitions with complete context
+**Location**: `.agor/handoffs/` directory
+**Format**: Structured markdown with git context, progress, and next steps
 
 ```bash
-# Read the manifest if available
-cat /tmp/agor_tools/AGENT_MANIFEST.md
+# Check for active handoffs
+ls .agor/handoffs/
+cat .agor/handoffs/index.md
 
-# Or check the JSON version
-cat /tmp/agor_tools/agent_manifest.json
+# Read a specific handoff document
+cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
 ```
 
-**For standalone mode**: Request the agent manifest from the developer using `agor agent-manifest`
+### 🔄 Handoff Workflow
+
+1. **Creating Handoffs**: Use `handoff` hotkey to generate comprehensive handoff document
+2. **Receiving Handoffs**: Use `receive` hotkey to accept work from another agent
+3. **Communication**: Update `.agor/agentconvo.md` to confirm handoff receipt
+4. **Continuation**: Follow next steps outlined in handoff document
 
 ## CRITICAL INITIALIZATION PROTOCOL
 
