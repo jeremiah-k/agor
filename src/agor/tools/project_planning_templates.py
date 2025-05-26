@@ -696,6 +696,174 @@ def generate_team_creation_template():
 """
 
 
+def generate_team_management_template():
+    """Template for ongoing team management and coordination (tm hotkey)"""
+    return """
+# Team Management Template
+
+## Team Overview
+
+### Team Composition
+- **Team Size**: [Number of active agents]
+- **Project**: [Current project name and objectives]
+- **Strategy**: [Active development strategy]
+- **Phase**: [Current development phase]
+- **Timeline**: [Project timeline and milestones]
+
+### Active Team Members
+- **Agent1**: [Role] - [Current task] - [Status]
+- **Agent2**: [Role] - [Current task] - [Status]
+- **Agent3**: [Role] - [Current task] - [Status]
+- **Agent{N}**: [Role] - [Current task] - [Status]
+
+## Performance Tracking
+
+### Team Metrics
+- **Velocity**: [Tasks completed per day/sprint]
+- **Quality Score**: [Code review ratings, bug rates]
+- **Collaboration Index**: [Communication frequency, help requests]
+- **Delivery Rate**: [On-time completion percentage]
+- **Blocker Resolution**: [Average time to resolve blockers]
+
+### Individual Performance
+- **Agent1**: Productivity: [High/Medium/Low], Quality: [Score], Collaboration: [Score]
+- **Agent2**: Productivity: [High/Medium/Low], Quality: [Score], Collaboration: [Score]
+- **Agent{N}**: Productivity: [High/Medium/Low], Quality: [Score], Collaboration: [Score]
+
+## Current Status
+
+### Active Work
+- **In Progress**: [List of current tasks and owners]
+- **Blocked**: [List of blocked tasks and reasons]
+- **Completed Today**: [List of completed tasks]
+- **Planned Next**: [List of upcoming tasks]
+
+### Team Health
+- **Communication**: [Frequency and quality of team communication]
+- **Coordination**: [Effectiveness of handoffs and collaboration]
+- **Morale**: [Team satisfaction and engagement indicators]
+- **Workload**: [Balance of work distribution across team]
+
+## Resource Management
+
+### Skill Matrix
+- **Frontend**: [Agents with frontend skills and proficiency levels]
+- **Backend**: [Agents with backend skills and proficiency levels]
+- **DevOps**: [Agents with infrastructure and deployment skills]
+- **Testing**: [Agents with QA and testing expertise]
+- **Domain**: [Agents with business domain knowledge]
+
+### Capacity Planning
+- **Available Capacity**: [Total agent hours available]
+- **Committed Capacity**: [Hours committed to current tasks]
+- **Buffer Capacity**: [Reserved hours for unexpected work]
+- **Skill Gaps**: [Areas where team lacks expertise]
+
+## Issue Management
+
+### Active Issues
+- **Blockers**: [Current blockers preventing progress]
+- **Risks**: [Identified risks that could impact delivery]
+- **Dependencies**: [External dependencies affecting the team]
+- **Quality Issues**: [Code quality or process issues]
+
+### Resolution Tracking
+- **Issue ID**: [Unique identifier]
+- **Description**: [What the issue is]
+- **Impact**: [How it affects the team/project]
+- **Owner**: [Who is responsible for resolution]
+- **Status**: [Open/In Progress/Resolved]
+- **Target Date**: [When resolution is expected]
+
+## Communication Management
+
+### Communication Channels
+- **Primary**: `.agor/agentconvo.md` - Main team communication
+- **Status**: `.agor/team-status.md` - Daily status updates
+- **Issues**: `.agor/team-issues.md` - Issue tracking and resolution
+- **Metrics**: `.agor/team-metrics.md` - Performance tracking
+
+### Communication Protocols
+- **Daily Standup**: [Time and format for daily updates]
+- **Status Reports**: [Frequency and format for status reporting]
+- **Escalation**: [Process for escalating issues]
+- **Decision Making**: [How team decisions are made and communicated]
+
+## Process Management
+
+### Development Process
+- **Code Review**: [Process for reviewing code changes]
+- **Testing**: [Testing requirements and procedures]
+- **Deployment**: [Deployment process and responsibilities]
+- **Documentation**: [Documentation standards and maintenance]
+
+### Quality Assurance
+- **Standards**: [Coding standards and best practices]
+- **Reviews**: [Review process and criteria]
+- **Testing**: [Testing coverage and quality requirements]
+- **Metrics**: [Quality metrics and targets]
+
+## Team Development
+
+### Skill Development
+- **Training Needs**: [Skills that team members need to develop]
+- **Knowledge Sharing**: [Process for sharing knowledge across team]
+- **Mentoring**: [Mentoring relationships and programs]
+- **Cross-Training**: [Plans for developing backup expertise]
+
+### Process Improvement
+- **Retrospectives**: [Regular process review and improvement]
+- **Feedback**: [Mechanism for collecting and acting on feedback]
+- **Experiments**: [Process improvements being tested]
+- **Best Practices**: [Documented best practices and lessons learned]
+
+## Risk Management
+
+### Team Risks
+- **Key Person Risk**: [Dependencies on specific team members]
+- **Skill Gaps**: [Areas where team lacks necessary expertise]
+- **Communication**: [Risks related to team communication]
+- **Coordination**: [Risks related to team coordination]
+
+### Mitigation Strategies
+- **Cross-Training**: [Plans to reduce key person dependencies]
+- **Skill Development**: [Plans to address skill gaps]
+- **Process Improvement**: [Plans to improve communication and coordination]
+- **Contingency Planning**: [Plans for handling team member unavailability]
+
+## Success Metrics
+
+### Team Performance
+- **Delivery**: [On-time delivery rate and quality]
+- **Velocity**: [Consistent and predictable delivery speed]
+- **Quality**: [Low defect rates and high code quality]
+- **Collaboration**: [Effective teamwork and communication]
+
+### Individual Growth
+- **Skill Development**: [Progress in developing new skills]
+- **Contribution**: [Quality and quantity of contributions]
+- **Leadership**: [Growth in leadership and mentoring]
+- **Innovation**: [Creative solutions and process improvements]
+
+## Action Items
+
+### Immediate (This Week)
+- [ ] [High priority actions needed this week]
+- [ ] [Critical issues to resolve]
+- [ ] [Important decisions to make]
+
+### Short Term (This Month)
+- [ ] [Medium priority improvements]
+- [ ] [Process enhancements to implement]
+- [ ] [Skill development initiatives]
+
+### Long Term (This Quarter)
+- [ ] [Strategic improvements]
+- [ ] [Major process changes]
+- [ ] [Team development goals]
+"""
+
+
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""
     return """
