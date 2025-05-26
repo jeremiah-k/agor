@@ -31,7 +31,7 @@ agor bundle /path/to/local/project
 
 ### Agent Mode (Direct Git Access)
 
-**For Augment Code, Jules by Google, and other git-capable agents:**
+**For Augment Code Remote Agents, Jules by Google, and other git-capable agents paste this into your prompt:**
 
 ```bash
 # Clone AGOR to temporary location
