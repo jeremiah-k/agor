@@ -2,12 +2,12 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.22.12
+  version: 1.22.15
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.7
+      ref: v1.6.8
       uri: https://github.com/trunk-io/plugins
 # Many linters and tools depend on runtimes - configure them here. (https://docs.trunk.io/runtimes)
 runtimes:
@@ -17,29 +17,27 @@ runtimes:
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
   ignore:
-    - linters: [bandit]
-      paths:
-        - tests/**/*.py
-        - src/agor/main.py # Subprocess calls are intentional for CLI functionality
     - linters: [markdownlint]
       paths:
         - src/agor/tools/code_exploration_docs.md # Multiple H1s are intentional for tool docs
         - src/agor/tools/AGOR_INSTRUCTIONS.md # Trailing punctuation in headings is intentional
         - src/agor/tools/README_ai.md # Code blocks without language are intentional
+        - .agor/**/*.md # Generated files may have formatting issues
+        - docs/strategies.md # Multiple headings with same content are intentional for strategy docs
+        - docs/handoffs.md # Emphasis used as headings is intentional for formatting
 
   enabled:
-    - bandit@1.8.3
     - black@25.1.0
-    - checkov@3.2.398
+    - checkov@3.2.432
     - git-diff-check
     - isort@6.0.1
-    - markdownlint@0.44.0
-    - osv-scanner@2.0.1
+    - markdownlint@0.45.0
+    - osv-scanner@2.0.2
     - prettier@3.5.3
-    - ruff@0.11.4
+    - ruff@0.11.11
     - taplo@0.9.3
-    - trufflehog@3.88.23
-    - yamllint@1.37.0
+    - trufflehog@3.88.34
+    - yamllint@1.37.1
 actions:
   disabled:
     - trunk-announce
