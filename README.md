@@ -150,5 +150,3 @@ agor bundle repo -f zip                     # Google AI Studio format
 ### Additional Inspiration
 
 - **[@NickADobos](https://twitter.com/NickADobos)** for the "[AI zip bomb](https://twitter.com/NickADobos/status/1687938356813180928)" concept that inspired the original AgentGrunt
-
-**We're deeply grateful to [@nikvdp](https://github.com/nikvdp) for creating the innovative foundation that made this comprehensive coordination platform possible.**
