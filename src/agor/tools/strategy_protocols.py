@@ -659,6 +659,642 @@ cat .agor/task-queue.json | grep '"status": "available"'
         return "\n".join(status_lines)
 
 
+class RedTeamProtocol(StrategyProtocol):
+    """Implementation protocol for Red Team strategy."""
+
+    def initialize_strategy(self, task_description: str, blue_team_size: int = 3, red_team_size: int = 3) -> str:
+        """Initialize Red Team strategy following AGOR protocols."""
+
+        # Create strategy-active.md with template content
+        from .project_planning_templates import generate_red_team_strategy
+        strategy_content = generate_red_team_strategy()
+
+        # Add concrete implementation details
+        implementation_details = f"""
+## IMPLEMENTATION PROTOCOL
+
+### Task: {task_description}
+### Blue Team: {blue_team_size} agents
+### Red Team: {red_team_size} agents
+### Status: Phase 1 - Blue Team Build (ACTIVE)
+
+## TEAM ASSIGNMENTS
+{self._generate_team_assignments(blue_team_size, red_team_size, task_description)}
+
+## CURRENT PHASE: Blue Team Build
+
+### Phase 1: Blue Team Build (ACTIVE)
+**Objective**: Implement robust, secure solution
+**Duration**: Until Blue Team signals completion
+**Rules**:
+- Blue Team works independently to build the feature
+- Focus on security, robustness, and error handling
+- Document security measures and assumptions
+- Create comprehensive test suite
+- Signal completion when ready for Red Team attack
+
+### Phase 2: Red Team Attack (PENDING)
+**Objective**: Find vulnerabilities and break the implementation
+**Duration**: Until Red Team exhausts attack vectors
+**Rules**:
+- Red Team attempts to break Blue Team's implementation
+- Document all vulnerabilities and attack vectors found
+- Focus on security, performance, and edge case failures
+- Provide detailed attack reports
+
+### Phase 3: Analysis & Hardening (PENDING)
+**Objective**: Fix vulnerabilities and improve robustness
+**Duration**: Until Red Team can no longer break the system
+**Rules**:
+- Blue Team fixes all discovered vulnerabilities
+- Red Team validates fixes and attempts new attacks
+- Continue cycles until system is sufficiently hardened
+
+## BLUE TEAM INSTRUCTIONS
+
+### Current Objective: Build Robust Implementation
+1. **Analyze requirements** with security mindset
+2. **Design defensively** - assume adversarial usage
+3. **Implement with security** - input validation, access control, error handling
+4. **Test thoroughly** - unit tests, integration tests, security tests
+5. **Document security measures** - what protections are in place
+6. **Signal completion** when ready for Red Team attack
+
+### Security Checklist:
+- [ ] Input validation on all user inputs
+- [ ] Authentication and authorization controls
+- [ ] Error handling that doesn't leak information
+- [ ] Rate limiting and resource protection
+- [ ] Secure data storage and transmission
+- [ ] Logging and monitoring capabilities
+
+### Completion Signal:
+```
+BLUE_TEAM: [timestamp] - BUILD_COMPLETE - Ready for Red Team attack
+```
+
+## RED TEAM INSTRUCTIONS (Phase 2)
+
+### Attack Vectors to Test:
+1. **Security Attacks**:
+   - Authentication bypass attempts
+   - Authorization escalation
+   - Input injection (SQL, XSS, etc.)
+   - Session management flaws
+   - Cryptographic weaknesses
+
+2. **Performance Attacks**:
+   - Resource exhaustion (DoS)
+   - Memory leaks
+   - CPU intensive operations
+   - Database query bombing
+   - File system attacks
+
+3. **Logic Attacks**:
+   - Race conditions
+   - Edge case exploitation
+   - Business logic bypass
+   - State manipulation
+   - Workflow circumvention
+
+4. **Integration Attacks**:
+   - API misuse
+   - Dependency exploitation
+   - Configuration manipulation
+   - Environment variable injection
+   - Third-party service abuse
+
+### Attack Documentation Template:
+```
+ATTACK: [attack-name] by [red-agent-id]
+VECTOR: [how the attack works]
+IMPACT: [what damage could be done]
+EVIDENCE: [proof of concept or reproduction steps]
+SEVERITY: [Critical/High/Medium/Low]
+RECOMMENDATION: [how to fix this vulnerability]
+```
+
+## CYCLE MANAGEMENT
+
+### Phase Transitions:
+1. **Blue → Red**: When Blue Team signals BUILD_COMPLETE
+2. **Red → Analysis**: When Red Team completes attack phase
+3. **Analysis → Blue**: When vulnerabilities are documented
+4. **Repeat**: Until Red Team finds no new vulnerabilities
+
+### Success Criteria:
+- Blue Team implementation is robust and secure
+- Red Team cannot find additional vulnerabilities
+- All discovered issues have been fixed and validated
+- System passes comprehensive security review
+"""
+
+        # Combine template with implementation
+        full_strategy = strategy_content + implementation_details
+
+        # Save to strategy-active.md
+        strategy_file = self.agor_dir / "strategy-active.md"
+        strategy_file.write_text(full_strategy)
+
+        # Create team memory file templates
+        self._create_team_memory_templates(blue_team_size, red_team_size)
+
+        # Create attack tracking file
+        self._create_attack_tracking_file()
+
+        # Log strategy initialization
+        self.log_communication("COORDINATOR", f"Initialized Red Team strategy: {task_description}")
+
+        return f"""✅ Red Team Strategy Initialized
+
+**Task**: {task_description}
+**Blue Team**: {blue_team_size} agents (Builders)
+**Red Team**: {red_team_size} agents (Breakers)
+**Phase**: 1 - Blue Team Build
+
+**Next Steps**:
+1. Blue Team builds robust, secure implementation
+2. Red Team prepares attack strategies
+3. Begin adversarial cycles when Blue Team completes
+
+**Files Created**:
+- `.agor/strategy-active.md` - Strategy details and team assignments
+- `.agor/blue-team-memory.md` - Blue Team coordination
+- `.agor/red-team-memory.md` - Red Team attack planning
+- `.agor/attack-tracking.md` - Vulnerability and attack documentation
+
+**Ready for Blue Team to begin building!**
+"""
+
+    def _generate_team_assignments(self, blue_team_size: int, red_team_size: int, task_description: str) -> str:
+        """Generate team assignments section."""
+        task_slug = task_description.lower().replace(" ", "-")[:20]
+
+        assignments = []
+
+        # Blue Team assignments
+        assignments.append("### Blue Team (Builders)")
+        blue_roles = ["Architect", "Developer", "Security-Tester", "Integration-Specialist", "Quality-Assurance"]
+        for i in range(blue_team_size):
+            role = blue_roles[i % len(blue_roles)]
+            agent_id = f"blue{i+1}"
+            branch_name = f"blue-team/{task_slug}"
+            assignments.append(f"- **{agent_id}** ({role}): `{branch_name}` - 🔄 Building")
+
+        assignments.append("\n### Red Team (Breakers)")
+        red_roles = ["Security-Analyst", "Chaos-Engineer", "Edge-Case-Hunter", "Performance-Tester", "Integration-Attacker"]
+        for i in range(red_team_size):
+            role = red_roles[i % len(red_roles)]
+            agent_id = f"red{i+1}"
+            assignments.append(f"- **{agent_id}** ({role}): Attack planning - ⏳ Waiting")
+
+        return "\n".join(assignments)
+
+    def _create_team_memory_templates(self, blue_team_size: int, red_team_size: int):
+        """Create team memory file templates."""
+
+        # Blue Team memory file
+        blue_memory_file = self.agor_dir / "blue-team-memory.md"
+        blue_memory_content = f"""# Blue Team Memory Log
+
+## Current Task
+[Describe the secure implementation you're building]
+
+## Security Strategy
+[Describe your defensive approach and security measures]
+
+## Implementation Progress
+- [ ] Requirements analysis with security focus
+- [ ] Defensive architecture design
+- [ ] Core functionality implementation
+- [ ] Security controls implementation
+- [ ] Comprehensive testing
+- [ ] Security documentation
+- [ ] Ready for Red Team attack
+
+## Security Measures Implemented
+- [List specific security controls and protections]
+
+## Files Modified
+- [List of changed files with security implications]
+
+## Security Assumptions
+- [Document security assumptions and threat model]
+
+## Test Coverage
+- [Describe security tests and validation]
+
+## Known Limitations
+- [Document any known security limitations or trade-offs]
+
+## Status
+Current: Building secure implementation
+Phase: 1 - Blue Team Build
+Team Size: {blue_team_size} agents
+"""
+        blue_memory_file.write_text(blue_memory_content)
+
+        # Red Team memory file
+        red_memory_file = self.agor_dir / "red-team-memory.md"
+        red_memory_content = f"""# Red Team Memory Log
+
+## Target Analysis
+[Analyze the Blue Team's implementation for attack vectors]
+
+## Attack Strategy
+[Describe your overall attack approach and methodology]
+
+## Attack Planning
+- [ ] Reconnaissance and target analysis
+- [ ] Attack vector identification
+- [ ] Exploit development
+- [ ] Attack execution
+- [ ] Vulnerability documentation
+- [ ] Impact assessment
+
+## Attack Vectors Identified
+- [List potential attack vectors and approaches]
+
+## Exploits Developed
+- [Document working exploits and proof of concepts]
+
+## Vulnerabilities Found
+- [List discovered vulnerabilities with severity]
+
+## Attack Results
+- [Document successful attacks and their impact]
+
+## Recommendations
+- [Provide recommendations for fixing vulnerabilities]
+
+## Status
+Current: Planning attacks
+Phase: 1 - Waiting for Blue Team completion
+Team Size: {red_team_size} agents
+"""
+        red_memory_file.write_text(red_memory_content)
+
+    def _create_attack_tracking_file(self):
+        """Create attack tracking file for vulnerability documentation."""
+        attack_file = self.agor_dir / "attack-tracking.md"
+        attack_content = """# Red Team Attack Tracking
+
+## Attack Summary
+
+| Attack ID | Vector | Severity | Status | Assigned To | Fixed |
+|-----------|--------|----------|--------|-------------|-------|
+| | | | | | |
+
+## Detailed Attack Reports
+
+### Template for New Attacks
+```
+## ATTACK-001: [Attack Name]
+**Discovered by**: [red-agent-id]
+**Date**: [timestamp]
+**Vector**: [attack method]
+**Severity**: [Critical/High/Medium/Low]
+
+### Description
+[Detailed description of the vulnerability]
+
+### Reproduction Steps
+1. [Step by step reproduction]
+2. [Include code/commands if applicable]
+
+### Impact
+[What damage could this cause?]
+
+### Evidence
+[Screenshots, logs, or proof of concept]
+
+### Recommendation
+[How to fix this vulnerability]
+
+### Blue Team Response
+[Blue Team's fix and validation]
+
+### Validation
+[Red Team validation of the fix]
+```
+
+## Attack Statistics
+
+- **Total Attacks**: 0
+- **Critical**: 0
+- **High**: 0
+- **Medium**: 0
+- **Low**: 0
+- **Fixed**: 0
+- **Remaining**: 0
+
+## Cycle History
+
+### Cycle 1: Initial Build
+- **Blue Team Build**: [timestamp] - [status]
+- **Red Team Attack**: [timestamp] - [status]
+- **Vulnerabilities Found**: [count]
+- **Fixes Applied**: [count]
+
+[Add additional cycles as they occur]
+"""
+        attack_file.write_text(attack_content)
+
+
+class MobProgrammingProtocol(StrategyProtocol):
+    """Implementation protocol for Mob Programming strategy."""
+
+    def initialize_strategy(self, task_description: str, agent_count: int = 4) -> str:
+        """Initialize Mob Programming strategy following AGOR protocols."""
+
+        # Create strategy-active.md with template content
+        from .project_planning_templates import generate_mob_programming_strategy
+        strategy_content = generate_mob_programming_strategy()
+
+        # Add concrete implementation details
+        implementation_details = f"""
+## IMPLEMENTATION PROTOCOL
+
+### Task: {task_description}
+### Agents: {agent_count}
+### Status: Session 1 - Problem Definition (ACTIVE)
+
+## AGENT ASSIGNMENTS
+{self._generate_mob_assignments(agent_count, task_description)}
+
+## CURRENT SESSION: Problem Definition
+
+### Session Structure (Rotate every 15-20 minutes):
+1. **Problem Definition** (Current) - All agents understand the task
+2. **Approach Discussion** - Brief strategy alignment
+3. **Coding Session** - Rotate roles while coding
+4. **Review** - Collective code review and refinement
+
+### Role Rotation Schedule:
+{self._generate_rotation_schedule(agent_count)}
+
+## CURRENT ROLES
+- **Driver**: {self._get_initial_driver(agent_count)} (Types code, implements decisions)
+- **Navigator**: {self._get_initial_navigator(agent_count)} (Guides direction, tactical decisions)
+- **Observers**: {self._get_initial_observers(agent_count)} (Review code, suggest improvements)
+- **Researcher**: {self._get_initial_researcher(agent_count)} (Documentation, investigation)
+
+## COLLABORATION PROTOCOL
+
+### Communication Format:
+```
+DRIVER: "I'm implementing [specific action]..."
+NAVIGATOR: "Let's [tactical suggestion]"
+OBSERVER: "Consider [improvement suggestion]"
+RESEARCHER: "Found [relevant information]"
+```
+
+### Session Rules:
+1. **Only Driver types** - Others guide through discussion
+2. **Navigator leads direction** - Makes tactical decisions
+3. **Observers catch errors** - Continuous code review
+4. **Researcher provides context** - Documentation, best practices
+5. **Rotate every 15-20 minutes** - Everyone gets all roles
+6. **Collective decisions** - Major choices discussed by all
+
+### Rotation Protocol:
+```
+ROTATION: [timestamp] - [session-number]
+Previous Driver → Observer
+Previous Navigator → Driver
+Previous Observer → Navigator
+Previous Researcher → Observer
+[Next agent] → Researcher
+```
+
+## SESSION INSTRUCTIONS
+
+### Session 1: Problem Definition (CURRENT)
+**Objective**: Ensure all agents understand the task
+**Duration**: 15-20 minutes
+**Activities**:
+- Review requirements and constraints
+- Discuss success criteria
+- Identify key challenges
+- Align on overall approach
+- Set up development environment
+
+**Completion Signal**:
+```
+MOB: [timestamp] - SESSION1_COMPLETE - Ready for approach discussion
+```
+
+### Session 2: Approach Discussion (NEXT)
+**Objective**: Align on technical strategy
+**Duration**: 15-20 minutes
+**Activities**:
+- Discuss architecture options
+- Choose technology approach
+- Plan implementation steps
+- Identify potential risks
+- Create task breakdown
+
+### Session 3+: Coding Sessions
+**Objective**: Collaborative implementation
+**Duration**: 15-20 minutes per rotation
+**Activities**:
+- Driver implements current task
+- Navigator guides implementation
+- Observers provide continuous review
+- Researcher supports with documentation
+- Rotate roles regularly
+
+## COLLABORATION WORKSPACE
+
+### Shared Branch: `mob-programming/{task_description.lower().replace(' ', '-')[:20]}`
+### Communication: Real-time via `.agor/agentconvo.md`
+### Code Review: Continuous during implementation
+### Documentation: Collective in `.agor/mob-session-log.md`
+
+## SUCCESS CRITERIA
+- All agents understand the complete solution
+- High-quality code through continuous review
+- Knowledge shared across all team members
+- Collective ownership of the implementation
+- No handoff required - everyone knows everything
+"""
+
+        # Combine template with implementation
+        full_strategy = strategy_content + implementation_details
+
+        # Save to strategy-active.md
+        strategy_file = self.agor_dir / "strategy-active.md"
+        strategy_file.write_text(full_strategy)
+
+        # Create mob session log
+        self._create_mob_session_log(task_description, agent_count)
+
+        # Log strategy initialization
+        self.log_communication("COORDINATOR", f"Initialized Mob Programming strategy: {task_description}")
+
+        return f"""✅ Mob Programming Strategy Initialized
+
+**Task**: {task_description}
+**Agents**: {agent_count}
+**Session**: 1 - Problem Definition
+
+**Current Roles**:
+- Driver: {self._get_initial_driver(agent_count)}
+- Navigator: {self._get_initial_navigator(agent_count)}
+- Observers: {self._get_initial_observers(agent_count)}
+- Researcher: {self._get_initial_researcher(agent_count)}
+
+**Next Steps**:
+1. All agents join collaborative session
+2. Begin with problem definition and alignment
+3. Rotate roles every 15-20 minutes
+4. Maintain continuous communication
+
+**Files Created**:
+- `.agor/strategy-active.md` - Strategy details and role assignments
+- `.agor/mob-session-log.md` - Session tracking and decisions
+
+**Ready for collaborative session to begin!**
+"""
+
+    def _generate_mob_assignments(self, agent_count: int, task_description: str) -> str:
+        """Generate mob programming assignments."""
+        task_slug = task_description.lower().replace(" ", "-")[:20]
+        branch_name = f"mob-programming/{task_slug}"
+
+        assignments = []
+        assignments.append(f"### Shared Workspace: `{branch_name}`")
+        assignments.append("### All Agents Collaborate Simultaneously")
+
+        for i in range(1, agent_count + 1):
+            agent_id = f"agent{i}"
+            assignments.append(f"- **{agent_id}**: Collaborative participant - 🔄 Active")
+
+        return "\n".join(assignments)
+
+    def _generate_rotation_schedule(self, agent_count: int) -> str:
+        """Generate role rotation schedule."""
+        agents = [f"agent{i}" for i in range(1, agent_count + 1)]
+
+        schedule = []
+        schedule.append("| Session | Driver | Navigator | Observer(s) | Researcher |")
+        schedule.append("|---------|--------|-----------|-------------|------------|")
+
+        for session in range(1, min(agent_count + 1, 6)):  # Show first 5 rotations
+            driver_idx = (session - 1) % agent_count
+            navigator_idx = (session) % agent_count
+            researcher_idx = (session + 1) % agent_count
+
+            observers = []
+            for i in range(agent_count):
+                if i not in [driver_idx, navigator_idx, researcher_idx]:
+                    observers.append(agents[i])
+
+            observer_str = ", ".join(observers) if observers else "N/A"
+
+            schedule.append(f"| {session} | {agents[driver_idx]} | {agents[navigator_idx]} | {observer_str} | {agents[researcher_idx]} |")
+
+        return "\n".join(schedule)
+
+    def _get_initial_driver(self, agent_count: int) -> str:
+        return "agent1"
+
+    def _get_initial_navigator(self, agent_count: int) -> str:
+        return "agent2" if agent_count > 1 else "agent1"
+
+    def _get_initial_observers(self, agent_count: int) -> str:
+        if agent_count <= 2:
+            return "N/A"
+        elif agent_count == 3:
+            return "agent3"
+        else:
+            observers = [f"agent{i}" for i in range(3, min(agent_count, 5))]
+            return ", ".join(observers)
+
+    def _get_initial_researcher(self, agent_count: int) -> str:
+        return f"agent{min(agent_count, 4)}"
+
+    def _create_mob_session_log(self, task_description: str, agent_count: int):
+        """Create mob programming session log."""
+        log_file = self.agor_dir / "mob-session-log.md"
+        log_content = f"""# Mob Programming Session Log
+
+## Task: {task_description}
+## Team: {agent_count} agents
+## Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Session History
+
+### Session 1: Problem Definition (ACTIVE)
+**Started**: [timestamp]
+**Roles**: Driver: agent1, Navigator: agent2, Observer(s): [others], Researcher: agent{min(agent_count, 4)}
+**Objective**: Understand requirements and align on approach
+**Progress**:
+- [ ] Requirements reviewed
+- [ ] Success criteria defined
+- [ ] Key challenges identified
+- [ ] Overall approach agreed
+- [ ] Development environment ready
+
+**Decisions Made**:
+- [Record key decisions and rationale]
+
+**Next Session**: Approach Discussion
+
+---
+
+### Session Template for Future Sessions
+```
+### Session [N]: [Session Name]
+**Started**: [timestamp]
+**Completed**: [timestamp]
+**Roles**: Driver: [agent], Navigator: [agent], Observer(s): [agents], Researcher: [agent]
+**Objective**: [what this session aimed to accomplish]
+**Progress**:
+- [ ] [specific tasks completed]
+
+**Code Changes**:
+- [files modified and key changes]
+
+**Decisions Made**:
+- [important decisions and rationale]
+
+**Challenges Encountered**:
+- [problems faced and how resolved]
+
+**Next Session**: [what's planned next]
+```
+
+## Collective Knowledge
+
+### Architecture Decisions
+- [Record architectural choices made collectively]
+
+### Implementation Patterns
+- [Document patterns and approaches used]
+
+### Lessons Learned
+- [Capture insights and learning from the session]
+
+### Code Quality Notes
+- [Document quality improvements and refactoring]
+
+## Final Summary
+
+**Total Sessions**: [count]
+**Total Duration**: [time]
+**Lines of Code**: [count]
+**Key Achievements**:
+- [major accomplishments]
+
+**Team Feedback**:
+- [what worked well]
+- [what could be improved]
+- [knowledge gained by each agent]
+"""
+        log_file.write_text(log_content)
+
+
 # Factory function to get appropriate protocol
 def get_strategy_protocol(strategy: str) -> StrategyProtocol:
     """Get the appropriate strategy protocol implementation."""
@@ -668,7 +1304,11 @@ def get_strategy_protocol(strategy: str) -> StrategyProtocol:
         "pl": PipelineProtocol,
         "pipeline": PipelineProtocol,
         "sw": SwarmProtocol,
-        "swarm": SwarmProtocol
+        "swarm": SwarmProtocol,
+        "rt": RedTeamProtocol,
+        "red_team": RedTeamProtocol,
+        "mb": MobProgrammingProtocol,
+        "mob_programming": MobProgrammingProtocol,
     }
 
     protocol_class = protocols.get(strategy.lower(), StrategyProtocol)
@@ -692,6 +1332,18 @@ def initialize_swarm(task: str, task_list: List[str], agent_count: int = 4) -> s
     """Initialize Swarm strategy."""
     protocol = SwarmProtocol()
     return protocol.initialize_strategy(task, task_list, agent_count)
+
+
+def initialize_red_team(task: str, blue_team_size: int = 3, red_team_size: int = 3) -> str:
+    """Initialize Red Team strategy."""
+    protocol = RedTeamProtocol()
+    return protocol.initialize_strategy(task, blue_team_size, red_team_size)
+
+
+def initialize_mob_programming(task: str, agent_count: int = 4) -> str:
+    """Initialize Mob Programming strategy."""
+    protocol = MobProgrammingProtocol()
+    return protocol.initialize_strategy(task, agent_count)
 
 
 def strategy_selection(project_analysis: str = "", team_size: int = 3, complexity: str = "medium") -> str:
@@ -779,6 +1431,14 @@ result = initialize_pipeline("your task description", stages=["Foundation", "Enh
 from agor.tools.strategy_protocols import initialize_swarm
 tasks = ["task1", "task2", "task3", "task4"]  # Define your task list
 result = initialize_swarm("your task description", tasks, agent_count={team_size})
+
+# Red Team
+from agor.tools.strategy_protocols import initialize_red_team
+result = initialize_red_team("your task description", blue_team_size=3, red_team_size=3)
+
+# Mob Programming
+from agor.tools.strategy_protocols import initialize_mob_programming
+result = initialize_mob_programming("your task description", agent_count={team_size})
 ```
 
 Or use the agent coordination helper:
