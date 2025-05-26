@@ -2,6 +2,8 @@
 
 _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
 
+**📚 DOCUMENTATION INDEX**: For comprehensive documentation and quick lookup, always check the **[Documentation Index](../../docs/index.md)** first. It provides token-efficient access to all AGOR resources, including strategy implementation, coordination protocols, and troubleshooting guides.
+
 ## ⚠️ CRITICAL: REAL GIT BINARY USAGE
 
 **You have a REAL, FUNCTIONAL git binary at `/tmp/agor_tools/git`**
@@ -320,6 +322,17 @@ If user selects a hotkey, respond accordingly.
 - **`discover_role`**: Discover your role and get concrete next actions
 - **`check_status`**: Check current strategy status and recent activity
 - **`initialize_strategy`**: Set up strategy with concrete implementation protocols
+
+**QUICK COORDINATION COMMANDS:**
+```python
+# For agents entering a project
+from agor.tools.agent_coordination import discover_my_role
+print(discover_my_role("agent1"))  # Gets concrete next actions
+
+# For strategy initialization
+from agor.tools.strategy_protocols import initialize_parallel_divergent
+result = initialize_parallel_divergent("task description", agent_count=3)
+```
 
 **COORDINATION SETUP:**
 

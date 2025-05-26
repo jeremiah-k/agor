@@ -36,6 +36,7 @@ Think of it as the difference between having one really smart developer versus h
 
 ## 🚀 Quick Navigation
 
+**🤖 AI Agent entering project?** → **[START HERE](agent-start-here.md)** - Immediate guidance and discovery
 **New to AGOR?** → Start with [Quick Start Guide](quick-start.md)
 **Want to get started quickly?** → Check out [Google AI Studio Guide](google-ai-studio.md)
 **Need comprehensive instructions?** → See [Complete AI Protocol](../src/agor/tools/README_ai.md)

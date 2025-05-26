@@ -6,6 +6,7 @@
 
 ### "I need to get started with AGOR"
 
+- **[docs/agent-start-here.md](agent-start-here.md)** - **START HERE** - Agent entry point with immediate guidance
 - **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
 - **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
@@ -25,6 +26,18 @@
   - Swarm: Dynamic task assignment
   - Red Team: Adversarial build/break cycles
   - Mob Programming: Collaborative coding
+
+### "I need to implement/execute a strategy"
+
+- **[src/agor/tools/strategy_protocols.py](../src/agor/tools/strategy_protocols.py)** - Concrete strategy implementation
+  - Functions: initialize_parallel_divergent(), initialize_pipeline(), initialize_swarm()
+  - Creates: .agor/strategy-active.md, agent memory files, task queues
+  - Provides: Step-by-step execution protocols, automatic phase transitions
+- **[src/agor/tools/agent_coordination.py](../src/agor/tools/agent_coordination.py)** - Agent role discovery
+  - Functions: discover_my_role(), check_strategy_status()
+  - Provides: Concrete next actions, role assignment, current status
+- **[docs/coordination-example.md](coordination-example.md)** - Complete implementation example
+  - Shows: Before/after coordination, concrete usage, file structure
 
 ### "I need to hand off work to another agent"
 
@@ -69,11 +82,13 @@
 | File                                                       | Purpose                    | Key Sections                                | Lines |
 | ---------------------------------------------------------- | -------------------------- | ------------------------------------------- | ----- |
 | **[README.md](README.md)**                                 | Documentation overview     | Navigation map, quick links                 | 60    |
+| **[agent-start-here.md](agent-start-here.md)**             | **Agent entry point**      | **Immediate guidance, discovery commands**   | ~100  |
 | **[quick-start.md](quick-start.md)**                       | 5-minute setup guide       | Installation, bundling, platform setup      | ~200  |
 | **[bundle-mode.md](bundle-mode.md)**                       | Complete Bundle Mode guide | All platforms, models, troubleshooting      | ~300  |
 | **[google-ai-studio.md](google-ai-studio.md)**             | Google AI Studio guide     | Function Calling setup, troubleshooting     | ~300  |
 | **[strategies.md](strategies.md)**                         | Multi-agent coordination   | 5 strategies with examples, decision matrix | ~400  |
 | **[handoffs.md](handoffs.md)**                             | Agent transition system    | Handoff creation, receiving, best practices | ~500  |
+| **[coordination-example.md](coordination-example.md)**     | Strategy implementation    | Complete example, before/after comparison   | ~300  |
 | **[agor-development-guide.md](agor-development-guide.md)** | Development checklist      | For agents working on AGOR itself           | ~400  |
 
 ### AI Instructions (src/agor/tools/)
@@ -95,6 +110,8 @@
 | **[sqlite_memory.py](../src/agor/tools/sqlite_memory.py)**                           | SQLite memory (exp) | SQLiteMemoryManager, database operations     | ~400  |
 | **[agent_prompt_templates.py](../src/agor/tools/agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
 | **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
+| **[strategy_protocols.py](../src/agor/tools/strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
+| **[agent_coordination.py](../src/agor/tools/agent_coordination.py)**                 | Agent coordination  | Role discovery, status checking              | ~400  |
 
 ## 🔍 Search by Concept
 
@@ -124,6 +141,9 @@
 - **SQLite Memory**: .agor/memory.db database-based storage (experimental)
 - **Handoffs**: Complete transition procedures with git state
 - **Strategies**: 5 multi-agent patterns with implementation details
+- **Strategy Implementation**: Concrete execution protocols (strategy_protocols.py)
+- **Agent Discovery**: Role assignment and next actions (agent_coordination.py)
+- **State Management**: .agor/strategy-active.md, task queues, phase transitions
 
 ## 🎯 Token-Efficient Lookup Patterns
 
@@ -141,6 +161,8 @@ Need handoff? → handoffs.md or handoff_templates.py
 Code analysis? → code_exploration.py + code_exploration_docs.md
 Prompt templates? → agent_prompt_templates.py
 Planning frameworks? → project_planning_templates.py
+Strategy execution? → strategy_protocols.py + coordination-example.md
+Agent coordination? → agent_coordination.py + README_ai.md Lines 318-322
 ```
 
 ### For Setup and Troubleshooting
