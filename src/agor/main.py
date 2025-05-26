@@ -38,12 +38,6 @@ app = typer.Typer(
 
 
 @app.command()
-def version():
-    """Display AGOR version information"""
-    print(f"🎼 AgentOrchestrator (AGOR) v{__version__}")
-
-
-@app.command()
 def init(
     task: str = typer.Argument(help="Task description for the strategy"),
     agents: int = typer.Option(3, "--agents", "-a", help="Number of agents (2-6)"),
@@ -79,7 +73,9 @@ def sync():
 
 @app.command()
 def ss(
-    complexity: str = typer.Option("medium", help="Project complexity: simple, medium, complex"),
+    complexity: str = typer.Option(
+        "medium", help="Project complexity: simple, medium, complex"
+    ),
     team_size: int = typer.Option(3, help="Preferred team size"),
 ):
     """Analyze project and recommend optimal development strategy"""
@@ -715,6 +711,7 @@ def agent_manifest(
     import platform
     from datetime import datetime
     from pathlib import Path
+
     from .constants import PROTOCOL_VERSION
 
     print("🤖 Generating AGOR Agent Manifest for Standalone Mode...")
@@ -941,6 +938,242 @@ def version():
     from .version_check import display_version_info
 
     display_version_info(check_updates=True)
+
+
+@app.command(name="generate-agor-feedback")
+def generate_agor_feedback(
+    copy: bool = typer.Option(
+        True, "--copy/--no-copy", help="Copy feedback to clipboard"
+    ),
+    commit: bool = typer.Option(
+        False, "--commit", help="Attempt to commit feedback directly to repository"
+    ),
+):
+    """Generate AGOR feedback and improvement suggestions"""
+    import json
+    import platform
+    import subprocess
+    from datetime import datetime
+    from pathlib import Path
+
+    from .constants import PROTOCOL_VERSION
+    from .platform import copy_to_clipboard
+
+    print("📝 Generating AGOR Feedback and Improvement Suggestions...")
+
+    # Get current time with NTP if possible
+    try:
+        import httpx
+        with httpx.Client(timeout=5.0) as client:
+            response = client.get("http://worldtimeapi.org/api/timezone/UTC")
+            response.raise_for_status()
+            time_data = response.json()
+            current_time = time_data["datetime"][:19].replace("T", " ") + " UTC"
+    except Exception:
+        current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+    # Collect system information
+    system_info = {
+        "agor_version": __version__,
+        "protocol_version": PROTOCOL_VERSION,
+        "platform": platform.system(),
+        "python_version": platform.python_version(),
+        "timestamp": current_time,
+    }
+
+    # Try to get git repository information
+    repo_info = {}
+    try:
+        repo_root = subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        repo_name = Path(repo_root).name
+        current_branch = subprocess.check_output(
+            ["git", "branch", "--show-current"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+
+        repo_info = {
+            "repository_name": repo_name,
+            "current_branch": current_branch,
+            "repository_root": repo_root,
+        }
+    except subprocess.CalledProcessError:
+        repo_info = {"note": "Not in a git repository"}
+
+    # Generate feedback content
+    feedback_content = f"""# AGOR Feedback and Improvement Suggestions
+
+**Generated**: {current_time}
+**AGOR Version**: {system_info['agor_version']}
+**Protocol Version**: {system_info['protocol_version']}
+**Platform**: {system_info['platform']} (Python {system_info['python_version']})
+**Repository**: {repo_info.get('repository_name', 'Unknown')}
+**Branch**: {repo_info.get('current_branch', 'Unknown')}
+
+## 🎯 Usage Experience
+
+### What worked well:
+- [ ] Strategy selection and setup
+- [ ] Bundle creation and extraction
+- [ ] Agent coordination protocols
+- [ ] Documentation clarity
+- [ ] CLI interface usability
+- [ ] Multi-agent workflow
+
+### What could be improved:
+- [ ] Performance issues
+- [ ] Documentation gaps
+- [ ] CLI command confusion
+- [ ] Strategy effectiveness
+- [ ] Error handling
+- [ ] Setup complexity
+
+## 🐛 Issues Encountered
+
+### Technical Issues:
+- [ ] Installation problems
+- [ ] Dependency conflicts
+- [ ] Platform compatibility
+- [ ] Git integration issues
+- [ ] Archive/bundle problems
+
+### Workflow Issues:
+- [ ] Agent coordination confusion
+- [ ] Strategy selection difficulty
+- [ ] Handoff process unclear
+- [ ] Status tracking problems
+- [ ] Communication breakdowns
+
+## 💡 Feature Requests
+
+### High Priority:
+- [ ] Better error messages
+- [ ] Improved documentation
+- [ ] Simplified setup process
+- [ ] Enhanced CLI help
+- [ ] Better agent status tracking
+
+### Medium Priority:
+- [ ] Additional strategies
+- [ ] Better integration with IDEs
+- [ ] Improved bundle formats
+- [ ] Enhanced git workflows
+- [ ] Better progress indicators
+
+### Low Priority:
+- [ ] GUI interface
+- [ ] Web dashboard
+- [ ] Mobile support
+- [ ] Cloud integration
+- [ ] Advanced analytics
+
+## 🔧 Specific Improvements
+
+### Documentation:
+- [ ] More examples needed
+- [ ] Better getting started guide
+- [ ] Video tutorials
+- [ ] FAQ section
+- [ ] Troubleshooting guide
+
+### CLI Interface:
+- [ ] Better command names
+- [ ] More intuitive options
+- [ ] Better help text
+- [ ] Command aliases
+- [ ] Auto-completion
+
+### Agent Coordination:
+- [ ] Clearer handoff process
+- [ ] Better status visibility
+- [ ] Improved communication templates
+- [ ] Enhanced strategy protocols
+- [ ] Better conflict resolution
+
+## 📊 Performance Feedback
+
+### Speed:
+- Bundle creation: ⭐⭐⭐⭐⭐ (1=slow, 5=fast)
+- Strategy setup: ⭐⭐⭐⭐⭐
+- Agent coordination: ⭐⭐⭐⭐⭐
+- Documentation loading: ⭐⭐⭐⭐⭐
+
+### Reliability:
+- Git operations: ⭐⭐⭐⭐⭐ (1=unreliable, 5=rock solid)
+- Archive creation: ⭐⭐⭐⭐⭐
+- Cross-platform: ⭐⭐⭐⭐⭐
+- Error handling: ⭐⭐⭐⭐⭐
+
+## 🎨 User Experience
+
+### Ease of Use:
+- First-time setup: ⭐⭐⭐⭐⭐ (1=confusing, 5=intuitive)
+- Daily usage: ⭐⭐⭐⭐⭐
+- Learning curve: ⭐⭐⭐⭐⭐
+- Documentation quality: ⭐⭐⭐⭐⭐
+
+## 💬 Additional Comments
+
+```
+[Please add any additional feedback, suggestions, or comments here]
+
+
+
+
+```
+
+## 🔗 Contact Information
+
+**How to submit this feedback:**
+1. **GitHub Issues**: https://github.com/jeremiah-k/agor/issues
+2. **Discussions**: https://github.com/jeremiah-k/agor/discussions
+3. **Email**: jeremiahk@gmx.com
+
+**Thank you for helping improve AGOR!** 🙏
+
+---
+*This feedback was generated automatically by AGOR v{system_info['agor_version']} (Protocol v{system_info['protocol_version']})*
+"""
+
+    # Determine output method
+    if commit and repo_info.get("repository_root"):
+        # Try to commit directly to repository
+        try:
+            feedback_file = Path(repo_info["repository_root"]) / "agor_feedback.md"
+            feedback_file.write_text(feedback_content)
+
+            # Add and commit the file
+            subprocess.run(["git", "add", str(feedback_file)], check=True)
+            subprocess.run([
+                "git", "commit", "-m",
+                f"📝 Add AGOR feedback form ({current_time})"
+            ], check=True)
+
+            print(f"✅ Feedback committed to repository: {feedback_file}")
+            print(f"📁 File: {feedback_file}")
+            print("\n🚀 You can now edit the file and submit feedback via GitHub!")
+
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Failed to commit feedback: {e}")
+            print("\n📋 Feedback content (copy and save manually):")
+            print("=" * 60)
+            print(feedback_content)
+            print("=" * 60)
+    else:
+        # Output as codeblock for copy/paste
+        print("\n📋 AGOR Feedback Form (ready for copy/paste):")
+        print("=" * 60)
+        print(feedback_content)
+        print("=" * 60)
+
+        # Copy to clipboard if requested
+        if copy:
+            success, message = copy_to_clipboard(feedback_content)
+            print(f"\n{message}")
+
+        print("\n💡 Save this as 'agor_feedback.md' and submit via GitHub Issues or Discussions")
 
 
 def cli():

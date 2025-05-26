@@ -324,6 +324,7 @@ If user selects a hotkey, respond accordingly.
 - **`initialize_strategy`**: Set up strategy with concrete implementation protocols
 
 **QUICK COORDINATION COMMANDS:**
+
 ```python
 # For agents entering a project
 from agor.tools.agent_coordination import discover_my_role

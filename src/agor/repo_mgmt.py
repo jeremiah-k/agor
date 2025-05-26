@@ -322,6 +322,62 @@ def clone_git_repo_to_temp_dir(
     return temp_dir
 
 
+def clone_repository(repo_url: str, target_path: Path, depth: int = None) -> None:
+    """
+    Clone a repository to a target path.
+
+    Args:
+        repo_url: URL or path of the repository to clone
+        target_path: Path where to clone the repository
+        depth: Depth for shallow clone (None for full clone)
+    """
+    # Use the existing clone_git_repo_to_temp_dir function but move result to target
+    temp_dir = clone_git_repo_to_temp_dir(
+        repo_url, shallow=depth is not None, main_only=False, all_branches=True
+    )
+
+    # Move the cloned repo to the target path
+    if target_path.exists():
+        shutil.rmtree(target_path)
+    shutil.move(str(temp_dir), str(target_path))
+
+
+def get_branches(repo_path: Path) -> list[str]:
+    """
+    Get list of all branches in a repository.
+
+    Args:
+        repo_path: Path to the git repository
+
+    Returns:
+        List of branch names
+    """
+    try:
+        # Get all local branches
+        result = git["branch", "-a"](cwd=repo_path)
+        branches = []
+        for line in result.strip().split("\n"):
+            line = line.strip()
+            if line and not line.startswith("*"):
+                # Remove leading * and whitespace, and remote prefixes
+                branch = line.replace("*", "").strip()
+                if branch.startswith("remotes/origin/"):
+                    branch = branch.replace("remotes/origin/", "")
+                if branch and branch != "HEAD":
+                    branches.append(branch)
+            elif line.startswith("*"):
+                # Current branch
+                branch = line.replace("*", "").strip()
+                if branch and branch != "HEAD":
+                    branches.append(branch)
+
+        # Remove duplicates and return
+        return list(set(branches))
+    except Exception as e:
+        print(f"Error getting branches: {e}")
+        return ["main"]  # Fallback to main branch
+
+
 def tar_directory(path_to_directory: Path, compression="gz") -> Path:
     # Ensure the directory exists
     if not path_to_directory.exists() or not path_to_directory.is_dir():

@@ -27,6 +27,7 @@ AGOR's state management system provides structured coordination for multi-agent 
 ## State Files
 
 ### strategy.json
+
 Contains the current strategy configuration:
 
 ```json
@@ -40,17 +41,19 @@ Contains the current strategy configuration:
 ```
 
 ### agent_branches.json
+
 Maps agents to their assigned git branches:
 
 ```json
 {
   "agent1": "agent1/implement-e2e-encryp",
-  "agent2": "agent2/implement-e2e-encryp", 
+  "agent2": "agent2/implement-e2e-encryp",
   "agent3": "agent3/implement-e2e-encryp"
 }
 ```
 
 ### active_tasks.json
+
 Tracks the current status of each agent:
 
 ```json
@@ -62,22 +65,25 @@ Tracks the current status of each agent:
 ```
 
 **Valid statuses:**
+
 - `pending`: Agent hasn't started work
 - `in-progress`: Agent is actively working
 - `completed`: Agent has finished their solution
 
 ### sync_flags.yaml
+
 Contains coordination flags and metadata:
 
 ```yaml
 agents_ready: 3
-last_sync: '2025-05-26T01:18:36.806632'
-last_update: '2025-05-26T01:20:19.865927'
+last_sync: "2025-05-26T01:18:36.806632"
+last_update: "2025-05-26T01:20:19.865927"
 pd_merge_pending: true
 total_agents: 3
 ```
 
 ### state.log
+
 Event log with timestamps:
 
 ```
@@ -92,6 +98,7 @@ Event log with timestamps:
 ## CLI Commands
 
 ### Initialize Strategy
+
 ```bash
 # Initialize basic coordination
 agor init "task description" --agents 3
@@ -101,6 +108,7 @@ agor pd "implement e2e encryption" --agents 3
 ```
 
 ### Monitor Progress
+
 ```bash
 # Check overall status
 agor status
@@ -114,6 +122,7 @@ agor sync
 ```
 
 ### Strategy Selection
+
 ```bash
 # Get strategy recommendations
 agor ss --complexity complex --team-size 4
@@ -122,18 +131,21 @@ agor ss --complexity complex --team-size 4
 ## Parallel Divergent Workflow
 
 ### Phase 1: Divergent Execution
+
 1. **Setup**: `agor pd "task description" --agents 3`
 2. **Agent Assignment**: Each agent gets their own branch and instructions
 3. **Independent Work**: Agents work without coordination
 4. **Status Updates**: `agor agent-status agent1 in-progress`
 
 ### Phase 2: Convergent Review
+
 1. **Completion**: All agents mark status as `completed`
 2. **Review**: Agents review each other's solutions
 3. **Evaluation**: Update `pd_evaluation.md` with findings
 4. **Comparison**: Identify best practices and innovations
 
 ### Phase 3: Synthesis
+
 1. **Merge Planning**: Decide which approaches to combine
 2. **Implementation**: Create unified solution
 3. **Documentation**: Update project documentation
@@ -142,17 +154,21 @@ agor ss --complexity complex --team-size 4
 ## Integration with Existing Tools
 
 ### SQLite Memory System
+
 The state management integrates with AGOR's existing SQLite memory system:
+
 - State changes are logged to the database
 - Agent memories are stored in SQLite
 - Coordination events are tracked
 
 ### Git Integration
+
 - Automatic branch creation for each agent
 - Branch naming follows pattern: `{agent_id}/{task_slug}`
 - Status tracking includes git synchronization
 
 ### Agent Instructions
+
 - Individual instruction files generated for each agent
 - Clear phase-based workflow guidance
 - Communication protocols defined
@@ -160,16 +176,19 @@ The state management integrates with AGOR's existing SQLite memory system:
 ## Best Practices
 
 ### File Management
+
 - Keep state files under 500 lines
 - Use structured JSON/YAML for machine readability
 - Maintain human-readable Markdown for documentation
 
 ### Status Updates
+
 - Update agent status regularly during development
 - Use descriptive commit messages on agent branches
 - Log significant decisions in `pd_evaluation.md`
 
 ### Coordination
+
 - Check `agor status` before major decisions
 - Sync regularly with `agor sync`
 - Use agent communication log for cross-agent messages
@@ -177,11 +196,13 @@ The state management integrates with AGOR's existing SQLite memory system:
 ## Error Handling
 
 ### Missing Files
+
 - State files are auto-generated if missing
 - Graceful degradation when files are corrupted
 - Clear error messages for invalid operations
 
 ### Invalid States
+
 - Status validation prevents invalid transitions
 - Agent ID validation ensures correct assignments
 - Strategy mode validation prevents conflicts
@@ -189,11 +210,13 @@ The state management integrates with AGOR's existing SQLite memory system:
 ## Future Extensions
 
 ### Additional Strategies
+
 - Pipeline strategy state management
 - Swarm strategy task queues
 - Red Team adversarial tracking
 
 ### Enhanced Coordination
+
 - Real-time status updates
 - Automated merge conflict detection
 - Performance metrics tracking
@@ -203,12 +226,14 @@ The state management integrates with AGOR's existing SQLite memory system:
 ### Common Issues
 
 **No state directory found:**
+
 ```bash
 # Solution: Initialize strategy first
 agor pd "your task" --agents 3
 ```
 
 **Agent not found:**
+
 ```bash
 # Check available agents
 agor status
@@ -216,6 +241,7 @@ agor status
 ```
 
 **Invalid status:**
+
 ```bash
 # Use valid statuses: pending, in-progress, completed
 agor agent-status agent1 completed
@@ -224,28 +250,33 @@ agor agent-status agent1 completed
 ### Recovery
 
 **Corrupted state files:**
+
 1. Backup existing `.agor/` directory
 2. Re-initialize strategy: `agor pd "task" --agents N`
 3. Manually update status if needed
 
 **Missing branches:**
+
 - Branches are auto-created during strategy initialization
 - Manual creation: `git checkout -b agent1/task-name`
 
 ## Implementation Details
 
 ### File Formats
+
 - **JSON**: Machine-readable configuration and status
-- **YAML**: Human-readable flags and metadata  
+- **YAML**: Human-readable flags and metadata
 - **Markdown**: Documentation and evaluation notes
 - **Log**: Timestamped event tracking
 
 ### Atomic Operations
+
 - File updates are atomic to prevent corruption
 - Status changes are logged before file updates
 - Rollback capability for failed operations
 
 ### Performance
+
 - Minimal file I/O for status checks
 - Efficient JSON parsing for large agent counts
 - Lazy loading of non-critical files

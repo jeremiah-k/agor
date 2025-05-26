@@ -27,7 +27,7 @@ class StrategyProtocol:
         # Create essential coordination files if they don't exist
         essential_files = {
             "agentconvo.md": "# Agent Communication Log\n\n",
-            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n"
+            "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n",
         }
 
         for filename, default_content in essential_files.items():
@@ -105,7 +105,10 @@ Each agent should:
         self._create_agent_memory_templates(agent_count)
 
         # Log strategy initialization
-        self.log_communication("COORDINATOR", f"Initialized Parallel Divergent strategy: {task_description}")
+        self.log_communication(
+            "COORDINATOR",
+            f"Initialized Parallel Divergent strategy: {task_description}",
+        )
 
         return f"""✅ Parallel Divergent Strategy Initialized
 
@@ -126,25 +129,31 @@ Each agent should:
 **Ready for agent coordination!**
 """
 
-    def _generate_agent_assignments(self, agent_count: int, task_description: str) -> str:
+    def _generate_agent_assignments(
+        self, agent_count: int, task_description: str
+    ) -> str:
         """Generate agent assignments section."""
         assignments = []
 
         for i in range(1, agent_count + 1):
             agent_id = f"agent{i}"
             branch_name = f"solution-{agent_id}"
-            assignments.append(f"""
+            assignments.append(
+                f"""
 ### Agent{i} Assignment
 - **Agent ID**: {agent_id}
 - **Branch**: `{branch_name}`
 - **Memory File**: `.agor/{agent_id}-memory.md`
 - **Status**: ⚪ Not Started
 - **Mission**: {task_description} (independent approach)
-""")
+"""
+            )
 
         return "\n".join(assignments)
 
-    def _generate_individual_instructions(self, agent_count: int, task_description: str) -> str:
+    def _generate_individual_instructions(
+        self, agent_count: int, task_description: str
+    ) -> str:
         """Generate individual agent instructions."""
         instructions = []
 

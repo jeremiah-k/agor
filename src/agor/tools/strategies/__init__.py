@@ -10,53 +10,64 @@ This package contains specialized modules for different aspects of multi-agent d
 - Workflow design and handoff coordination
 """
 
-# Import all strategy functions for backward compatibility
-from .multi_agent_strategies import (
-    initialize_parallel_divergent,
-    initialize_red_team, 
-    initialize_mob_programming,
-    select_strategy
-)
+# Import strategy protocol classes
+from .parallel_divergent import ParallelDivergentProtocol
+from .red_team import RedTeamProtocol
+from .mob_programming import MobProgrammingProtocol
 
-from .project_coordination import (
-    project_breakdown,
-    create_team,
-    design_workflow,
-    generate_handoff_prompts
-)
+# Import utility functions that exist
+try:
+    from .error_optimization import optimize_error_handling
+except ImportError:
+    optimize_error_handling = None
 
-from .team_management import (
-    manage_team
-)
+try:
+    from .multi_agent_strategies import (
+        initialize_mob_programming,
+        initialize_parallel_divergent,
+        initialize_red_team,
+        select_strategy,
+    )
+except ImportError:
+    initialize_mob_programming = None
+    initialize_parallel_divergent = None
+    initialize_red_team = None
+    select_strategy = None
 
-from .quality_assurance import (
-    setup_quality_gates
-)
+try:
+    from .team_management import manage_team
+except ImportError:
+    manage_team = None
 
-from .error_optimization import (
-    optimize_error_handling
-)
+try:
+    from .dependency_planning import plan_dependencies
+except ImportError:
+    plan_dependencies = None
 
-# Export all functions
+try:
+    from .risk_planning import plan_risks
+except ImportError:
+    plan_risks = None
+
+try:
+    from .quality_gates import setup_quality_gates
+except ImportError:
+    setup_quality_gates = None
+
+# Export all available functions and classes
 __all__ = [
-    # Multi-agent strategies
-    'initialize_parallel_divergent',
-    'initialize_red_team',
-    'initialize_mob_programming', 
-    'select_strategy',
-    
-    # Project coordination
-    'project_breakdown',
-    'create_team',
-    'design_workflow',
-    'generate_handoff_prompts',
-    
-    # Team management
-    'manage_team',
-    
-    # Quality assurance
-    'setup_quality_gates',
-    
-    # Error optimization
-    'optimize_error_handling'
+    # Strategy protocol classes
+    "ParallelDivergentProtocol",
+    "RedTeamProtocol",
+    "MobProgrammingProtocol",
+    # Utility functions (if available)
+    "optimize_error_handling",
+    "initialize_parallel_divergent",
+    "initialize_red_team",
+    "initialize_mob_programming",
+    "select_strategy",
+    "manage_team",
+    "setup_quality_gates",
+    "plan_dependencies",
+    "plan_risks",
 ]

@@ -7,10 +7,13 @@ enabling systematic error detection, resolution, and prevention processes.
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
-def optimize_error_handling(project_name: str = "Current Project", error_focus: str = "comprehensive", debug_level: str = "medium") -> str:
+def optimize_error_handling(
+    project_name: str = "Current Project",
+    error_focus: str = "comprehensive",
+    debug_level: str = "medium",
+) -> str:
     """Optimize error handling and debugging workflows (eh hotkey)."""
 
     # Create implementation details
@@ -165,7 +168,7 @@ def _generate_error_recovery_protocols() -> str:
 
 def _create_error_tracking_files(project_name: str, error_focus: str):
     """Create error tracking coordination files."""
-    
+
     # Create error tracking file
     tracking_file = Path(".agor") / "error-tracking.md"
     tracking_content = f"""

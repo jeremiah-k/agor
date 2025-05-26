@@ -11,7 +11,11 @@ from pathlib import Path
 from typing import Dict, List
 
 
-def setup_quality_gates(project_name: str = "Current Project", quality_focus: str = "comprehensive", automation_level: str = "medium") -> str:
+def setup_quality_gates(
+    project_name: str = "Current Project",
+    quality_focus: str = "comprehensive",
+    automation_level: str = "medium",
+) -> str:
     """Setup quality gates and validation checkpoints (qg hotkey)."""
 
     # Import the quality gates template
@@ -197,7 +201,7 @@ print(f"Gate pass rate: {{metrics['gate_pass_rate']}}%")
 
 def _generate_active_quality_gates(quality_focus: str) -> str:
     """Generate active quality gates based on focus area."""
-    
+
     base_gates = """
 ### Gate 1: Requirements Quality
 - **Purpose**: Ensure requirements are complete, clear, and testable
@@ -299,7 +303,7 @@ def _generate_active_quality_gates(quality_focus: str) -> str:
 
 def _generate_automated_quality_checks(automation_level: str) -> str:
     """Generate automated quality checks based on automation level."""
-    
+
     if automation_level == "high":
         return """
 ### High Automation Level
@@ -422,7 +426,7 @@ QUALITY_ALERT: [timestamp] - [metric] - [threshold-exceeded] - [action-required]
 
 def _generate_quality_standards_enforcement(quality_focus: str) -> str:
     """Generate quality standards enforcement based on focus."""
-    
+
     base_enforcement = """
 ### Standard Enforcement Framework
 
@@ -736,7 +740,7 @@ def _create_quality_gate_files(quality_focus: str, automation_level: str):
         ("implementation", "Implementation Quality Gate"),
         ("integration", "Integration Quality Gate"),
         ("system", "System Quality Gate"),
-        ("deployment", "Deployment Quality Gate")
+        ("deployment", "Deployment Quality Gate"),
     ]
 
     for gate_id, gate_name in gates:
@@ -892,7 +896,7 @@ def execute_quality_gate(gate_name: str, deliverable: str, criteria: List[str]) 
         "gate": gate_name,
         "deliverable": deliverable,
         "criteria_passed": criteria,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
 
 
@@ -906,5 +910,5 @@ def collect_quality_metrics(project_name: str) -> Dict:
         "complexity": 7.2,
         "technical_debt": 28,
         "project": project_name,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
