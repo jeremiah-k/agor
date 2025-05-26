@@ -6,8 +6,6 @@ enabling systematic dependency mapping, risk assessment, and management workflow
 """
 
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, List
 
 
 def plan_dependencies(
@@ -85,7 +83,7 @@ DEPENDENCY_INCIDENT: [timestamp] - [dependency-name] - [issue-type]
 
 def _generate_dependency_mapping(dependency_scope: str) -> str:
     """Generate dependency mapping framework."""
-    
+
     if dependency_scope == "comprehensive":
         return """
 ### Comprehensive Dependency Map
@@ -127,7 +125,7 @@ def _generate_dependency_mapping(dependency_scope: str) -> str:
 - **Testing Frameworks**: [Unit, integration, e2e testing tools]
 - **Development Environment**: [IDEs, containers, local services]
 """
-    
+
     elif dependency_scope == "critical":
         return """
 ### Critical Dependencies Only
@@ -142,7 +140,7 @@ def _generate_dependency_mapping(dependency_scope: str) -> str:
 - **Key Services**: [Critical internal APIs]
 - **Primary Data**: [Essential data sources]
 """
-    
+
     else:  # basic
         return """
 ### Basic Dependency Overview
@@ -159,7 +157,7 @@ def _generate_dependency_mapping(dependency_scope: str) -> str:
 
 def _generate_dependency_analysis(analysis_depth: str) -> str:
     """Generate dependency analysis framework."""
-    
+
     if analysis_depth == "deep":
         return """
 ### Deep Dependency Analysis
@@ -188,7 +186,7 @@ def _generate_dependency_analysis(analysis_depth: str) -> str:
 - **Integration Complexity**: Effort required to integrate and maintain
 - **Testing Requirements**: Testing needs for dependency updates
 """
-    
+
     elif analysis_depth == "medium":
         return """
 ### Standard Dependency Analysis
@@ -208,7 +206,7 @@ def _generate_dependency_analysis(analysis_depth: str) -> str:
 - **Community Support**: Evaluate community and maintainer activity
 - **Migration Effort**: Estimate effort for major updates
 """
-    
+
     else:  # basic
         return """
 ### Basic Dependency Analysis
@@ -225,7 +223,7 @@ def _generate_dependency_analysis(analysis_depth: str) -> str:
 
 def _generate_dependency_risk_assessment() -> str:
     """Generate dependency risk assessment framework."""
-    
+
     return """
 ### Dependency Risk Assessment Matrix
 
@@ -270,7 +268,7 @@ def _generate_dependency_risk_assessment() -> str:
 
 def _generate_dependency_management_protocols() -> str:
     """Generate dependency management protocols."""
-    
+
     return """
 ### Dependency Management Protocols
 

@@ -5,6 +5,7 @@
 This guide ensures consistency, quality, and proper protocol management when developing AGOR. Use this checklist for all changes to maintain the integrity of the multi-agent coordination platform.
 
 > **📜 Related Documentation:**
+>
 > - **[AGOR Development Log](agor-development-log.md)**: Technical history, architectural decisions, and lessons learned
 > - **This Guide**: Current status, guidelines, and checklists for active development
 
@@ -13,12 +14,14 @@ This guide ensures consistency, quality, and proper protocol management when dev
 **Last Updated**: 2025-05-26 13:31 UTC | **AGOR Version**: 0.2.1 | **Protocol Version**: 0.3.0 | **Latest**: Added CLI usage clarification for agents
 
 > **🕐 Getting Current Date/Time Programmatically:**
+>
 > - **NTP Server (Accurate)**: `curl -s "http://worldtimeapi.org/api/timezone/UTC" | jq -r '.datetime[:16]' | tr 'T' ' '` + " UTC"
 > - **Shell (Local)**: `date -u +"%Y-%m-%d %H:%M UTC"` (may be inaccurate in containers)
 > - **Python**: `from datetime import datetime; datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")`
 > - **Always use NTP for accurate timestamps** when updating this document to track development progress
 >
 > **📋 Getting Current Version Information:**
+>
 > - **AGOR Version**: Check `src/agor/__init__.py` (fallback: "0.2.1") or `pyproject.toml`
 > - **Protocol Version**: Check `src/agor/constants.py` (current: "0.3.0" - development phase)
 > - **Programmatic Check**: `python -c "from agor import __version__; from agor.constants import PROTOCOL_VERSION; print(f'AGOR: {__version__}, Protocol: {PROTOCOL_VERSION}')"`
@@ -27,26 +30,26 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 ### ✅ Fully Implemented Features
 
-| Feature                 | Hotkey                                | Implementation                | Status      |
-| ----------------------- | ------------------------------------- | ----------------------------- | ----------- |
-| **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`        | code_exploration.py           | ✅ Complete |
-| **Handoff System**      | `handoff`, `receive`, `handoffs`      | handoff_templates.py          | ✅ Complete |
-| **SQLite Memory**       | `mem-*`, `db-*`, `coord-*`, `state-*` | sqlite_memory.py              | ✅ Complete |
-| **Parallel Divergent**  | `pd`                                  | strategies/parallel_divergent.py | ✅ Complete |
+| Feature                 | Hotkey                                | Implementation                       | Status      |
+| ----------------------- | ------------------------------------- | ------------------------------------ | ----------- |
+| **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`        | code_exploration.py                  | ✅ Complete |
+| **Handoff System**      | `handoff`, `receive`, `handoffs`      | handoff_templates.py                 | ✅ Complete |
+| **SQLite Memory**       | `mem-*`, `db-*`, `coord-*`, `state-*` | sqlite_memory.py                     | ✅ Complete |
+| **Parallel Divergent**  | `pd`                                  | strategies/parallel_divergent.py     | ✅ Complete |
 | **Pipeline Strategy**   | `pl`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
 | **Swarm Strategy**      | `sw`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
 | **Strategy Selection**  | `ss`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
-| **Strategic Planning**  | `sp`                                  | project_planning_templates.py | ✅ Complete |
-| **Architecture Review** | `ar`                                  | project_planning_templates.py | ✅ Complete |
-| **Project Breakdown**   | `bp`                                  | strategies/project_breakdown.py | ✅ Complete |
-| **Team Creation**       | `ct`                                  | strategies/team_creation.py | ✅ Complete |
-| **Workflow Design**     | `wf`                                  | strategies/workflow_design.py | ✅ Complete |
-| **Handoff Prompts**     | `hp`                                  | strategies/handoff_prompts.py | ✅ Complete |
-| **Red Team Strategy**   | `rt`                                  | strategies/red_team.py | ✅ Complete |
-| **Mob Programming**     | `mb`                                  | strategies/mob_programming.py | ✅ Complete |
-| **Agent Discovery**     | N/A                                   | agent_coordination.py         | ✅ Complete |
-| **Bundle Mode**         | N/A                                   | Complete documentation        | ✅ Complete |
-| **AGOR Meta**           | `meta`                                | agor-meta.md                  | ✅ Complete |
+| **Strategic Planning**  | `sp`                                  | project_planning_templates.py        | ✅ Complete |
+| **Architecture Review** | `ar`                                  | project_planning_templates.py        | ✅ Complete |
+| **Project Breakdown**   | `bp`                                  | strategies/project_breakdown.py      | ✅ Complete |
+| **Team Creation**       | `ct`                                  | strategies/team_creation.py          | ✅ Complete |
+| **Workflow Design**     | `wf`                                  | strategies/workflow_design.py        | ✅ Complete |
+| **Handoff Prompts**     | `hp`                                  | strategies/handoff_prompts.py        | ✅ Complete |
+| **Red Team Strategy**   | `rt`                                  | strategies/red_team.py               | ✅ Complete |
+| **Mob Programming**     | `mb`                                  | strategies/mob_programming.py        | ✅ Complete |
+| **Agent Discovery**     | N/A                                   | agent_coordination.py                | ✅ Complete |
+| **Bundle Mode**         | N/A                                   | Complete documentation               | ✅ Complete |
+| **AGOR Meta**           | `meta`                                | agor-meta.md                         | ✅ Complete |
 
 ### 🟡 Partially Implemented Features
 
@@ -58,13 +61,13 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 ### ✅ Recently Completed Implementations
 
-| Feature                 | Hotkey | Documentation | Implementation | Status |
-| ----------------------- | ------ | ------------- | -------------- | -------- |
-| **Team Management**     | `tm`   | ✅ Complete    | strategies/team_management.py | ✅ Complete |
-| **Quality Gates**       | `qg`   | ✅ Complete    | strategies/quality_gates.py | ✅ Complete |
-| **Error Optimization**  | `eo`   | ✅ Complete    | strategies/error_optimization.py | ✅ Complete |
-| **Dependency Planning** | `dp`   | ✅ Complete    | strategies/dependency_planning.py | ✅ Complete |
-| **Risk Planning**       | `rp`   | ✅ Complete    | strategies/risk_planning.py | ✅ Complete |
+| Feature                 | Hotkey | Documentation | Implementation                    | Status      |
+| ----------------------- | ------ | ------------- | --------------------------------- | ----------- |
+| **Team Management**     | `tm`   | ✅ Complete   | strategies/team_management.py     | ✅ Complete |
+| **Quality Gates**       | `qg`   | ✅ Complete   | strategies/quality_gates.py       | ✅ Complete |
+| **Error Optimization**  | `eo`   | ✅ Complete   | strategies/error_optimization.py  | ✅ Complete |
+| **Dependency Planning** | `dp`   | ✅ Complete   | strategies/dependency_planning.py | ✅ Complete |
+| **Risk Planning**       | `rp`   | ✅ Complete   | strategies/risk_planning.py       | ✅ Complete |
 
 ### ❌ Missing Implementations
 
@@ -137,6 +140,7 @@ agor agent-manifest            # Generate standalone agent manifest
 **✅ REALITY**: Most AGOR coordination commands are for **internal use by agents within the coordination system**, not for direct CLI usage by humans or external agents.
 
 #### 🔧 Internal Coordination Commands (Agent Use Only):
+
 ```bash
 # These are used BY agents WITHIN the .agor/ coordination system
 agor init <task>               # Initialize coordination (internal)
@@ -148,6 +152,7 @@ agor ss                        # Strategy selection (internal)
 ```
 
 #### 👤 User-Facing Commands (External Use):
+
 ```bash
 # These are for users and external agents
 agor bundle <repo>             # Bundle repository for AI upload
@@ -164,12 +169,14 @@ agor git-config               # Set up git configuration
 **When you're an AI agent working with AGOR:**
 
 1. **In Bundle Mode** (most common):
+
    - You receive a bundled archive with AGOR tools
    - You work WITHIN the extracted bundle
    - You use the coordination files in `.agor/` directory
    - You DON'T use CLI commands - you work with the files directly
 
 2. **In Standalone Mode** (less common):
+
    - You have direct repository access
    - You might use some CLI commands, but mainly for status/coordination
    - You still work primarily with `.agor/` coordination files
@@ -182,18 +189,22 @@ agor git-config               # Set up git configuration
 ### ⚠️ Common Agent Mistakes to Avoid
 
 #### ❌ "I'll use `agor init` to start working"
+
 **Problem**: `agor init` is for initializing the coordination system, not for starting work on a project.
 **Solution**: Look for existing `.agor/` directory or follow bundle extraction instructions.
 
 #### ❌ "I need to run `agor pd` to set up parallel work"
+
 **Problem**: Strategy setup commands are for coordination system initialization, not ongoing work.
 **Solution**: Check `.agor/strategy.md` and `.agor/agent-instructions/` for your assigned role.
 
 #### ❌ "I should use `agor status` to check my progress"
+
 **Problem**: This is for internal coordination system status, not individual agent progress.
 **Solution**: Update your agent memory files and check `.agor/agentconvo.md` for coordination.
 
 #### ❌ "I need to install AGOR to work with this project"
+
 **Problem**: In bundle mode, AGOR tools are included - no installation needed.
 **Solution**: Look for `agor_tools/` directory in your bundle and read `README_ai.md`.
 
@@ -202,12 +213,14 @@ agor git-config               # Set up git configuration
 **Check these indicators to understand your role:**
 
 1. **Bundle Mode Indicators**:
+
    - You received a `.zip`, `.tar.gz`, or `.tar.bz2` file
    - After extraction, you see `agor_tools/` directory
    - There's a `README_ai.md` file with instructions
    - You see `.agor/` coordination directory
 
 2. **Standalone Mode Indicators**:
+
    - You have direct git repository access
    - AGOR is installed in the environment
    - You received an "agent manifest" with setup instructions

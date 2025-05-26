@@ -950,7 +950,6 @@ def generate_agor_feedback(
     ),
 ):
     """Generate AGOR feedback and improvement suggestions"""
-    import json
     import platform
     import subprocess
     from datetime import datetime
@@ -964,6 +963,7 @@ def generate_agor_feedback(
     # Get current time with NTP if possible
     try:
         import httpx
+
         with httpx.Client(timeout=5.0) as client:
             response = client.get("http://worldtimeapi.org/api/timezone/UTC")
             response.raise_for_status()
@@ -1146,10 +1146,10 @@ def generate_agor_feedback(
 
             # Add and commit the file
             subprocess.run(["git", "add", str(feedback_file)], check=True)
-            subprocess.run([
-                "git", "commit", "-m",
-                f"📝 Add AGOR feedback form ({current_time})"
-            ], check=True)
+            subprocess.run(
+                ["git", "commit", "-m", f"📝 Add AGOR feedback form ({current_time})"],
+                check=True,
+            )
 
             print(f"✅ Feedback committed to repository: {feedback_file}")
             print(f"📁 File: {feedback_file}")
@@ -1173,7 +1173,9 @@ def generate_agor_feedback(
             success, message = copy_to_clipboard(feedback_content)
             print(f"\n{message}")
 
-        print("\n💡 Save this as 'agor_feedback.md' and submit via GitHub Issues or Discussions")
+        print(
+            "\n💡 Save this as 'agor_feedback.md' and submit via GitHub Issues or Discussions"
+        )
 
 
 def cli():

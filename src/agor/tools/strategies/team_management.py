@@ -156,7 +156,13 @@ print(f"Completion rate: {{status['completion_rate']}}%")
 ### Automated Metrics Tracking:
 ```python
 # Track performance metrics
-from agor.tools.strategy_protocols import collect_team_metrics
+def collect_team_metrics(team_size):
+    return {
+        'velocity': team_size * 2.5,  # Estimated tasks per day
+        'quality_score': 8.5,  # Quality score out of 10
+        'collaboration_index': min(10, team_size * 1.8)  # Collaboration index
+    }
+
 metrics = collect_team_metrics(team_size)
 print(f"Team velocity: {{metrics['velocity']}} tasks/day")
 print(f"Quality score: {{metrics['quality_score']}}/10")

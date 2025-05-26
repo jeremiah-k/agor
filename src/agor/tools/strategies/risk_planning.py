@@ -6,8 +6,6 @@ enabling systematic risk identification, analysis, mitigation planning, and moni
 """
 
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, List
 
 
 def plan_risks(
@@ -85,7 +83,7 @@ RISK_INCIDENT: [timestamp] - [risk-name] - [materialization-level]
 
 def _generate_risk_identification(risk_scope: str) -> str:
     """Generate risk identification framework."""
-    
+
     if risk_scope == "comprehensive":
         return """
 ### Comprehensive Risk Identification
@@ -171,7 +169,7 @@ def _generate_risk_identification(risk_scope: str) -> str:
   - Data privacy violations
   - Litigation exposure
 """
-    
+
     elif risk_scope == "technical":
         return """
 ### Technical Risk Focus
@@ -188,7 +186,7 @@ def _generate_risk_identification(risk_scope: str) -> str:
 - **Security**: Vulnerabilities, data breaches
 - **Scalability**: Growth limitations, resource constraints
 """
-    
+
     else:  # basic
         return """
 ### Basic Risk Overview
@@ -203,7 +201,7 @@ def _generate_risk_identification(risk_scope: str) -> str:
 
 def _generate_risk_analysis(assessment_depth: str) -> str:
     """Generate risk analysis framework."""
-    
+
     if assessment_depth == "deep":
         return """
 ### Deep Risk Analysis
@@ -253,7 +251,7 @@ Risk Score = Probability × Impact
 - **Risk Exposure Calculation**: Total risk exposure assessment
 - **Sensitivity Analysis**: Impact of risk parameter changes
 """
-    
+
     elif assessment_depth == "medium":
         return """
 ### Standard Risk Analysis
@@ -284,7 +282,7 @@ Risk Score = Probability × Impact
 - **Independent Risks**: Standalone risk factors
 - **Compound Risks**: Multiple risks affecting same area
 """
-    
+
     else:  # basic
         return """
 ### Basic Risk Analysis
@@ -304,7 +302,7 @@ Risk Score = Probability × Impact
 
 def _generate_risk_mitigation_strategies() -> str:
     """Generate risk mitigation strategies."""
-    
+
     return """
 ### Risk Mitigation Strategies
 
@@ -390,7 +388,7 @@ def _generate_risk_mitigation_strategies() -> str:
 
 def _generate_risk_monitoring_protocols() -> str:
     """Generate risk monitoring protocols."""
-    
+
     return """
 ### Risk Monitoring Protocols
 
