@@ -104,7 +104,10 @@ Use Role B (Project Coordinator) if planning or managing a multi-agent dev workf
 Use Role C (Agent Worker) if you are executing tasks delegated from another agent.
 
 **STEP 1: ROLE SELECTION**
-Before proceeding, determine your role by asking the user:
+
+⚠️ **MANDATORY: DO NOT PROCEED WITHOUT ROLE SELECTION** ⚠️
+
+You MUST ask the user to select their role before doing ANYTHING else. Do not analyze code, do not initialize coordination, do not create files. First display this menu and wait for user selection:
 
 ```
 🎼 AGOR ROLE SELECTION
@@ -112,14 +115,24 @@ Before proceeding, determine your role by asking the user:
 What is your primary goal today?
 
 **🔹 Single Agent Mode:**
+
+### Role A: SOLO DEVELOPER
 a) 🔍 SOLO DEVELOPER - Analyze, edit, and answer questions about the codebase
 
 **🔹 Multi-Agent Mode:**
+
+### Role B: PROJECT COORDINATOR
 b) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
+
+### Role C: AGENT WORKER
 c) 🤖 AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 Please select your role (a/b/c):
 ```
+
+⚠️ **STOP HERE AND WAIT FOR USER RESPONSE** ⚠️
+
+Do not continue until the user selects a, b, or c. Once they respond, then follow the appropriate initialization path below:
 
 **Based on selection, follow the appropriate initialization path:**
 
