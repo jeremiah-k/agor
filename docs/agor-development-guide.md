@@ -201,7 +201,7 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 | ----------------------- | ------------------------------------- | ------------------------------------ | ----------- |
 | **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`        | code_exploration.py                  | ✅ Complete |
 | **Handoff System**      | `handoff`, `receive`, `handoffs`      | handoff_templates.py                 | ✅ Complete |
-| **SQLite Memory**       | `mem-*`, `db-*`, `coord-*`, `state-*` | sqlite_memory.py                     | ✅ Complete |
+| **SQLite Memory**       | Internal system only                  | sqlite_memory.py                     | ✅ Complete (Internal) |
 | **Parallel Divergent**  | `pd`                                  | strategies/parallel_divergent.py     | ✅ Complete |
 | **Pipeline Strategy**   | `pl`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
 | **Swarm Strategy**      | `sw`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
@@ -289,10 +289,11 @@ Based on comprehensive audit findings, the following documentation improvements 
 - **Issue**: Unclear how parameters translate to concrete states in `.agor/` files
 - **Action**: ✅ Added comprehensive parameter effects section with concrete file mapping
 
-#### 3. SQLite Memory Configuration
+#### 3. SQLite Memory System (Internal Use Only)
 
-- **Context**: Currently auto-activates if binary exists
-- **Consideration**: Project-level configuration for memory type selection
+- **Status**: Experimental internal system, not for agent use
+- **Purpose**: Advanced coordination logging and state management
+- **Agent Interface**: Removed from hotkey menus, agents use `.agor/memory.md`
 
 ### ✅ Completed Audit Items
 
