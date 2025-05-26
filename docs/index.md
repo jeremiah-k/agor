@@ -89,6 +89,7 @@
 | **[strategies.md](strategies.md)**                         | Multi-agent coordination   | 5 strategies with examples, decision matrix | ~400  |
 | **[handoffs.md](handoffs.md)**                             | Agent transition system    | Handoff creation, receiving, best practices | ~500  |
 | **[coordination-example.md](coordination-example.md)**     | Strategy implementation    | Complete example, before/after comparison   | ~300  |
+| **[coordination-audit.md](coordination-audit.md)**         | Implementation audit       | Hotkey analysis, gaps, harmonization        | ~400  |
 | **[agor-development-guide.md](agor-development-guide.md)** | Development checklist      | For agents working on AGOR itself           | ~400  |
 
 ### AI Instructions (src/agor/tools/)
