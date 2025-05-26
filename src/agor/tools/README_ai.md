@@ -299,6 +299,7 @@ If user selects a hotkey, respond accordingly.
 **HOTKEY ACTIONS:**
 
 **Strategic Planning:**
+
 - **`sp`**: Create comprehensive project strategy with goals, scope, timeline, and success metrics
 - **`bp`**: Break project into tasks with dependencies, complexity analysis, and agent assignments
 - **`ar`**: Analyze architecture and plan improvements with technical recommendations
@@ -306,6 +307,7 @@ If user selects a hotkey, respond accordingly.
 - **`rp`**: Assess project risks and create mitigation strategies
 
 **Team & Coordination:**
+
 - **`ct`**: Design team structure with specialized roles and coordination protocols
 - **`tm`**: Generate team documentation with roles, prompts, and performance tracking
 - **`hp`**: Create agent handoff prompts with context and transition procedures
@@ -314,6 +316,7 @@ If user selects a hotkey, respond accordingly.
 - **`eo`**: Plan execution sequence considering dependencies and optimization strategies
 
 **Coordination Setup:**
+
 - **`init`**: Initialize .agor/ directory structure, create coordination files (agentconvo.md, memory.md), and set up basic project context. Takes optional task description parameter.
 - **`as`**: [FUTURE IMPLEMENTATION] Assign specialists to specific project areas
 - **`tc`**: [FUTURE IMPLEMENTATION] Team coordination and communication setup
@@ -330,6 +333,7 @@ If user selects a hotkey, respond accordingly.
 **ANALYST/SOLO DEV ACTIONS:**
 
 **Analysis & Display:**
+
 - **`a`**: Perform comprehensive codebase analysis with structure, dependencies, and recommendations
 - **`f`**: Display complete files with full content and formatting preserved
 - **`co`**: Show only changed sections with before/after context for focused review
@@ -337,16 +341,19 @@ If user selects a hotkey, respond accordingly.
 - **`m`**: Show git diff of current changes (equivalent to `git diff`). No parameters required.
 
 **Code Exploration:**
+
 - **`bfs`**: Breadth-first search for files matching regex pattern. Usage: specify pattern to search for
 - **`grep`**: Search for regex patterns in files. Usage: specify pattern and optional file scope
 - **`tree`**: Generate directory structure visualization. Usage: optional directory path and depth
 
 **Editing & Changes:**
+
 - **`edit`**: Modify files with targeted changes. Usage: specify file path and changes to make
 - **`commit`**: Save changes to git with descriptive commit message. Usage: provide commit message describing changes
 - **`diff`**: Show git diff of current changes (same as `m`). No parameters required.
 
 **Documentation:**
+
 - **`doc`**: Generate comprehensive documentation for code modules and functions
 - **`comment`**: Add inline comments and docstrings to improve code readability
 - **`explain`**: Provide detailed code explanation with logic flow and purpose
@@ -354,16 +361,19 @@ If user selects a hotkey, respond accordingly.
 **AGENT WORKER ACTIONS:**
 
 **Coordination:**
+
 - **`status`**: Check coordination files, agent memory files, and recent activity in agentconvo.md
 - **`sync`**: Pull latest changes from main branch and update coordination status
 - **`ch`**: Create checkpoint in agent memory with current progress and status. Usage: provide checkpoint description
 
 **Communication:**
+
 - **`log`**: Update agent memory log with progress, decisions, and current status. Usage: provide log entry content
 - **`msg`**: Post message to agentconvo.md for cross-agent communication. Usage: provide message content
 - **`report`**: Generate comprehensive status report including completed work, current tasks, and next steps
 
 **Task Management:**
+
 - **`task`**: Receive and acknowledge task assignment from coordinator. Usage: task will be provided by coordinator
 - **`complete`**: Mark current task as complete and update all coordination files. Usage: provide completion summary
 - **`handoff`**: Prepare handoff document for next agent with comprehensive context and status
@@ -379,31 +389,37 @@ If user selects a hotkey, respond accordingly.
 Understanding how strategy parameters translate to concrete coordination states:
 
 **Agent Count Parameters:**
+
 - **`agent_count=3`**: Creates 3 individual agent memory files (agent1-memory.md, agent2-memory.md, agent3-memory.md)
 - **`team_size=5`**: Generates role assignments for 5 agents with specialized responsibilities
 - **`blue_team_size=3, red_team_size=3`**: Creates separate blue-team-memory.md and red-team-memory.md files
 
 **Project Type Parameters:**
+
 - **`project_type="web_app"`**: Generates web-specific workflow phases (Frontend, Backend, API, Testing)
 - **`project_type="api"`**: Creates API-focused phases (Design, Implementation, Documentation, Testing)
 - **`project_type="mobile"`**: Generates mobile-specific phases (UI, Logic, Platform, Testing)
 
 **Complexity Parameters:**
+
 - **`complexity="simple"`**: Creates 3-4 workflow phases with basic coordination
 - **`complexity="medium"`**: Generates 4-5 phases with intermediate quality gates
 - **`complexity="complex"`**: Creates 5-6 phases with comprehensive validation and handoffs
 
 **Quality Focus Parameters:**
+
 - **`quality_focus="security"`**: Emphasizes security gates, penetration testing, vulnerability assessment
 - **`quality_focus="performance"`**: Focuses on load testing, optimization, scalability validation
 - **`quality_focus="comprehensive"`**: Includes all quality aspects with balanced coverage
 
 **Automation Level Parameters:**
+
 - **`automation_level="high"`**: 80% automated checks, minimal manual validation
 - **`automation_level="medium"`**: 50% automated, 50% manual review processes
 - **`automation_level="low"`**: 20% automated, emphasis on manual quality assurance
 
 **Generated .agor/ Files by Strategy:**
+
 - **Parallel Divergent**: strategy-active.md + agent{N}-memory.md files
 - **Red Team**: strategy-active.md + blue-team-memory.md + red-team-memory.md
 - **Mob Programming**: strategy-active.md + mob-session-log.md + mob-decisions.md
@@ -700,6 +716,7 @@ VALIDATION:
 **BEST PRACTICES:**
 
 **General Development:**
+
 - Work autonomously, try multiple approaches before asking for input
 - Use short code cells (1-2 lines), verify with `/tmp/agor_tools/git diff`
 - Always show hotkey menu at end of replies
@@ -707,6 +724,7 @@ VALIDATION:
 - **Provide feedback on AGOR**: Use `meta` hotkey to report issues, suggestions, or exceptional workflows
 
 **Shared File Access (CRITICAL for Multi-Agent Coordination):**
+
 - **APPEND-ONLY for logs**: Always append to `agentconvo.md` and agent memory files - never overwrite
 - **PULL BEFORE WRITE**: Always pull latest changes before modifying shared coordination files
 - **Atomic updates**: Make complete, self-contained updates to avoid partial state conflicts
@@ -715,6 +733,7 @@ VALIDATION:
 - **Coordination protocol**: Use `sync` hotkey regularly to stay current with other agents
 
 **File Access Patterns:**
+
 ```bash
 # CORRECT: Pull before modifying shared files
 /tmp/agor_tools/git pull origin main
