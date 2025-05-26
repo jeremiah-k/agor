@@ -6,12 +6,12 @@
 
 ### From AgentGrunt to AgentOrchestrator
 
-AGOR was born from the innovative [AgentGrunt](https://github.com/nikvdp/agentgrunt) project by [@nikvdp](https://github.com/nikvdp). While it has evolved into a sophisticated multi-agent coordination platform, **AGOR maintains its core strength in standalone operations**.
+AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgrunt) project by [@nikvdp](https://github.com/nikvdp). **AGOR retains all of AgentGrunt's capabilities** while adding multi-agent coordination.
 
-**Key Evolution Points:**
-- **AgentGrunt**: Revolutionary code bundling and single-agent git operations
-- **AGOR**: Added multi-agent coordination, strategic planning, and platform flexibility
-- **Maintained**: All original standalone capabilities and git integration
+**Key Changes from AgentGrunt:**
+- **Retained**: All original standalone capabilities and git integration
+- **Replaced**: Patch downloads with full file output in codeblocks (preserving comments, formatting, etc.)
+- **Added**: Multi-agent coordination, strategic planning, and platform flexibility
 
 ## 🔄 Two Operational Modes Explained
 
@@ -19,14 +19,14 @@ AGOR was born from the innovative [AgentGrunt](https://github.com/nikvdp/agentgr
 
 **When to Use:**
 - You have an AI agent with direct repository access
-- You want agents to make commits directly
-- You're using platforms like Augment Code or Jules by Google
+- You want agents to make commits directly (if they have commit access)
+- You're using platforms like Augment Code Remote Agents or Jules by Google
 - You need real-time collaboration between multiple agents
 
 **How It Works:**
 1. Agent clones AGOR repository to learn the protocol
 2. Agent clones your target project repository
-3. Agent can make direct commits, create branches, push changes
+3. Agent can make direct commits if they have commit access, or use copy-paste codeblocks as fallback
 4. Multiple agents can work on the same repository simultaneously
 5. Full git history and branch management available
 
@@ -165,6 +165,7 @@ agor bundle your-project -f zip --sqlite
 - Any role works, but **PROJECT COORDINATOR** excels here
 - Full multi-agent capabilities available
 - Real-time collaboration possible
+- Direct commits if agent has commit access, copy-paste fallback otherwise
 
 **Workflow:**
 ```bash

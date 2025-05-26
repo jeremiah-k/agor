@@ -74,13 +74,14 @@ AGOR offers three primary roles when agents load the protocol:
 
 ## 🔄 Operational Modes
 
-**Born from AgentGrunt** - AGOR evolved from the innovative AgentGrunt project, maintaining its core strength in standalone operations while adding sophisticated multi-agent coordination.
+**Fork of AgentGrunt** - AGOR is a fork of AgentGrunt that retains all of its capabilities, replacing patch downloads with full file output in codeblocks (preserving comments, formatting, etc.).
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
-**For agents with repository access** (Augment Code, Jules by Google, etc.)
+**For agents with repository access** (Augment Code Remote Agents, Jules by Google, etc.)
 
-- **Direct commits**: Agents can make commits directly to repositories
+- **Direct commits**: Agents can make commits directly if they have commit access
+- **Fallback method**: Copy-paste codeblocks if no commit access
 - **Full git operations**: Branch creation, merging, pull requests
 - **Real-time collaboration**: Multiple agents working on live repositories
 - **No file size limits**: Complete repository access

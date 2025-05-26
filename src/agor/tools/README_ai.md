@@ -205,8 +205,8 @@ chmod 755 /tmp/agor_tools/git
 
 **DEPLOYMENT MODES:**
 
-- **BUNDLE MODE**: User code in `project/` folder, use provided `git` binary
-- **STANDALONE MODE**: Clone target project as specified by user
+- **BUNDLE MODE**: User code in `project/` folder, use provided `git` binary, output full files in codeblocks
+- **STANDALONE MODE**: Clone target project as specified by user, direct commits if you have commit access, copy-paste codeblocks as fallback
 
 **ROLE-SPECIFIC HOTKEY MENUS:**
 

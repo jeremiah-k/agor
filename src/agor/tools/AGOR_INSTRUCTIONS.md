@@ -4,7 +4,7 @@
 
 **Agent Mode** is for AI agents with direct git access (Augment Code, Jules by Google, etc.)
 
-> **🔄 Born from AgentGrunt**: AGOR evolved from AgentGrunt, maintaining its core strength in standalone operations while adding sophisticated multi-agent coordination. In this mode, agents can make direct commits to repositories.
+> **🔄 Fork of AgentGrunt**: AGOR is a fork of AgentGrunt that retains all capabilities, replacing patch downloads with full file output in codeblocks. In standalone mode, agents can make direct commits if they have commit access, or use copy-paste codeblocks as fallback.
 
 ### Step 1: Clone AGOR Repository
 
@@ -101,13 +101,14 @@ You now have access to all AgentOrchestrator capabilities:
 
 - **No installation required** - just clone the AGOR repository
 - **Direct repository access** - can work with any repository URL
-- **Direct commits** - agents can commit, push, and manage git operations
+- **Direct commits** - agents can commit, push, and manage git operations if they have commit access
+- **Fallback method** - copy-paste codeblocks if no commit access
 - **No file size limitations** - full repository access
 - **Can clone multiple repositories** for complex projects
 - **Full git history and branch access**
 - **Real-time collaboration** - multiple agents can work on same repository
 - **Real-time updates** - can pull latest AGOR improvements
-- **For**: Augment Code, Jules by Google, other advanced AI agents
+- **For**: Augment Code Remote Agents, Jules by Google, other advanced AI agents
 
 **Bundle Mode - Upload-Based Platforms with Manual Git Operations:**
 
