@@ -696,6 +696,346 @@ def generate_team_creation_template():
 """
 
 
+def generate_team_management_template():
+    """Template for ongoing team management and coordination (tm hotkey)"""
+    return """
+# Team Management Template
+
+## Team Overview
+
+### Team Composition
+- **Team Size**: [Number of active agents]
+- **Project**: [Current project name and objectives]
+- **Strategy**: [Active development strategy]
+- **Phase**: [Current development phase]
+- **Timeline**: [Project timeline and milestones]
+
+### Active Team Members
+- **Agent1**: [Role] - [Current task] - [Status]
+- **Agent2**: [Role] - [Current task] - [Status]
+- **Agent3**: [Role] - [Current task] - [Status]
+- **Agent{N}**: [Role] - [Current task] - [Status]
+
+## Performance Tracking
+
+### Team Metrics
+- **Velocity**: [Tasks completed per day/sprint]
+- **Quality Score**: [Code review ratings, bug rates]
+- **Collaboration Index**: [Communication frequency, help requests]
+- **Delivery Rate**: [On-time completion percentage]
+- **Blocker Resolution**: [Average time to resolve blockers]
+
+### Individual Performance
+- **Agent1**: Productivity: [High/Medium/Low], Quality: [Score], Collaboration: [Score]
+- **Agent2**: Productivity: [High/Medium/Low], Quality: [Score], Collaboration: [Score]
+- **Agent{N}**: Productivity: [High/Medium/Low], Quality: [Score], Collaboration: [Score]
+
+## Current Status
+
+### Active Work
+- **In Progress**: [List of current tasks and owners]
+- **Blocked**: [List of blocked tasks and reasons]
+- **Completed Today**: [List of completed tasks]
+- **Planned Next**: [List of upcoming tasks]
+
+### Team Health
+- **Communication**: [Frequency and quality of team communication]
+- **Coordination**: [Effectiveness of handoffs and collaboration]
+- **Morale**: [Team satisfaction and engagement indicators]
+- **Workload**: [Balance of work distribution across team]
+
+## Resource Management
+
+### Skill Matrix
+- **Frontend**: [Agents with frontend skills and proficiency levels]
+- **Backend**: [Agents with backend skills and proficiency levels]
+- **DevOps**: [Agents with infrastructure and deployment skills]
+- **Testing**: [Agents with QA and testing expertise]
+- **Domain**: [Agents with business domain knowledge]
+
+### Capacity Planning
+- **Available Capacity**: [Total agent hours available]
+- **Committed Capacity**: [Hours committed to current tasks]
+- **Buffer Capacity**: [Reserved hours for unexpected work]
+- **Skill Gaps**: [Areas where team lacks expertise]
+
+## Issue Management
+
+### Active Issues
+- **Blockers**: [Current blockers preventing progress]
+- **Risks**: [Identified risks that could impact delivery]
+- **Dependencies**: [External dependencies affecting the team]
+- **Quality Issues**: [Code quality or process issues]
+
+### Resolution Tracking
+- **Issue ID**: [Unique identifier]
+- **Description**: [What the issue is]
+- **Impact**: [How it affects the team/project]
+- **Owner**: [Who is responsible for resolution]
+- **Status**: [Open/In Progress/Resolved]
+- **Target Date**: [When resolution is expected]
+
+## Communication Management
+
+### Communication Channels
+- **Primary**: `.agor/agentconvo.md` - Main team communication
+- **Status**: `.agor/team-status.md` - Daily status updates
+- **Issues**: `.agor/team-issues.md` - Issue tracking and resolution
+- **Metrics**: `.agor/team-metrics.md` - Performance tracking
+
+### Communication Protocols
+- **Daily Standup**: [Time and format for daily updates]
+- **Status Reports**: [Frequency and format for status reporting]
+- **Escalation**: [Process for escalating issues]
+- **Decision Making**: [How team decisions are made and communicated]
+
+## Process Management
+
+### Development Process
+- **Code Review**: [Process for reviewing code changes]
+- **Testing**: [Testing requirements and procedures]
+- **Deployment**: [Deployment process and responsibilities]
+- **Documentation**: [Documentation standards and maintenance]
+
+### Quality Assurance
+- **Standards**: [Coding standards and best practices]
+- **Reviews**: [Review process and criteria]
+- **Testing**: [Testing coverage and quality requirements]
+- **Metrics**: [Quality metrics and targets]
+
+## Team Development
+
+### Skill Development
+- **Training Needs**: [Skills that team members need to develop]
+- **Knowledge Sharing**: [Process for sharing knowledge across team]
+- **Mentoring**: [Mentoring relationships and programs]
+- **Cross-Training**: [Plans for developing backup expertise]
+
+### Process Improvement
+- **Retrospectives**: [Regular process review and improvement]
+- **Feedback**: [Mechanism for collecting and acting on feedback]
+- **Experiments**: [Process improvements being tested]
+- **Best Practices**: [Documented best practices and lessons learned]
+
+## Risk Management
+
+### Team Risks
+- **Key Person Risk**: [Dependencies on specific team members]
+- **Skill Gaps**: [Areas where team lacks necessary expertise]
+- **Communication**: [Risks related to team communication]
+- **Coordination**: [Risks related to team coordination]
+
+### Mitigation Strategies
+- **Cross-Training**: [Plans to reduce key person dependencies]
+- **Skill Development**: [Plans to address skill gaps]
+- **Process Improvement**: [Plans to improve communication and coordination]
+- **Contingency Planning**: [Plans for handling team member unavailability]
+
+## Success Metrics
+
+### Team Performance
+- **Delivery**: [On-time delivery rate and quality]
+- **Velocity**: [Consistent and predictable delivery speed]
+- **Quality**: [Low defect rates and high code quality]
+- **Collaboration**: [Effective teamwork and communication]
+
+### Individual Growth
+- **Skill Development**: [Progress in developing new skills]
+- **Contribution**: [Quality and quantity of contributions]
+- **Leadership**: [Growth in leadership and mentoring]
+- **Innovation**: [Creative solutions and process improvements]
+
+## Action Items
+
+### Immediate (This Week)
+- [ ] [High priority actions needed this week]
+- [ ] [Critical issues to resolve]
+- [ ] [Important decisions to make]
+
+### Short Term (This Month)
+- [ ] [Medium priority improvements]
+- [ ] [Process enhancements to implement]
+- [ ] [Skill development initiatives]
+
+### Long Term (This Quarter)
+- [ ] [Strategic improvements]
+- [ ] [Major process changes]
+- [ ] [Team development goals]
+"""
+
+
+def generate_quality_gates_template():
+    """Template for defining quality gates and validation checkpoints (qg hotkey)"""
+    return """
+# Quality Gates Template
+
+## Quality Gate Overview
+
+### Purpose
+Quality gates are checkpoints in the development process that ensure deliverables meet defined standards before proceeding to the next phase. They act as validation barriers that prevent defects from propagating downstream.
+
+### Quality Gate Principles
+- **Fail Fast**: Identify issues as early as possible
+- **Clear Criteria**: Objective, measurable quality standards
+- **Automated Validation**: Minimize manual verification where possible
+- **Continuous Improvement**: Refine gates based on feedback and metrics
+
+## Standard Quality Gates
+
+### Gate 1: Requirements Quality
+- **Trigger**: Requirements documentation complete
+- **Criteria**:
+  - [ ] Requirements are clear and unambiguous
+  - [ ] Acceptance criteria defined for all features
+  - [ ] Dependencies and constraints identified
+  - [ ] Stakeholder approval obtained
+- **Exit Criteria**: All requirements validated and approved
+- **Owner**: Product Owner / Business Analyst
+
+### Gate 2: Design Quality
+- **Trigger**: Technical design complete
+- **Criteria**:
+  - [ ] Architecture design reviewed and approved
+  - [ ] API contracts defined and validated
+  - [ ] Database schema designed and reviewed
+  - [ ] Security considerations addressed
+  - [ ] Performance requirements specified
+- **Exit Criteria**: Design meets quality standards and is approved
+- **Owner**: Technical Architect / Lead Developer
+
+### Gate 3: Implementation Quality
+- **Trigger**: Code implementation complete
+- **Criteria**:
+  - [ ] Code review completed with approval
+  - [ ] Unit tests written and passing (>80% coverage)
+  - [ ] Code follows established standards and conventions
+  - [ ] No critical security vulnerabilities
+  - [ ] Performance benchmarks met
+- **Exit Criteria**: Code quality meets standards
+- **Owner**: Development Team / Code Reviewers
+
+### Gate 4: Integration Quality
+- **Trigger**: Component integration complete
+- **Criteria**:
+  - [ ] Integration tests passing
+  - [ ] API contracts validated
+  - [ ] Data flow verified end-to-end
+  - [ ] Error handling tested
+  - [ ] Performance under load validated
+- **Exit Criteria**: System integration verified
+- **Owner**: Integration Team / QA
+
+### Gate 5: System Quality
+- **Trigger**: System testing complete
+- **Criteria**:
+  - [ ] All functional tests passing
+  - [ ] Non-functional requirements met
+  - [ ] User acceptance criteria satisfied
+  - [ ] Security testing completed
+  - [ ] Performance testing passed
+- **Exit Criteria**: System ready for deployment
+- **Owner**: QA Team / Test Lead
+
+### Gate 6: Deployment Quality
+- **Trigger**: Deployment preparation complete
+- **Criteria**:
+  - [ ] Deployment scripts tested
+  - [ ] Rollback procedures verified
+  - [ ] Monitoring and alerting configured
+  - [ ] Documentation updated
+  - [ ] Support team trained
+- **Exit Criteria**: System ready for production
+- **Owner**: DevOps Team / Release Manager
+
+## Quality Metrics
+
+### Code Quality Metrics
+- **Code Coverage**: Percentage of code covered by tests
+- **Cyclomatic Complexity**: Measure of code complexity
+- **Technical Debt**: Amount of suboptimal code requiring refactoring
+- **Bug Density**: Number of bugs per lines of code
+- **Code Review Effectiveness**: Percentage of issues caught in review
+
+### Process Quality Metrics
+- **Gate Pass Rate**: Percentage of deliverables passing gates on first attempt
+- **Rework Rate**: Percentage of work requiring revision
+- **Defect Escape Rate**: Percentage of defects found in later phases
+- **Time to Resolution**: Average time to fix quality issues
+- **Customer Satisfaction**: Stakeholder satisfaction with quality
+
+## Quality Standards
+
+### Code Standards
+- **Naming Conventions**: Clear, consistent naming for variables, functions, classes
+- **Documentation**: Inline comments and API documentation
+- **Error Handling**: Proper exception handling and error messages
+- **Security**: Input validation, authentication, authorization
+- **Performance**: Efficient algorithms and resource usage
+
+### Testing Standards
+- **Unit Testing**: Individual component testing with high coverage
+- **Integration Testing**: Component interaction testing
+- **System Testing**: End-to-end functionality testing
+- **Performance Testing**: Load and stress testing
+- **Security Testing**: Vulnerability and penetration testing
+
+### Documentation Standards
+- **Technical Documentation**: Architecture, API, and code documentation
+- **User Documentation**: User guides and help documentation
+- **Process Documentation**: Workflows and procedures
+- **Deployment Documentation**: Installation and configuration guides
+
+## Quality Gate Automation
+
+### Automated Checks
+- **Static Code Analysis**: Automated code quality scanning
+- **Automated Testing**: Unit, integration, and regression tests
+- **Security Scanning**: Vulnerability detection and analysis
+- **Performance Monitoring**: Automated performance benchmarking
+- **Documentation Validation**: Automated documentation completeness checks
+
+### CI/CD Integration
+- **Build Gates**: Quality checks integrated into build pipeline
+- **Deployment Gates**: Quality validation before deployment
+- **Monitoring Gates**: Quality monitoring in production
+- **Feedback Loops**: Automated quality feedback to development team
+
+## Quality Gate Management
+
+### Gate Definition
+- **Entry Criteria**: What must be complete to trigger the gate
+- **Validation Criteria**: Specific quality checks to perform
+- **Exit Criteria**: What must pass to proceed beyond the gate
+- **Escalation Procedures**: What to do when gates fail
+
+### Gate Execution
+- **Validation Process**: Step-by-step quality validation
+- **Documentation**: Record of gate execution and results
+- **Decision Making**: Go/no-go decisions based on gate results
+- **Communication**: Notification of gate results to stakeholders
+
+### Continuous Improvement
+- **Gate Effectiveness**: Measure how well gates prevent defects
+- **Process Optimization**: Improve gate efficiency and accuracy
+- **Standard Updates**: Evolve quality standards based on learning
+- **Tool Enhancement**: Improve automation and tooling
+
+## Quality Culture
+
+### Team Responsibility
+- **Shared Ownership**: Everyone responsible for quality
+- **Quality First**: Quality prioritized over speed
+- **Continuous Learning**: Regular improvement of quality practices
+- **Feedback Culture**: Open discussion of quality issues and improvements
+
+### Quality Champions
+- **Quality Advocates**: Team members who promote quality practices
+- **Knowledge Sharing**: Sharing quality best practices across team
+- **Mentoring**: Helping team members improve quality skills
+- **Innovation**: Exploring new quality tools and techniques
+"""
+
+
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""
     return """

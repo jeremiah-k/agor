@@ -2334,3 +2334,2949 @@ def _get_team_summary(team_size: int, project_type: str, complexity: str) -> str
         return f"Medium team ({team_size} agents) - Specialized roles with lead"
     else:
         return f"Large team ({team_size} agents) - Multiple specialized teams with leadership"
+
+
+def design_workflow(project_description: str, team_size: int = 4, project_type: str = "web_app", complexity: str = "medium") -> str:
+    """Design agent workflow and coordination patterns (wf hotkey)."""
+
+    # Import the workflow template
+    from .project_planning_templates import generate_workflow_template
+
+    # Get the base template
+    template = generate_workflow_template()
+
+    # Add concrete workflow implementation
+    implementation_details = f"""
+## CONCRETE WORKFLOW IMPLEMENTATION
+
+### Project: {project_description}
+### Team Size: {team_size} agents
+### Project Type: {project_type}
+### Complexity: {complexity}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## WORKFLOW DESIGN
+
+{_generate_workflow_phases(project_type, complexity, team_size)}
+
+## AGENT WORKFLOW ASSIGNMENTS
+
+{_generate_workflow_assignments(team_size, project_type)}
+
+## COORDINATION PROTOCOLS
+
+### Phase Transition Rules:
+```
+PHASE_COMPLETE: [agent-id] - [phase-name] - [deliverables] - [timestamp]
+PHASE_READY: [next-agent] - [phase-name] - [prerequisites-met] - [timestamp]
+PHASE_BLOCKED: [agent-id] - [phase-name] - [blocker-description] - [timestamp]
+```
+
+### Quality Gates:
+{_generate_workflow_quality_gates(complexity)}
+
+### Handoff Procedures:
+{_generate_workflow_handoffs(project_type)}
+
+## WORKFLOW EXECUTION
+
+### Parallel Tracks:
+{_generate_parallel_tracks(team_size, project_type)}
+
+### Dependencies:
+{_generate_workflow_dependencies(project_type, complexity)}
+
+### Timeline:
+{_generate_workflow_timeline(complexity, team_size)}
+
+## ERROR HANDLING & RECOVERY
+
+### Common Workflow Issues:
+1. **Phase Blocking**: When one phase cannot proceed
+   - **Detection**: Missing prerequisites, failed quality gates
+   - **Resolution**: Rollback to previous phase, fix issues, retry
+   - **Prevention**: Clear phase completion criteria
+
+2. **Integration Conflicts**: When parallel work doesn't merge cleanly
+   - **Detection**: Merge conflicts, API mismatches, test failures
+   - **Resolution**: Integration agent coordinates resolution
+   - **Prevention**: Regular integration checkpoints
+
+3. **Resource Bottlenecks**: When agents are waiting for others
+   - **Detection**: Idle agents, delayed phase transitions
+   - **Resolution**: Rebalance work, add parallel tasks
+   - **Prevention**: Load balancing, buffer tasks
+
+4. **Quality Failures**: When deliverables don't meet standards
+   - **Detection**: Failed quality gates, review rejections
+   - **Resolution**: Return to development phase, address issues
+   - **Prevention**: Continuous quality checks
+
+### Recovery Procedures:
+```
+WORKFLOW_ISSUE: [agent-id] - [issue-type] - [description] - [timestamp]
+RECOVERY_PLAN: [coordinator] - [steps] - [timeline] - [timestamp]
+RECOVERY_COMPLETE: [agent-id] - [resolution] - [lessons-learned] - [timestamp]
+```
+
+## WORKFLOW MONITORING
+
+### Progress Tracking:
+- **Phase Completion**: Percentage complete for each phase
+- **Agent Utilization**: Active vs idle time for each agent
+- **Quality Metrics**: Defect rates, rework percentage
+- **Timeline Adherence**: Actual vs planned phase durations
+
+### Performance Indicators:
+- **Velocity**: Features completed per sprint
+- **Quality**: Bug rates, review feedback scores
+- **Efficiency**: Rework percentage, idle time
+- **Collaboration**: Handoff success rate, communication frequency
+
+## WORKFLOW OPTIMIZATION
+
+### Continuous Improvement:
+1. **Weekly Retrospectives**: What worked, what didn't, improvements
+2. **Metrics Review**: Analyze performance indicators, identify bottlenecks
+3. **Process Refinement**: Adjust phases, handoffs, quality gates
+4. **Tool Enhancement**: Improve coordination tools and templates
+
+### Adaptation Triggers:
+- **Performance Degradation**: Velocity drops, quality issues increase
+- **Team Changes**: New agents, role changes, skill gaps
+- **Project Evolution**: Scope changes, new requirements, technology shifts
+- **External Factors**: Timeline pressure, resource constraints
+
+## WORKFLOW INITIALIZATION CHECKLIST
+
+- [ ] **Workflow Design Approved**: All agents understand the process
+- [ ] **Phase Definitions Clear**: Entry/exit criteria defined
+- [ ] **Quality Gates Established**: Standards and review processes
+- [ ] **Handoff Procedures Documented**: Clear transition protocols
+- [ ] **Monitoring Setup**: Progress tracking and metrics collection
+- [ ] **Error Handling Defined**: Recovery procedures and escalation
+- [ ] **Communication Protocols**: Regular updates and coordination
+- [ ] **Tool Integration**: .agor files and coordination systems
+
+## NEXT STEPS
+
+1. **Review Workflow Design**: Validate phases and assignments with team
+2. **Setup Coordination**: Initialize .agor workflow tracking files
+3. **Define Standards**: Establish quality gates and handoff criteria
+4. **Begin Execution**: Start with first phase and monitor progress
+5. **Iterate and Improve**: Regular retrospectives and optimization
+"""
+
+    # Combine template with implementation
+    full_workflow = template + implementation_details
+
+    # Save to workflow design file
+    workflow_file = Path(".agor") / "workflow-design.md"
+    workflow_file.parent.mkdir(exist_ok=True)
+    workflow_file.write_text(full_workflow)
+
+    # Create workflow tracking file
+    _create_workflow_tracking_file(team_size, project_type)
+
+    # Create phase coordination files
+    _create_phase_coordination_files(project_type, complexity)
+
+    return f"""✅ Workflow Design Created
+
+**Project**: {project_description}
+**Team Size**: {team_size} agents
+**Project Type**: {project_type}
+**Complexity**: {complexity}
+
+**Workflow Structure**:
+{_get_workflow_summary(project_type, complexity, team_size)}
+
+**Files Created**:
+- `.agor/workflow-design.md` - Complete workflow plan and coordination
+- `.agor/workflow-tracking.md` - Progress tracking and metrics
+- `.agor/phase-[name].md` - Individual phase coordination files
+
+**Next Steps**:
+1. Review workflow design with team
+2. Initialize phase coordination and tracking
+3. Begin execution with first phase
+4. Monitor progress and optimize workflow
+
+**Ready for coordinated workflow execution!**
+"""
+
+
+def _generate_workflow_phases(project_type: str, complexity: str, team_size: int) -> str:
+    """Generate workflow phases based on project characteristics."""
+
+    if project_type == "api":
+        return _generate_api_workflow_phases(complexity)
+    elif project_type == "web_app":
+        return _generate_webapp_workflow_phases(complexity)
+    elif project_type == "mobile":
+        return _generate_mobile_workflow_phases(complexity)
+    elif project_type == "data":
+        return _generate_data_workflow_phases(complexity)
+    else:
+        return _generate_generic_workflow_phases(complexity)
+
+
+def _generate_api_workflow_phases(complexity: str) -> str:
+    """Generate API-specific workflow phases."""
+    base_phases = """
+### API Development Workflow
+
+#### Phase 1: API Design (Sequential)
+- **API Specification**: Define endpoints, schemas, error handling
+- **Data Modeling**: Design database schema and relationships
+- **Security Planning**: Authentication, authorization, rate limiting
+- **Documentation**: API documentation and examples
+
+#### Phase 2: Core Implementation (Parallel)
+- **Backend Development**: API endpoints and business logic
+- **Database Implementation**: Schema creation and data access layer
+- **Authentication System**: User management and security
+- **Testing Framework**: Unit tests and API testing
+
+#### Phase 3: Integration & Testing (Sequential)
+- **API Integration**: Connect all components
+- **End-to-End Testing**: Full API workflow testing
+- **Performance Testing**: Load testing and optimization
+- **Security Testing**: Vulnerability assessment
+
+#### Phase 4: Deployment (Sequential)
+- **Environment Setup**: Production infrastructure
+- **Deployment Pipeline**: CI/CD and automation
+- **Monitoring**: Logging, metrics, and alerting
+- **Documentation**: Deployment and maintenance guides
+"""
+
+    if complexity == "complex":
+        base_phases += """
+
+#### Phase 5: Advanced Features (Parallel)
+- **Caching Layer**: Redis/Memcached implementation
+- **API Gateway**: Rate limiting, routing, analytics
+- **Microservices**: Service decomposition and communication
+- **Advanced Security**: OAuth, JWT, encryption
+"""
+
+    return base_phases
+
+
+def _generate_webapp_workflow_phases(complexity: str) -> str:
+    """Generate web application workflow phases."""
+    base_phases = """
+### Web Application Workflow
+
+#### Phase 1: Foundation (Sequential)
+- **Architecture Design**: Frontend/backend architecture
+- **UI/UX Design**: Wireframes, mockups, design system
+- **Database Design**: Schema and data relationships
+- **Development Environment**: Setup and configuration
+
+#### Phase 2: Core Development (Parallel)
+- **Frontend Development**: UI components and user interface
+- **Backend Development**: API and business logic
+- **Database Implementation**: Data layer and migrations
+- **Authentication**: User management and security
+
+#### Phase 3: Integration (Sequential)
+- **Frontend-Backend Integration**: API connections
+- **Database Integration**: Data flow and persistence
+- **User Experience**: Navigation and interaction flows
+- **Testing**: Integration and user acceptance testing
+
+#### Phase 4: Quality & Deployment (Parallel)
+- **Quality Assurance**: Testing and bug fixes
+- **Performance Optimization**: Speed and scalability
+- **Deployment Setup**: Production environment
+- **Documentation**: User guides and technical docs
+"""
+
+    if complexity == "complex":
+        base_phases += """
+
+#### Phase 5: Advanced Features (Parallel)
+- **Real-time Features**: WebSockets, notifications
+- **Advanced UI**: Animations, responsive design
+- **Analytics**: User tracking and reporting
+- **SEO & Accessibility**: Search optimization and compliance
+"""
+
+    return base_phases
+
+
+def _generate_mobile_workflow_phases(complexity: str) -> str:
+    """Generate mobile application workflow phases."""
+    return """
+### Mobile Application Workflow
+
+#### Phase 1: Design & Planning (Sequential)
+- **UX Design**: User flows and wireframes
+- **UI Design**: Visual design and components
+- **Architecture**: App structure and data flow
+- **Platform Strategy**: iOS, Android, or cross-platform
+
+#### Phase 2: Core Development (Parallel)
+- **UI Implementation**: Screens and components
+- **Business Logic**: App functionality and features
+- **Data Layer**: Local storage and API integration
+- **Navigation**: Screen transitions and routing
+
+#### Phase 3: Platform Integration (Parallel)
+- **Platform Features**: Camera, GPS, notifications
+- **Performance**: Memory management and optimization
+- **Testing**: Device testing and compatibility
+- **App Store Preparation**: Metadata and assets
+
+#### Phase 4: Release (Sequential)
+- **Final Testing**: QA and user acceptance
+- **App Store Submission**: Review and approval
+- **Launch Preparation**: Marketing and support
+- **Post-Launch**: Monitoring and updates
+"""
+
+
+def _generate_data_workflow_phases(complexity: str) -> str:
+    """Generate data project workflow phases."""
+    return """
+### Data Project Workflow
+
+#### Phase 1: Data Discovery (Sequential)
+- **Data Assessment**: Available data sources and quality
+- **Requirements Analysis**: Business needs and objectives
+- **Architecture Design**: Data pipeline and storage
+- **Tool Selection**: Technologies and frameworks
+
+#### Phase 2: Data Pipeline (Sequential)
+- **Data Ingestion**: Collection and import processes
+- **Data Cleaning**: Quality checks and transformation
+- **Data Storage**: Database design and optimization
+- **Data Validation**: Quality assurance and testing
+
+#### Phase 3: Analysis & Modeling (Parallel)
+- **Exploratory Analysis**: Data exploration and insights
+- **Model Development**: Machine learning or analytics
+- **Visualization**: Dashboards and reporting
+- **Performance Tuning**: Optimization and scaling
+
+#### Phase 4: Deployment (Sequential)
+- **Production Pipeline**: Automated data processing
+- **Monitoring**: Data quality and system health
+- **Documentation**: Process and maintenance guides
+- **Training**: User education and support
+"""
+
+
+def _generate_generic_workflow_phases(complexity: str) -> str:
+    """Generate generic workflow phases."""
+    base_phases = """
+### Generic Development Workflow
+
+#### Phase 1: Analysis & Design (Sequential)
+- **Requirements Analysis**: Gather and document needs
+- **System Design**: Architecture and component design
+- **Technical Planning**: Technology choices and approach
+- **Project Setup**: Environment and tool configuration
+
+#### Phase 2: Implementation (Parallel)
+- **Core Development**: Primary functionality
+- **Component Development**: Individual modules
+- **Integration Development**: Component connections
+- **Testing Development**: Test suites and validation
+
+#### Phase 3: Integration & Testing (Sequential)
+- **System Integration**: Combine all components
+- **Quality Assurance**: Testing and validation
+- **Performance Testing**: Load and stress testing
+- **User Acceptance**: Stakeholder validation
+
+#### Phase 4: Deployment & Support (Sequential)
+- **Deployment Preparation**: Production setup
+- **Go-Live**: System launch and monitoring
+- **Documentation**: User and technical guides
+- **Support Setup**: Maintenance and help systems
+"""
+
+    if complexity == "complex":
+        base_phases += """
+
+#### Phase 5: Optimization (Parallel)
+- **Performance Optimization**: Speed and efficiency
+- **Security Hardening**: Vulnerability mitigation
+- **Feature Enhancement**: Additional capabilities
+- **Process Improvement**: Workflow optimization
+"""
+
+    return base_phases
+
+
+def _generate_workflow_assignments(team_size: int, project_type: str) -> str:
+    """Generate workflow assignments for agents."""
+    if team_size <= 3:
+        return """
+### Small Team Workflow Assignments
+- **Agent1**: Lead Developer - Handles design, core development, and coordination
+- **Agent2**: Quality Engineer - Testing, integration, and quality assurance
+- **Agent3**: DevOps Specialist - Deployment, monitoring, and infrastructure
+"""
+    elif team_size <= 6:
+        return """
+### Medium Team Workflow Assignments
+- **Agent1**: Technical Lead - Architecture, coordination, and code review
+- **Agent2**: Frontend Developer - UI/UX implementation and client-side logic
+- **Agent3**: Backend Developer - API development and business logic
+- **Agent4**: Quality Assurance - Testing, validation, and quality control
+- **Agent5**: DevOps Engineer - Deployment, infrastructure, and monitoring
+- **Agent6**: Integration Specialist - Component integration and system testing
+"""
+    else:
+        return """
+### Large Team Workflow Assignments
+- **Agent1**: Project Coordinator - Overall workflow management and coordination
+- **Agent2**: Technical Architect - System design and technical direction
+- **Agent3**: Frontend Lead - UI/UX team coordination and implementation
+- **Agent4**: Backend Lead - API and business logic team coordination
+- **Agent5**: Quality Lead - Testing strategy and quality assurance
+- **Agent6**: DevOps Lead - Infrastructure and deployment coordination
+- **Agent7+**: Specialized Developers - Domain-specific implementation
+"""
+
+
+def _generate_workflow_quality_gates(complexity: str) -> str:
+    """Generate quality gates for workflow phases."""
+    base_gates = """
+#### Phase 1 Quality Gates:
+- [ ] Requirements documented and approved
+- [ ] Architecture design reviewed and signed off
+- [ ] Technical approach validated
+- [ ] Development environment ready
+
+#### Phase 2 Quality Gates:
+- [ ] Code review completed for all components
+- [ ] Unit tests passing with >80% coverage
+- [ ] Security review completed
+- [ ] Performance benchmarks met
+
+#### Phase 3 Quality Gates:
+- [ ] Integration tests passing
+- [ ] End-to-end workflows validated
+- [ ] Performance testing completed
+- [ ] Security testing passed
+
+#### Phase 4 Quality Gates:
+- [ ] Production deployment successful
+- [ ] Monitoring and alerting active
+- [ ] Documentation complete and reviewed
+- [ ] User acceptance criteria met
+"""
+
+    if complexity == "complex":
+        base_gates += """
+
+#### Phase 5 Quality Gates:
+- [ ] Advanced features tested and validated
+- [ ] Scalability requirements met
+- [ ] Security hardening completed
+- [ ] Performance optimization verified
+"""
+
+    return base_gates
+
+
+def _generate_workflow_handoffs(project_type: str) -> str:
+    """Generate handoff procedures for workflow."""
+    return f"""
+#### Standard Handoff Procedure:
+1. **Completion Signal**: Agent signals phase completion with deliverables
+2. **Quality Check**: Next agent validates prerequisites and quality gates
+3. **Knowledge Transfer**: Brief handoff meeting or documentation review
+4. **Acceptance**: Receiving agent confirms readiness to proceed
+
+#### Handoff Documentation Template:
+```
+HANDOFF: [from-agent] → [to-agent] - [phase-name]
+COMPLETED:
+- [Deliverable 1 with location]
+- [Deliverable 2 with location]
+- [Quality gates passed]
+
+NEXT PHASE:
+- [Task 1 for receiving agent]
+- [Task 2 for receiving agent]
+- [Prerequisites and dependencies]
+
+NOTES:
+- [Important context or decisions]
+- [Known issues or considerations]
+- [Recommendations for next phase]
+```
+
+#### Emergency Handoff Procedure:
+- **Immediate**: Critical blocker requires different expertise
+- **Planned**: Scheduled agent rotation or availability change
+- **Quality**: Phase fails quality gates, needs rework
+"""
+
+
+def _generate_parallel_tracks(team_size: int, project_type: str) -> str:
+    """Generate parallel execution tracks."""
+    if project_type == "web_app":
+        return """
+#### Parallel Development Tracks:
+
+**Track A: Frontend Development**
+- UI component development
+- User experience implementation
+- Client-side testing
+- Frontend optimization
+
+**Track B: Backend Development**
+- API endpoint development
+- Business logic implementation
+- Database integration
+- Backend testing
+
+**Track C: Infrastructure & Quality**
+- Development environment setup
+- CI/CD pipeline configuration
+- Testing framework setup
+- Deployment preparation
+
+**Synchronization Points:**
+- Daily: Progress updates and blocker resolution
+- Weekly: Integration testing and alignment
+- Phase End: Complete integration and handoff
+"""
+    else:
+        return """
+#### Parallel Development Tracks:
+
+**Track A: Core Development**
+- Primary functionality implementation
+- Core business logic
+- Main feature development
+
+**Track B: Supporting Systems**
+- Infrastructure and tooling
+- Testing and validation
+- Documentation and guides
+
+**Track C: Quality & Integration**
+- Quality assurance
+- System integration
+- Performance optimization
+
+**Synchronization Points:**
+- Regular integration checkpoints
+- Quality gate validations
+- Phase completion reviews
+"""
+
+
+def _generate_workflow_dependencies(project_type: str, complexity: str) -> str:
+    """Generate workflow dependencies."""
+    return """
+#### Critical Dependencies:
+
+**Phase Dependencies:**
+- Phase 1 → Phase 2: Architecture approval required
+- Phase 2 → Phase 3: Core components completed
+- Phase 3 → Phase 4: Integration testing passed
+- Phase 4 → Launch: Quality gates satisfied
+
+**Resource Dependencies:**
+- Development Environment: Required for all development phases
+- Test Environment: Required for integration and testing phases
+- Production Environment: Required for deployment phase
+- External APIs: May block integration if unavailable
+
+**Knowledge Dependencies:**
+- Domain Expertise: Required for business logic implementation
+- Technical Skills: Specific technology knowledge needed
+- Process Knowledge: Understanding of workflow and quality standards
+
+**Dependency Management:**
+- **Early Identification**: Map dependencies during planning
+- **Risk Mitigation**: Prepare alternatives for critical dependencies
+- **Regular Review**: Monitor dependency status and adjust plans
+- **Communication**: Keep team informed of dependency changes
+"""
+
+
+def _generate_workflow_timeline(complexity: str, team_size: int) -> str:
+    """Generate workflow timeline estimates."""
+    if complexity == "simple":
+        return """
+#### Simple Project Timeline:
+- **Phase 1**: 2-3 days (Analysis & Design)
+- **Phase 2**: 5-7 days (Implementation)
+- **Phase 3**: 2-3 days (Integration & Testing)
+- **Phase 4**: 1-2 days (Deployment)
+
+**Total Duration**: 10-15 days
+**Team Utilization**: High (minimal idle time)
+**Risk Buffer**: 20% additional time for unexpected issues
+"""
+    elif complexity == "complex":
+        return """
+#### Complex Project Timeline:
+- **Phase 1**: 1-2 weeks (Analysis & Design)
+- **Phase 2**: 3-4 weeks (Implementation)
+- **Phase 3**: 1-2 weeks (Integration & Testing)
+- **Phase 4**: 1 week (Deployment)
+- **Phase 5**: 1-2 weeks (Advanced Features)
+
+**Total Duration**: 7-11 weeks
+**Team Utilization**: Medium (coordination overhead)
+**Risk Buffer**: 30% additional time for complexity management
+"""
+    else:  # medium
+        return """
+#### Medium Project Timeline:
+- **Phase 1**: 3-5 days (Analysis & Design)
+- **Phase 2**: 2-3 weeks (Implementation)
+- **Phase 3**: 1 week (Integration & Testing)
+- **Phase 4**: 2-3 days (Deployment)
+
+**Total Duration**: 4-6 weeks
+**Team Utilization**: High (good balance)
+**Risk Buffer**: 25% additional time for coordination
+"""
+
+
+def _create_workflow_tracking_file(team_size: int, project_type: str):
+    """Create workflow tracking file."""
+    tracking_file = Path(".agor") / "workflow-tracking.md"
+    tracking_content = f"""
+# Workflow Progress Tracking
+
+## Project Configuration
+- **Team Size**: {team_size} agents
+- **Project Type**: {project_type}
+- **Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Phase Progress
+
+### Phase 1: Analysis & Design
+- **Status**: Not Started
+- **Assigned**: [agent-id]
+- **Started**: [timestamp]
+- **Completed**: [timestamp]
+- **Quality Gates**: [ ] [ ] [ ] [ ]
+- **Deliverables**: [list when completed]
+
+### Phase 2: Implementation
+- **Status**: Not Started
+- **Assigned**: [agent-ids]
+- **Started**: [timestamp]
+- **Completed**: [timestamp]
+- **Quality Gates**: [ ] [ ] [ ] [ ]
+- **Deliverables**: [list when completed]
+
+### Phase 3: Integration & Testing
+- **Status**: Not Started
+- **Assigned**: [agent-id]
+- **Started**: [timestamp]
+- **Completed**: [timestamp]
+- **Quality Gates**: [ ] [ ] [ ] [ ]
+- **Deliverables**: [list when completed]
+
+### Phase 4: Deployment
+- **Status**: Not Started
+- **Assigned**: [agent-id]
+- **Started**: [timestamp]
+- **Completed**: [timestamp]
+- **Quality Gates**: [ ] [ ] [ ] [ ]
+- **Deliverables**: [list when completed]
+
+## Metrics Tracking
+
+### Daily Metrics
+- **Date**: {datetime.now().strftime('%Y-%m-%d')}
+- **Active Agents**: 0/{team_size}
+- **Completed Tasks**: 0
+- **Blockers**: 0
+- **Quality Issues**: 0
+
+### Weekly Summary
+- **Week**: [week-number]
+- **Velocity**: [tasks completed]
+- **Quality Score**: [percentage]
+- **Team Utilization**: [percentage]
+- **Timeline Adherence**: [on-track/delayed/ahead]
+
+## Issue Tracking
+
+### Active Issues
+- [No issues currently]
+
+### Resolved Issues
+- [No issues resolved yet]
+
+## Workflow Adjustments
+
+### Process Changes
+- [No changes made yet]
+
+### Lessons Learned
+- [Lessons will be captured here]
+"""
+    tracking_file.write_text(tracking_content)
+
+
+def _create_phase_coordination_files(project_type: str, complexity: str):
+    """Create individual phase coordination files."""
+    phases = ["analysis-design", "implementation", "integration-testing", "deployment"]
+    if complexity == "complex":
+        phases.append("optimization")
+
+    for phase in phases:
+        phase_file = Path(".agor") / f"phase-{phase}.md"
+        phase_content = f"""
+# Phase: {phase.replace('-', ' ').title()}
+
+## Phase Overview
+[Description of this phase and its objectives]
+
+## Assigned Agents
+- [List of agents working on this phase]
+
+## Tasks
+- [ ] [Task 1 description]
+- [ ] [Task 2 description]
+- [ ] [Task 3 description]
+
+## Quality Gates
+- [ ] [Quality requirement 1]
+- [ ] [Quality requirement 2]
+- [ ] [Quality requirement 3]
+
+## Deliverables
+- [Deliverable 1 with location]
+- [Deliverable 2 with location]
+
+## Dependencies
+- [Dependency 1 description]
+- [Dependency 2 description]
+
+## Progress Updates
+
+### {datetime.now().strftime('%Y-%m-%d')}
+- **Status**: Not Started
+- **Progress**: 0%
+- **Blockers**: None
+- **Next Steps**: [What needs to be done next]
+
+## Handoff Preparation
+
+### Prerequisites for Next Phase
+- [Requirement 1]
+- [Requirement 2]
+
+### Handoff Documentation
+- [Will be completed when phase is done]
+
+## Notes
+- [Important notes and decisions for this phase]
+"""
+        phase_file.write_text(phase_content)
+
+
+def _get_workflow_summary(project_type: str, complexity: str, team_size: int) -> str:
+    """Get workflow summary."""
+    phase_count = 4 if complexity != "complex" else 5
+    return f"{phase_count} phases, {project_type} optimized, {team_size} agents coordinated"
+
+
+def generate_handoff_prompts(handoff_type: str = "standard", from_role: str = "developer", to_role: str = "reviewer", context: str = "") -> str:
+    """Generate handoff prompts and coordination templates (hp hotkey)."""
+
+    # Import handoff templates
+    from .agent_prompt_templates import generate_handoff_prompt, generate_specialist_prompt
+    from .handoff_templates import generate_handoff_document, generate_receive_handoff_prompt
+
+    # Generate comprehensive handoff guidance
+    implementation_details = f"""
+## HANDOFF PROMPTS IMPLEMENTATION
+
+### Handoff Type: {handoff_type}
+### From Role: {from_role}
+### To Role: {to_role}
+### Context: {context if context else "General development handoff"}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## HANDOFF PROMPT TEMPLATES
+
+{_generate_handoff_prompt_templates(handoff_type, from_role, to_role)}
+
+## ROLE-SPECIFIC PROMPTS
+
+{_generate_role_specific_prompts(from_role, to_role, context)}
+
+## HANDOFF COORDINATION PROTOCOLS
+
+### Standard Handoff Process:
+1. **Preparation Phase**:
+   ```
+   [FROM-AGENT] [TIMESTAMP] - HANDOFF_PREP: [task] - Preparing handoff materials
+   ```
+
+2. **Handoff Creation**:
+   ```
+   [FROM-AGENT] [TIMESTAMP] - HANDOFF_CREATED: [task] - Handoff document ready
+   ```
+
+3. **Handoff Delivery**:
+   ```
+   [FROM-AGENT] [TIMESTAMP] - HANDOFF_REQUEST: [to-agent] - [task] - [handoff-location]
+   ```
+
+4. **Handoff Reception**:
+   ```
+   [TO-AGENT] [TIMESTAMP] - HANDOFF_RECEIVED: [task] - Reviewing materials
+   ```
+
+5. **Handoff Acceptance**:
+   ```
+   [TO-AGENT] [TIMESTAMP] - HANDOFF_ACCEPTED: [task] - Work resumed
+   ```
+
+### Emergency Handoff Process:
+1. **Immediate Notification**:
+   ```
+   [FROM-AGENT] [TIMESTAMP] - EMERGENCY_HANDOFF: [critical-issue] - Immediate assistance needed
+   ```
+
+2. **Quick Context Transfer**:
+   ```
+   [FROM-AGENT] [TIMESTAMP] - CONTEXT: [current-state] - [blocker] - [urgency-level]
+   ```
+
+3. **Emergency Response**:
+   ```
+   [TO-AGENT] [TIMESTAMP] - EMERGENCY_RESPONSE: [task] - Taking over immediately
+   ```
+
+## HANDOFF QUALITY ASSURANCE
+
+### Handoff Checklist:
+- [ ] **Work Status**: Current progress clearly documented
+- [ ] **Deliverables**: All completed work identified and accessible
+- [ ] **Context**: Technical decisions and rationale explained
+- [ ] **Next Steps**: Clear tasks for receiving agent
+- [ ] **Dependencies**: External dependencies and blockers identified
+- [ ] **Quality**: Code quality and testing status documented
+- [ ] **Timeline**: Estimated completion time provided
+- [ ] **Communication**: Handoff logged in agentconvo.md
+
+### Handoff Validation:
+- [ ] **Completeness**: All required information provided
+- [ ] **Clarity**: Instructions are clear and actionable
+- [ ] **Accessibility**: All referenced files and resources available
+- [ ] **Context**: Sufficient background for receiving agent
+- [ ] **Quality**: Work meets standards for handoff
+
+## SPECIALIZED HANDOFF SCENARIOS
+
+{_generate_specialized_handoff_scenarios()}
+
+## HANDOFF TEMPLATES LIBRARY
+
+{_generate_handoff_templates_library()}
+
+## HANDOFF METRICS & OPTIMIZATION
+
+### Success Metrics:
+- **Handoff Time**: Time from request to acceptance
+- **Context Transfer**: Receiving agent understanding score
+- **Continuation Quality**: Work quality after handoff
+- **Rework Rate**: Percentage of work requiring revision
+
+### Optimization Strategies:
+- **Template Standardization**: Use consistent handoff formats
+- **Context Documentation**: Maintain detailed work logs
+- **Regular Checkpoints**: Frequent progress updates
+- **Knowledge Sharing**: Cross-training and documentation
+
+## HANDOFF TROUBLESHOOTING
+
+### Common Issues:
+1. **Incomplete Context**: Missing technical details or decisions
+   - **Solution**: Use comprehensive handoff templates
+   - **Prevention**: Regular documentation during work
+
+2. **Unclear Next Steps**: Receiving agent unsure how to proceed
+   - **Solution**: Provide specific, actionable tasks
+   - **Prevention**: Break down work into clear steps
+
+3. **Missing Dependencies**: Required resources not available
+   - **Solution**: Document all dependencies and provide access
+   - **Prevention**: Dependency mapping during planning
+
+4. **Quality Issues**: Work not ready for handoff
+   - **Solution**: Complete quality checks before handoff
+   - **Prevention**: Continuous quality assurance
+
+### Escalation Procedures:
+1. **Agent Level**: Direct communication between agents
+2. **Team Level**: Involve technical lead or coordinator
+3. **Project Level**: Escalate to project management
+4. **Emergency Level**: Immediate intervention required
+
+## HANDOFF AUTOMATION
+
+### Automated Handoff Generation:
+```python
+# Generate handoff document
+from agor.tools.handoff_templates import generate_handoff_document
+handoff = generate_handoff_document(
+    problem_description="User authentication system",
+    work_completed=["API endpoints", "Database schema", "Unit tests"],
+    commits_made=["feat: add auth endpoints", "fix: validation logic"],
+    current_status="80% complete - needs frontend integration",
+    next_steps=["Create login UI", "Implement session management"],
+    files_modified=["src/auth/api.py", "src/models/user.py"],
+    context_notes="Uses JWT tokens, 24hr expiry",
+    agent_role="Backend Developer",
+    handoff_reason="Frontend development needed"
+)
+```
+
+### Automated Prompt Generation:
+```python
+# Generate role-specific prompts
+from agor.tools.agent_prompt_templates import generate_handoff_prompt
+prompt = generate_handoff_prompt(
+    from_agent="backend-dev",
+    to_agent="frontend-dev",
+    work_completed="Authentication API complete",
+    next_tasks="Build login interface",
+    context="JWT-based auth with 24hr tokens"
+)
+```
+
+## NEXT STEPS
+
+1. **Review Handoff Templates**: Validate prompt templates and formats
+2. **Setup Handoff Directory**: Initialize .agor/handoffs/ structure
+3. **Train Team**: Ensure all agents understand handoff protocols
+4. **Monitor Quality**: Track handoff success metrics
+5. **Iterate and Improve**: Refine templates based on usage
+"""
+
+    # Save to handoff prompts file
+    handoff_file = Path(".agor") / "handoff-prompts.md"
+    handoff_file.parent.mkdir(exist_ok=True)
+    handoff_file.write_text(implementation_details)
+
+    # Create handoff templates directory
+    _create_handoff_templates_directory()
+
+    # Create role-specific prompt files
+    _create_role_specific_prompt_files(from_role, to_role)
+
+    return f"""✅ Handoff Prompts Generated
+
+**Handoff Type**: {handoff_type}
+**From Role**: {from_role}
+**To Role**: {to_role}
+**Context**: {context if context else "General development"}
+
+**Generated Resources**:
+- Comprehensive handoff prompt templates
+- Role-specific coordination protocols
+- Quality assurance checklists
+- Specialized handoff scenarios
+- Automation examples and scripts
+
+**Files Created**:
+- `.agor/handoff-prompts.md` - Complete handoff guidance
+- `.agor/handoff-templates/` - Template library
+- `.agor/role-prompts/` - Role-specific prompts
+
+**Next Steps**:
+1. Review handoff templates and customize as needed
+2. Train team on handoff protocols
+3. Begin using standardized handoff processes
+4. Monitor handoff quality and optimize
+
+**Ready for seamless agent handoffs!**
+"""
+
+
+def _generate_handoff_prompt_templates(handoff_type: str, from_role: str, to_role: str) -> str:
+    """Generate handoff prompt templates."""
+    if handoff_type == "emergency":
+        return f"""
+### Emergency Handoff Template
+```
+EMERGENCY HANDOFF: {from_role} → {to_role}
+
+CRITICAL ISSUE: [Describe the urgent problem]
+CURRENT STATE: [What's working/broken]
+IMMEDIATE ACTION NEEDED: [What must be done now]
+TIME CONSTRAINT: [Deadline or urgency level]
+
+CONTEXT:
+- [Key technical details]
+- [Recent changes that may be related]
+- [Resources and access needed]
+
+EMERGENCY CONTACT: [How to reach original agent if needed]
+```
+"""
+    elif handoff_type == "planned":
+        return f"""
+### Planned Handoff Template
+```
+PLANNED HANDOFF: {from_role} → {to_role}
+
+SCHEDULED: [Date and time]
+REASON: [Why handoff is happening]
+PREPARATION TIME: [How long to prepare]
+
+WORK COMPLETED:
+- [Deliverable 1 with location]
+- [Deliverable 2 with location]
+- [Quality gates passed]
+
+NEXT PHASE:
+- [Task 1 for receiving agent]
+- [Task 2 for receiving agent]
+- [Success criteria]
+
+TRANSITION PLAN:
+- [Knowledge transfer sessions]
+- [Documentation review]
+- [Overlap period if needed]
+```
+"""
+    else:  # standard
+        return f"""
+### Standard Handoff Template
+```
+HANDOFF: {from_role} → {to_role}
+
+COMPLETED WORK:
+- [List of deliverables with locations]
+- [Quality checks performed]
+- [Tests passing]
+
+CURRENT STATUS:
+- [Overall progress percentage]
+- [What's working well]
+- [Known issues or limitations]
+
+NEXT STEPS:
+- [Immediate tasks for receiving agent]
+- [Medium-term objectives]
+- [Success criteria]
+
+CONTEXT:
+- [Technical decisions made]
+- [Architecture choices]
+- [Important constraints or requirements]
+
+RESOURCES:
+- [Documentation links]
+- [Code repositories]
+- [Access credentials or permissions needed]
+```
+"""
+
+
+def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) -> str:
+    """Generate role-specific handoff prompts."""
+    role_prompts = {
+        "developer": {
+            "to_reviewer": """
+### Developer → Reviewer Handoff
+**Focus**: Code quality, standards compliance, security review
+
+**Developer Deliverables**:
+- Complete, tested code implementation
+- Unit tests with >80% coverage
+- Documentation for new features
+- Self-review checklist completed
+
+**Reviewer Tasks**:
+- Code quality assessment
+- Security vulnerability scan
+- Performance impact analysis
+- Standards compliance verification
+
+**Handoff Criteria**:
+- All tests passing
+- Code follows team standards
+- Documentation is complete
+- No obvious security issues
+""",
+            "to_tester": """
+### Developer → Tester Handoff
+**Focus**: Functional testing, integration validation, user acceptance
+
+**Developer Deliverables**:
+- Working feature implementation
+- Unit tests and test data
+- Feature documentation
+- Known limitations or edge cases
+
+**Tester Tasks**:
+- Functional testing execution
+- Integration testing
+- User acceptance validation
+- Bug reporting and tracking
+
+**Handoff Criteria**:
+- Feature is functionally complete
+- Basic testing completed
+- Test environment ready
+- Test data available
+""",
+            "to_devops": """
+### Developer → DevOps Handoff
+**Focus**: Deployment readiness, infrastructure requirements, monitoring
+
+**Developer Deliverables**:
+- Production-ready code
+- Deployment configuration
+- Infrastructure requirements
+- Monitoring and logging setup
+
+**DevOps Tasks**:
+- Deployment pipeline setup
+- Infrastructure provisioning
+- Monitoring configuration
+- Performance optimization
+
+**Handoff Criteria**:
+- Code is deployment-ready
+- Configuration is documented
+- Dependencies are specified
+- Monitoring requirements defined
+"""
+        },
+        "reviewer": {
+            "to_developer": """
+### Reviewer → Developer Handoff
+**Focus**: Required fixes, improvements, optimization recommendations
+
+**Reviewer Deliverables**:
+- Detailed review report
+- Prioritized fix list
+- Security recommendations
+- Performance suggestions
+
+**Developer Tasks**:
+- Address critical issues
+- Implement security fixes
+- Optimize performance
+- Update documentation
+
+**Handoff Criteria**:
+- Review is complete
+- Issues are prioritized
+- Fix guidance is clear
+- Timeline is realistic
+"""
+        },
+        "tester": {
+            "to_developer": """
+### Tester → Developer Handoff
+**Focus**: Bug fixes, test failures, quality improvements
+
+**Tester Deliverables**:
+- Test results and reports
+- Bug reports with reproduction steps
+- Test coverage analysis
+- Quality metrics
+
+**Developer Tasks**:
+- Fix identified bugs
+- Improve test coverage
+- Address quality issues
+- Update implementation
+
+**Handoff Criteria**:
+- Testing is complete
+- Bugs are documented
+- Reproduction steps provided
+- Priority levels assigned
+"""
+        }
+    }
+
+    key = f"{from_role}_to_{to_role}"
+    if from_role in role_prompts and f"to_{to_role}" in role_prompts[from_role]:
+        return role_prompts[from_role][f"to_{to_role}"]
+    else:
+        return f"""
+### {from_role.title()} → {to_role.title()} Handoff
+**Focus**: Role transition and work continuation
+
+**{from_role.title()} Deliverables**:
+- Completed work with documentation
+- Current status and progress
+- Next steps and requirements
+- Context and technical details
+
+**{to_role.title()} Tasks**:
+- Review handoff materials
+- Continue work from current state
+- Address any immediate issues
+- Maintain quality standards
+
+**Handoff Criteria**:
+- Work is properly documented
+- Context is clearly explained
+- Next steps are actionable
+- Quality standards maintained
+"""
+
+
+def _generate_specialized_handoff_scenarios() -> str:
+    """Generate specialized handoff scenarios."""
+    return """
+### Cross-Functional Handoffs
+
+#### Backend → Frontend
+- **Focus**: API integration, data contracts, user experience
+- **Key Items**: API documentation, data schemas, authentication flow
+- **Success Criteria**: Frontend can consume APIs successfully
+
+#### Frontend → Backend
+- **Focus**: Data requirements, performance needs, user workflows
+- **Key Items**: User stories, data models, performance requirements
+- **Success Criteria**: Backend supports all frontend needs
+
+#### Development → Operations
+- **Focus**: Deployment readiness, monitoring, scalability
+- **Key Items**: Deployment configs, monitoring setup, scaling requirements
+- **Success Criteria**: System deploys and runs reliably
+
+### Temporal Handoffs
+
+#### End of Sprint
+- **Focus**: Sprint completion, next sprint preparation
+- **Key Items**: Sprint summary, backlog updates, lessons learned
+- **Success Criteria**: Clean transition to next sprint
+
+#### End of Phase
+- **Focus**: Phase completion, next phase readiness
+- **Key Items**: Phase deliverables, quality gates, next phase planning
+- **Success Criteria**: Phase objectives met, next phase can begin
+
+#### Project Completion
+- **Focus**: Project closure, maintenance handoff
+- **Key Items**: Final deliverables, documentation, support procedures
+- **Success Criteria**: Project successfully closed, maintenance ready
+
+### Emergency Handoffs
+
+#### Critical Bug
+- **Focus**: Immediate issue resolution
+- **Key Items**: Bug description, impact assessment, immediate fixes
+- **Success Criteria**: Critical issue resolved quickly
+
+#### Agent Unavailability
+- **Focus**: Work continuation without original agent
+- **Key Items**: Current state, immediate tasks, contact information
+- **Success Criteria**: Work continues without significant delay
+
+#### Deadline Pressure
+- **Focus**: Accelerated delivery, scope management
+- **Key Items**: Priority tasks, scope decisions, resource needs
+- **Success Criteria**: Deadline met with acceptable quality
+"""
+
+
+def _generate_handoff_templates_library() -> str:
+    """Generate handoff templates library."""
+    return """
+### Quick Handoff Templates
+
+#### Minimal Handoff
+```
+QUICK HANDOFF: [from] → [to]
+TASK: [brief description]
+STATUS: [current state]
+NEXT: [immediate action needed]
+FILES: [key files to check]
+```
+
+#### Bug Fix Handoff
+```
+BUG HANDOFF: [from] → [to]
+BUG: [description and impact]
+REPRODUCTION: [steps to reproduce]
+INVESTIGATION: [what's been tried]
+NEXT: [suggested approach]
+```
+
+#### Feature Handoff
+```
+FEATURE HANDOFF: [from] → [to]
+FEATURE: [description and requirements]
+PROGRESS: [what's implemented]
+REMAINING: [what's left to do]
+TESTS: [testing status]
+```
+
+#### Review Handoff
+```
+REVIEW HANDOFF: [from] → [to]
+CODE: [location and scope]
+CRITERIA: [review requirements]
+TIMELINE: [review deadline]
+CONTACT: [for questions]
+```
+
+### Comprehensive Templates
+
+#### Full Project Handoff
+- Complete project context
+- All deliverables and documentation
+- Team structure and responsibilities
+- Timeline and milestones
+- Risk assessment and mitigation
+- Success criteria and metrics
+
+#### Phase Transition Handoff
+- Phase completion summary
+- Quality gate validation
+- Next phase preparation
+- Resource allocation
+- Dependency management
+- Stakeholder communication
+"""
+
+
+def _create_handoff_templates_directory():
+    """Create handoff templates directory structure."""
+    templates_dir = Path(".agor") / "handoff-templates"
+    templates_dir.mkdir(exist_ok=True)
+
+    # Create template files
+    templates = {
+        "standard-handoff.md": """
+# Standard Handoff Template
+
+## Handoff Information
+- **From**: [Agent Role/ID]
+- **To**: [Agent Role/ID]
+- **Date**: [Timestamp]
+- **Type**: Standard
+
+## Work Completed
+- [ ] [Deliverable 1]
+- [ ] [Deliverable 2]
+- [ ] [Deliverable 3]
+
+## Current Status
+**Progress**: [Percentage]%
+**Quality**: [Status]
+**Testing**: [Status]
+
+## Next Steps
+1. [Immediate task]
+2. [Follow-up task]
+3. [Future consideration]
+
+## Context & Notes
+[Important technical details, decisions, constraints]
+
+## Resources
+- [Documentation links]
+- [Code repositories]
+- [Access requirements]
+""",
+        "emergency-handoff.md": """
+# Emergency Handoff Template
+
+## Emergency Information
+- **From**: [Agent Role/ID]
+- **To**: [Agent Role/ID]
+- **Date**: [Timestamp]
+- **Urgency**: [Critical/High/Medium]
+
+## Critical Issue
+**Problem**: [Description]
+**Impact**: [Business/technical impact]
+**Deadline**: [When this must be resolved]
+
+## Current State
+**What's Working**: [Functional components]
+**What's Broken**: [Failed components]
+**Last Known Good**: [Previous working state]
+
+## Immediate Actions
+1. [First priority action]
+2. [Second priority action]
+3. [Fallback option]
+
+## Emergency Contacts
+- **Original Agent**: [Contact info]
+- **Technical Lead**: [Contact info]
+- **Escalation**: [Contact info]
+""",
+        "review-handoff.md": """
+# Review Handoff Template
+
+## Review Information
+- **Reviewer**: [Agent Role/ID]
+- **Developer**: [Agent Role/ID]
+- **Date**: [Timestamp]
+- **Scope**: [What's being reviewed]
+
+## Review Criteria
+- [ ] Code quality and standards
+- [ ] Security considerations
+- [ ] Performance impact
+- [ ] Test coverage
+- [ ] Documentation completeness
+
+## Code Location
+**Repository**: [Repo URL/path]
+**Branch**: [Branch name]
+**Files**: [List of files to review]
+**Commits**: [Relevant commit hashes]
+
+## Review Timeline
+**Deadline**: [When review must be complete]
+**Priority**: [High/Medium/Low]
+**Complexity**: [Simple/Medium/Complex]
+
+## Review Results
+[To be filled by reviewer]
+
+## Action Items
+[To be filled by reviewer]
+"""
+    }
+
+    for filename, content in templates.items():
+        template_file = templates_dir / filename
+        template_file.write_text(content)
+
+
+def _create_role_specific_prompt_files(from_role: str, to_role: str):
+    """Create role-specific prompt files."""
+    prompts_dir = Path(".agor") / "role-prompts"
+    prompts_dir.mkdir(exist_ok=True)
+
+    # Create role-specific prompt file
+    prompt_file = prompts_dir / f"{from_role}-to-{to_role}.md"
+    prompt_content = f"""
+# {from_role.title()} to {to_role.title()} Handoff Prompts
+
+## Role Transition Context
+**From Role**: {from_role}
+**To Role**: {to_role}
+**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Handoff Prompt
+{_generate_role_specific_prompts(from_role, to_role, "")}
+
+## Communication Templates
+
+### Handoff Request
+```
+[{from_role.upper()}] [TIMESTAMP] - HANDOFF_REQUEST: {to_role} - [task-description] - [handoff-location]
+```
+
+### Handoff Acceptance
+```
+[{to_role.upper()}] [TIMESTAMP] - HANDOFF_ACCEPTED: [task-description] - Work resumed
+```
+
+### Progress Update
+```
+[{to_role.upper()}] [TIMESTAMP] - PROGRESS: [task-description] - [status] - [next-steps]
+```
+
+## Quality Checklist
+- [ ] All deliverables documented
+- [ ] Context clearly explained
+- [ ] Next steps actionable
+- [ ] Resources accessible
+- [ ] Timeline realistic
+
+## Success Criteria
+- Receiving agent understands the work
+- Work continues without significant delay
+- Quality standards maintained
+- Communication protocols followed
+"""
+    prompt_file.write_text(prompt_content)
+
+
+def manage_team(project_name: str = "Current Project", team_size: int = 4, management_focus: str = "performance") -> str:
+    """Manage ongoing team coordination and performance (tm hotkey)."""
+
+    # Import the team management template
+    from .project_planning_templates import generate_team_management_template
+
+    # Get the base template
+    template = generate_team_management_template()
+
+    # Add concrete team management implementation
+    implementation_details = f"""
+## TEAM MANAGEMENT IMPLEMENTATION
+
+### Project: {project_name}
+### Team Size: {team_size} agents
+### Management Focus: {management_focus}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## CURRENT TEAM STATUS
+
+{_generate_current_team_status(team_size, project_name)}
+
+## PERFORMANCE DASHBOARD
+
+{_generate_performance_dashboard(team_size, management_focus)}
+
+## TEAM COORDINATION PROTOCOLS
+
+### Daily Management Routine:
+1. **Morning Status Check** (9:00 AM):
+   ```
+   TEAM_STATUS: [timestamp] - Daily team status review
+   - Active agents: [count]
+   - Blocked tasks: [count]
+   - Completed yesterday: [count]
+   - Planned today: [count]
+   ```
+
+2. **Midday Progress Review** (1:00 PM):
+   ```
+   PROGRESS_CHECK: [timestamp] - Midday progress assessment
+   - On track: [agent-list]
+   - Behind schedule: [agent-list]
+   - Blockers identified: [blocker-list]
+   - Help needed: [help-requests]
+   ```
+
+3. **End of Day Summary** (5:00 PM):
+   ```
+   DAY_SUMMARY: [timestamp] - Daily completion summary
+   - Completed tasks: [task-list]
+   - Incomplete tasks: [task-list]
+   - Tomorrow's priorities: [priority-list]
+   - Team health: [assessment]
+   ```
+
+### Weekly Management Cycle:
+- **Monday**: Sprint planning and goal setting
+- **Wednesday**: Mid-week progress review and adjustments
+- **Friday**: Sprint retrospective and improvement planning
+
+## ISSUE MANAGEMENT SYSTEM
+
+### Issue Classification:
+{_generate_issue_classification()}
+
+### Resolution Workflows:
+{_generate_resolution_workflows()}
+
+## PERFORMANCE OPTIMIZATION
+
+### Team Efficiency Metrics:
+{_generate_efficiency_metrics(team_size)}
+
+### Improvement Strategies:
+{_generate_improvement_strategies(management_focus)}
+
+## COMMUNICATION MANAGEMENT
+
+### Communication Channels Setup:
+```
+.agor/team-status.md - Real-time team status
+.agor/team-metrics.md - Performance tracking
+.agor/team-issues.md - Issue tracking and resolution
+.agor/team-retrospective.md - Weekly improvement notes
+.agor/agent-assignments.md - Current task assignments
+```
+
+### Communication Protocols:
+{_generate_communication_protocols()}
+
+## RESOURCE ALLOCATION
+
+### Current Assignments:
+{_generate_resource_allocation(team_size)}
+
+### Capacity Management:
+{_generate_capacity_management(team_size)}
+
+## QUALITY MANAGEMENT
+
+### Quality Gates:
+- [ ] **Daily**: All agents provide status updates
+- [ ] **Daily**: Blockers identified and escalated
+- [ ] **Weekly**: Performance metrics reviewed
+- [ ] **Weekly**: Process improvements identified
+- [ ] **Monthly**: Team satisfaction assessed
+
+### Quality Metrics:
+{_generate_quality_metrics()}
+
+## TEAM DEVELOPMENT
+
+### Skill Development Tracking:
+{_generate_skill_development_tracking(team_size)}
+
+### Knowledge Sharing:
+{_generate_knowledge_sharing_protocols()}
+
+## RISK MANAGEMENT
+
+### Active Risk Monitoring:
+{_generate_risk_monitoring()}
+
+### Contingency Planning:
+{_generate_contingency_planning(team_size)}
+
+## MANAGEMENT AUTOMATION
+
+### Automated Status Collection:
+```python
+# Collect team status
+from agor.tools.agent_coordination import get_team_status
+status = get_team_status()
+print(f"Active agents: {status['active_count']}/{team_size}")
+print(f"Blocked tasks: {status['blocked_count']}")
+print(f"Completion rate: {status['completion_rate']}%")
+```
+
+### Automated Metrics Tracking:
+```python
+# Track performance metrics
+from agor.tools.strategy_protocols import collect_team_metrics
+metrics = collect_team_metrics(team_size)
+print(f"Team velocity: {metrics['velocity']} tasks/day")
+print(f"Quality score: {metrics['quality_score']}/10")
+print(f"Collaboration index: {metrics['collaboration_index']}/10")
+```
+
+## NEXT STEPS
+
+1. **Initialize Team Management**: Set up coordination files and protocols
+2. **Establish Baselines**: Collect initial performance metrics
+3. **Begin Daily Routine**: Start daily status checks and progress reviews
+4. **Monitor and Adjust**: Track metrics and optimize processes
+5. **Continuous Improvement**: Regular retrospectives and process refinement
+"""
+
+    # Combine template with implementation
+    full_management_plan = template + implementation_details
+
+    # Save to team management file
+    management_file = Path(".agor") / "team-management.md"
+    management_file.parent.mkdir(exist_ok=True)
+    management_file.write_text(full_management_plan)
+
+    # Create team management coordination files
+    _create_team_management_files(team_size, project_name)
+
+    # Initialize team metrics tracking
+    _initialize_team_metrics(team_size)
+
+    return f"""✅ Team Management Initialized
+
+**Project**: {project_name}
+**Team Size**: {team_size} agents
+**Management Focus**: {management_focus}
+
+**Management Features**:
+- Real-time team status tracking
+- Performance metrics and dashboards
+- Issue management and resolution workflows
+- Communication protocols and automation
+- Resource allocation and capacity planning
+- Quality management and improvement processes
+
+**Files Created**:
+- `.agor/team-management.md` - Complete management plan and protocols
+- `.agor/team-status.md` - Real-time team status tracking
+- `.agor/team-metrics.md` - Performance metrics dashboard
+- `.agor/team-issues.md` - Issue tracking and resolution
+- `.agor/agent-assignments.md` - Current task assignments
+
+**Next Steps**:
+1. Review team management protocols
+2. Begin daily status tracking routine
+3. Establish performance baselines
+4. Start weekly improvement cycles
+
+**Ready for comprehensive team management!**
+"""
+
+
+def _generate_current_team_status(team_size: int, project_name: str) -> str:
+    """Generate current team status overview."""
+    return f"""
+### Team Status Overview
+- **Project**: {project_name}
+- **Team Size**: {team_size} agents
+- **Active Agents**: [To be updated with actual count]
+- **Current Phase**: [To be updated with current development phase]
+- **Overall Health**: [To be assessed - Green/Yellow/Red]
+
+### Agent Status Summary
+{chr(10).join([f"- **Agent{i}**: [Role] - [Current Task] - [Status: Active/Blocked/Idle]" for i in range(1, team_size + 1)])}
+
+### Today's Priorities
+- [Priority task 1 - assigned to Agent X]
+- [Priority task 2 - assigned to Agent Y]
+- [Priority task 3 - assigned to Agent Z]
+
+### Current Blockers
+- [No blockers currently identified]
+
+### Recent Completions
+- [Tasks completed in last 24 hours]
+"""
+
+
+def _generate_performance_dashboard(team_size: int, management_focus: str) -> str:
+    """Generate performance dashboard based on focus area."""
+    if management_focus == "velocity":
+        return """
+### Velocity-Focused Dashboard
+- **Daily Task Completion**: [X tasks/day target vs actual]
+- **Sprint Velocity**: [Story points completed per sprint]
+- **Cycle Time**: [Average time from start to completion]
+- **Throughput**: [Tasks completed per agent per day]
+- **Bottleneck Analysis**: [Identification of process bottlenecks]
+"""
+    elif management_focus == "quality":
+        return """
+### Quality-Focused Dashboard
+- **Code Review Score**: [Average review rating 1-10]
+- **Bug Rate**: [Bugs per 100 lines of code]
+- **Test Coverage**: [Percentage of code covered by tests]
+- **Rework Rate**: [Percentage of work requiring revision]
+- **Customer Satisfaction**: [Stakeholder feedback scores]
+"""
+    elif management_focus == "collaboration":
+        return """
+### Collaboration-Focused Dashboard
+- **Communication Frequency**: [Messages per agent per day]
+- **Help Request Response Time**: [Average time to respond to help requests]
+- **Knowledge Sharing**: [Documentation contributions per agent]
+- **Cross-Training**: [Skills shared across team members]
+- **Team Satisfaction**: [Team morale and engagement scores]
+"""
+    else:  # performance (default)
+        return """
+### Performance Dashboard
+- **Overall Productivity**: [Tasks completed vs planned]
+- **Quality Metrics**: [Code review scores, bug rates]
+- **Team Velocity**: [Consistent delivery speed]
+- **Collaboration Index**: [Team communication and cooperation]
+- **Individual Performance**: [Per-agent productivity and quality]
+"""
+
+
+def _generate_issue_classification() -> str:
+    """Generate issue classification system."""
+    return """
+#### Issue Types and Priorities
+
+**P0 - Critical (Resolve within 2 hours)**
+- Production outages
+- Security vulnerabilities
+- Complete team blockers
+
+**P1 - High (Resolve within 1 day)**
+- Individual agent blockers
+- Quality failures
+- Integration issues
+
+**P2 - Medium (Resolve within 3 days)**
+- Process improvements
+- Tool issues
+- Documentation gaps
+
+**P3 - Low (Resolve within 1 week)**
+- Nice-to-have improvements
+- Training needs
+- Long-term optimizations
+
+#### Issue Categories
+- **Technical**: Code, infrastructure, tool issues
+- **Process**: Workflow, communication, coordination issues
+- **Resource**: Capacity, skill, availability issues
+- **Quality**: Standards, review, testing issues
+"""
+
+
+def _generate_resolution_workflows() -> str:
+    """Generate issue resolution workflows."""
+    return """
+#### Standard Resolution Workflow
+1. **Issue Identification**: Agent identifies and reports issue
+2. **Triage**: Team lead assesses priority and assigns owner
+3. **Investigation**: Owner investigates root cause
+4. **Resolution**: Owner implements fix or workaround
+5. **Validation**: Team validates resolution
+6. **Documentation**: Resolution documented for future reference
+
+#### Escalation Workflow
+- **Level 1**: Agent attempts self-resolution (30 minutes)
+- **Level 2**: Peer assistance requested (1 hour)
+- **Level 3**: Team lead involvement (2 hours)
+- **Level 4**: External escalation (4 hours)
+
+#### Communication Templates
+```
+ISSUE_REPORTED: [agent-id] - [issue-type] - [priority] - [description]
+ISSUE_ASSIGNED: [owner] - [issue-id] - [estimated-resolution-time]
+ISSUE_RESOLVED: [owner] - [issue-id] - [resolution-summary]
+```
+"""
+
+
+def _generate_efficiency_metrics(team_size: int) -> str:
+    """Generate team efficiency metrics."""
+    return f"""
+#### Key Efficiency Indicators
+- **Agent Utilization**: [Percentage of time spent on productive work]
+- **Idle Time**: [Percentage of time agents are waiting/blocked]
+- **Context Switching**: [Frequency of task changes per agent]
+- **Handoff Efficiency**: [Success rate and speed of agent handoffs]
+- **Meeting Overhead**: [Time spent in coordination vs development]
+
+#### Productivity Targets
+- **Individual Productivity**: {6 if team_size <= 3 else 5 if team_size <= 6 else 4} tasks per agent per day
+- **Team Velocity**: {team_size * 5} tasks per day (team target)
+- **Quality Gate**: >90% first-time pass rate for code reviews
+- **Response Time**: <2 hours for help requests
+- **Handoff Success**: >95% successful handoffs without rework
+"""
+
+
+def _generate_improvement_strategies(management_focus: str) -> str:
+    """Generate improvement strategies based on focus."""
+    strategies = {
+        "velocity": """
+#### Velocity Improvement Strategies
+- **Task Decomposition**: Break large tasks into smaller, manageable pieces
+- **Parallel Processing**: Identify opportunities for concurrent work
+- **Automation**: Automate repetitive tasks and processes
+- **Skill Development**: Cross-train agents to reduce bottlenecks
+- **Tool Optimization**: Improve development tools and workflows
+""",
+        "quality": """
+#### Quality Improvement Strategies
+- **Code Review Standards**: Establish and enforce quality criteria
+- **Test-Driven Development**: Implement TDD practices
+- **Continuous Integration**: Automated testing and quality checks
+- **Pair Programming**: Collaborative development for quality
+- **Quality Metrics**: Track and improve quality indicators
+""",
+        "collaboration": """
+#### Collaboration Improvement Strategies
+- **Communication Protocols**: Standardize team communication
+- **Knowledge Sharing**: Regular tech talks and documentation
+- **Mentoring Programs**: Pair experienced with junior agents
+- **Team Building**: Activities to improve team cohesion
+- **Feedback Culture**: Regular feedback and improvement discussions
+"""
+    }
+
+    return strategies.get(management_focus, """
+#### General Improvement Strategies
+- **Process Optimization**: Continuously improve development processes
+- **Skill Development**: Invest in team member growth
+- **Tool Enhancement**: Upgrade and optimize development tools
+- **Communication**: Improve team communication and coordination
+- **Quality Focus**: Maintain high standards for deliverables
+""")
+
+
+def _generate_communication_protocols() -> str:
+    """Generate communication protocols for team management."""
+    return """
+#### Daily Communication
+- **Morning Standup**: 15-minute status update (9:00 AM)
+- **Progress Check**: Mid-day coordination (1:00 PM)
+- **End of Day**: Summary and planning (5:00 PM)
+
+#### Weekly Communication
+- **Monday**: Sprint planning and goal setting
+- **Wednesday**: Mid-week review and adjustments
+- **Friday**: Retrospective and improvement planning
+
+#### Communication Templates
+```
+STATUS_UPDATE: [agent-id] [timestamp] - [current-task] - [progress] - [blockers] - [help-needed]
+PROGRESS_REPORT: [agent-id] [timestamp] - [completed] - [in-progress] - [planned]
+BLOCKER_ALERT: [agent-id] [timestamp] - [blocker-description] - [impact] - [help-requested]
+HELP_REQUEST: [agent-id] [timestamp] - [help-type] - [urgency] - [context]
+```
+"""
+
+
+def _generate_resource_allocation(team_size: int) -> str:
+    """Generate resource allocation overview."""
+    return f"""
+#### Current Agent Assignments
+{chr(10).join([f"- **Agent{i}**: [Role] - [Current Task] - [Estimated Completion]" for i in range(1, team_size + 1)])}
+
+#### Workload Distribution
+- **High Utilization** (>80%): [List agents with high workload]
+- **Medium Utilization** (50-80%): [List agents with medium workload]
+- **Low Utilization** (<50%): [List agents with low workload]
+
+#### Skill Allocation
+- **Frontend Work**: [Agents assigned to frontend tasks]
+- **Backend Work**: [Agents assigned to backend tasks]
+- **Testing Work**: [Agents assigned to testing tasks]
+- **DevOps Work**: [Agents assigned to infrastructure tasks]
+"""
+
+
+def _generate_capacity_management(team_size: int) -> str:
+    """Generate capacity management overview."""
+    total_capacity = team_size * 8  # 8 hours per agent per day
+    return f"""
+#### Daily Capacity Overview
+- **Total Capacity**: {total_capacity} hours/day ({team_size} agents × 8 hours)
+- **Committed Capacity**: [X hours committed to current tasks]
+- **Available Capacity**: [Y hours available for new work]
+- **Buffer Capacity**: [Z hours reserved for unexpected work]
+
+#### Capacity Utilization Targets
+- **Optimal Utilization**: 70-80% (allows for flexibility)
+- **Maximum Utilization**: 90% (short-term only)
+- **Buffer Requirement**: 20% (for unexpected work and improvements)
+
+#### Capacity Planning
+- **Next Sprint**: [Planned capacity allocation]
+- **Upcoming Features**: [Capacity requirements for planned features]
+- **Skill Gaps**: [Areas where additional capacity is needed]
+"""
+
+
+def _generate_quality_metrics() -> str:
+    """Generate quality metrics tracking."""
+    return """
+#### Code Quality Metrics
+- **Review Score**: [Average code review rating 1-10]
+- **Bug Rate**: [Bugs per 100 lines of code]
+- **Test Coverage**: [Percentage of code covered by tests]
+- **Documentation Coverage**: [Percentage of code with documentation]
+
+#### Process Quality Metrics
+- **Handoff Success Rate**: [Percentage of successful agent handoffs]
+- **Rework Rate**: [Percentage of work requiring revision]
+- **First-Time Pass Rate**: [Percentage passing review on first attempt]
+- **Communication Effectiveness**: [Response time and clarity scores]
+
+#### Quality Targets
+- **Code Review Score**: >8.0/10
+- **Bug Rate**: <2 bugs per 100 lines
+- **Test Coverage**: >80%
+- **Handoff Success**: >95%
+- **First-Time Pass**: >90%
+"""
+
+
+def _generate_skill_development_tracking(team_size: int) -> str:
+    """Generate skill development tracking."""
+    return f"""
+#### Individual Skill Development
+{chr(10).join([f"- **Agent{i}**: [Current Skills] - [Learning Goals] - [Progress]" for i in range(1, team_size + 1)])}
+
+#### Team Skill Matrix
+- **Frontend**: [Skill levels: Expert/Intermediate/Beginner]
+- **Backend**: [Skill levels: Expert/Intermediate/Beginner]
+- **DevOps**: [Skill levels: Expert/Intermediate/Beginner]
+- **Testing**: [Skill levels: Expert/Intermediate/Beginner]
+- **Domain Knowledge**: [Skill levels: Expert/Intermediate/Beginner]
+
+#### Skill Development Goals
+- **Cross-Training**: [Plans to develop backup expertise]
+- **Specialization**: [Plans to deepen specific skills]
+- **Knowledge Sharing**: [Plans to share expertise across team]
+
+#### Training Resources
+- **Internal**: [Mentoring, pair programming, code reviews]
+- **External**: [Courses, conferences, certifications]
+- **Documentation**: [Internal knowledge base and best practices]
+"""
+
+
+def _generate_knowledge_sharing_protocols() -> str:
+    """Generate knowledge sharing protocols."""
+    return """
+#### Knowledge Sharing Activities
+- **Tech Talks**: Weekly 30-minute presentations by team members
+- **Code Reviews**: Detailed reviews with learning focus
+- **Pair Programming**: Collaborative development sessions
+- **Documentation**: Shared knowledge base and best practices
+
+#### Knowledge Sharing Schedule
+- **Monday**: Tech talk or knowledge sharing session
+- **Wednesday**: Pair programming or mentoring session
+- **Friday**: Documentation review and updates
+
+#### Knowledge Areas
+- **Technical Skills**: Programming languages, frameworks, tools
+- **Domain Knowledge**: Business requirements, user needs
+- **Process Knowledge**: Development workflows, best practices
+- **Problem Solving**: Debugging techniques, optimization strategies
+"""
+
+
+def _generate_risk_monitoring() -> str:
+    """Generate risk monitoring framework."""
+    return """
+#### Risk Categories
+
+**Technical Risks**
+- **Key Person Dependencies**: Critical knowledge held by single agent
+- **Technology Risks**: Outdated or problematic technology choices
+- **Integration Risks**: Complex system integration challenges
+
+**Process Risks**
+- **Communication Breakdown**: Poor team communication
+- **Quality Issues**: Declining code quality or testing
+- **Coordination Problems**: Poor handoffs or collaboration
+
+**Resource Risks**
+- **Capacity Constraints**: Insufficient team capacity
+- **Skill Gaps**: Missing critical skills on team
+- **Agent Availability**: Team member unavailability
+
+#### Risk Monitoring
+- **Daily**: Monitor for immediate risks and blockers
+- **Weekly**: Assess process and coordination risks
+- **Monthly**: Review strategic and technical risks
+
+#### Risk Indicators
+- **Red Flags**: Immediate attention required
+- **Yellow Flags**: Monitor closely, may need intervention
+- **Green Flags**: Low risk, continue monitoring
+"""
+
+
+def _generate_contingency_planning(team_size: int) -> str:
+    """Generate contingency planning."""
+    return f"""
+#### Contingency Scenarios
+
+**Agent Unavailability**
+- **Single Agent**: Redistribute work, pair with backup
+- **Multiple Agents**: Adjust scope, extend timeline
+- **Key Agent**: Activate knowledge transfer protocols
+
+**Technical Issues**
+- **Tool Failures**: Switch to backup tools, manual processes
+- **Integration Problems**: Rollback, isolate, fix incrementally
+- **Performance Issues**: Optimize, scale, or redesign
+
+**Process Breakdowns**
+- **Communication Issues**: Increase check-ins, clarify protocols
+- **Quality Problems**: Increase reviews, add quality gates
+- **Coordination Failures**: Simplify processes, add oversight
+
+#### Response Teams
+- **Technical Issues**: [Lead developer + specialist]
+- **Process Issues**: [Team lead + coordinator]
+- **Resource Issues**: [Manager + team lead]
+
+#### Escalation Procedures
+1. **Team Level**: Team attempts resolution (2 hours)
+2. **Lead Level**: Team lead involvement (4 hours)
+3. **Management Level**: Manager escalation (8 hours)
+4. **External Level**: Outside help requested (24 hours)
+"""
+
+
+def _create_team_management_files(team_size: int, project_name: str):
+    """Create team management coordination files."""
+
+    # Create team status file
+    status_file = Path(".agor") / "team-status.md"
+    status_content = f"""
+# Team Status Dashboard
+
+## Project: {project_name}
+## Team Size: {team_size} agents
+## Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Current Status
+
+### Active Agents
+{chr(10).join([f"- **Agent{i}**: [Status] - [Current Task] - [Progress]" for i in range(1, team_size + 1)])}
+
+### Today's Progress
+- **Completed**: [List completed tasks]
+- **In Progress**: [List current tasks]
+- **Blocked**: [List blocked tasks]
+- **Planned**: [List planned tasks]
+
+### Team Health
+- **Overall Status**: [Green/Yellow/Red]
+- **Communication**: [Effective/Needs Improvement]
+- **Coordination**: [Smooth/Some Issues/Major Issues]
+- **Morale**: [High/Medium/Low]
+
+## Daily Updates
+
+### {datetime.now().strftime('%Y-%m-%d')}
+- **Morning Status**: [Team status at start of day]
+- **Midday Check**: [Progress and issues at midday]
+- **End of Day**: [Summary of day's work]
+
+## Issues and Blockers
+
+### Active Issues
+- [No active issues currently]
+
+### Resolved Today
+- [No issues resolved today]
+
+## Tomorrow's Plan
+- [Priorities for next day]
+"""
+    status_file.write_text(status_content)
+
+    # Create team metrics file
+    metrics_file = Path(".agor") / "team-metrics.md"
+    metrics_content = f"""
+# Team Performance Metrics
+
+## Project: {project_name}
+## Tracking Period: {datetime.now().strftime('%Y-%m-%d')} onwards
+
+## Key Performance Indicators
+
+### Productivity Metrics
+- **Team Velocity**: [Tasks completed per day]
+- **Individual Productivity**: [Tasks per agent per day]
+- **Cycle Time**: [Average time from start to completion]
+- **Throughput**: [Work items completed per time period]
+
+### Quality Metrics
+- **Code Review Score**: [Average rating 1-10]
+- **Bug Rate**: [Bugs per 100 lines of code]
+- **Test Coverage**: [Percentage of code tested]
+- **Rework Rate**: [Percentage requiring revision]
+
+### Collaboration Metrics
+- **Communication Frequency**: [Messages per agent per day]
+- **Help Response Time**: [Average time to respond to requests]
+- **Knowledge Sharing**: [Documentation contributions]
+- **Handoff Success Rate**: [Percentage of successful handoffs]
+
+## Daily Tracking
+
+### {datetime.now().strftime('%Y-%m-%d')}
+- **Tasks Completed**: 0
+- **Active Agents**: 0/{team_size}
+- **Blockers**: 0
+- **Quality Issues**: 0
+
+## Weekly Summary
+
+### Week of {datetime.now().strftime('%Y-%m-%d')}
+- **Velocity**: [Tasks completed this week]
+- **Quality Score**: [Average quality rating]
+- **Team Utilization**: [Percentage of capacity used]
+- **Issues Resolved**: [Number of issues resolved]
+
+## Trends and Analysis
+
+### Performance Trends
+- [Analysis of performance over time]
+
+### Improvement Opportunities
+- [Areas for improvement identified]
+"""
+    metrics_file.write_text(metrics_content)
+
+    # Create team issues file
+    issues_file = Path(".agor") / "team-issues.md"
+    issues_content = f"""
+# Team Issue Tracking
+
+## Project: {project_name}
+## Issue Tracking Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Active Issues
+
+### Critical (P0)
+- [No critical issues currently]
+
+### High Priority (P1)
+- [No high priority issues currently]
+
+### Medium Priority (P2)
+- [No medium priority issues currently]
+
+### Low Priority (P3)
+- [No low priority issues currently]
+
+## Issue History
+
+### Resolved Issues
+- [No issues resolved yet]
+
+### Issue Templates
+
+#### New Issue Template
+```
+**Issue ID**: [Unique identifier]
+**Priority**: [P0/P1/P2/P3]
+**Category**: [Technical/Process/Resource/Quality]
+**Reporter**: [Agent who reported]
+**Assigned**: [Agent responsible for resolution]
+**Created**: [Timestamp]
+**Description**: [Detailed description of issue]
+**Impact**: [How it affects team/project]
+**Steps to Reproduce**: [If applicable]
+**Expected Resolution**: [Target date]
+**Status**: [Open/In Progress/Resolved]
+```
+
+#### Resolution Template
+```
+**Issue ID**: [Reference to original issue]
+**Resolution**: [How the issue was resolved]
+**Root Cause**: [What caused the issue]
+**Prevention**: [How to prevent similar issues]
+**Lessons Learned**: [What the team learned]
+**Resolved By**: [Agent who resolved]
+**Resolved Date**: [Timestamp]
+```
+
+## Issue Statistics
+
+### Current Period
+- **Total Issues**: 0
+- **Resolved Issues**: 0
+- **Average Resolution Time**: [To be calculated]
+- **Most Common Category**: [To be determined]
+"""
+    issues_file.write_text(issues_content)
+
+    # Create agent assignments file
+    assignments_file = Path(".agor") / "agent-assignments.md"
+    newline = chr(10)
+    agent_sections = newline.join([f"### Agent{i}{newline}- **Role**: [Assigned role]{newline}- **Current Task**: [Task description]{newline}- **Priority**: [High/Medium/Low]{newline}- **Estimated Completion**: [Date/time]{newline}- **Dependencies**: [What this task depends on]{newline}- **Blockers**: [Current blockers if any]{newline}" for i in range(1, team_size + 1)])
+
+    assignments_content = f"""
+# Agent Task Assignments
+
+## Project: {project_name}
+## Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Current Assignments
+
+{agent_sections}
+
+## Assignment History
+
+### {datetime.now().strftime('%Y-%m-%d')}
+- [Assignment changes and updates will be tracked here]
+
+## Workload Balance
+
+### High Workload
+- [Agents with >80% capacity utilization]
+
+### Medium Workload
+- [Agents with 50-80% capacity utilization]
+
+### Low Workload
+- [Agents with <50% capacity utilization]
+
+## Skill Utilization
+
+### Frontend Tasks
+- [Agents working on frontend]
+
+### Backend Tasks
+- [Agents working on backend]
+
+### Testing Tasks
+- [Agents working on testing]
+
+### DevOps Tasks
+- [Agents working on infrastructure]
+
+## Assignment Guidelines
+
+### Task Assignment Criteria
+- **Skill Match**: Assign tasks matching agent expertise
+- **Workload Balance**: Distribute work evenly across team
+- **Learning Opportunities**: Include skill development tasks
+- **Dependencies**: Consider task dependencies and sequencing
+
+### Assignment Process
+1. **Task Analysis**: Understand requirements and complexity
+2. **Skill Assessment**: Identify required skills and expertise
+3. **Capacity Check**: Verify agent availability and workload
+4. **Assignment**: Assign task to most suitable agent
+5. **Communication**: Notify agent and update tracking
+"""
+    assignments_file.write_text(assignments_content)
+
+
+def _initialize_team_metrics(team_size: int):
+    """Initialize team metrics tracking system."""
+
+    # Create team retrospective file
+    retro_file = Path(".agor") / "team-retrospective.md"
+    retro_content = f"""
+# Team Retrospective Notes
+
+## Retrospective Schedule
+- **Frequency**: Weekly (every Friday)
+- **Duration**: 30 minutes
+- **Participants**: All {team_size} team members
+
+## Retrospective Format
+
+### What Went Well
+- [Things that worked well this week]
+
+### What Could Be Improved
+- [Areas for improvement identified]
+
+### Action Items
+- [Specific actions to take next week]
+
+### Experiments
+- [Process improvements to try]
+
+## Retrospective History
+
+### Week of {datetime.now().strftime('%Y-%m-%d')}
+- **What Went Well**: [To be filled during retrospective]
+- **Improvements**: [To be filled during retrospective]
+- **Action Items**: [To be filled during retrospective]
+- **Experiments**: [To be filled during retrospective]
+
+## Improvement Tracking
+
+### Implemented Improvements
+- [Improvements that have been successfully implemented]
+
+### Ongoing Experiments
+- [Process improvements currently being tested]
+
+### Lessons Learned
+- [Key insights from retrospectives]
+
+## Team Health Indicators
+
+### Communication
+- **Frequency**: [How often team communicates]
+- **Quality**: [Effectiveness of communication]
+- **Issues**: [Communication problems identified]
+
+### Collaboration
+- **Handoffs**: [Quality of work handoffs]
+- **Help Requests**: [Response to help requests]
+- **Knowledge Sharing**: [Sharing of expertise]
+
+### Satisfaction
+- **Work Satisfaction**: [Team satisfaction with work]
+- **Process Satisfaction**: [Satisfaction with processes]
+- **Team Dynamics**: [Quality of team relationships]
+"""
+    retro_file.write_text(retro_content)
+
+
+def _generate_gate_ownership() -> str:
+    """Generate gate ownership assignments."""
+    return """
+#### Gate Ownership Assignments
+- **Requirements Gate**: Product Owner / Business Analyst
+- **Design Gate**: Technical Architect / Lead Developer
+- **Implementation Gate**: Development Team / Code Reviewers
+- **Integration Gate**: Integration Team / QA Lead
+- **System Gate**: QA Team / Test Lead
+- **Deployment Gate**: DevOps Team / Release Manager
+"""
+
+
+def _generate_gate_dependencies() -> str:
+    """Generate gate dependencies mapping."""
+    return """
+#### Gate Dependencies
+- **Design Gate** depends on Requirements Gate completion
+- **Implementation Gate** depends on Design Gate approval
+- **Integration Gate** depends on Implementation Gate success
+- **System Gate** depends on Integration Gate validation
+- **Deployment Gate** depends on System Gate approval
+
+#### Parallel Gate Opportunities
+- **Documentation** can be developed in parallel with Implementation
+- **Test Planning** can occur during Design phase
+- **Deployment Preparation** can begin during System testing
+"""
+
+
+def _generate_gate_scheduling() -> str:
+    """Generate gate scheduling framework."""
+    return """
+#### Gate Scheduling
+- **Requirements Gate**: Project start + 1-2 days
+- **Design Gate**: Requirements complete + 2-3 days
+- **Implementation Gate**: Per feature/component completion
+- **Integration Gate**: Weekly or per integration milestone
+- **System Gate**: End of development phase
+- **Deployment Gate**: Pre-release validation
+
+#### Gate Review Meetings
+- **Frequency**: As needed based on gate triggers
+- **Duration**: 30-60 minutes per gate
+- **Participants**: Gate owner + stakeholders + development team
+- **Format**: Criteria review + go/no-go decision
+"""
+
+
+def _create_quality_gate_files(quality_focus: str, automation_level: str):
+    """Create quality gate coordination files."""
+
+    # Create quality metrics file
+    metrics_file = Path(".agor") / "quality-metrics.md"
+    metrics_content = f"""
+# Quality Metrics Dashboard
+
+## Quality Focus: {quality_focus}
+## Automation Level: {automation_level}
+## Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Current Quality Status
+
+### Code Quality Metrics
+- **Code Coverage**: [X%] (Target: >80%)
+- **Cyclomatic Complexity**: [X] (Target: <10)
+- **Technical Debt**: [X hours] (Target: <40 hours)
+- **Bug Density**: [X bugs/kloc] (Target: <2 bugs/kloc)
+- **Code Review Score**: [X/10] (Target: >8/10)
+
+### Process Quality Metrics
+- **Gate Pass Rate**: [X%] (Target: >90%)
+- **Rework Rate**: [X%] (Target: <10%)
+- **Defect Escape Rate**: [X%] (Target: <5%)
+- **Time to Resolution**: [X hours] (Target: <24 hours)
+- **Customer Satisfaction**: [X/10] (Target: >8/10)
+
+## Quality Gate Status
+
+### Gate 1: Requirements Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 2: Design Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 3: Implementation Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 4: Integration Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 5: System Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 6: Deployment Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+## Quality Trends
+
+### Weekly Quality Summary
+- **Week of {datetime.now().strftime('%Y-%m-%d')}**:
+  - Gates Passed: [X/6]
+  - Quality Score: [X/100]
+  - Issues Resolved: [X]
+  - Improvement Actions: [X]
+
+## Quality Improvement Actions
+
+### Active Improvements
+- [No active improvements currently]
+
+### Completed Improvements
+- [No improvements completed yet]
+
+### Planned Improvements
+- [No improvements planned yet]
+"""
+    metrics_file.write_text(metrics_content)
+
+    # Create quality standards file
+    standards_file = Path(".agor") / "quality-standards.md"
+    standards_content = f"""
+# Quality Standards
+
+## Quality Focus: {quality_focus}
+## Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Code Quality Standards
+
+### Naming Conventions
+- **Variables**: camelCase for JavaScript, snake_case for Python
+- **Functions**: Descriptive verbs (e.g., getUserData, calculateTotal)
+- **Classes**: PascalCase (e.g., UserManager, DataProcessor)
+- **Constants**: UPPER_SNAKE_CASE (e.g., MAX_RETRY_COUNT)
+
+### Code Structure
+- **File Length**: Maximum 500 lines per file
+- **Function Length**: Maximum 50 lines per function
+- **Class Length**: Maximum 300 lines per class
+- **Nesting Depth**: Maximum 4 levels of nesting
+
+### Documentation Standards
+- **Functions**: JSDoc/docstring for all public functions
+- **Classes**: Class-level documentation with purpose and usage
+- **APIs**: OpenAPI/Swagger documentation for all endpoints
+- **README**: Comprehensive setup and usage instructions
+
+### Testing Standards
+- **Unit Tests**: >80% code coverage required
+- **Integration Tests**: All API endpoints must have tests
+- **Test Naming**: Descriptive test names (should_return_error_when_invalid_input)
+- **Test Structure**: Arrange-Act-Assert pattern
+
+## Process Quality Standards
+
+### Code Review Standards
+- **Review Required**: All code changes must be reviewed
+- **Review Criteria**: Functionality, security, performance, maintainability
+- **Review Timeline**: Reviews completed within 24 hours
+- **Approval Required**: At least one approval before merge
+
+### Git Standards
+- **Commit Messages**: Conventional commits format
+- **Branch Naming**: feature/description, bugfix/description, hotfix/description
+- **Pull Requests**: Template with description, testing, and checklist
+- **Merge Strategy**: Squash and merge for feature branches
+
+### Quality Gate Standards
+- **Gate Criteria**: Objective, measurable criteria for each gate
+- **Gate Documentation**: All gate results must be documented
+- **Gate Approval**: Designated gate owner must approve
+- **Gate Escalation**: Failed gates must be escalated within 2 hours
+
+## Security Standards
+
+### Input Validation
+- **All Inputs**: Validate and sanitize all user inputs
+- **SQL Injection**: Use parameterized queries or ORM
+- **XSS Prevention**: Escape output, use Content Security Policy
+- **CSRF Protection**: Use CSRF tokens for state-changing operations
+
+### Authentication & Authorization
+- **Password Policy**: Minimum 8 characters, complexity requirements
+- **Session Management**: Secure session handling, timeout policies
+- **Access Control**: Role-based access control (RBAC)
+- **API Security**: Authentication required for all API endpoints
+
+### Data Protection
+- **Encryption**: Encrypt sensitive data at rest and in transit
+- **PII Handling**: Special handling for personally identifiable information
+- **Data Retention**: Clear data retention and deletion policies
+- **Backup Security**: Encrypted backups with access controls
+
+## Performance Standards
+
+### Response Time Standards
+- **API Responses**: <200ms for 95% of requests
+- **Page Load**: <3 seconds for initial page load
+- **Database Queries**: <100ms for simple queries, <1s for complex
+- **File Operations**: <500ms for file uploads/downloads
+
+### Resource Usage Standards
+- **Memory Usage**: <500MB per application instance
+- **CPU Usage**: <70% average CPU utilization
+- **Database Connections**: Connection pooling with max 20 connections
+- **File Storage**: Efficient file storage with cleanup policies
+
+### Scalability Standards
+- **Horizontal Scaling**: Application must support horizontal scaling
+- **Load Testing**: Must handle 10x current load
+- **Caching**: Implement caching for frequently accessed data
+- **CDN Usage**: Use CDN for static assets
+
+## Quality Enforcement
+
+### Automated Enforcement
+- **Linting**: Automated code style checking
+- **Testing**: Automated test execution in CI/CD
+- **Security Scanning**: Automated vulnerability scanning
+- **Performance Testing**: Automated performance benchmarking
+
+### Manual Enforcement
+- **Code Reviews**: Manual review of all code changes
+- **Architecture Reviews**: Manual review of design decisions
+- **Security Reviews**: Manual security assessment
+- **Performance Reviews**: Manual performance analysis
+
+### Quality Metrics
+- **Compliance Rate**: Percentage of code meeting standards
+- **Violation Trends**: Tracking of standard violations over time
+- **Improvement Rate**: Rate of quality improvement over time
+- **Team Adoption**: Team adoption of quality practices
+"""
+    standards_file.write_text(standards_content)
+
+    # Create individual gate files
+    gates = [
+        ("requirements", "Requirements Quality Gate"),
+        ("design", "Design Quality Gate"),
+        ("implementation", "Implementation Quality Gate"),
+        ("integration", "Integration Quality Gate"),
+        ("system", "System Quality Gate"),
+        ("deployment", "Deployment Quality Gate")
+    ]
+
+    for gate_id, gate_name in gates:
+        gate_file = Path(".agor") / f"gate-{gate_id}.md"
+        gate_content = f"""
+# {gate_name}
+
+## Gate Overview
+- **Gate ID**: {gate_id}
+- **Gate Name**: {gate_name}
+- **Owner**: [To be assigned]
+- **Status**: Not Started
+- **Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Entry Criteria
+- [Criteria that must be met to trigger this gate]
+
+## Validation Criteria
+- [ ] [Specific quality check 1]
+- [ ] [Specific quality check 2]
+- [ ] [Specific quality check 3]
+- [ ] [Specific quality check 4]
+
+## Exit Criteria
+- [Criteria that must be met to pass this gate]
+
+## Gate Execution
+
+### Validation Process
+1. [Step 1 of validation process]
+2. [Step 2 of validation process]
+3. [Step 3 of validation process]
+4. [Step 4 of validation process]
+
+### Validation Results
+- **Executed By**: [Agent/team who executed validation]
+- **Execution Date**: [When validation was performed]
+- **Results**: [Pass/Fail with details]
+- **Score**: [X/100]
+- **Issues Found**: [List of issues if any]
+
+### Gate Decision
+- **Decision**: [Pass/Fail/Conditional Pass]
+- **Decision By**: [Gate owner who made decision]
+- **Decision Date**: [When decision was made]
+- **Rationale**: [Reason for decision]
+- **Next Actions**: [What needs to happen next]
+
+## Issue Tracking
+
+### Issues Found
+- [No issues found yet]
+
+### Issues Resolved
+- [No issues resolved yet]
+
+## Gate History
+
+### Execution History
+- [No executions yet]
+
+### Improvement History
+- [No improvements yet]
+
+## Notes
+- [Additional notes and context for this gate]
+"""
+        gate_file.write_text(gate_content)
+
+
+def _initialize_quality_metrics(project_name: str):
+    """Initialize quality metrics tracking."""
+
+    # Create quality tracking summary file
+    summary_file = Path(".agor") / "quality-summary.md"
+    summary_content = f"""
+# Quality Summary Dashboard
+
+## Project: {project_name}
+## Quality System Initialized: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Overall Quality Status
+- **Quality Score**: [To be calculated]
+- **Gates Passed**: 0/6
+- **Active Issues**: 0
+- **Quality Trend**: [To be determined]
+
+## Quick Quality Metrics
+
+### Code Quality
+- **Coverage**: [X%]
+- **Complexity**: [X]
+- **Debt**: [X hours]
+- **Bugs**: [X/kloc]
+
+### Process Quality
+- **Gate Pass Rate**: [X%]
+- **Rework Rate**: [X%]
+- **Resolution Time**: [X hours]
+- **Satisfaction**: [X/10]
+
+## Recent Quality Activities
+
+### Today ({datetime.now().strftime('%Y-%m-%d')})
+- Quality gates system initialized
+- Quality standards established
+- Metrics tracking started
+
+## Quality Improvement Plan
+
+### Short Term (This Week)
+- [ ] Complete requirements quality gate
+- [ ] Establish baseline metrics
+- [ ] Train team on quality standards
+
+### Medium Term (This Month)
+- [ ] Implement automated quality checks
+- [ ] Complete design and implementation gates
+- [ ] Optimize quality processes
+
+### Long Term (This Quarter)
+- [ ] Achieve target quality metrics
+- [ ] Establish quality culture
+- [ ] Continuous quality improvement
+
+## Quality Resources
+
+### Documentation
+- `.agor/quality-gates.md` - Complete quality gate system
+- `.agor/quality-standards.md` - Quality standards and guidelines
+- `.agor/quality-metrics.md` - Detailed metrics dashboard
+- `.agor/gate-[name].md` - Individual gate tracking
+
+### Tools and Automation
+- [Quality tools to be configured]
+- [Automation scripts to be developed]
+- [Integration points to be established]
+
+### Training and Support
+- [Quality training materials]
+- [Team support resources]
+- [Quality champion program]
+"""
+    summary_file.write_text(summary_content)
+
+
+def setup_quality_gates(project_name: str = "Current Project", quality_focus: str = "comprehensive", automation_level: str = "medium") -> str:
+    """Setup quality gates and validation checkpoints (qg hotkey)."""
+
+    # Import the quality gates template
+    from .project_planning_templates import generate_quality_gates_template
+
+    # Get the base template
+    template = generate_quality_gates_template()
+
+    # Add concrete quality gates implementation
+    implementation_details = f"""
+## QUALITY GATES IMPLEMENTATION
+
+### Project: {project_name}
+### Quality Focus: {quality_focus}
+### Automation Level: {automation_level}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## ACTIVE QUALITY GATES
+
+{_generate_active_quality_gates(quality_focus)}
+
+## QUALITY GATE EXECUTION PROTOCOLS
+
+### Gate Validation Process:
+1. **Gate Trigger**: Automatic detection when deliverable is ready
+   ```
+   GATE_TRIGGERED: [gate-name] - [deliverable] - [timestamp] - [responsible-agent]
+   ```
+
+2. **Quality Validation**: Execute all gate criteria checks
+   ```
+   GATE_VALIDATION: [gate-name] - [criteria-checked] - [pass/fail] - [details]
+   ```
+
+3. **Gate Decision**: Go/no-go decision based on validation results
+   ```
+   GATE_DECISION: [gate-name] - [PASS/FAIL] - [score] - [next-action]
+   ```
+
+4. **Gate Communication**: Notify stakeholders of gate results
+   ```
+   GATE_NOTIFICATION: [stakeholders] - [gate-name] - [result] - [impact]
+   ```
+
+### Gate Failure Handling:
+1. **Immediate Response**: Stop progression, identify issues
+2. **Root Cause Analysis**: Determine why gate failed
+3. **Remediation Plan**: Create plan to address issues
+4. **Re-validation**: Re-run gate after fixes
+5. **Process Improvement**: Update gates based on learnings
+
+## AUTOMATED QUALITY CHECKS
+
+{_generate_automated_quality_checks(automation_level)}
+
+## QUALITY METRICS TRACKING
+
+{_generate_quality_metrics_tracking()}
+
+## QUALITY STANDARDS ENFORCEMENT
+
+{_generate_quality_standards_enforcement(quality_focus)}
+
+## CONTINUOUS QUALITY IMPROVEMENT
+
+### Quality Feedback Loops:
+- **Real-time**: Immediate feedback during development
+- **Daily**: Daily quality metrics review
+- **Weekly**: Quality trends analysis
+- **Monthly**: Quality process improvement
+
+### Quality Learning:
+- **Defect Analysis**: Learn from quality failures
+- **Best Practices**: Capture and share quality successes
+- **Tool Improvement**: Enhance quality tools and automation
+- **Standard Evolution**: Evolve quality standards based on experience
+
+## QUALITY GATE COORDINATION
+
+### Gate Ownership:
+{_generate_gate_ownership()}
+
+### Gate Dependencies:
+{_generate_gate_dependencies()}
+
+### Gate Scheduling:
+{_generate_gate_scheduling()}
+
+## QUALITY ASSURANCE AUTOMATION
+
+### Automated Gate Execution:
+```python
+# Execute quality gate
+from agor.tools.strategy_protocols import execute_quality_gate
+result = execute_quality_gate(
+    gate_name="implementation_quality",
+    deliverable="user_auth_module",
+    criteria=["code_review", "unit_tests", "security_scan"]
+)
+print(f"Gate result: {result['status']} - Score: {result['score']}/100")
+```
+
+### Quality Metrics Collection:
+```python
+# Collect quality metrics
+from agor.tools.strategy_protocols import collect_quality_metrics
+metrics = collect_quality_metrics(project_name)
+print(f"Code coverage: {metrics['coverage']}%")
+print(f"Bug density: {metrics['bug_density']} bugs/kloc")
+print(f"Gate pass rate: {metrics['gate_pass_rate']}%")
+```
+
+## QUALITY CULTURE DEVELOPMENT
+
+### Quality Champions Program:
+- **Quality Advocates**: Agents who promote quality practices
+- **Knowledge Sharing**: Regular quality best practices sessions
+- **Mentoring**: Quality coaching for team members
+- **Innovation**: Exploring new quality tools and techniques
+
+### Quality Training:
+- **Quality Standards**: Training on coding and process standards
+- **Tool Usage**: Training on quality tools and automation
+- **Best Practices**: Sharing quality best practices and lessons learned
+- **Continuous Learning**: Ongoing quality skill development
+
+## NEXT STEPS
+
+1. **Review Quality Gates**: Validate gate definitions and criteria
+2. **Setup Automation**: Configure automated quality checks
+3. **Train Team**: Ensure all agents understand quality standards
+4. **Begin Execution**: Start using quality gates in development process
+5. **Monitor and Improve**: Track quality metrics and optimize gates
+"""
+
+    # Combine template with implementation
+    full_quality_plan = template + implementation_details
+
+    # Save to quality gates file
+    quality_file = Path(".agor") / "quality-gates.md"
+    quality_file.parent.mkdir(exist_ok=True)
+    quality_file.write_text(full_quality_plan)
+
+    # Create quality gate coordination files
+    _create_quality_gate_files(quality_focus, automation_level)
+
+    # Initialize quality metrics tracking
+    _initialize_quality_metrics(project_name)
+
+    return f"""✅ Quality Gates Established
+
+**Project**: {project_name}
+**Quality Focus**: {quality_focus}
+**Automation Level**: {automation_level}
+
+**Quality Gate Features**:
+- 6-stage quality validation process (Requirements → Deployment)
+- Automated quality checks and validation
+- Quality metrics tracking and reporting
+- Gate failure handling and remediation
+- Continuous quality improvement processes
+
+**Files Created**:
+- `.agor/quality-gates.md` - Complete quality gate plan and standards
+- `.agor/quality-metrics.md` - Quality metrics tracking dashboard
+- `.agor/quality-standards.md` - Coding and process standards
+- `.agor/gate-[name].md` - Individual gate validation files
+
+**Next Steps**:
+1. Review and customize quality standards
+2. Configure automated quality checks
+3. Train team on quality gate processes
+4. Begin quality gate execution
+5. Monitor quality metrics and optimize
+
+**Ready for comprehensive quality assurance!**
+"""
