@@ -331,8 +331,8 @@ from agor.tools.agent_coordination import discover_my_role
 print(discover_my_role("agent1"))  # Gets concrete next actions
 
 # For strategy selection (ss hotkey)
-from agor.tools.strategy_protocols import strategy_selection
-print(strategy_selection("project analysis", team_size=3, complexity="medium"))
+from agor.tools.strategies.multi_agent_strategies import select_strategy
+print(select_strategy("project analysis", team_size=3, complexity="medium"))
 
 # For strategic planning (sp hotkey)
 from agor.tools.project_planning_templates import generate_strategic_planning_template
@@ -343,31 +343,31 @@ from agor.tools.project_planning_templates import generate_architecture_review_t
 print(generate_architecture_review_template())
 
 # For project breakdown (bp hotkey)
-from agor.tools.strategy_protocols import project_breakdown
+from agor.tools.strategies.project_breakdown import project_breakdown
 print(project_breakdown("build user authentication", complexity="medium"))
 
 # For team creation (ct hotkey)
-from agor.tools.strategy_protocols import create_team
+from agor.tools.strategies.team_creation import create_team
 print(create_team("e-commerce platform", team_size=5, project_type="web_app"))
 
 # For workflow design (wf hotkey)
-from agor.tools.strategy_protocols import design_workflow
+from agor.tools.strategies.workflow_design import design_workflow
 print(design_workflow("user management system", team_size=4, project_type="web_app"))
 
 # For handoff prompts (hp hotkey)
-from agor.tools.strategy_protocols import generate_handoff_prompts
+from agor.tools.strategies.handoff_prompts import generate_handoff_prompts
 print(generate_handoff_prompts("standard", "developer", "reviewer", "auth system"))
 
 # For team management (tm hotkey)
-from agor.tools.strategy_protocols import manage_team
+from agor.tools.strategies.team_management import manage_team
 print(manage_team("e-commerce platform", team_size=5, management_focus="performance"))
 
 # For quality gates (qg hotkey)
-from agor.tools.strategy_protocols import setup_quality_gates
+from agor.tools.strategies.quality_gates import setup_quality_gates
 print(setup_quality_gates("user management", quality_focus="security", automation_level="high"))
 
 # For strategy initialization
-from agor.tools.strategy_protocols import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming
+from agor.tools.strategies.multi_agent_strategies import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming
 result = initialize_parallel_divergent("task description", agent_count=3)
 result = initialize_red_team("secure feature", blue_team_size=3, red_team_size=3)
 result = initialize_mob_programming("complex algorithm", agent_count=4)
@@ -538,17 +538,17 @@ Use the new strategy protocols for concrete implementation:
 
 ```python
 # Initialize Parallel Divergent strategy
-from agor.tools.strategy_protocols import initialize_parallel_divergent
+from agor.tools.strategies.multi_agent_strategies import initialize_parallel_divergent
 result = initialize_parallel_divergent("implement user authentication", agent_count=3)
 print(result)
 
 # Initialize Pipeline strategy
-from agor.tools.strategy_protocols import initialize_pipeline
+from agor.tools.strategies.multi_agent_strategies import initialize_pipeline
 result = initialize_pipeline("build REST API", stages=["Foundation", "Enhancement", "Testing"])
 print(result)
 
 # Initialize Swarm strategy
-from agor.tools.strategy_protocols import initialize_swarm
+from agor.tools.strategies.multi_agent_strategies import initialize_swarm
 tasks = ["Create user model", "Implement login", "Add validation", "Write tests"]
 result = initialize_swarm("user system", tasks, agent_count=4)
 print(result)

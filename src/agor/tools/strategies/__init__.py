@@ -10,10 +10,11 @@ This package contains specialized modules for different aspects of multi-agent d
 - Workflow design and handoff coordination
 """
 
+from .mob_programming import MobProgrammingProtocol
+
 # Import strategy protocol classes
 from .parallel_divergent import ParallelDivergentProtocol
 from .red_team import RedTeamProtocol
-from .mob_programming import MobProgrammingProtocol
 
 # Import utility functions that exist
 try:
