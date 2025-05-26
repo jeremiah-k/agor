@@ -210,13 +210,13 @@ chmod 755 /tmp/agor_tools/git
 ### PROJECT COORDINATOR Menu (Role A):
 
 **🎯 Strategic Planning:**
-sp) strategic plan ✅ bp) break down project ar) architecture review ✅ dp) dependency planning rp) risk planning
+sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp) dependency planning rp) risk planning
 
 **⚡ Strategy Selection:**
 ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team ✅ mb) mob programming ✅
 
 **👥 Team Design:**
-ct) create team tm) team manifest hp) handoff prompts as) assign specialists tc) team coordination
+ct) create team ✅ tm) team manifest hp) handoff prompts as) assign specialists tc) team coordination
 
 **🔄 Coordination:**
 wf) workflow design qg) quality gates eo) execution order init) initialize coordination
@@ -340,6 +340,14 @@ print(generate_strategic_planning_template())
 # For architecture review (ar hotkey)
 from agor.tools.project_planning_templates import generate_architecture_review_template
 print(generate_architecture_review_template())
+
+# For project breakdown (bp hotkey)
+from agor.tools.strategy_protocols import project_breakdown
+print(project_breakdown("build user authentication", complexity="medium"))
+
+# For team creation (ct hotkey)
+from agor.tools.strategy_protocols import create_team
+print(create_team("e-commerce platform", team_size=5, project_type="web_app"))
 
 # For strategy initialization
 from agor.tools.strategy_protocols import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming

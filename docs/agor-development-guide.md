@@ -21,6 +21,8 @@ This guide ensures consistency, quality, and proper protocol management when dev
 | **Strategy Selection** | `ss` | strategy_protocols.py | ✅ Complete |
 | **Strategic Planning** | `sp` | project_planning_templates.py | ✅ Complete |
 | **Architecture Review** | `ar` | project_planning_templates.py | ✅ Complete |
+| **Project Breakdown** | `bp` | strategy_protocols.py | ✅ Complete |
+| **Team Creation** | `ct` | strategy_protocols.py | ✅ Complete |
 | **Red Team Strategy** | `rt` | strategy_protocols.py | ✅ Complete |
 | **Mob Programming** | `mb` | strategy_protocols.py | ✅ Complete |
 | **Agent Discovery** | N/A | agent_coordination.py | ✅ Complete |
@@ -31,8 +33,8 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 | Feature | Hotkey | Template | Execution Protocol | Priority |
 |---------|--------|----------|-------------------|----------|
-| **Project Breakdown** | `bp` | ✅ Available | ❌ Missing | Medium |
-| **Team Creation** | `ct` | ✅ Available | ❌ Missing | Medium |
+| **Project Breakdown** | `bp` | ✅ Available | ✅ Complete | ✅ DONE |
+| **Team Creation** | `ct` | ✅ Available | ✅ Complete | ✅ DONE |
 | **Workflow Design** | `wf` | ✅ Available | ❌ Missing | Medium |
 | **Handoff Prompts** | `hp` | ✅ Available | ❌ Missing | Low |
 
@@ -49,8 +51,9 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### 🎯 Current Development Priorities
 
 1. **✅ COMPLETED**: Red Team and Mob Programming execution protocols
-2. **Medium Priority**: Add execution protocols for existing templates (bp, ct, wf)
-3. **Low Priority**: Add missing planning templates (tm, qg, eo, dp, rp)
+2. **✅ COMPLETED**: Project Breakdown and Team Creation execution protocols
+3. **Medium Priority**: Add execution protocols for existing templates (wf, hp)
+4. **Low Priority**: Add missing planning templates (tm, qg, eo, dp, rp)
 
 ### 🚦 Development Safety Guidelines
 
@@ -75,11 +78,12 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### 📈 Implementation Statistics
 
 - **Total Features**: 25 documented features
-- **Fully Implemented**: 14 features (56%)
-- **Partially Implemented**: 4 features (16%)
+- **Fully Implemented**: 16 features (64%)
+- **Partially Implemented**: 2 features (8%)
 - **Missing Implementation**: 7 features (28%)
 - **Core Coordination**: 100% implemented (agent discovery, strategy execution, state management)
 - **Strategy Coverage**: 100% implemented (all 5 strategies have execution protocols)
+- **Planning Tools**: 80% implemented (4/5 planning tools complete)
 
 ## 🔍 Pre-Development Checklist
 
