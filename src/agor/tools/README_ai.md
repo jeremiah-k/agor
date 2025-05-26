@@ -374,6 +374,42 @@ If user selects a hotkey, respond accordingly.
 - **`check_status`**: Check current strategy status and recent activity
 - **`initialize_strategy`**: Set up strategy with concrete implementation protocols
 
+**STRATEGY PARAMETER EFFECTS:**
+
+Understanding how strategy parameters translate to concrete coordination states:
+
+**Agent Count Parameters:**
+- **`agent_count=3`**: Creates 3 individual agent memory files (agent1-memory.md, agent2-memory.md, agent3-memory.md)
+- **`team_size=5`**: Generates role assignments for 5 agents with specialized responsibilities
+- **`blue_team_size=3, red_team_size=3`**: Creates separate blue-team-memory.md and red-team-memory.md files
+
+**Project Type Parameters:**
+- **`project_type="web_app"`**: Generates web-specific workflow phases (Frontend, Backend, API, Testing)
+- **`project_type="api"`**: Creates API-focused phases (Design, Implementation, Documentation, Testing)
+- **`project_type="mobile"`**: Generates mobile-specific phases (UI, Logic, Platform, Testing)
+
+**Complexity Parameters:**
+- **`complexity="simple"`**: Creates 3-4 workflow phases with basic coordination
+- **`complexity="medium"`**: Generates 4-5 phases with intermediate quality gates
+- **`complexity="complex"`**: Creates 5-6 phases with comprehensive validation and handoffs
+
+**Quality Focus Parameters:**
+- **`quality_focus="security"`**: Emphasizes security gates, penetration testing, vulnerability assessment
+- **`quality_focus="performance"`**: Focuses on load testing, optimization, scalability validation
+- **`quality_focus="comprehensive"`**: Includes all quality aspects with balanced coverage
+
+**Automation Level Parameters:**
+- **`automation_level="high"`**: 80% automated checks, minimal manual validation
+- **`automation_level="medium"`**: 50% automated, 50% manual review processes
+- **`automation_level="low"`**: 20% automated, emphasis on manual quality assurance
+
+**Generated .agor/ Files by Strategy:**
+- **Parallel Divergent**: strategy-active.md + agent{N}-memory.md files
+- **Red Team**: strategy-active.md + blue-team-memory.md + red-team-memory.md
+- **Mob Programming**: strategy-active.md + mob-session-log.md + mob-decisions.md
+- **Team Creation**: team-structure.md + role-assignments.md + coordination-protocols.md
+- **Quality Gates**: quality-gates.md + quality-metrics.md + gate-{name}.md files
+
 **QUICK COORDINATION COMMANDS:**
 
 ```python
