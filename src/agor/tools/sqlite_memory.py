@@ -44,7 +44,7 @@ class SQLiteMemoryManager:
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
-                
+
                 -- Coordination logs table
                 CREATE TABLE IF NOT EXISTS coordination_logs (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +55,7 @@ class SQLiteMemoryManager:
                     metadata TEXT,  -- JSON metadata
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
-                
+
                 -- Project state table
                 CREATE TABLE IF NOT EXISTS project_state (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +66,7 @@ class SQLiteMemoryManager:
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
-                
+
                 -- Handoffs table
                 CREATE TABLE IF NOT EXISTS handoffs (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,7 +87,7 @@ class SQLiteMemoryManager:
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
-                
+
                 -- Indexes for performance
                 CREATE INDEX IF NOT EXISTS idx_agent_memories_agent_id ON agent_memories(agent_id);
                 CREATE INDEX IF NOT EXISTS idx_agent_memories_type ON agent_memories(memory_type);
@@ -130,7 +130,7 @@ class SQLiteMemoryManager:
             if memory_type:
                 cursor = conn.execute(
                     """
-                    SELECT * FROM agent_memories 
+                    SELECT * FROM agent_memories
                     WHERE agent_id = ? AND memory_type = ?
                     ORDER BY created_at DESC LIMIT ?
                     """,
@@ -139,7 +139,7 @@ class SQLiteMemoryManager:
             else:
                 cursor = conn.execute(
                     """
-                    SELECT * FROM agent_memories 
+                    SELECT * FROM agent_memories
                     WHERE agent_id = ?
                     ORDER BY created_at DESC LIMIT ?
                     """,
@@ -199,7 +199,7 @@ class SQLiteMemoryManager:
 
             cursor = conn.execute(
                 f"""
-                SELECT * FROM coordination_logs 
+                SELECT * FROM coordination_logs
                 WHERE {where_clause}
                 ORDER BY created_at DESC LIMIT ?
                 """,
@@ -211,11 +211,15 @@ class SQLiteMemoryManager:
     def set_project_state(
         self,
         key: str,
-        value: str,
+        value: Any,
         description: Optional[str] = None,
         updated_by: Optional[str] = None,
     ):
         """Set project state value."""
+        # Convert value to JSON string if it's not already a string
+        if not isinstance(value, str):
+            value = json.dumps(value)
+
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
                 """
@@ -225,13 +229,20 @@ class SQLiteMemoryManager:
                 (key, value, description, updated_by),
             )
 
-    def get_project_state(self, key: str) -> Optional[Dict[str, Any]]:
+    def get_project_state(self, key: str) -> Optional[Any]:
         """Get project state value."""
         with sqlite3.connect(self.db_path) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.execute("SELECT * FROM project_state WHERE key = ?", (key,))
-            row = cursor.fetchone()
-            return dict(row) if row else None
+            cursor = conn.execute(
+                "SELECT value FROM project_state WHERE key = ?", (key,)
+            )
+            result = cursor.fetchone()
+            if result:
+                try:
+                    # Try to parse as JSON, fall back to string
+                    return json.loads(result[0])
+                except json.JSONDecodeError:
+                    return result[0]
+            return None
 
     def create_handoff(
         self,
@@ -285,7 +296,7 @@ class SQLiteMemoryManager:
             if to_agent:
                 conn.execute(
                     """
-                    UPDATE handoffs 
+                    UPDATE handoffs
                     SET status = ?, to_agent = ?, updated_at = CURRENT_TIMESTAMP
                     WHERE handoff_id = ?
                     """,
@@ -294,7 +305,7 @@ class SQLiteMemoryManager:
             else:
                 conn.execute(
                     """
-                    UPDATE handoffs 
+                    UPDATE handoffs
                     SET status = ?, updated_at = CURRENT_TIMESTAMP
                     WHERE handoff_id = ?
                     """,
@@ -323,7 +334,7 @@ class SQLiteMemoryManager:
 
             cursor = conn.execute(
                 f"""
-                SELECT * FROM handoffs 
+                SELECT * FROM handoffs
                 WHERE {where_clause}
                 ORDER BY created_at DESC
                 """,
@@ -331,6 +342,34 @@ class SQLiteMemoryManager:
             )
 
             return [dict(row) for row in cursor.fetchall()]
+
+    def get_handoff(self, handoff_id: str) -> Optional[Dict[str, Any]]:
+        """Get a specific handoff by ID."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute(
+                "SELECT * FROM handoffs WHERE handoff_id = ?", (handoff_id,)
+            )
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def get_agent_handoffs(self, agent_id: str) -> List[Dict[str, Any]]:
+        """Get all handoffs for a specific agent (sent or received)."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute(
+                """
+                SELECT * FROM handoffs
+                WHERE from_agent = ? OR to_agent = ?
+                ORDER BY created_at DESC
+                """,
+                (agent_id, agent_id),
+            )
+            return [dict(row) for row in cursor.fetchall()]
+
+    def _get_connection(self):
+        """Get database connection (for migration utilities)."""
+        return sqlite3.connect(self.db_path)
 
     def search_memories(
         self,
@@ -359,7 +398,7 @@ class SQLiteMemoryManager:
 
             cursor = conn.execute(
                 f"""
-                SELECT * FROM agent_memories 
+                SELECT * FROM agent_memories
                 WHERE {where_clause}
                 ORDER BY created_at DESC LIMIT ?
                 """,
@@ -425,7 +464,7 @@ def log_coordination_message(
 SQLITE_MEMORY_HOTKEYS = """
 🗄️ **SQLite Memory Commands (Experimental):**
 mem-add) add memory entry
-mem-get) retrieve memories  
+mem-get) retrieve memories
 mem-search) search memory content
 coord-log) log coordination message
 state-set) set project state
