@@ -216,10 +216,10 @@ sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp
 ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team ✅ mb) mob programming ✅
 
 **👥 Team Design:**
-ct) create team ✅ tm) team manifest hp) handoff prompts ✅ as) assign specialists tc) team coordination
+ct) create team ✅ tm) team manifest ✅ hp) handoff prompts ✅ as) assign specialists tc) team coordination
 
 **🔄 Coordination:**
-wf) workflow design ✅ qg) quality gates eo) execution order init) initialize coordination
+wf) workflow design ✅ qg) quality gates ✅ eo) execution order init) initialize coordination
 
 **📊 Basic Analysis:**
 a ) analyze codebase da) detailed handoff
@@ -356,6 +356,14 @@ print(design_workflow("user management system", team_size=4, project_type="web_a
 # For handoff prompts (hp hotkey)
 from agor.tools.strategy_protocols import generate_handoff_prompts
 print(generate_handoff_prompts("standard", "developer", "reviewer", "auth system"))
+
+# For team management (tm hotkey)
+from agor.tools.strategy_protocols import manage_team
+print(manage_team("e-commerce platform", team_size=5, management_focus="performance"))
+
+# For quality gates (qg hotkey)
+from agor.tools.strategy_protocols import setup_quality_gates
+print(setup_quality_gates("user management", quality_focus="security", automation_level="high"))
 
 # For strategy initialization
 from agor.tools.strategy_protocols import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming
