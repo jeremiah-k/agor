@@ -530,6 +530,172 @@ def generate_architecture_review_template():
 """
 
 
+def generate_team_creation_template():
+    """Template for creating and organizing development teams (ct hotkey)"""
+    return """
+# Team Creation Template
+
+## Team Structure Analysis
+
+### Project Requirements
+- **Project Type**: [Web app, API, Mobile, Desktop, etc.]
+- **Technology Stack**: [Languages, frameworks, databases]
+- **Complexity Level**: [Simple, Medium, Complex]
+- **Timeline**: [Duration and key milestones]
+- **Team Size**: [Available agents/developers]
+
+### Skill Requirements
+- **Frontend**: [UI/UX, React, Vue, Angular, etc.]
+- **Backend**: [API development, databases, server logic]
+- **DevOps**: [Deployment, CI/CD, infrastructure]
+- **Quality Assurance**: [Testing, validation, security]
+- **Architecture**: [System design, technical leadership]
+- **Specialized**: [Domain-specific expertise needed]
+
+## Team Composition Recommendations
+
+### Small Team (2-3 agents)
+- **Full-Stack Developer**: Frontend + Backend + Basic DevOps
+- **Quality Engineer**: Testing + Code Review + Documentation
+- **Optional: Specialist**: Domain expert or architect
+
+### Medium Team (4-6 agents)
+- **Frontend Developer**: UI/UX, client-side logic
+- **Backend Developer**: API, database, server logic
+- **DevOps Engineer**: Deployment, infrastructure, monitoring
+- **Quality Assurance**: Testing, validation, security review
+- **Architect/Lead**: Technical design, coordination
+- **Optional: Specialist**: Performance, security, or domain expert
+
+### Large Team (7+ agents)
+- **Frontend Team**: UI Developer + UX Developer + Frontend Architect
+- **Backend Team**: API Developer + Database Developer + Backend Architect
+- **Platform Team**: DevOps Engineer + Infrastructure Engineer
+- **Quality Team**: Test Engineer + Security Engineer + Performance Engineer
+- **Leadership**: Technical Lead + Project Coordinator
+- **Specialists**: Domain experts, consultants, integration specialists
+
+## Role Definitions
+
+### Core Development Roles
+- **Frontend Developer**: User interface, client-side logic, user experience
+- **Backend Developer**: Server logic, APIs, data processing, business rules
+- **Full-Stack Developer**: Both frontend and backend capabilities
+- **Mobile Developer**: iOS, Android, cross-platform mobile applications
+- **Database Developer**: Schema design, queries, optimization, data modeling
+
+### Platform & Operations Roles
+- **DevOps Engineer**: CI/CD, deployment, infrastructure, monitoring
+- **Infrastructure Engineer**: Cloud platforms, networking, scalability
+- **Security Engineer**: Security review, vulnerability assessment, compliance
+- **Performance Engineer**: Optimization, load testing, scalability analysis
+
+### Quality & Validation Roles
+- **Quality Assurance Engineer**: Test planning, execution, automation
+- **Test Automation Engineer**: Automated testing frameworks and scripts
+- **Code Reviewer**: Code quality, standards compliance, best practices
+- **Integration Tester**: System integration, end-to-end testing
+
+### Leadership & Coordination Roles
+- **Technical Lead**: Architecture decisions, technical direction, mentoring
+- **Project Coordinator**: Timeline management, resource allocation, communication
+- **Product Owner**: Requirements, priorities, stakeholder communication
+- **Architect**: System design, technology choices, technical standards
+
+### Specialized Roles
+- **Domain Expert**: Business logic, industry knowledge, requirements clarification
+- **UX/UI Designer**: User experience design, interface design, usability
+- **Data Scientist**: Analytics, machine learning, data processing
+- **Integration Specialist**: Third-party integrations, API connections
+
+## Team Assignment Matrix
+
+### By Project Type
+
+#### Web Application
+- **Required**: Frontend Dev, Backend Dev, DevOps, QA
+- **Recommended**: Full-Stack Dev, Security Engineer
+- **Optional**: UX Designer, Performance Engineer
+
+#### API/Microservices
+- **Required**: Backend Dev, DevOps, QA, Architect
+- **Recommended**: Security Engineer, Performance Engineer
+- **Optional**: Integration Specialist, Documentation Specialist
+
+#### Mobile Application
+- **Required**: Mobile Dev, Backend Dev, DevOps, QA
+- **Recommended**: UX Designer, Performance Engineer
+- **Optional**: Platform Specialist (iOS/Android), Security Engineer
+
+#### Data/Analytics Platform
+- **Required**: Data Engineer, Backend Dev, DevOps, QA
+- **Recommended**: Data Scientist, Performance Engineer
+- **Optional**: Database Specialist, Visualization Expert
+
+### By Complexity Level
+
+#### Simple Projects
+- **Team Size**: 2-3 agents
+- **Duration**: 1-4 weeks
+- **Roles**: Full-Stack Dev, QA, Optional Specialist
+- **Coordination**: Lightweight, daily check-ins
+
+#### Medium Projects
+- **Team Size**: 4-6 agents
+- **Duration**: 1-3 months
+- **Roles**: Specialized developers, dedicated QA, DevOps, Lead
+- **Coordination**: Regular standups, weekly reviews
+
+#### Complex Projects
+- **Team Size**: 7+ agents
+- **Duration**: 3+ months
+- **Roles**: Multiple specialists, dedicated teams, leadership layer
+- **Coordination**: Formal processes, multiple coordination levels
+
+## Communication Structure
+
+### Reporting Lines
+- **Technical Lead** ← All developers
+- **Project Coordinator** ← All team members
+- **Architect** ← Technical Lead, Senior Developers
+- **Product Owner** ← Project Coordinator, Technical Lead
+
+### Communication Channels
+- **Daily Standups**: Progress, blockers, coordination
+- **Weekly Reviews**: Sprint progress, quality metrics, adjustments
+- **Architecture Reviews**: Technical decisions, design changes
+- **Stakeholder Updates**: Progress reports, milestone achievements
+
+## Success Metrics
+
+### Team Performance
+- **Velocity**: Story points or tasks completed per sprint
+- **Quality**: Bug rates, code review feedback, test coverage
+- **Collaboration**: Communication effectiveness, knowledge sharing
+- **Delivery**: On-time delivery, scope completion, stakeholder satisfaction
+
+### Individual Performance
+- **Productivity**: Task completion, code quality, innovation
+- **Collaboration**: Peer feedback, mentoring, knowledge sharing
+- **Growth**: Skill development, learning, adaptability
+- **Leadership**: Initiative, problem-solving, team contribution
+
+## Risk Management
+
+### Common Team Risks
+- **Skill Gaps**: Missing expertise for critical components
+- **Communication Breakdown**: Poor coordination, information silos
+- **Resource Conflicts**: Competing priorities, availability issues
+- **Technical Debt**: Quality shortcuts, maintenance burden
+
+### Mitigation Strategies
+- **Cross-Training**: Knowledge sharing, skill development
+- **Clear Processes**: Defined workflows, communication protocols
+- **Regular Reviews**: Progress assessment, course correction
+- **Quality Focus**: Code reviews, testing, documentation
+"""
+
+
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""
     return """

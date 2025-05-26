@@ -1857,3 +1857,480 @@ def _get_top_recommendation(team_size: int, complexity: str) -> str:
     top_score = scores[top_strategy]
 
     return f"**Recommended Strategy**: {top_strategy} (Score: {top_score}/10)\n\nBased on your team size ({team_size}) and complexity ({complexity}), {top_strategy} offers the best balance of effectiveness, coordination overhead, and expected outcomes."
+
+
+def create_team(project_description: str, team_size: int = 4, project_type: str = "web_app", complexity: str = "medium") -> str:
+    """Create and organize development team structure (ct hotkey)."""
+
+    # Import the team creation template
+    from .project_planning_templates import generate_team_creation_template
+
+    # Get the base template
+    template = generate_team_creation_template()
+
+    # Add concrete team implementation
+    implementation_details = f"""
+## CONCRETE TEAM IMPLEMENTATION
+
+### Project: {project_description}
+### Team Size: {team_size} agents
+### Project Type: {project_type}
+### Complexity: {complexity}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## RECOMMENDED TEAM STRUCTURE
+
+{_generate_team_structure(team_size, project_type, complexity)}
+
+## COORDINATION SETUP
+
+### Communication Structure:
+```
+.agor/agentconvo.md - Main team communication
+.agor/team-structure.md - Team roles and responsibilities
+.agor/agent[N]-memory.md - Individual agent memory files
+.agor/team-coordination.md - Team coordination protocols
+```
+
+### Daily Coordination Protocol:
+1. **Morning Standup** (async via agentconvo.md):
+   ```
+   [AGENT-ID] [TIMESTAMP] - STANDUP: [yesterday's work] | [today's plan] | [blockers]
+   ```
+
+2. **Progress Updates** (throughout day):
+   ```
+   [AGENT-ID] [TIMESTAMP] - PROGRESS: [task] - [status] - [next steps]
+   ```
+
+3. **Handoff Coordination** (when needed):
+   ```
+   [AGENT-ID] [TIMESTAMP] - HANDOFF_REQUEST: [to-agent] - [task] - [deliverables]
+   [TO-AGENT] [TIMESTAMP] - HANDOFF_ACCEPTED: [task] - [estimated completion]
+   ```
+
+4. **Blocker Resolution** (immediate):
+   ```
+   [AGENT-ID] [TIMESTAMP] - BLOCKER: [description] - [help needed]
+   [HELPER-ID] [TIMESTAMP] - BLOCKER_ASSIST: [solution/guidance]
+   ```
+
+## ROLE RESPONSIBILITIES
+
+{_generate_role_responsibilities(team_size, project_type, complexity)}
+
+## SUCCESS METRICS
+
+### Team Performance Tracking:
+- **Daily Velocity**: Tasks completed per day
+- **Quality Metrics**: Code review feedback, bug rates
+- **Collaboration Score**: Communication frequency, help requests/responses
+- **Delivery Metrics**: Sprint completion, milestone achievement
+
+### Individual Performance:
+- **Task Completion**: On-time delivery, quality of work
+- **Team Contribution**: Help provided, knowledge sharing
+- **Innovation**: Creative solutions, process improvements
+- **Growth**: Skill development, learning new technologies
+
+## TEAM INITIALIZATION CHECKLIST
+
+- [ ] **Team Structure Defined**: Roles assigned, responsibilities clear
+- [ ] **Communication Setup**: .agor files created, protocols established
+- [ ] **Development Environment**: Shared tools, standards, conventions
+- [ ] **Project Planning**: Milestones defined, tasks prioritized
+- [ ] **Quality Standards**: Code review process, testing requirements
+- [ ] **Risk Assessment**: Potential issues identified, mitigation plans ready
+- [ ] **Success Metrics**: KPIs defined, tracking mechanisms in place
+- [ ] **Kickoff Meeting**: Team alignment, questions answered
+
+## NEXT STEPS
+
+1. **Review Team Structure**: Validate roles and assignments
+2. **Setup Communication**: Initialize .agor coordination files
+3. **Define Standards**: Establish coding standards and quality gates
+4. **Plan First Sprint**: Break down initial tasks and assign owners
+5. **Begin Development**: Start with team coordination and first tasks
+"""
+
+    # Combine template with implementation
+    full_team_plan = template + implementation_details
+
+    # Save to team structure file
+    team_file = Path(".agor") / "team-structure.md"
+    team_file.parent.mkdir(exist_ok=True)
+    team_file.write_text(full_team_plan)
+
+    # Create team coordination file
+    _create_team_coordination_file(team_size, project_type)
+
+    # Create individual agent memory templates
+    _create_agent_memory_templates(team_size)
+
+    return f"""✅ Team Structure Created
+
+**Project**: {project_description}
+**Team Size**: {team_size} agents
+**Project Type**: {project_type}
+**Complexity**: {complexity}
+
+**Team Structure**:
+{_get_team_summary(team_size, project_type, complexity)}
+
+**Files Created**:
+- `.agor/team-structure.md` - Complete team plan and roles
+- `.agor/team-coordination.md` - Coordination protocols
+- `.agor/agent[1-{team_size}]-memory.md` - Individual agent memory files
+
+**Next Steps**:
+1. Review team structure and role assignments
+2. Initialize development environment and standards
+3. Plan first sprint and assign initial tasks
+4. Begin team coordination with daily standups
+
+**Ready for team development to begin!**
+"""
+
+
+def _generate_team_structure(team_size: int, project_type: str, complexity: str) -> str:
+    """Generate recommended team structure based on parameters."""
+
+    if team_size <= 3:
+        return _generate_small_team_structure(team_size, project_type)
+    elif team_size <= 6:
+        return _generate_medium_team_structure(team_size, project_type)
+    else:
+        return _generate_large_team_structure(team_size, project_type)
+
+
+def _generate_small_team_structure(team_size: int, project_type: str) -> str:
+    """Generate small team structure (2-3 agents)."""
+    if team_size == 2:
+        return """
+### Small Team Structure (2 Agents)
+- **Agent1**: Full-Stack Developer + Technical Lead
+  - Frontend and backend development
+  - Architecture decisions and technical direction
+  - Code review and quality assurance
+
+- **Agent2**: Quality Engineer + DevOps
+  - Testing, validation, and quality control
+  - Deployment, CI/CD, and infrastructure
+  - Documentation and user acceptance
+"""
+    else:  # team_size == 3
+        return """
+### Small Team Structure (3 Agents)
+- **Agent1**: Full-Stack Developer + Technical Lead
+  - Primary development (frontend and backend)
+  - Architecture decisions and technical direction
+  - Code review and mentoring
+
+- **Agent2**: Quality Assurance + Testing
+  - Test planning, execution, and automation
+  - Quality control and validation
+  - Bug tracking and resolution coordination
+
+- **Agent3**: DevOps + Support
+  - Deployment, CI/CD, and infrastructure
+  - Performance monitoring and optimization
+  - Documentation and maintenance
+"""
+
+
+def _generate_medium_team_structure(team_size: int, project_type: str) -> str:
+    """Generate medium team structure (4-6 agents)."""
+    base_structure = f"""
+### Medium Team Structure ({team_size} Agents)
+- **Agent1**: Technical Lead + Architect
+  - Technical direction and architecture decisions
+  - Code review and quality oversight
+  - Team coordination and mentoring
+
+- **Agent2**: Frontend Developer
+  - User interface development
+  - Client-side logic and user experience
+  - Frontend testing and optimization
+
+- **Agent3**: Backend Developer
+  - Server-side logic and API development
+  - Database design and data processing
+  - Backend testing and performance
+
+- **Agent4**: DevOps Engineer
+  - CI/CD pipeline and deployment
+  - Infrastructure and monitoring
+  - Security and performance optimization
+"""
+
+    if team_size >= 5:
+        base_structure += """
+- **Agent5**: Quality Assurance Engineer
+  - Test planning and execution
+  - Quality control and validation
+  - Bug tracking and resolution
+"""
+
+    if team_size >= 6:
+        if project_type in ["mobile", "data", "security"]:
+            base_structure += f"""
+- **Agent6**: {project_type.title()} Specialist
+  - Domain-specific expertise
+  - Specialized implementation
+  - Technical consultation
+"""
+        else:
+            base_structure += """
+- **Agent6**: Integration Specialist
+  - System integration and testing
+  - Third-party service integration
+  - End-to-end workflow validation
+"""
+
+    return base_structure
+
+
+def _generate_large_team_structure(team_size: int, project_type: str) -> str:
+    """Generate large team structure (7+ agents)."""
+    return f"""
+### Large Team Structure ({team_size} Agents)
+
+#### Leadership Team
+- **Agent1**: Technical Lead
+  - Overall technical direction and architecture
+  - Team coordination and decision making
+  - Stakeholder communication
+
+- **Agent2**: Project Coordinator
+  - Timeline and resource management
+  - Process coordination and optimization
+  - Risk management and mitigation
+
+#### Development Teams
+- **Agent3**: Frontend Lead
+  - Frontend architecture and standards
+  - UI/UX implementation
+  - Frontend team coordination
+
+- **Agent4**: Backend Lead
+  - Backend architecture and API design
+  - Database design and optimization
+  - Backend team coordination
+
+- **Agent5**: DevOps Engineer
+  - CI/CD and deployment automation
+  - Infrastructure and monitoring
+  - Security and compliance
+
+- **Agent6**: Quality Assurance Lead
+  - Test strategy and planning
+  - Quality metrics and reporting
+  - QA team coordination
+
+{_generate_additional_large_team_roles(team_size, project_type)}
+"""
+
+
+def _generate_additional_large_team_roles(team_size: int, project_type: str) -> str:
+    """Generate additional roles for large teams."""
+    additional_roles = []
+
+    if team_size >= 7:
+        if project_type == "security":
+            additional_roles.append("""
+- **Agent7**: Security Engineer
+  - Security architecture and review
+  - Vulnerability assessment
+  - Compliance and audit""")
+        elif project_type == "data":
+            additional_roles.append("""
+- **Agent7**: Data Engineer
+  - Data pipeline and processing
+  - Analytics and reporting
+  - Data quality and governance""")
+        else:
+            additional_roles.append("""
+- **Agent7**: Performance Engineer
+  - Performance testing and optimization
+  - Scalability analysis
+  - Monitoring and alerting""")
+
+    if team_size >= 8:
+        additional_roles.append("""
+- **Agent8**: Integration Specialist
+  - System integration and testing
+  - Third-party service integration
+  - End-to-end workflow validation""")
+
+    return "\n".join(additional_roles)
+
+
+def _generate_role_responsibilities(team_size: int, project_type: str, complexity: str) -> str:
+    """Generate detailed role responsibilities."""
+    return f"""
+### Detailed Role Responsibilities
+
+#### Technical Lead (Agent1)
+- **Architecture**: Make high-level technical decisions
+- **Code Review**: Review critical code changes and architectural decisions
+- **Mentoring**: Guide junior developers and share knowledge
+- **Coordination**: Facilitate technical discussions and resolve conflicts
+- **Quality**: Ensure code quality standards and best practices
+
+#### Development Team
+- **Implementation**: Write clean, maintainable, and tested code
+- **Collaboration**: Participate in code reviews and knowledge sharing
+- **Documentation**: Document code, APIs, and technical decisions
+- **Testing**: Write unit tests and participate in integration testing
+- **Communication**: Regular updates on progress and blockers
+
+#### Quality Assurance
+- **Test Planning**: Create comprehensive test plans and strategies
+- **Test Execution**: Execute manual and automated tests
+- **Bug Tracking**: Identify, document, and track defects
+- **Quality Metrics**: Monitor and report on quality metrics
+- **Process Improvement**: Suggest improvements to development processes
+
+#### DevOps Engineer
+- **Infrastructure**: Manage development, staging, and production environments
+- **Deployment**: Automate deployment processes and ensure reliability
+- **Monitoring**: Set up monitoring, logging, and alerting systems
+- **Security**: Implement security best practices and compliance
+- **Performance**: Monitor and optimize system performance
+"""
+
+
+def _create_team_coordination_file(team_size: int, project_type: str):
+    """Create team coordination file."""
+    coord_file = Path(".agor") / "team-coordination.md"
+    coord_content = f"""
+# Team Coordination Protocols
+
+## Team Configuration
+- **Team Size**: {team_size} agents
+- **Project Type**: {project_type}
+- **Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Communication Protocols
+
+### Daily Standup Format
+```
+[AGENT-ID] [TIMESTAMP] - STANDUP:
+Yesterday: [what was accomplished]
+Today: [planned work]
+Blockers: [any impediments]
+```
+
+### Progress Update Format
+```
+[AGENT-ID] [TIMESTAMP] - PROGRESS: [task-name] - [percentage]% - [next-steps]
+```
+
+### Handoff Request Format
+```
+[FROM-AGENT] [TIMESTAMP] - HANDOFF_REQUEST: [to-agent] - [task] - [deliverables]
+[TO-AGENT] [TIMESTAMP] - HANDOFF_ACCEPTED: [task] - [estimated-completion]
+```
+
+### Blocker Resolution Format
+```
+[AGENT-ID] [TIMESTAMP] - BLOCKER: [description] - [help-needed]
+[HELPER-ID] [TIMESTAMP] - BLOCKER_ASSIST: [solution/guidance]
+```
+
+## Team Metrics
+
+### Daily Tracking
+- [ ] All agents posted standup updates
+- [ ] Progress updates provided for active tasks
+- [ ] Blockers identified and assistance requested
+- [ ] Handoffs completed successfully
+
+### Weekly Review
+- [ ] Sprint goals achieved
+- [ ] Quality metrics reviewed
+- [ ] Team velocity calculated
+- [ ] Process improvements identified
+
+## Escalation Procedures
+
+### Technical Issues
+1. **Agent Level**: Try to resolve independently
+2. **Peer Level**: Ask team members for assistance
+3. **Lead Level**: Escalate to Technical Lead
+4. **External Level**: Seek external consultation
+
+### Process Issues
+1. **Team Discussion**: Raise in daily standup
+2. **Lead Review**: Discuss with Technical Lead
+3. **Process Change**: Implement agreed improvements
+4. **Documentation**: Update coordination protocols
+
+## Success Criteria
+
+### Team Performance
+- **Communication**: Regular, clear, and helpful
+- **Collaboration**: Effective knowledge sharing and assistance
+- **Quality**: High code quality and low defect rates
+- **Delivery**: Consistent progress toward goals
+
+### Individual Performance
+- **Productivity**: Consistent task completion
+- **Quality**: Code meets standards and requirements
+- **Collaboration**: Active participation in team activities
+- **Growth**: Continuous learning and improvement
+"""
+    coord_file.write_text(coord_content)
+
+
+def _create_agent_memory_templates(team_size: int):
+    """Create individual agent memory file templates."""
+    for i in range(1, team_size + 1):
+        memory_file = Path(".agor") / f"agent{i}-memory.md"
+        memory_content = f"""
+# Agent{i} Memory Log
+
+## Current Role
+[Your assigned role and responsibilities]
+
+## Current Tasks
+- [ ] [Task 1 description]
+- [ ] [Task 2 description]
+- [ ] [Task 3 description]
+
+## Decisions Made
+- [Key architectural or implementation decisions]
+
+## Files Modified
+- [List of files changed with brief descriptions]
+
+## Problems Encountered
+- [Issues faced and how they were resolved]
+
+## Knowledge Gained
+- [New things learned during development]
+
+## Team Interactions
+- [Important communications with other team members]
+
+## Next Steps
+- [What needs to be done next]
+
+## Notes for Handoffs
+- [Important information for future handoffs]
+
+## Status
+Current: [current status]
+Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        memory_file.write_text(memory_content)
+
+
+def _get_team_summary(team_size: int, project_type: str, complexity: str) -> str:
+    """Get a brief team summary."""
+    if team_size <= 3:
+        return f"Small team ({team_size} agents) - Full-stack + QA + DevOps"
+    elif team_size <= 6:
+        return f"Medium team ({team_size} agents) - Specialized roles with lead"
+    else:
+        return f"Large team ({team_size} agents) - Multiple specialized teams with leadership"
