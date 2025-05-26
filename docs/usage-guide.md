@@ -188,7 +188,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 # Agent then works directly with your repositories
 ```
 
-### ChatGPT / Claude
+### ChatGPT
 
 **Setup:**
 - Use **Bundled Mode** with `.tar.gz` format
@@ -199,7 +199,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 **Workflow:**
 ```bash
 agor bundle your-project -f tar.gz
-# Upload to platform
+# Upload to ChatGPT
 # Select appropriate role based on your needs
 ```
 

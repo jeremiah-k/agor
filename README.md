@@ -118,7 +118,6 @@ AGOR offers three primary roles when agents load the protocol:
 
 - **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - *Free tier available*
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
-- **Claude** (via file upload, use `.tar.gz` format)
 - **Other upload-based platforms** (use appropriate format)
 
 **✅ Standalone Mode Platforms**
