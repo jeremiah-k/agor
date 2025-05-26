@@ -114,10 +114,10 @@ Based on comprehensive audit findings, the following documentation improvements 
 - **Examples**: `project_status_overview`, `git_add_commit`, `git_push`
 - **Trade-off**: Convenience vs maintaining direct CLI emphasis
 
-#### 2. Strategy Parameter Documentation
+#### 2. Strategy Parameter Documentation ✅ COMPLETED
 - **Target**: Strategy initialization documentation
 - **Issue**: Unclear how parameters translate to concrete states in `.agor/` files
-- **Action**: Enhance explanations of parameter impacts on shared environment
+- **Action**: ✅ Added comprehensive parameter effects section with concrete file mapping
 
 #### 3. SQLite Memory Configuration
 - **Context**: Currently auto-activates if binary exists
