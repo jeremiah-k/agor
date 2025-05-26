@@ -14,7 +14,7 @@ from typing import Dict, List, Optional
 
 from .project_planning_templates import (
     generate_parallel_divergent_strategy,
-    generate_pipeline_strategy, 
+    generate_pipeline_strategy,
     generate_swarm_strategy,
     generate_red_team_strategy,
     generate_mob_programming_strategy
@@ -23,32 +23,32 @@ from .project_planning_templates import (
 
 class StrategyProtocol:
     """Base class for strategy implementation protocols."""
-    
+
     def __init__(self, project_root: Optional[Path] = None):
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
         self.ensure_agor_structure()
-    
+
     def ensure_agor_structure(self):
         """Ensure .agor directory structure exists."""
         self.agor_dir.mkdir(exist_ok=True)
-        
+
         # Create essential coordination files if they don't exist
         essential_files = {
             "agentconvo.md": "# Agent Communication Log\n\n",
             "memory.md": "# Project Memory\n\n## Current Strategy\nNone active\n\n"
         }
-        
+
         for filename, default_content in essential_files.items():
             file_path = self.agor_dir / filename
             if not file_path.exists():
                 file_path.write_text(default_content)
-    
+
     def log_communication(self, agent_id: str, message: str):
         """Log a message to agentconvo.md following AGOR protocol."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"{agent_id}: {timestamp} - {message}\n"
-        
+
         agentconvo_file = self.agor_dir / "agentconvo.md"
         with open(agentconvo_file, "a") as f:
             f.write(log_entry)
@@ -56,13 +56,13 @@ class StrategyProtocol:
 
 class ParallelDivergentProtocol(StrategyProtocol):
     """Implementation protocol for Parallel Divergent strategy."""
-    
+
     def initialize_strategy(self, task_description: str, agent_count: int = 3) -> str:
         """Initialize Parallel Divergent strategy following AGOR protocols."""
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_parallel_divergent_strategy()
-        
+
         # Add concrete implementation details
         implementation_details = f"""
 ## IMPLEMENTATION PROTOCOL
@@ -102,20 +102,20 @@ Each agent should:
 
 {self._generate_individual_instructions(agent_count, task_description)}
 """
-        
+
         # Combine template with implementation
         full_strategy = strategy_content + implementation_details
-        
+
         # Save to strategy-active.md
         strategy_file = self.agor_dir / "strategy-active.md"
         strategy_file.write_text(full_strategy)
-        
+
         # Create individual agent memory file templates
         self._create_agent_memory_templates(agent_count)
-        
+
         # Log strategy initialization
         self.log_communication("COORDINATOR", f"Initialized Parallel Divergent strategy: {task_description}")
-        
+
         return f"""✅ Parallel Divergent Strategy Initialized
 
 **Task**: {task_description}
@@ -134,12 +134,12 @@ Each agent should:
 
 **Ready for agent coordination!**
 """
-    
+
     def _generate_agent_assignments(self, agent_count: int, task_description: str) -> str:
         """Generate agent assignments section."""
         task_slug = task_description.lower().replace(" ", "-")[:20]
         assignments = []
-        
+
         for i in range(1, agent_count + 1):
             agent_id = f"agent{i}"
             branch_name = f"solution-{agent_id}"
@@ -151,17 +151,17 @@ Each agent should:
 - **Status**: ⚪ Not Started
 - **Mission**: {task_description} (independent approach)
 """)
-        
+
         return "\n".join(assignments)
-    
+
     def _generate_individual_instructions(self, agent_count: int, task_description: str) -> str:
         """Generate individual agent instructions."""
         instructions = []
-        
+
         for i in range(1, agent_count + 1):
             agent_id = f"agent{i}"
             branch_name = f"solution-{agent_id}"
-            
+
             instruction = f"""
 ### {agent_id.upper()} INSTRUCTIONS
 
@@ -195,15 +195,15 @@ When you finish your solution, post this to agentconvo.md:
 **Remember**: Work independently! No coordination with other agents during Phase 1.
 """
             instructions.append(instruction)
-        
+
         return "\n".join(instructions)
-    
+
     def _create_agent_memory_templates(self, agent_count: int):
         """Create agent memory file templates."""
         for i in range(1, agent_count + 1):
             agent_id = f"agent{i}"
             memory_file = self.agor_dir / f"{agent_id}-memory.md"
-            
+
             if not memory_file.exists():
                 memory_content = f"""# {agent_id.upper()} Memory Log
 
@@ -241,43 +241,43 @@ Current: Working on independent solution
 Phase: 1 - Divergent Execution
 """
                 memory_file.write_text(memory_content)
-    
+
     def check_phase_transition(self) -> Optional[str]:
         """Check if phase transition should occur."""
         agentconvo_file = self.agor_dir / "agentconvo.md"
-        
+
         if not agentconvo_file.exists():
             return None
-        
+
         content = agentconvo_file.read_text()
         completion_signals = content.count("PHASE1_COMPLETE")
-        
+
         # Count expected agents from strategy file
         strategy_file = self.agor_dir / "strategy-active.md"
         if strategy_file.exists():
             strategy_content = strategy_file.read_text()
             expected_agents = strategy_content.count("### Agent")
-            
+
             if completion_signals >= expected_agents:
                 return "transition_to_convergent"
-        
+
         return None
-    
+
     def transition_to_convergent_phase(self) -> str:
         """Transition from divergent to convergent phase."""
         strategy_file = self.agor_dir / "strategy-active.md"
-        
+
         if not strategy_file.exists():
             return "❌ No active strategy found"
-        
+
         content = strategy_file.read_text()
-        
+
         # Update phase status
         updated_content = content.replace(
             "### Status: Phase 1 - Divergent Execution (ACTIVE)",
             "### Status: Phase 2 - Convergent Review (ACTIVE)"
         )
-        
+
         # Add convergent phase instructions
         convergent_instructions = """
 
@@ -324,13 +324,13 @@ OVERALL SCORE: [1-10]
 - Consensus on final approach is reached
 - Ready to move to Phase 3 (Synthesis)
 """
-        
+
         updated_content += convergent_instructions
         strategy_file.write_text(updated_content)
-        
+
         # Log phase transition
         self.log_communication("COORDINATOR", "PHASE TRANSITION: Divergent → Convergent Review")
-        
+
         return """✅ Phase Transition Complete
 
 **New Phase**: 2 - Convergent Review
@@ -348,16 +348,16 @@ OVERALL SCORE: [1-10]
 
 class PipelineProtocol(StrategyProtocol):
     """Implementation protocol for Pipeline strategy."""
-    
+
     def initialize_strategy(self, task_description: str, stages: List[str] = None) -> str:
         """Initialize Pipeline strategy following AGOR protocols."""
-        
+
         if stages is None:
             stages = ["Foundation", "Enhancement", "Refinement", "Validation"]
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_pipeline_strategy()
-        
+
         # Add concrete implementation details
         implementation_details = f"""
 ## IMPLEMENTATION PROTOCOL
@@ -397,21 +397,21 @@ class PipelineProtocol(StrategyProtocol):
 
 {self._generate_stage_instructions(stages)}
 """
-        
+
         # Combine template with implementation
         full_strategy = strategy_content + implementation_details
-        
+
         # Save to strategy-active.md
         strategy_file = self.agor_dir / "strategy-active.md"
         strategy_file.write_text(full_strategy)
-        
+
         # Create handoff directory
         handoff_dir = self.agor_dir / "handoffs"
         handoff_dir.mkdir(exist_ok=True)
-        
+
         # Log strategy initialization
         self.log_communication("COORDINATOR", f"Initialized Pipeline strategy: {task_description}")
-        
+
         return f"""✅ Pipeline Strategy Initialized
 
 **Task**: {task_description}
@@ -430,11 +430,11 @@ class PipelineProtocol(StrategyProtocol):
 
 **Ready for first agent to claim Stage 1!**
 """
-    
+
     def _generate_stage_assignments(self, stages: List[str]) -> str:
         """Generate stage assignments section."""
         assignments = []
-        
+
         for i, stage in enumerate(stages, 1):
             status = "🔄 ACTIVE" if i == 1 else "⏳ PENDING"
             assignments.append(f"""
@@ -444,17 +444,17 @@ class PipelineProtocol(StrategyProtocol):
 - **Deliverables**: [Stage-specific deliverables]
 - **Handoff**: Required for next stage
 """)
-        
+
         return "\n".join(assignments)
-    
+
     def _generate_stage_instructions(self, stages: List[str]) -> str:
         """Generate instructions for each stage."""
         instructions = []
-        
+
         stage_responsibilities = {
             "Foundation": [
                 "Create basic project structure",
-                "Implement core functionality", 
+                "Implement core functionality",
                 "Set up testing framework",
                 "Establish coding standards"
             ],
@@ -477,10 +477,10 @@ class PipelineProtocol(StrategyProtocol):
                 "Deployment preparation"
             ]
         }
-        
+
         for i, stage in enumerate(stages, 1):
             responsibilities = stage_responsibilities.get(stage, [f"Complete {stage} requirements"])
-            
+
             instruction = f"""
 ### Stage {i}: {stage} Instructions
 
@@ -520,19 +520,19 @@ class PipelineProtocol(StrategyProtocol):
 ```
 """
             instructions.append(instruction)
-        
+
         return "\n".join(instructions)
 
 
 class SwarmProtocol(StrategyProtocol):
     """Implementation protocol for Swarm strategy."""
-    
+
     def initialize_strategy(self, task_description: str, task_list: List[str], agent_count: int = 4) -> str:
         """Initialize Swarm strategy following AGOR protocols."""
-        
+
         # Create strategy-active.md with template content
         strategy_content = generate_swarm_strategy()
-        
+
         # Create task queue file
         task_queue = {
             "strategy": "swarm",
@@ -551,12 +551,12 @@ class SwarmProtocol(StrategyProtocol):
                 for i, task in enumerate(task_list)
             ]
         }
-        
+
         # Save task queue
         queue_file = self.agor_dir / "task-queue.json"
         with open(queue_file, "w") as f:
             json.dump(task_queue, f, indent=2)
-        
+
         # Add implementation details to strategy
         implementation_details = f"""
 ## IMPLEMENTATION PROTOCOL
@@ -597,7 +597,7 @@ cat .agor/task-queue.json | grep '"status": "available"'
 # Claim announcement
 [agent-id]: [timestamp] - CLAIMED TASK [N]: [task description]
 
-# Completion announcement  
+# Completion announcement
 [agent-id]: [timestamp] - COMPLETED TASK [N]: [task description]
 ```
 
@@ -619,17 +619,17 @@ cat .agor/task-queue.json | grep '"status": "available"'
 - Task status is updated in queue
 - Completion is announced in agentconvo.md
 """
-        
+
         # Combine template with implementation
         full_strategy = strategy_content + implementation_details
-        
+
         # Save to strategy-active.md
         strategy_file = self.agor_dir / "strategy-active.md"
         strategy_file.write_text(full_strategy)
-        
+
         # Log strategy initialization
         self.log_communication("COORDINATOR", f"Initialized Swarm strategy with {len(task_list)} tasks")
-        
+
         return f"""✅ Swarm Strategy Initialized
 
 **Task**: {task_description}
@@ -648,14 +648,14 @@ cat .agor/task-queue.json | grep '"status": "available"'
 
 **Ready for agents to start claiming tasks!**
 """
-    
+
     def _generate_task_status(self, task_list: List[str]) -> str:
         """Generate current task status display."""
         status_lines = []
-        
+
         for i, task in enumerate(task_list, 1):
             status_lines.append(f"- **Task {i}**: {task} (Status: Available)")
-        
+
         return "\n".join(status_lines)
 
 
@@ -670,7 +670,7 @@ def get_strategy_protocol(strategy: str) -> StrategyProtocol:
         "sw": SwarmProtocol,
         "swarm": SwarmProtocol
     }
-    
+
     protocol_class = protocols.get(strategy.lower(), StrategyProtocol)
     return protocol_class()
 
@@ -692,3 +692,201 @@ def initialize_swarm(task: str, task_list: List[str], agent_count: int = 4) -> s
     """Initialize Swarm strategy."""
     protocol = SwarmProtocol()
     return protocol.initialize_strategy(task, task_list, agent_count)
+
+
+def strategy_selection(project_analysis: str = "", team_size: int = 3, complexity: str = "medium") -> str:
+    """Analyze project and recommend optimal development strategy (ss hotkey)."""
+
+    # Import the strategy selection template
+    from .agent_prompt_templates import generate_strategy_selection_prompt
+
+    # Generate strategy analysis
+    analysis = f"""
+# 🎯 Strategy Selection Analysis
+
+## Project Context
+{project_analysis if project_analysis else "No specific project analysis provided"}
+
+## Team Configuration
+- **Team Size**: {team_size} agents
+- **Complexity**: {complexity}
+
+## Strategy Recommendations
+
+### 🔄 Parallel Divergent (Score: {_score_parallel_divergent(team_size, complexity)}/10)
+**Best for**: Complex problems, multiple valid approaches, creative solutions
+**Process**: Independent solutions → peer review → synthesis
+**Team Size**: 2-6 agents (optimal: 3-4)
+**Timeline**: Medium (parallel execution + review time)
+
+**Pros**: Redundancy, diversity, innovation, quality through peer review
+**Cons**: Requires review coordination, potential for conflicting approaches
+
+### ⚡ Pipeline (Score: {_score_pipeline(team_size, complexity)}/10)
+**Best for**: Sequential dependencies, specialization, predictable workflows
+**Process**: Foundation → Enhancement → Refinement → Validation
+**Team Size**: 3-5 agents (optimal: 4)
+**Timeline**: Medium (sequential but focused)
+
+**Pros**: Clear dependencies, specialization, incremental progress
+**Cons**: Sequential bottlenecks, less parallelism
+
+### 🐝 Swarm (Score: {_score_swarm(team_size, complexity)}/10)
+**Best for**: Many independent tasks, speed priority, large codebases
+**Process**: Task queue → dynamic assignment → emergent solution
+**Team Size**: 5-8 agents (optimal: 6)
+**Timeline**: Fast (maximum parallelism)
+
+**Pros**: Maximum parallelism, flexibility, resilience
+**Cons**: Requires good task decomposition, potential integration challenges
+
+### ⚔️ Red Team (Score: {_score_red_team(team_size, complexity)}/10)
+**Best for**: Security-critical, high-reliability, complex integration
+**Process**: Build → Break → Analyze → Harden → Repeat
+**Team Size**: 4-6 agents (2-3 per team)
+**Timeline**: Slow (thorough validation)
+
+**Pros**: Robustness, security, high confidence
+**Cons**: Time-intensive, requires adversarial mindset
+
+### 👥 Mob Programming (Score: {_score_mob_programming(team_size, complexity)}/10)
+**Best for**: Knowledge sharing, complex problems, team alignment
+**Process**: Collaborative coding with rotating roles
+**Team Size**: 3-5 agents (optimal: 4)
+**Timeline**: Medium (intensive collaboration)
+
+**Pros**: Knowledge sharing, continuous review, consensus
+**Cons**: Coordination overhead, requires real-time collaboration
+
+## 🎯 Recommendation
+
+{_get_top_recommendation(team_size, complexity)}
+
+## 🚀 Next Steps
+
+To initialize your chosen strategy:
+
+```python
+# Parallel Divergent
+from agor.tools.strategy_protocols import initialize_parallel_divergent
+result = initialize_parallel_divergent("your task description", agent_count={team_size})
+
+# Pipeline
+from agor.tools.strategy_protocols import initialize_pipeline
+result = initialize_pipeline("your task description", stages=["Foundation", "Enhancement", "Testing"])
+
+# Swarm
+from agor.tools.strategy_protocols import initialize_swarm
+tasks = ["task1", "task2", "task3", "task4"]  # Define your task list
+result = initialize_swarm("your task description", tasks, agent_count={team_size})
+```
+
+Or use the agent coordination helper:
+```python
+from agor.tools.agent_coordination import discover_my_role
+print(discover_my_role("agent1"))  # Get immediate next actions
+```
+"""
+
+    return analysis
+
+
+def _score_parallel_divergent(team_size: int, complexity: str) -> int:
+    """Score Parallel Divergent strategy for given parameters."""
+    score = 7  # Base score
+
+    if complexity == "complex":
+        score += 2
+    elif complexity == "simple":
+        score -= 1
+
+    if 2 <= team_size <= 4:
+        score += 1
+    elif team_size > 5:
+        score -= 1
+
+    return min(score, 10)
+
+
+def _score_pipeline(team_size: int, complexity: str) -> int:
+    """Score Pipeline strategy for given parameters."""
+    score = 6  # Base score
+
+    if complexity in ["medium", "complex"]:
+        score += 1
+
+    if 3 <= team_size <= 5:
+        score += 2
+    elif team_size < 3:
+        score -= 1
+    elif team_size > 5:
+        score -= 1
+
+    return min(score, 10)
+
+
+def _score_swarm(team_size: int, complexity: str) -> int:
+    """Score Swarm strategy for given parameters."""
+    score = 5  # Base score
+
+    if team_size >= 5:
+        score += 3
+    elif team_size < 4:
+        score -= 2
+
+    if complexity == "simple":
+        score += 2
+    elif complexity == "complex":
+        score -= 1
+
+    return min(score, 10)
+
+
+def _score_red_team(team_size: int, complexity: str) -> int:
+    """Score Red Team strategy for given parameters."""
+    score = 4  # Base score
+
+    if complexity == "complex":
+        score += 3
+    elif complexity == "simple":
+        score -= 1
+
+    if 4 <= team_size <= 6:
+        score += 2
+    elif team_size < 4:
+        score -= 2
+
+    return min(score, 10)
+
+
+def _score_mob_programming(team_size: int, complexity: str) -> int:
+    """Score Mob Programming strategy for given parameters."""
+    score = 6  # Base score
+
+    if complexity == "complex":
+        score += 1
+
+    if 3 <= team_size <= 5:
+        score += 1
+    elif team_size > 5:
+        score -= 2
+    elif team_size < 3:
+        score -= 1
+
+    return min(score, 10)
+
+
+def _get_top_recommendation(team_size: int, complexity: str) -> str:
+    """Get the top strategy recommendation."""
+    scores = {
+        "Parallel Divergent": _score_parallel_divergent(team_size, complexity),
+        "Pipeline": _score_pipeline(team_size, complexity),
+        "Swarm": _score_swarm(team_size, complexity),
+        "Red Team": _score_red_team(team_size, complexity),
+        "Mob Programming": _score_mob_programming(team_size, complexity)
+    }
+
+    top_strategy = max(scores, key=scores.get)
+    top_score = scores[top_strategy]
+
+    return f"**Recommended Strategy**: {top_strategy} (Score: {top_score}/10)\n\nBased on your team size ({team_size}) and complexity ({complexity}), {top_strategy} offers the best balance of effectiveness, coordination overhead, and expected outcomes."

@@ -357,6 +357,179 @@ RESEARCHER: "The standard library has a validate() method we should use"
 """
 
 
+def generate_strategic_planning_template():
+    """Template for strategic planning (sp hotkey)"""
+    return """
+# Strategic Planning Template
+
+## Project Vision
+- **Mission**: [What are we building and why?]
+- **Success Metrics**: [How will we measure success?]
+- **Timeline**: [Key milestones and deadlines]
+- **Constraints**: [Budget, technical, resource limitations]
+
+## Stakeholder Analysis
+- **Primary Users**: [Who will use this?]
+- **Business Stakeholders**: [Who has decision authority?]
+- **Technical Stakeholders**: [Who needs to integrate/maintain?]
+- **Success Criteria**: [What does each stakeholder need?]
+
+## Technical Strategy
+- **Architecture Approach**: [Monolith, microservices, serverless, etc.]
+- **Technology Stack**: [Languages, frameworks, databases]
+- **Integration Points**: [External systems, APIs, dependencies]
+- **Scalability Requirements**: [Expected load, growth patterns]
+- **Security Requirements**: [Compliance, data protection, access control]
+
+## Risk Assessment
+### High Risk
+- **Technical Risks**: [Complex integrations, new technologies]
+- **Business Risks**: [Market changes, requirement volatility]
+- **Resource Risks**: [Key person dependencies, skill gaps]
+- **Mitigation Strategies**: [How to address each risk]
+
+### Medium Risk
+- **Integration Challenges**: [Third-party dependencies]
+- **Performance Concerns**: [Scalability unknowns]
+- **Timeline Pressures**: [Aggressive deadlines]
+
+## Resource Planning
+- **Team Composition**: [Required roles and skills]
+- **Development Strategy**: [Which multi-agent approach?]
+- **Infrastructure Needs**: [Hosting, tools, environments]
+- **External Dependencies**: [Third-party services, approvals]
+
+## Implementation Roadmap
+### Phase 1: Foundation (Weeks 1-2)
+- [ ] Architecture design and approval
+- [ ] Development environment setup
+- [ ] Core infrastructure implementation
+- [ ] Basic security framework
+
+### Phase 2: Core Features (Weeks 3-6)
+- [ ] Primary user workflows
+- [ ] Data layer implementation
+- [ ] API development
+- [ ] Integration with key systems
+
+### Phase 3: Enhancement (Weeks 7-8)
+- [ ] Advanced features
+- [ ] Performance optimization
+- [ ] Security hardening
+- [ ] User experience polish
+
+### Phase 4: Launch (Weeks 9-10)
+- [ ] Comprehensive testing
+- [ ] Documentation completion
+- [ ] Deployment and monitoring
+- [ ] User training and support
+
+## Quality Strategy
+- **Testing Approach**: [Unit, integration, end-to-end strategies]
+- **Code Review Process**: [Peer review, automated checks]
+- **Performance Benchmarks**: [Response times, throughput targets]
+- **Security Validation**: [Penetration testing, compliance checks]
+
+## Communication Plan
+- **Status Reporting**: [Frequency, format, audience]
+- **Decision Making**: [Who decides what, escalation paths]
+- **Change Management**: [How to handle scope changes]
+- **Stakeholder Updates**: [Regular communication schedule]
+
+## Success Metrics
+- **Technical Metrics**: [Performance, reliability, security]
+- **Business Metrics**: [User adoption, business value]
+- **Process Metrics**: [Delivery speed, quality, team satisfaction]
+- **Monitoring Strategy**: [How to track and report progress]
+"""
+
+
+def generate_architecture_review_template():
+    """Template for architecture review (ar hotkey)"""
+    return """
+# Architecture Review Template
+
+## System Overview
+- **Purpose**: [What does this system do?]
+- **Scope**: [What's included in this review?]
+- **Stakeholders**: [Who needs to approve this?]
+
+## Architecture Analysis
+### High-Level Design
+- **System Architecture**: [Monolith, microservices, serverless]
+- **Component Diagram**: [Major components and relationships]
+- **Data Flow**: [How data moves through the system]
+- **Integration Points**: [External systems and APIs]
+
+### Technology Stack
+- **Frontend**: [Languages, frameworks, libraries]
+- **Backend**: [Languages, frameworks, databases]
+- **Infrastructure**: [Cloud providers, deployment strategy]
+- **Monitoring**: [Logging, metrics, alerting]
+
+## Quality Attributes
+### Performance
+- **Response Time Requirements**: [Target latencies]
+- **Throughput Requirements**: [Requests per second]
+- **Scalability Strategy**: [Horizontal vs vertical scaling]
+- **Bottleneck Analysis**: [Potential performance issues]
+
+### Reliability
+- **Availability Requirements**: [Uptime targets]
+- **Fault Tolerance**: [How system handles failures]
+- **Disaster Recovery**: [Backup and recovery strategy]
+- **Monitoring Strategy**: [Health checks, alerting]
+
+### Security
+- **Authentication**: [User identity verification]
+- **Authorization**: [Access control strategy]
+- **Data Protection**: [Encryption, privacy compliance]
+- **Threat Model**: [Security risks and mitigations]
+
+### Maintainability
+- **Code Organization**: [Module structure, separation of concerns]
+- **Documentation**: [API docs, architecture decisions]
+- **Testing Strategy**: [Unit, integration, end-to-end]
+- **Deployment Process**: [CI/CD, environment management]
+
+## Risk Assessment
+### Technical Risks
+- **Complexity**: [Areas of high technical complexity]
+- **Dependencies**: [External system dependencies]
+- **Technology Maturity**: [New or unproven technologies]
+- **Performance**: [Scalability and performance risks]
+
+### Mitigation Strategies
+- **Proof of Concepts**: [Areas needing validation]
+- **Fallback Plans**: [Alternative approaches]
+- **Monitoring**: [Early warning systems]
+- **Documentation**: [Knowledge transfer strategies]
+
+## Recommendations
+### Approved Elements
+- [Architecture components that are approved as-is]
+
+### Required Changes
+- [Architecture elements that must be modified]
+- [Specific changes needed and rationale]
+
+### Suggested Improvements
+- [Optional enhancements for consideration]
+- [Future architecture evolution paths]
+
+## Action Items
+- [ ] **High Priority**: [Critical changes needed before implementation]
+- [ ] **Medium Priority**: [Important improvements to consider]
+- [ ] **Low Priority**: [Nice-to-have enhancements]
+
+## Sign-off
+- **Architect**: [Approval status and date]
+- **Technical Lead**: [Approval status and date]
+- **Security Review**: [Approval status and date]
+- **Performance Review**: [Approval status and date]
+"""
+
+
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""
     return """
