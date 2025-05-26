@@ -78,12 +78,28 @@ cat .agor/handoffs/index.md
 cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
 ```
 
-### 🔄 Handoff Workflow
+### 🔄 Bidirectional Handoff Workflow
 
+**CRITICAL**: Agent coordination is a two-way process:
+
+#### 📤 Task Assignment (Coordinator → Agent)
 1. **Creating Handoffs**: Use `handoff` hotkey to generate comprehensive handoff document
-2. **Receiving Handoffs**: Use `receive` hotkey to accept work from another agent
+2. **Agent Receipt**: Agent uses `receive` hotkey to accept work
 3. **Communication**: Update `.agor/agentconvo.md` to confirm handoff receipt
-4. **Continuation**: Follow next steps outlined in handoff document
+4. **Work Execution**: Follow next steps outlined in handoff document
+
+#### 📥 Task Completion (Agent → Coordinator)
+1. **Completion Handoff**: Use `complete` hotkey to generate completion document
+2. **Results Summary**: Include work completed, commits, issues, recommendations
+3. **Coordinator Review**: Coordinator reviews results and provides feedback
+4. **Integration**: Coordinator decides on integration and next steps
+
+#### 📝 Communication Protocol
+- **All handoffs logged in**: `.agor/agentconvo.md`
+- **Task assignment**: `[COORDINATOR-ID] [timestamp] - TASK ASSIGNED: description`
+- **Task receipt**: `[AGENT-ID] [timestamp] - HANDOFF RECEIVED: description`
+- **Task completion**: `[AGENT-ID] [timestamp] - TASK COMPLETED: description`
+- **Coordinator review**: `[COORDINATOR-ID] [timestamp] - TASK REVIEWED: status`
 
 ## CRITICAL INITIALIZATION PROTOCOL
 

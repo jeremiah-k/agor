@@ -143,6 +143,29 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 3. **Most 'commands' are agent menu hotkeys** - not terminal commands
 4. **The .agor/ directory is the coordination hub** - all agent state lives here
 5. **Commit and push frequently** - work can be lost in agent environments
+6. **Bidirectional workflow is required** - agents must report completion back to coordinators
+
+### 🔄 Bidirectional Handoff Workflow
+
+**CRITICAL**: Agent coordination is a two-way process:
+
+#### 📤 Coordinator → Agent (Task Assignment)
+- **Hotkey**: `handoff` - Create handoff document for agent
+- **Contains**: Task description, context, requirements, next steps
+- **File**: `.agor/handoffs/YYYY-MM-DD_HHMMSS_task-summary.md`
+
+#### 📥 Agent → Coordinator (Task Completion)
+- **Hotkey**: `complete` - Create completion handoff for coordinator
+- **Contains**: Results summary, commits made, issues, recommendations
+- **File**: `.agor/handoffs/YYYY-MM-DD_HHMMSS_COMPLETED_task-summary.md`
+- **Purpose**: Coordinator review, quality assurance, integration decisions
+
+#### 📝 Communication Protocol
+- **All handoffs logged in**: `.agor/agentconvo.md`
+- **Task assignment**: `[COORDINATOR-ID] [timestamp] - TASK ASSIGNED: description`
+- **Task receipt**: `[AGENT-ID] [timestamp] - HANDOFF RECEIVED: description`
+- **Task completion**: `[AGENT-ID] [timestamp] - TASK COMPLETED: description`
+- **Coordinator review**: `[COORDINATOR-ID] [timestamp] - TASK REVIEWED: status`
 
 ---
 
