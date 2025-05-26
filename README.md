@@ -40,6 +40,15 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ```
+## 📚 Documentation
+
+**[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
+**[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
+**[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
+**[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup
+**[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol
+**[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
+**[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 
 ## 🎯 Core Capabilities
 
@@ -164,16 +173,6 @@ agor bundle repo -f zip                     # Google AI Studio format
 **Requirements**: Python 3.10+ | **Platforms**: Linux, macOS, Windows
 
 ---
-
-## 📚 Documentation
-
-**[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
-**[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
-**[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
-**[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup
-**[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol
-**[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
-**[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 
 ## 🙏 Attribution
 
