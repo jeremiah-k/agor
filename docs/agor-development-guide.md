@@ -9,6 +9,147 @@ This guide ensures consistency, quality, and proper protocol management when dev
 > - **[AGOR Development Log](agor-development-log.md)**: Technical history, architectural decisions, and lessons learned
 > - **This Guide**: Current status, guidelines, and checklists for active development
 
+## 🧠 CORE CONTEXT FOR ALL AGENTS
+
+**⚠️ CRITICAL: This section contains permanent context that ALL agents must understand. Do NOT modify this section.**
+
+### 🎯 AGOR Architecture Understanding
+
+#### 📦 CLI vs Agent Tools - FUNDAMENTAL DISTINCTION
+
+**AGOR CLI Purpose**: Primarily for **bundling repositories** for AI assistant upload
+- `agor bundle <repo>` - Main use case
+- `agor version`, `agor config`, `agor git-config` - Utility functions
+- Most users interact with AGOR through bundling, not direct CLI usage
+
+**Agent Tools Purpose**: For **agents working within coordination systems**
+- Located in `src/agor/tools/` directory
+- Include coordination files, strategy modules, memory systems
+- Used by agents within `.agor/` coordination workflows
+
+#### 🤖 Hotkeys vs CLI Commands - CRITICAL DISTINCTION
+
+**❌ COMMON CONFUSION**: "Hotkeys like `pd`, `ss`, `init` are CLI commands"
+
+**✅ REALITY**: Most "hotkeys" are **agent menu options**, not CLI commands
+
+- **Agent Menu Hotkeys**: `pd`, `ss`, `init`, `a`, `f`, `mem-add`, `handoff`, etc.
+  - These are menu options agents use within coordination workflows
+  - They trigger agent actions and generate coordination files
+  - They are NOT direct CLI commands for users
+  - They work with files in `.agor/` directory
+
+- **Actual CLI Commands**: `bundle`, `version`, `config`, `git-config`
+  - These are commands users run from terminal
+  - They perform specific utility functions
+  - They are documented in `--help` output
+
+#### 📋 Agent Manifests - TWO DIFFERENT TYPES
+
+**Bundle Manifests** (Setup Information):
+- **File**: `/tmp/agor_tools/AGENT_MANIFEST.md` (in bundles)
+- **Purpose**: Bundle setup and initialization
+- **Contains**: Git config, available tools, quick start commands
+- **Used for**: Agent setup when receiving a bundle
+
+**Handoff Documents** (Agent Coordination):
+- **Location**: `.agor/handoffs/` directory
+- **Purpose**: Agent-to-agent work transitions with complete context
+- **Contains**: Problem definition, progress, commits, next steps, git context
+- **Used for**: Multi-agent coordination and work handoffs
+- **Implementation**: `handoff_templates.py` (already complete)
+
+#### 🏗️ File Structure Understanding
+
+**Bundle Mode** (Most Common):
+- Agent receives bundled archive with AGOR tools
+- Works within extracted bundle
+- Uses coordination files in `.agor/` directory
+- Does NOT use CLI commands - works with files directly
+
+**Standalone Mode** (Less Common):
+- Agent has direct repository access
+- Might use some CLI commands for status/coordination
+- Still works primarily with `.agor/` coordination files
+
+### 🚦 Development Safety Levels
+
+**✅ Safe to Implement (Low Risk)**:
+- Documentation improvements and clarifications
+- Bug fixes in existing implementations
+- Hotkey documentation enhancements
+- Agent best practices reinforcement
+
+**⚠️ Requires Coordination (Medium Risk)**:
+- Changes to existing hotkey behavior
+- New hotkey additions
+- Changes to .agor file structure
+- New strategy module additions
+
+**🛑 Requires Team Discussion (High Risk)**:
+- Changes to core coordination protocols
+- Modifications to existing strategy implementations
+- Breaking changes to agent_coordination.py
+- Version number changes or protocol modifications
+
+### 📁 Key Directories and Their Purposes
+
+- **`src/agor/`**: Core AGOR package code
+- **`src/agor/tools/`**: Agent coordination tools and templates
+- **`src/agor/tools/strategies/`**: Multi-agent strategy implementations
+- **`.agor/`**: Project coordination directory (created by agents)
+- **`.agor/handoffs/`**: Agent handoff documents
+- **`docs/`**: Documentation for users and developers
+
+### 🔄 Commit and Push Protocol
+
+**ALWAYS**: Commit often and push often
+- Problems can happen and unpushed work is lost
+- Use: `git add . && git commit -m "message" && git push`
+- Update development guide as you work
+- If agent struggles, generate handoff prompt for continuation
+
+---
+
+### 📚 Essential Files for Agent Understanding
+
+**Always read these first when working on AGOR**:
+- **`src/agor/tools/README_ai.md`**: Complete AI agent protocol and instructions
+- **`src/agor/tools/handoff_templates.py`**: Agent coordination and handoff system
+- **`docs/agor-development-guide.md`**: This file - development guidelines and context
+- **`src/agor/main.py`**: CLI commands (for understanding what's user-facing vs internal)
+
+### 🔍 Quick Context Checks
+
+**Before making changes, always verify**:
+```bash
+# Check current AGOR version
+python -c "from agor import __version__; from agor.constants import PROTOCOL_VERSION; print(f'AGOR: {__version__}, Protocol: {PROTOCOL_VERSION}')"
+
+# See available CLI commands (user-facing)
+./run_agor.sh --help
+
+# Check agent tools directory
+ls src/agor/tools/
+
+# Check if .agor coordination exists
+ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
+```
+
+### 🤝 Multi-Agent Coordination Principles
+
+1. **Handoffs are the primary coordination mechanism** - not CLI commands
+2. **Bundle manifests are for setup** - handoff documents are for work transitions
+3. **Most 'commands' are agent menu hotkeys** - not terminal commands
+4. **The .agor/ directory is the coordination hub** - all agent state lives here
+5. **Commit and push frequently** - work can be lost in agent environments
+
+---
+
+**🎯 Remember**: AGOR is primarily a bundling tool with sophisticated agent coordination capabilities built on top. The CLI is for bundling; the real power is in the agent tools and coordination system.
+
+**🚨 IMPORTANT**: This "Core Context" section should remain stable and always be available to new agents. Only add to it, don't remove or significantly change existing content.
+
 ## 📊 Implementation Status Tracking
 
 **Last Updated**: 2025-05-26 18:25 UTC | **AGOR Version**: 0.2.4 | **Protocol Version**: 0.3.0 | **Latest**: Agent manifest protocol clarification - removed confusing CLI command, clarified handoff system
