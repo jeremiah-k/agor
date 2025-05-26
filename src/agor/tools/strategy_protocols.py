@@ -4693,3 +4693,590 @@ def _initialize_team_metrics(team_size: int):
 - **Team Dynamics**: [Quality of team relationships]
 """
     retro_file.write_text(retro_content)
+
+
+def _generate_gate_ownership() -> str:
+    """Generate gate ownership assignments."""
+    return """
+#### Gate Ownership Assignments
+- **Requirements Gate**: Product Owner / Business Analyst
+- **Design Gate**: Technical Architect / Lead Developer
+- **Implementation Gate**: Development Team / Code Reviewers
+- **Integration Gate**: Integration Team / QA Lead
+- **System Gate**: QA Team / Test Lead
+- **Deployment Gate**: DevOps Team / Release Manager
+"""
+
+
+def _generate_gate_dependencies() -> str:
+    """Generate gate dependencies mapping."""
+    return """
+#### Gate Dependencies
+- **Design Gate** depends on Requirements Gate completion
+- **Implementation Gate** depends on Design Gate approval
+- **Integration Gate** depends on Implementation Gate success
+- **System Gate** depends on Integration Gate validation
+- **Deployment Gate** depends on System Gate approval
+
+#### Parallel Gate Opportunities
+- **Documentation** can be developed in parallel with Implementation
+- **Test Planning** can occur during Design phase
+- **Deployment Preparation** can begin during System testing
+"""
+
+
+def _generate_gate_scheduling() -> str:
+    """Generate gate scheduling framework."""
+    return """
+#### Gate Scheduling
+- **Requirements Gate**: Project start + 1-2 days
+- **Design Gate**: Requirements complete + 2-3 days
+- **Implementation Gate**: Per feature/component completion
+- **Integration Gate**: Weekly or per integration milestone
+- **System Gate**: End of development phase
+- **Deployment Gate**: Pre-release validation
+
+#### Gate Review Meetings
+- **Frequency**: As needed based on gate triggers
+- **Duration**: 30-60 minutes per gate
+- **Participants**: Gate owner + stakeholders + development team
+- **Format**: Criteria review + go/no-go decision
+"""
+
+
+def _create_quality_gate_files(quality_focus: str, automation_level: str):
+    """Create quality gate coordination files."""
+
+    # Create quality metrics file
+    metrics_file = Path(".agor") / "quality-metrics.md"
+    metrics_content = f"""
+# Quality Metrics Dashboard
+
+## Quality Focus: {quality_focus}
+## Automation Level: {automation_level}
+## Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Current Quality Status
+
+### Code Quality Metrics
+- **Code Coverage**: [X%] (Target: >80%)
+- **Cyclomatic Complexity**: [X] (Target: <10)
+- **Technical Debt**: [X hours] (Target: <40 hours)
+- **Bug Density**: [X bugs/kloc] (Target: <2 bugs/kloc)
+- **Code Review Score**: [X/10] (Target: >8/10)
+
+### Process Quality Metrics
+- **Gate Pass Rate**: [X%] (Target: >90%)
+- **Rework Rate**: [X%] (Target: <10%)
+- **Defect Escape Rate**: [X%] (Target: <5%)
+- **Time to Resolution**: [X hours] (Target: <24 hours)
+- **Customer Satisfaction**: [X/10] (Target: >8/10)
+
+## Quality Gate Status
+
+### Gate 1: Requirements Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 2: Design Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 3: Implementation Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 4: Integration Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 5: System Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+### Gate 6: Deployment Quality
+- **Status**: [Not Started/In Progress/Complete]
+- **Score**: [X/100]
+- **Issues**: [List any issues]
+- **Next Action**: [What needs to be done]
+
+## Quality Trends
+
+### Weekly Quality Summary
+- **Week of {datetime.now().strftime('%Y-%m-%d')}**:
+  - Gates Passed: [X/6]
+  - Quality Score: [X/100]
+  - Issues Resolved: [X]
+  - Improvement Actions: [X]
+
+## Quality Improvement Actions
+
+### Active Improvements
+- [No active improvements currently]
+
+### Completed Improvements
+- [No improvements completed yet]
+
+### Planned Improvements
+- [No improvements planned yet]
+"""
+    metrics_file.write_text(metrics_content)
+
+    # Create quality standards file
+    standards_file = Path(".agor") / "quality-standards.md"
+    standards_content = f"""
+# Quality Standards
+
+## Quality Focus: {quality_focus}
+## Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Code Quality Standards
+
+### Naming Conventions
+- **Variables**: camelCase for JavaScript, snake_case for Python
+- **Functions**: Descriptive verbs (e.g., getUserData, calculateTotal)
+- **Classes**: PascalCase (e.g., UserManager, DataProcessor)
+- **Constants**: UPPER_SNAKE_CASE (e.g., MAX_RETRY_COUNT)
+
+### Code Structure
+- **File Length**: Maximum 500 lines per file
+- **Function Length**: Maximum 50 lines per function
+- **Class Length**: Maximum 300 lines per class
+- **Nesting Depth**: Maximum 4 levels of nesting
+
+### Documentation Standards
+- **Functions**: JSDoc/docstring for all public functions
+- **Classes**: Class-level documentation with purpose and usage
+- **APIs**: OpenAPI/Swagger documentation for all endpoints
+- **README**: Comprehensive setup and usage instructions
+
+### Testing Standards
+- **Unit Tests**: >80% code coverage required
+- **Integration Tests**: All API endpoints must have tests
+- **Test Naming**: Descriptive test names (should_return_error_when_invalid_input)
+- **Test Structure**: Arrange-Act-Assert pattern
+
+## Process Quality Standards
+
+### Code Review Standards
+- **Review Required**: All code changes must be reviewed
+- **Review Criteria**: Functionality, security, performance, maintainability
+- **Review Timeline**: Reviews completed within 24 hours
+- **Approval Required**: At least one approval before merge
+
+### Git Standards
+- **Commit Messages**: Conventional commits format
+- **Branch Naming**: feature/description, bugfix/description, hotfix/description
+- **Pull Requests**: Template with description, testing, and checklist
+- **Merge Strategy**: Squash and merge for feature branches
+
+### Quality Gate Standards
+- **Gate Criteria**: Objective, measurable criteria for each gate
+- **Gate Documentation**: All gate results must be documented
+- **Gate Approval**: Designated gate owner must approve
+- **Gate Escalation**: Failed gates must be escalated within 2 hours
+
+## Security Standards
+
+### Input Validation
+- **All Inputs**: Validate and sanitize all user inputs
+- **SQL Injection**: Use parameterized queries or ORM
+- **XSS Prevention**: Escape output, use Content Security Policy
+- **CSRF Protection**: Use CSRF tokens for state-changing operations
+
+### Authentication & Authorization
+- **Password Policy**: Minimum 8 characters, complexity requirements
+- **Session Management**: Secure session handling, timeout policies
+- **Access Control**: Role-based access control (RBAC)
+- **API Security**: Authentication required for all API endpoints
+
+### Data Protection
+- **Encryption**: Encrypt sensitive data at rest and in transit
+- **PII Handling**: Special handling for personally identifiable information
+- **Data Retention**: Clear data retention and deletion policies
+- **Backup Security**: Encrypted backups with access controls
+
+## Performance Standards
+
+### Response Time Standards
+- **API Responses**: <200ms for 95% of requests
+- **Page Load**: <3 seconds for initial page load
+- **Database Queries**: <100ms for simple queries, <1s for complex
+- **File Operations**: <500ms for file uploads/downloads
+
+### Resource Usage Standards
+- **Memory Usage**: <500MB per application instance
+- **CPU Usage**: <70% average CPU utilization
+- **Database Connections**: Connection pooling with max 20 connections
+- **File Storage**: Efficient file storage with cleanup policies
+
+### Scalability Standards
+- **Horizontal Scaling**: Application must support horizontal scaling
+- **Load Testing**: Must handle 10x current load
+- **Caching**: Implement caching for frequently accessed data
+- **CDN Usage**: Use CDN for static assets
+
+## Quality Enforcement
+
+### Automated Enforcement
+- **Linting**: Automated code style checking
+- **Testing**: Automated test execution in CI/CD
+- **Security Scanning**: Automated vulnerability scanning
+- **Performance Testing**: Automated performance benchmarking
+
+### Manual Enforcement
+- **Code Reviews**: Manual review of all code changes
+- **Architecture Reviews**: Manual review of design decisions
+- **Security Reviews**: Manual security assessment
+- **Performance Reviews**: Manual performance analysis
+
+### Quality Metrics
+- **Compliance Rate**: Percentage of code meeting standards
+- **Violation Trends**: Tracking of standard violations over time
+- **Improvement Rate**: Rate of quality improvement over time
+- **Team Adoption**: Team adoption of quality practices
+"""
+    standards_file.write_text(standards_content)
+
+    # Create individual gate files
+    gates = [
+        ("requirements", "Requirements Quality Gate"),
+        ("design", "Design Quality Gate"),
+        ("implementation", "Implementation Quality Gate"),
+        ("integration", "Integration Quality Gate"),
+        ("system", "System Quality Gate"),
+        ("deployment", "Deployment Quality Gate")
+    ]
+
+    for gate_id, gate_name in gates:
+        gate_file = Path(".agor") / f"gate-{gate_id}.md"
+        gate_content = f"""
+# {gate_name}
+
+## Gate Overview
+- **Gate ID**: {gate_id}
+- **Gate Name**: {gate_name}
+- **Owner**: [To be assigned]
+- **Status**: Not Started
+- **Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Entry Criteria
+- [Criteria that must be met to trigger this gate]
+
+## Validation Criteria
+- [ ] [Specific quality check 1]
+- [ ] [Specific quality check 2]
+- [ ] [Specific quality check 3]
+- [ ] [Specific quality check 4]
+
+## Exit Criteria
+- [Criteria that must be met to pass this gate]
+
+## Gate Execution
+
+### Validation Process
+1. [Step 1 of validation process]
+2. [Step 2 of validation process]
+3. [Step 3 of validation process]
+4. [Step 4 of validation process]
+
+### Validation Results
+- **Executed By**: [Agent/team who executed validation]
+- **Execution Date**: [When validation was performed]
+- **Results**: [Pass/Fail with details]
+- **Score**: [X/100]
+- **Issues Found**: [List of issues if any]
+
+### Gate Decision
+- **Decision**: [Pass/Fail/Conditional Pass]
+- **Decision By**: [Gate owner who made decision]
+- **Decision Date**: [When decision was made]
+- **Rationale**: [Reason for decision]
+- **Next Actions**: [What needs to happen next]
+
+## Issue Tracking
+
+### Issues Found
+- [No issues found yet]
+
+### Issues Resolved
+- [No issues resolved yet]
+
+## Gate History
+
+### Execution History
+- [No executions yet]
+
+### Improvement History
+- [No improvements yet]
+
+## Notes
+- [Additional notes and context for this gate]
+"""
+        gate_file.write_text(gate_content)
+
+
+def _initialize_quality_metrics(project_name: str):
+    """Initialize quality metrics tracking."""
+
+    # Create quality tracking summary file
+    summary_file = Path(".agor") / "quality-summary.md"
+    summary_content = f"""
+# Quality Summary Dashboard
+
+## Project: {project_name}
+## Quality System Initialized: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Overall Quality Status
+- **Quality Score**: [To be calculated]
+- **Gates Passed**: 0/6
+- **Active Issues**: 0
+- **Quality Trend**: [To be determined]
+
+## Quick Quality Metrics
+
+### Code Quality
+- **Coverage**: [X%]
+- **Complexity**: [X]
+- **Debt**: [X hours]
+- **Bugs**: [X/kloc]
+
+### Process Quality
+- **Gate Pass Rate**: [X%]
+- **Rework Rate**: [X%]
+- **Resolution Time**: [X hours]
+- **Satisfaction**: [X/10]
+
+## Recent Quality Activities
+
+### Today ({datetime.now().strftime('%Y-%m-%d')})
+- Quality gates system initialized
+- Quality standards established
+- Metrics tracking started
+
+## Quality Improvement Plan
+
+### Short Term (This Week)
+- [ ] Complete requirements quality gate
+- [ ] Establish baseline metrics
+- [ ] Train team on quality standards
+
+### Medium Term (This Month)
+- [ ] Implement automated quality checks
+- [ ] Complete design and implementation gates
+- [ ] Optimize quality processes
+
+### Long Term (This Quarter)
+- [ ] Achieve target quality metrics
+- [ ] Establish quality culture
+- [ ] Continuous quality improvement
+
+## Quality Resources
+
+### Documentation
+- `.agor/quality-gates.md` - Complete quality gate system
+- `.agor/quality-standards.md` - Quality standards and guidelines
+- `.agor/quality-metrics.md` - Detailed metrics dashboard
+- `.agor/gate-[name].md` - Individual gate tracking
+
+### Tools and Automation
+- [Quality tools to be configured]
+- [Automation scripts to be developed]
+- [Integration points to be established]
+
+### Training and Support
+- [Quality training materials]
+- [Team support resources]
+- [Quality champion program]
+"""
+    summary_file.write_text(summary_content)
+
+
+def setup_quality_gates(project_name: str = "Current Project", quality_focus: str = "comprehensive", automation_level: str = "medium") -> str:
+    """Setup quality gates and validation checkpoints (qg hotkey)."""
+
+    # Import the quality gates template
+    from .project_planning_templates import generate_quality_gates_template
+
+    # Get the base template
+    template = generate_quality_gates_template()
+
+    # Add concrete quality gates implementation
+    implementation_details = f"""
+## QUALITY GATES IMPLEMENTATION
+
+### Project: {project_name}
+### Quality Focus: {quality_focus}
+### Automation Level: {automation_level}
+### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## ACTIVE QUALITY GATES
+
+{_generate_active_quality_gates(quality_focus)}
+
+## QUALITY GATE EXECUTION PROTOCOLS
+
+### Gate Validation Process:
+1. **Gate Trigger**: Automatic detection when deliverable is ready
+   ```
+   GATE_TRIGGERED: [gate-name] - [deliverable] - [timestamp] - [responsible-agent]
+   ```
+
+2. **Quality Validation**: Execute all gate criteria checks
+   ```
+   GATE_VALIDATION: [gate-name] - [criteria-checked] - [pass/fail] - [details]
+   ```
+
+3. **Gate Decision**: Go/no-go decision based on validation results
+   ```
+   GATE_DECISION: [gate-name] - [PASS/FAIL] - [score] - [next-action]
+   ```
+
+4. **Gate Communication**: Notify stakeholders of gate results
+   ```
+   GATE_NOTIFICATION: [stakeholders] - [gate-name] - [result] - [impact]
+   ```
+
+### Gate Failure Handling:
+1. **Immediate Response**: Stop progression, identify issues
+2. **Root Cause Analysis**: Determine why gate failed
+3. **Remediation Plan**: Create plan to address issues
+4. **Re-validation**: Re-run gate after fixes
+5. **Process Improvement**: Update gates based on learnings
+
+## AUTOMATED QUALITY CHECKS
+
+{_generate_automated_quality_checks(automation_level)}
+
+## QUALITY METRICS TRACKING
+
+{_generate_quality_metrics_tracking()}
+
+## QUALITY STANDARDS ENFORCEMENT
+
+{_generate_quality_standards_enforcement(quality_focus)}
+
+## CONTINUOUS QUALITY IMPROVEMENT
+
+### Quality Feedback Loops:
+- **Real-time**: Immediate feedback during development
+- **Daily**: Daily quality metrics review
+- **Weekly**: Quality trends analysis
+- **Monthly**: Quality process improvement
+
+### Quality Learning:
+- **Defect Analysis**: Learn from quality failures
+- **Best Practices**: Capture and share quality successes
+- **Tool Improvement**: Enhance quality tools and automation
+- **Standard Evolution**: Evolve quality standards based on experience
+
+## QUALITY GATE COORDINATION
+
+### Gate Ownership:
+{_generate_gate_ownership()}
+
+### Gate Dependencies:
+{_generate_gate_dependencies()}
+
+### Gate Scheduling:
+{_generate_gate_scheduling()}
+
+## QUALITY ASSURANCE AUTOMATION
+
+### Automated Gate Execution:
+```python
+# Execute quality gate
+from agor.tools.strategy_protocols import execute_quality_gate
+result = execute_quality_gate(
+    gate_name="implementation_quality",
+    deliverable="user_auth_module",
+    criteria=["code_review", "unit_tests", "security_scan"]
+)
+print(f"Gate result: {result['status']} - Score: {result['score']}/100")
+```
+
+### Quality Metrics Collection:
+```python
+# Collect quality metrics
+from agor.tools.strategy_protocols import collect_quality_metrics
+metrics = collect_quality_metrics(project_name)
+print(f"Code coverage: {metrics['coverage']}%")
+print(f"Bug density: {metrics['bug_density']} bugs/kloc")
+print(f"Gate pass rate: {metrics['gate_pass_rate']}%")
+```
+
+## QUALITY CULTURE DEVELOPMENT
+
+### Quality Champions Program:
+- **Quality Advocates**: Agents who promote quality practices
+- **Knowledge Sharing**: Regular quality best practices sessions
+- **Mentoring**: Quality coaching for team members
+- **Innovation**: Exploring new quality tools and techniques
+
+### Quality Training:
+- **Quality Standards**: Training on coding and process standards
+- **Tool Usage**: Training on quality tools and automation
+- **Best Practices**: Sharing quality best practices and lessons learned
+- **Continuous Learning**: Ongoing quality skill development
+
+## NEXT STEPS
+
+1. **Review Quality Gates**: Validate gate definitions and criteria
+2. **Setup Automation**: Configure automated quality checks
+3. **Train Team**: Ensure all agents understand quality standards
+4. **Begin Execution**: Start using quality gates in development process
+5. **Monitor and Improve**: Track quality metrics and optimize gates
+"""
+
+    # Combine template with implementation
+    full_quality_plan = template + implementation_details
+
+    # Save to quality gates file
+    quality_file = Path(".agor") / "quality-gates.md"
+    quality_file.parent.mkdir(exist_ok=True)
+    quality_file.write_text(full_quality_plan)
+
+    # Create quality gate coordination files
+    _create_quality_gate_files(quality_focus, automation_level)
+
+    # Initialize quality metrics tracking
+    _initialize_quality_metrics(project_name)
+
+    return f"""✅ Quality Gates Established
+
+**Project**: {project_name}
+**Quality Focus**: {quality_focus}
+**Automation Level**: {automation_level}
+
+**Quality Gate Features**:
+- 6-stage quality validation process (Requirements → Deployment)
+- Automated quality checks and validation
+- Quality metrics tracking and reporting
+- Gate failure handling and remediation
+- Continuous quality improvement processes
+
+**Files Created**:
+- `.agor/quality-gates.md` - Complete quality gate plan and standards
+- `.agor/quality-metrics.md` - Quality metrics tracking dashboard
+- `.agor/quality-standards.md` - Coding and process standards
+- `.agor/gate-[name].md` - Individual gate validation files
+
+**Next Steps**:
+1. Review and customize quality standards
+2. Configure automated quality checks
+3. Train team on quality gate processes
+4. Begin quality gate execution
+5. Monitor quality metrics and optimize
+
+**Ready for comprehensive quality assurance!**
+"""

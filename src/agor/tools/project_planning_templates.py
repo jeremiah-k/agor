@@ -864,6 +864,178 @@ def generate_team_management_template():
 """
 
 
+def generate_quality_gates_template():
+    """Template for defining quality gates and validation checkpoints (qg hotkey)"""
+    return """
+# Quality Gates Template
+
+## Quality Gate Overview
+
+### Purpose
+Quality gates are checkpoints in the development process that ensure deliverables meet defined standards before proceeding to the next phase. They act as validation barriers that prevent defects from propagating downstream.
+
+### Quality Gate Principles
+- **Fail Fast**: Identify issues as early as possible
+- **Clear Criteria**: Objective, measurable quality standards
+- **Automated Validation**: Minimize manual verification where possible
+- **Continuous Improvement**: Refine gates based on feedback and metrics
+
+## Standard Quality Gates
+
+### Gate 1: Requirements Quality
+- **Trigger**: Requirements documentation complete
+- **Criteria**:
+  - [ ] Requirements are clear and unambiguous
+  - [ ] Acceptance criteria defined for all features
+  - [ ] Dependencies and constraints identified
+  - [ ] Stakeholder approval obtained
+- **Exit Criteria**: All requirements validated and approved
+- **Owner**: Product Owner / Business Analyst
+
+### Gate 2: Design Quality
+- **Trigger**: Technical design complete
+- **Criteria**:
+  - [ ] Architecture design reviewed and approved
+  - [ ] API contracts defined and validated
+  - [ ] Database schema designed and reviewed
+  - [ ] Security considerations addressed
+  - [ ] Performance requirements specified
+- **Exit Criteria**: Design meets quality standards and is approved
+- **Owner**: Technical Architect / Lead Developer
+
+### Gate 3: Implementation Quality
+- **Trigger**: Code implementation complete
+- **Criteria**:
+  - [ ] Code review completed with approval
+  - [ ] Unit tests written and passing (>80% coverage)
+  - [ ] Code follows established standards and conventions
+  - [ ] No critical security vulnerabilities
+  - [ ] Performance benchmarks met
+- **Exit Criteria**: Code quality meets standards
+- **Owner**: Development Team / Code Reviewers
+
+### Gate 4: Integration Quality
+- **Trigger**: Component integration complete
+- **Criteria**:
+  - [ ] Integration tests passing
+  - [ ] API contracts validated
+  - [ ] Data flow verified end-to-end
+  - [ ] Error handling tested
+  - [ ] Performance under load validated
+- **Exit Criteria**: System integration verified
+- **Owner**: Integration Team / QA
+
+### Gate 5: System Quality
+- **Trigger**: System testing complete
+- **Criteria**:
+  - [ ] All functional tests passing
+  - [ ] Non-functional requirements met
+  - [ ] User acceptance criteria satisfied
+  - [ ] Security testing completed
+  - [ ] Performance testing passed
+- **Exit Criteria**: System ready for deployment
+- **Owner**: QA Team / Test Lead
+
+### Gate 6: Deployment Quality
+- **Trigger**: Deployment preparation complete
+- **Criteria**:
+  - [ ] Deployment scripts tested
+  - [ ] Rollback procedures verified
+  - [ ] Monitoring and alerting configured
+  - [ ] Documentation updated
+  - [ ] Support team trained
+- **Exit Criteria**: System ready for production
+- **Owner**: DevOps Team / Release Manager
+
+## Quality Metrics
+
+### Code Quality Metrics
+- **Code Coverage**: Percentage of code covered by tests
+- **Cyclomatic Complexity**: Measure of code complexity
+- **Technical Debt**: Amount of suboptimal code requiring refactoring
+- **Bug Density**: Number of bugs per lines of code
+- **Code Review Effectiveness**: Percentage of issues caught in review
+
+### Process Quality Metrics
+- **Gate Pass Rate**: Percentage of deliverables passing gates on first attempt
+- **Rework Rate**: Percentage of work requiring revision
+- **Defect Escape Rate**: Percentage of defects found in later phases
+- **Time to Resolution**: Average time to fix quality issues
+- **Customer Satisfaction**: Stakeholder satisfaction with quality
+
+## Quality Standards
+
+### Code Standards
+- **Naming Conventions**: Clear, consistent naming for variables, functions, classes
+- **Documentation**: Inline comments and API documentation
+- **Error Handling**: Proper exception handling and error messages
+- **Security**: Input validation, authentication, authorization
+- **Performance**: Efficient algorithms and resource usage
+
+### Testing Standards
+- **Unit Testing**: Individual component testing with high coverage
+- **Integration Testing**: Component interaction testing
+- **System Testing**: End-to-end functionality testing
+- **Performance Testing**: Load and stress testing
+- **Security Testing**: Vulnerability and penetration testing
+
+### Documentation Standards
+- **Technical Documentation**: Architecture, API, and code documentation
+- **User Documentation**: User guides and help documentation
+- **Process Documentation**: Workflows and procedures
+- **Deployment Documentation**: Installation and configuration guides
+
+## Quality Gate Automation
+
+### Automated Checks
+- **Static Code Analysis**: Automated code quality scanning
+- **Automated Testing**: Unit, integration, and regression tests
+- **Security Scanning**: Vulnerability detection and analysis
+- **Performance Monitoring**: Automated performance benchmarking
+- **Documentation Validation**: Automated documentation completeness checks
+
+### CI/CD Integration
+- **Build Gates**: Quality checks integrated into build pipeline
+- **Deployment Gates**: Quality validation before deployment
+- **Monitoring Gates**: Quality monitoring in production
+- **Feedback Loops**: Automated quality feedback to development team
+
+## Quality Gate Management
+
+### Gate Definition
+- **Entry Criteria**: What must be complete to trigger the gate
+- **Validation Criteria**: Specific quality checks to perform
+- **Exit Criteria**: What must pass to proceed beyond the gate
+- **Escalation Procedures**: What to do when gates fail
+
+### Gate Execution
+- **Validation Process**: Step-by-step quality validation
+- **Documentation**: Record of gate execution and results
+- **Decision Making**: Go/no-go decisions based on gate results
+- **Communication**: Notification of gate results to stakeholders
+
+### Continuous Improvement
+- **Gate Effectiveness**: Measure how well gates prevent defects
+- **Process Optimization**: Improve gate efficiency and accuracy
+- **Standard Updates**: Evolve quality standards based on learning
+- **Tool Enhancement**: Improve automation and tooling
+
+## Quality Culture
+
+### Team Responsibility
+- **Shared Ownership**: Everyone responsible for quality
+- **Quality First**: Quality prioritized over speed
+- **Continuous Learning**: Regular improvement of quality practices
+- **Feedback Culture**: Open discussion of quality issues and improvements
+
+### Quality Champions
+- **Quality Advocates**: Team members who promote quality practices
+- **Knowledge Sharing**: Sharing quality best practices across team
+- **Mentoring**: Helping team members improve quality skills
+- **Innovation**: Exploring new quality tools and techniques
+"""
+
+
 def generate_workflow_template():
     """Template for defining agent workflows and coordination"""
     return """
