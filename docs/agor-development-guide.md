@@ -182,7 +182,7 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 
 ## 📊 Implementation Status Tracking
 
-**Last Updated**: 2025-01-27 15:30 UTC | **AGOR Version**: 0.2.5 | **Protocol Version**: 0.3.0 | **Latest**: Role Bootstrapping Analysis - investigating bundle upload menu loading behavior vs tag 0.2.1
+**Last Updated**: 2025-01-27 16:15 UTC | **AGOR Version**: 0.2.5 | **Protocol Version**: 0.3.0 | **Latest**: Role Bootstrapping FIXED - restored mandatory role selection menu with proper headers and stop instructions
 
 > **🕐 Getting Current Date/Time Programmatically:**
 >
@@ -274,6 +274,29 @@ All planned AGOR strategy modules have been implemented and are fully functional
 - **Agent Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc. - protocol directives in agent instructions, NOT CLI commands
 
 **Key Achievement**: Eliminated confusion between CLI commands and agent protocol hotkeys. Future agents will clearly understand the distinction when reading the codebase.
+
+### 🔧 Role Bootstrapping Fix (✅ COMPLETED)
+
+**Problem**: Role selection menu was broken in bundle uploads - AI was skipping role selection and jumping to default initialization, creating a "jumbled mess" of output.
+
+**Root Cause Analysis**:
+1. **Bundle Creation**: Works correctly - copies README_ai.md to agor_tools/ and generates proper prompt
+2. **AI Prompt**: Works correctly - tells AI to "read agor_tools/README_ai.md completely"
+3. **Role Selection Instructions**: Were too weak - AI was ignoring "Before proceeding, determine your role"
+4. **Menu Structure**: Had confusing headers mixed into user-facing display
+
+**Solution Implemented**:
+- ✅ **Strong mandatory warnings**: Added explicit "DO NOT PROCEED WITHOUT ROLE SELECTION" instructions
+- ✅ **Preserved Role A/B/C headers**: Kept formal role identifiers as requested
+- ✅ **Clean menu display**: Role headers inside menu but properly formatted
+- ✅ **Stop instruction**: Added "STOP HERE AND WAIT FOR USER RESPONSE" after menu
+- ✅ **SINGLE-AGENT vs MULTI-AGENT guidance**: Clear workflow distinction
+
+**Files Modified**:
+- `src/agor/tools/README_ai.md` - Enhanced role selection protocol
+- `.agor/handoff/restore_role_boot.md` - Documentation of changes
+
+**Testing**: Role selection menu should now display properly when bundles are uploaded to AI platforms.
 
 ### 📝 Documentation Enhancement (High Priority)
 
