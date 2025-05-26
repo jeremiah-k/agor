@@ -4,6 +4,8 @@
 
 **Agent Mode** is for AI agents with direct git access (Augment Code, Jules by Google, etc.)
 
+> **🔄 Born from AgentGrunt**: AGOR evolved from AgentGrunt, maintaining its core strength in standalone operations while adding sophisticated multi-agent coordination. In this mode, agents can make direct commits to repositories.
+
 ### Step 1: Clone AGOR Repository
 
 ```bash
@@ -93,23 +95,27 @@ You now have access to all AgentOrchestrator capabilities:
 
 ## Agent Mode vs Bundle Mode
 
-**Agent Mode (This Mode) - For AI Agents with Direct Git Access:**
+**Agent Mode (This Mode) - Standalone Operations with Direct Git Access:**
 
 - **No installation required** - just clone the AGOR repository
 - **Direct repository access** - can work with any repository URL
+- **Direct commits** - agents can commit, push, and manage git operations
 - **No file size limitations** - full repository access
 - **Can clone multiple repositories** for complex projects
 - **Full git history and branch access**
+- **Real-time collaboration** - multiple agents can work on same repository
 - **Real-time updates** - can pull latest AGOR improvements
 - **For**: Augment Code, Jules by Google, other advanced AI agents
 
-**Bundle Mode - For Upload-Based AI Platforms:**
+**Bundle Mode - Upload-Based Platforms with Manual Git Operations:**
 
 - **Requires local installation** - user installs AGOR locally
-- **File upload workflow** - user bundles project and uploads .tar.gz
-- **Works with upload-only platforms** like ChatGPT
+- **File upload workflow** - user bundles project and uploads to AI platform
+- **Copy-paste workflow** - agent provides edited files, user manually commits
+- **Works with upload-only platforms** like Google AI Studio, ChatGPT, Claude
 - **Self-contained** - everything bundled in one file
-- **For**: ChatGPT and other AI agents that accept file uploads (.zip/.tar.gz)
+- **Free tier compatible** - excellent for Google AI Studio Pro (free)
+- **For**: Any AI platform that accepts file uploads (.zip/.tar.gz)
 
 ## Usage Examples
 
