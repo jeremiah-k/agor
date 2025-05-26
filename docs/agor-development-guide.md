@@ -27,22 +27,26 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - Include coordination files, strategy modules, memory systems
 - Used by agents within `.agor/` coordination workflows
 
-#### 🤖 Hotkeys vs CLI Commands - CRITICAL DISTINCTION
+#### 🤖 CLI Commands vs Agent Hotkeys - CRITICAL DISTINCTION
 
-**❌ COMMON CONFUSION**: "Hotkeys like `pd`, `ss`, `init` are CLI commands"
+**THERE ARE TWO COMPLETELY DIFFERENT TYPES OF "COMMANDS":**
 
-**✅ REALITY**: Most "hotkeys" are **agent menu options**, not CLI commands
+**Real CLI Commands** (in `src/agor/main.py`):
+- **[CLI] Commands**: `bundle`, `config`, `git-config`, `version` - for developers using AGOR
+- **[AGENT] Commands**: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback` - for agents when they need CLI access
+- These are actual typer commands that can be run from terminal
+- They appear in `agor --help` output
+- Prefixed with [CLI] or [AGENT] to show intended user
 
-- **Agent Menu Hotkeys**: `pd`, `ss`, `init`, `a`, `f`, `mem-add`, `handoff`, etc.
-  - These are menu options agents use within coordination workflows
-  - They trigger agent actions and generate coordination files
-  - They are NOT direct CLI commands for users
-  - They work with files in `.agor/` directory
+**Agent Protocol Hotkeys** (in agent instructions):
+- **Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc.
+- These are menu options/verbal commands in agent workflow instructions
+- They are implemented as Python functions in `src/agor/tools/`
+- They are NOT CLI commands - they're protocol directives
+- They work within agent coordination workflows and `.agor/` files
+- They are documented in `README_ai.md` as workflow options
 
-- **Actual CLI Commands**: `bundle`, `version`, `config`, `git-config`
-  - These are commands users run from terminal
-  - They perform specific utility functions
-  - They are documented in `--help` output
+**KEY RULE**: CLI commands with [CLI] prefix don't appear in agent hotkey menus. Agent hotkeys are not CLI commands.
 
 #### 📋 Agent Coordination Documents
 
@@ -252,41 +256,24 @@ All planned AGOR strategy modules have been implemented and are fully functional
 
 ## 🔍 Current Development Priorities
 
-### 🎯 CLI User/Agent Command Separation (IN PROGRESS)
+### 🎯 CLI User/Agent Command Separation (✅ COMPLETED)
 
-**Status**: 🟡 PARTIALLY COMPLETED by previous agent, needs continuation
+**Status**: ✅ COMPLETED - Clear distinction implemented
 
-**Problem**: CLI mixes user-facing commands (bundle, config, version) with agent coordination commands (init, pd, ss, status), causing confusion about what's for developers vs AI agents.
+**Problem**: CLI mixed user-facing commands with agent coordination commands, causing confusion about what's for developers vs AI agents.
 
-**Solution in Progress**:
-- ✅ **Started**: Adding [USER] and [AGENT] prefixes to command help text in `src/agor/main.py`
-- ✅ **Completed**: User commands marked with "[USER]" prefix
-- 🟡 **In Progress**: Agent commands being marked with "[AGENT]" prefix
-- ⏳ **Pending**: Documentation updates to explain the distinction
-- ⏳ **Pending**: Consider architectural separation (separate CLI vs internal functions)
+**Solution Implemented**:
+- ✅ **Completed**: Added [CLI] prefixes to user commands: `bundle`, `config`, `git-config`, `version`
+- ✅ **Completed**: Added [AGENT] prefixes to agent commands: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback`
+- ✅ **Completed**: Updated development guide with clear distinction between CLI commands and agent hotkeys
+- ✅ **Completed**: Clarified that agent hotkeys (`a`, `f`, `co`, etc.) are protocol directives, not CLI commands
 
-**User-Facing Commands** (for developers using AGOR):
-- `bundle` - Create bundles for AI upload
-- `config` - Manage settings
-- `git-config` - Set up git
-- `version` - Check version
-- `custom-instructions` - Generate AI instructions
-- `generate-agor-feedback` - Feedback system
+**Implementation Details**:
+- **[CLI] Commands**: `bundle`, `config`, `git-config`, `version` - for developers using AGOR
+- **[AGENT] Commands**: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback` - for agents when they need CLI access
+- **Agent Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc. - protocol directives in agent instructions, NOT CLI commands
 
-**Agent-Only Commands** (for AI agents in coordination mode):
-- `init` - Initialize coordination
-- `pd` - Parallel divergent strategy
-- `ss` - Strategy selection
-- `status` - Check agent status
-- `sync` - Sync coordination
-- `agent-status` - Update agent status
-
-**Next Steps**:
-1. Complete [AGENT] prefix additions to remaining commands
-2. Update documentation to explain user vs agent command distinction
-3. Consider architectural improvements (separate internal functions from CLI)
-4. Test CLI help output for clarity
-5. Update development guide with final implementation
+**Key Achievement**: Eliminated confusion between CLI commands and agent protocol hotkeys. Future agents will clearly understand the distinction when reading the codebase.
 
 ### 📝 Documentation Enhancement (High Priority)
 
