@@ -112,29 +112,16 @@ Before proceeding, determine your role by asking the user:
 What is your primary goal today?
 
 **🔹 Single Agent Mode:**
-### Role A: SOLO DEVELOPER
 a) 🔍 SOLO DEVELOPER - Analyze, edit, and answer questions about the codebase
-### SOLO DEVELOPER Menu (Role A):
 
 **🔹 Multi-Agent Mode:**
-### Role B: PROJECT COORDINATOR
 b) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
-### PROJECT COORDINATOR Menu (Role B):
-### Role C: AGENT WORKER
 c) 🤖 AGENT WORKER - Ready to receive specific tasks from project coordinator
-### AGENT WORKER Menu (Role C):
 
 Please select your role (a/b/c):
 ```
 
 **Based on selection, follow the appropriate initialization path:**
-
-### Role B: PROJECT COORDINATOR
-
-- Focus on strategic planning and agent coordination
-- Initialize coordination system first
-- Emphasize planning tools and multi-agent strategies
-- Show strategic planning hotkeys prominently
 
 ### Role A: SOLO DEVELOPER
 
@@ -142,6 +129,13 @@ Please select your role (a/b/c):
 - Perform immediate comprehensive codebase analysis
 - Emphasize code exploration tools and editing capabilities
 - Show analysis and editing hotkeys prominently
+
+### Role B: PROJECT COORDINATOR
+
+- Focus on strategic planning and agent coordination
+- Initialize coordination system first
+- Emphasize planning tools and multi-agent strategies
+- Show strategic planning hotkeys prominently
 
 ### Role C: AGENT WORKER
 
