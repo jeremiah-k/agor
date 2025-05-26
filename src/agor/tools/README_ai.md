@@ -98,6 +98,11 @@ cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
 
 ## CRITICAL INITIALIZATION PROTOCOL
 
+## SINGLE-AGENT vs MULTI-AGENT MODES
+Use Role A (Solo Developer) if you are working alone or performing deep code analysis.
+Use Role B (Project Coordinator) if planning or managing a multi-agent dev workflow.
+Use Role C (Agent Worker) if you are executing tasks delegated from another agent.
+
 **STEP 1: ROLE SELECTION**
 Before proceeding, determine your role by asking the user:
 
@@ -107,11 +112,17 @@ Before proceeding, determine your role by asking the user:
 What is your primary goal today?
 
 **🔹 Single Agent Mode:**
+### Role A: SOLO DEVELOPER
 a) 🔍 SOLO DEVELOPER - Analyze, edit, and answer questions about the codebase
+### SOLO DEVELOPER Menu (Role A):
 
 **🔹 Multi-Agent Mode:**
+### Role B: PROJECT COORDINATOR
 b) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
+### PROJECT COORDINATOR Menu (Role B):
+### Role C: AGENT WORKER
 c) 🤖 AGENT WORKER - Ready to receive specific tasks from project coordinator
+### AGENT WORKER Menu (Role C):
 
 Please select your role (a/b/c):
 ```
