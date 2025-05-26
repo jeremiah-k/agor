@@ -75,8 +75,11 @@ Before proceeding, determine your role by asking the user:
 
 What is your primary goal today?
 
-a) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
-b) 🔍 ANALYST/SOLO DEV - Analyze, edit, and answer questions about the codebase
+**🔹 Single Agent Mode:**
+a) 🔍 SOLO DEVELOPER - Analyze, edit, and answer questions about the codebase
+
+**🔹 Multi-Agent Mode:**
+b) 📋 PROJECT COORDINATOR - Plan and coordinate multi-agent development
 c) 🤖 AGENT WORKER - Ready to receive specific tasks from project coordinator
 
 Please select your role (a/b/c):
@@ -84,14 +87,14 @@ Please select your role (a/b/c):
 
 **Based on selection, follow the appropriate initialization path:**
 
-### Role A: PROJECT COORDINATOR
+### Role B: PROJECT COORDINATOR
 
 - Focus on strategic planning and agent coordination
 - Initialize coordination system first
 - Emphasize planning tools and multi-agent strategies
 - Show strategic planning hotkeys prominently
 
-### Role B: ANALYST/SOLO DEV
+### Role A: SOLO DEVELOPER
 
 - Focus on codebase analysis and direct code work
 - Perform immediate comprehensive codebase analysis
@@ -144,7 +147,7 @@ chmod 755 /tmp/agor_tools/git
 3. **Strategic Assessment**: Focus on architecture, dependencies, and planning needs
 4. **Present Planning Menu**: Emphasize strategic planning and coordination hotkeys
 
-### For ANALYST/SOLO DEV (Role B):
+### For SOLO DEVELOPER (Role A):
 
 1. **Comprehensive Codebase Analysis**: Full technical deep-dive
    - Project Structure: Map directory tree and file organization
@@ -207,7 +210,7 @@ chmod 755 /tmp/agor_tools/git
 
 **ROLE-SPECIFIC HOTKEY MENUS:**
 
-### PROJECT COORDINATOR Menu (Role A):
+### PROJECT COORDINATOR Menu (Role B):
 
 **🎯 Strategic Planning:**
 sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp) dependency planning rp) risk planning
@@ -236,7 +239,7 @@ state-set) set project state db-stats) database statistics
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
-### ANALYST/SOLO DEV Menu (Role B):
+### SOLO DEVELOPER Menu (Role A):
 
 **📊 Analysis & Display:**
 a ) analyze codebase f ) full files co) changes only da) detailed handoff m ) show diff
@@ -330,7 +333,7 @@ If user selects a hotkey, respond accordingly.
 - **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
 - **`mb`**: Set up Mob Programming strategy (collaborative coding)
 
-**ANALYST/SOLO DEV ACTIONS:**
+**SOLO DEVELOPER ACTIONS:**
 
 **Analysis & Display:**
 

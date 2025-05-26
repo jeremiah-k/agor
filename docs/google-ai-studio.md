@@ -38,9 +38,9 @@ agor bundle /path/to/your/project -f zip
 1. **Upload your .zip bundle** using the file attachment button
 2. **Copy and paste the generated prompt** (AGOR creates this automatically)
 3. **Select your role** when prompted:
-   - **PROJECT COORDINATOR** - Strategic planning and team coordination
-   - **ANALYST/SOLO DEV** - Deep codebase analysis and implementation
-   - **AGENT WORKER** - Task execution and coordination handoffs
+   - **SOLO DEVELOPER** - Deep codebase analysis and implementation *(Single Agent)*
+   - **PROJECT COORDINATOR** - Strategic planning and team coordination *(Multi-Agent)*
+   - **AGENT WORKER** - Task execution and coordination handoffs *(Multi-Agent)*
 
 ## 🔧 Critical Configuration
 
@@ -82,7 +82,7 @@ When AGOR initializes, it will ask you to choose a role. Here's how to decide:
 - Multi-agent strategy selection
 - Workflow design capabilities
 
-### 🔍 ANALYST/SOLO DEV
+### 🔍 SOLO DEVELOPER
 
 **Choose this when:**
 

@@ -47,11 +47,14 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 AGOR offers three primary roles when agents load the protocol:
 
-- **PROJECT COORDINATOR** *(Multi-Agent)*: Strategic planning and team coordination
-- **ANALYST/SOLO DEV** *(Solo or Multi-Agent)*: Deep codebase analysis and implementation
-- **AGENT WORKER** *(Multi-Agent)*: Task execution and coordination handoffs
+**🔹 Single Agent Mode:**
+- **SOLO DEVELOPER**: Deep codebase analysis and implementation *(Perfect for bundled mode)*
 
-> **💡 Flexibility Note**: While PROJECT COORDINATOR and AGENT WORKER are designed for multi-agent workflows, ANALYST/SOLO DEV can operate both independently (great for bundled mode with Google AI Studio) and as part of larger multi-agent teams.
+**🔹 Multi-Agent Mode:**
+- **PROJECT COORDINATOR**: Strategic planning and team coordination
+- **AGENT WORKER**: Task execution and coordination handoffs
+
+> **💡 Flexibility Note**: SOLO DEVELOPER excels in bundled mode (Google AI Studio, ChatGPT) but can also be incorporated into multi-agent teams when specialized analysis is needed.
 
 **Multi-Agent Strategies**
 

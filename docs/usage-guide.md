@@ -68,6 +68,34 @@ agor bundle https://github.com/your-username/your-project
 
 ## 🎭 Role Selection Deep Dive
 
+### 🔍 SOLO DEVELOPER *(Single Agent)*
+
+**Primary Purpose:** Deep codebase analysis and implementation
+
+**Best For:**
+- Analyzing existing codebases
+- Implementing specific features
+- Debugging and troubleshooting
+- Solo development work
+- Technical deep-dives
+
+**Single Agent Focus:**
+- **Perfect for bundled mode** with platforms like Google AI Studio
+- **Independent operation** - no coordination overhead
+- **Can be incorporated** into multi-agent teams when specialized analysis is needed
+
+**Key Capabilities:**
+- Comprehensive codebase analysis (`a`)
+- Code exploration and investigation (`f`, `co`)
+- Implementation and development work
+- Technical documentation and explanation
+
+**Typical Workflow:**
+1. Perform comprehensive analysis (`a`)
+2. Explore specific code areas (`f`, `co`)
+3. Implement changes or provide detailed explanations
+4. Document findings and decisions
+
 ### 📋 PROJECT COORDINATOR *(Multi-Agent)*
 
 **Primary Purpose:** Strategic planning and team orchestration
@@ -89,33 +117,6 @@ agor bundle https://github.com/your-username/your-project
 2. Select optimal strategy (`ss`)
 3. Create specialized team (`ct`)
 4. Initialize strategy and coordinate agents
-
-### 🔍 ANALYST/SOLO DEV *(Solo or Multi-Agent)*
-
-**Primary Purpose:** Deep codebase analysis and implementation
-
-**Best For:**
-- Analyzing existing codebases
-- Implementing specific features
-- Debugging and troubleshooting
-- Solo development work
-- Technical deep-dives
-
-**Flexibility:**
-- **Solo Mode**: Perfect for bundled mode with platforms like Google AI Studio
-- **Multi-Agent Mode**: Can be incorporated into larger teams as a specialist
-
-**Key Capabilities:**
-- Comprehensive codebase analysis (`a`)
-- Code exploration and investigation (`f`, `co`)
-- Implementation and development work
-- Technical documentation and explanation
-
-**Typical Workflow:**
-1. Perform comprehensive analysis (`a`)
-2. Explore specific code areas (`f`, `co`)
-3. Implement changes or provide detailed explanations
-4. Document findings and decisions
 
 ### 🤖 AGENT WORKER *(Multi-Agent)*
 
@@ -145,7 +146,7 @@ agor bundle https://github.com/your-username/your-project
 
 **Recommended Setup:**
 - Use **Bundled Mode** with `.zip` format
-- Select **ANALYST/SOLO DEV** role for solo work
+- Select **SOLO DEVELOPER** role for solo work
 - Enable Function Calling in your project settings
 - Use `--sqlite` flag for enhanced memory features
 
@@ -153,7 +154,7 @@ agor bundle https://github.com/your-username/your-project
 ```bash
 agor bundle your-project -f zip --sqlite
 # Upload to Google AI Studio Pro
-# Select ANALYST/SOLO DEV role
+# Select SOLO DEVELOPER role
 # Work independently with copy-paste workflow
 ```
 
@@ -194,7 +195,7 @@ agor bundle your-project -f tar.gz
 
 **🔄 Parallel Divergent** - Multiple independent solutions
 - **Use for**: Feature design, architecture decisions, creative problem-solving
-- **Roles**: Multiple ANALYST/SOLO DEV agents working independently
+- **Roles**: Multiple SOLO DEVELOPER agents working independently
 - **Outcome**: Best ideas synthesized into final solution
 
 **⚡ Pipeline** - Sequential handoffs with specialization
@@ -222,7 +223,7 @@ agor bundle your-project -f tar.gz
 ### For Beginners
 
 1. **Start with Bundled Mode** using Google AI Studio Pro (free)
-2. **Choose ANALYST/SOLO DEV** role for simplicity
+2. **Choose SOLO DEVELOPER** role for simplicity
 3. **Use basic hotkeys**: `a` (analyze), `f` (full files), `status`
 4. **Practice with small projects** before attempting multi-agent workflows
 
@@ -251,7 +252,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 ### "Multi-agent coordination isn't working"
 
-**Solution:** 
+**Solution:**
 1. Check `.agor/` directory exists and has proper files
 2. Ensure all agents are using `sync` hotkey regularly
 3. Verify agents are communicating via `agentconvo.md`
