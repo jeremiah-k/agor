@@ -15,6 +15,8 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 ### 🎯 AGOR Architecture Understanding
 
+To effectively develop for or work with AGOR, it's crucial to understand the different layers of interaction and tooling. This section clarifies the distinctions between the AGOR Command Line Interface (CLI) for developers, the conversational hotkeys used for AI-user interaction, and the bundled tools and scripts executed by the AI agent itself.
+
 #### 📦 CLI vs Agent Tools - FUNDAMENTAL DISTINCTION
 
 **AGOR CLI Purpose**: Primarily for **bundling repositories** for AI assistant upload
@@ -44,9 +46,21 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - They are implemented as Python functions in `src/agor/tools/`
 - They are NOT CLI commands - they're protocol directives
 - They work within agent coordination workflows and `.agor/` files
-- They are documented in `README_ai.md` as workflow options
+- They are documented in `src/agor/tools/AGOR_INSTRUCTIONS.md` as workflow options
 
 **KEY RULE**: CLI commands with [CLI] prefix don't appear in agent hotkey menus. Agent hotkeys are not CLI commands.
+
+#### 🔧 Bundled Agent Tools & Scripts (AI Execution)
+
+Beyond CLI commands used by developers and conversational hotkeys used for AI-user interaction, a third critical category comprises the tools and scripts bundled *with* AGOR, primarily for the AI's use within its operational environment.
+
+*   **Purpose**: These tools provide essential functionalities to the AI, especially in isolated or restricted environments like "Bundle Mode." They allow the AI to perform complex tasks such as version control, data analysis, and executing pre-defined routines.
+*   **Key Examples**:
+    *   **Portable Git Binary**: Located at `/tmp/agor_tools/git` (in bundle mode), this allows the AI to execute real Git commands.
+    *   **Portable SQLite3 Binary**: May be located at `/tmp/agor_tools/sqlite3`, enabling database operations for memory systems if activated.
+    *   **Python Scripts**: A collection of scripts within `agor_tools/` (e.g., `git_setup.py`, `code_exploration.py`, various strategy and coordination modules). The AI executes these via `python /tmp/agor_tools/<script_name>.py` or by importing their functions.
+*   **Execution**: These tools and scripts are executed *by the AI agent* based on the detailed procedures and scenarios outlined in `src/agor/tools/AGOR_INSTRUCTIONS.md`. They are not intended for direct execution by the human user setting up or running AGOR.
+*   **Developer Impact**: When developing or extending AGOR, any new tools or scripts designed for the AI's autonomous use must be correctly included in the bundling process and documented appropriately in the AI's instructional materials.
 
 #### 📋 Agent Coordination Documents
 
@@ -297,6 +311,11 @@ All planned AGOR strategy modules have been implemented and are fully functional
 - `.agor/handoff/restore_role_boot.md` - Documentation of changes
 
 **Testing**: Role selection menu should now display properly when bundles are uploaded to AI platforms.
+
+**CRITICAL DISCOVERY (2025-01-27)**: The **STARTUP RESPONSES** section was overriding role selection! AI was reading "Bundle Mode: 'AgentOrchestrator (AGOR) initialized!'" and immediately using that response instead of displaying the role menu. Fixed by:
+- Adding warning to startup responses: "DO NOT USE UNTIL ROLE SELECTION COMPLETE"
+- Adding strong "FIRST ACTION REQUIRED" instruction at top of initialization protocol
+- Making startup responses conditional on role selection completion
 
 ### 📝 Documentation Enhancement (High Priority)
 
