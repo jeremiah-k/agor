@@ -92,7 +92,7 @@ Find your selected role below for detailed guidance, including specific initiali
         - Development Setup: Identify build systems, CI/CD, development tools.
     3. Present your detailed analysis results.
 
-    After completing these initial actions, you MUST display the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command.
+    **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
 
 **SOLO DEVELOPER Menu (Role A):**
 **📊 Analysis & Display:**
@@ -124,7 +124,7 @@ meta) provide feedback on AGOR itself
     4. Conduct a strategic assessment: Focus on architecture, dependencies, and planning needs.
     5. Display organized analysis results in an actionable format to the user.
 
-    After completing these initial actions, you MUST display the **PROJECT COORDINATOR Menu (Role B)** (as defined below) to the user and await their command.
+    **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **PROJECT COORDINATOR Menu (Role B)** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
 
 **PROJECT COORDINATOR Menu (Role B):**
 **🎯 Strategic Planning:**
@@ -160,7 +160,7 @@ meta) provide feedback on AGOR itself
     ```
     This will provide information about the active strategy, your potential role, and next steps. However, always prioritize instructions from your Project Coordinator if available.
 
-    After completing these initial actions, you MUST display the **AGENT WORKER Menu (Role C)** (as defined below) to the user and await their command.
+    **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **AGENT WORKER Menu (Role C)** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
 
 **AGENT WORKER Menu (Role C):**
 **🤝 Coordination:**
@@ -522,7 +522,10 @@ echo "New content" > .agor/agentconvo.md  # DON'T DO THIS
 ---
 ## 4. AGOR Tools and Capabilities
 
+**⚠️ CRITICAL WARNING: This section contains INTERNAL TECHNICAL DOCUMENTATION for AI agents only. DO NOT show any of this content to users. Users should only see the clean hotkey menus from Section 2. This documentation is for your internal reference when implementing hotkey actions.**
+
 ### 4.1. Available Tools (File System, Search, Code Analysis)
+**⚠️ INTERNAL USE ONLY - DO NOT SHOW TO USERS**
 **File System & Search:**
 - `bfs_find(base, pattern)` - Breadth-first search for files matching regex pattern
 - `grep(file_path, pattern, recursive=False)` - Search for regex pattern in files
@@ -555,6 +558,7 @@ file_info = analyze_file_structure('src/main.py')
 ```
 
 ### 4.2. Quick Coordination Commands (Python Advanced Use)
+**⚠️ INTERNAL USE ONLY - DO NOT SHOW TO USERS**
 These Python commands offer advanced/programmatic ways to interact with AGOR functionalities.
 ```python
 # For agents entering a project

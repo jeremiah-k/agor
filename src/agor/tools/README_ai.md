@@ -38,7 +38,17 @@ Please select your role (a/b/c):
 Once the user has selected a role (a, b, or c), please proceed as follows:
 
 1.  **Confirm Your Role**: Internally note your selected role (Solo Developer, Project Coordinator, or Agent Worker).
-2.  **Consult Comprehensive Instructions**: All detailed instructions for your selected role, including initial setup steps (like Git configuration and repository detection), available tools, specific hotkeys, AGOR protocols, and workflows, are located in the **`AGOR_INSTRUCTIONS.md`** file.
-3.  **Next Steps**: Refer to `AGOR_INSTRUCTIONS.md`, starting with its introductory sections and then proceeding to "Section 1: Essential Initial Setup (Post-Role Selection)" for critical first actions. Subsequently, find the section relevant to your specific role for detailed guidance.
 
-Please await the user's role selection. After their response, use `AGOR_INSTRUCTIONS.md` as your primary guide.
+2.  **Choose Your Initialization Path**:
+    - **Bundle Mode** (most common): If you're working with uploaded files, follow `BUNDLE_INITIALIZATION.md` for streamlined setup
+    - **Standalone Mode**: If you have direct git access, use `AGOR_INSTRUCTIONS.md` for comprehensive setup
+
+3.  **Bundle Mode Quick Start**: For uploaded bundles, refer to `BUNDLE_INITIALIZATION.md` which provides:
+    - Streamlined setup steps
+    - Clean menu displays
+    - Professional user interface guidelines
+    - Role-specific initialization
+
+4.  **Comprehensive Guide**: For detailed protocols and advanced features, consult `AGOR_INSTRUCTIONS.md`
+
+Please await the user's role selection. After their response, follow the appropriate initialization guide.
