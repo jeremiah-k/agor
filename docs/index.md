@@ -2,6 +2,8 @@
 
 **Purpose**: This index is designed for AI models to efficiently locate specific information without token-expensive exploration. Each entry includes the exact file path, key concepts, and specific use cases.
 
+**For AI Models**: This index is designed to minimize token usage while maximizing information retrieval efficiency. Use the "Quick Reference by Need" section to jump directly to relevant documentation without exploration overhead.
+
 ## 🎯 Quick Reference by Need
 
 ### "I need to get started with AGOR"
@@ -11,6 +13,13 @@
 - **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
 - **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
+
+### "I need to check protocol updates or compatibility"
+
+- **[docs/protocol-changelog.md](protocol-changelog.md)** - Protocol version history and compatibility guide
+  - Current: Protocol v0.4.0 with snapshot system and standalone mode
+  - Breaking changes, new capabilities, and migration notes
+  - Reference commits and specific line numbers for changes
 
 ### "I need to understand roles and initialization"
 
@@ -40,9 +49,9 @@
 - **[docs/coordination-example.md](coordination-example.md)** - Complete implementation example
   - Shows: Before/after coordination, concrete usage, file structure
 
-### "I need to hand off work to another agent"
+### "I need to create or use a work snapshot"
 
-- **[docs/handoffs.md](handoffs.md)** - Comprehensive handoff system (for multi-agent and solo context management)
+- **[docs/snapshots.md](snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
 - **[src/agor/tools/handoff_templates.py](../src/agor/tools/handoff_templates.py)** - Handoff generation code
   - Functions: generate_handoff_document(), get_git_context(), get_agor_version()
   - Captures: problem, progress, commits, files, next steps, git state, AGOR version
@@ -87,10 +96,10 @@
 | **[quick-start.md](quick-start.md)**                       | 5-minute setup guide       | Installation, bundling, platform setup      | ~200  |
 | **[bundle-mode.md](bundle-mode.md)**                       | Complete Bundle Mode guide | All platforms, models, troubleshooting      | ~300  |
 | **[google-ai-studio.md](google-ai-studio.md)**             | Google AI Studio guide     | Function Calling setup, troubleshooting     | ~300  |
+| **[standalone-mode.md](standalone-mode.md)** | Standalone Mode Guide | Setup, usage, advantages of direct git access | ~250  |
 | **[strategies.md](strategies.md)**                         | Multi-agent coordination   | 5 strategies with examples, decision matrix | ~400  |
-| **[handoffs.md](handoffs.md)**                             | Agent transitions & solo context management    | Handoff creation, receiving, solo use benefits | ~500  |
+| **[snapshots.md](snapshots.md)**                           | Agent state snapshots & context management    | Snapshot creation, receiving, solo use benefits | ~550+ |
 | **[coordination-example.md](coordination-example.md)**     | Strategy implementation    | Complete example, before/after comparison   | ~300  |
-| **[coordination-audit.md](coordination-audit.md)**         | Implementation audit       | Hotkey analysis, gaps, harmonization        | ~400  |
 | **[agor-development-guide.md](agor-development-guide.md)** | Development checklist      | For agents working on AGOR itself           | ~400  |
 
 ### AI Instructions (src/agor/tools/)
@@ -126,7 +135,7 @@
 ### Role-Based Workflows
 
 - **PROJECT COORDINATOR**: Strategic planning, team coordination, strategy selection
-- **ANALYST/SOLO DEV**: Codebase analysis, implementation, technical deep-dives
+- **SOLO DEVELOPER**: Codebase analysis, implementation, technical deep-dives
 - **AGENT WORKER**: Task execution, handoffs, coordination communication
 
 ### Platform-Specific Information
@@ -134,14 +143,14 @@
 - **Bundle Mode**: [docs/bundle-mode.md](bundle-mode.md) - All platforms, models, formats
 - **Google AI Studio**: Gemini 2.5 Pro, Function Calling, .zip format
 - **ChatGPT**: GPT-4o, subscription required, .tar.gz format
-- **Agent Mode**: [src/agor/tools/AGOR_INSTRUCTIONS.md](../src/agor/tools/AGOR_INSTRUCTIONS.md) - Direct git access
+- **Standalone Mode**: [docs/standalone-mode.md](standalone-mode.md) - Direct git access workflows
 
 ### Coordination Protocols
 
 - **Communication**: .agor/agentconvo.md format and usage
 - **Memory**: .agor/memory.md and agent-specific files
 - **SQLite Memory**: .agor/memory.db database-based storage (experimental)
-- **Handoffs**: Complete transition procedures with git state (also for solo context snapshots)
+- **Snapshots**: Capturing work state with git context (also for solo context preservation)
 - **Strategies**: 5 multi-agent patterns with implementation details
 - **Strategy Implementation**: Concrete execution protocols (strategy_protocols.py)
 - **Agent Discovery**: Role assignment and next actions (agent_coordination.py)
@@ -154,7 +163,7 @@
 ```
 Need hotkey? → README_ai.md Lines 120-220
 Need strategy? → strategies.md decision matrix
-Need handoff? → handoffs.md or handoff_templates.py
+Need snapshot? → snapshots.md or snapshot_templates.py
 ```
 
 ### For Implementation Details
@@ -172,7 +181,7 @@ Agent coordination? → agent_coordination.py + README_ai.md Lines 318-322
 ```
 First time? → quick-start.md
 Bundle Mode? → bundle-mode.md
-Agent Mode? → AGOR_INSTRUCTIONS.md
+Standalone Mode? → docs/standalone-mode.md
 Platform-specific? → bundle-mode.md platform sections
 ```
 
@@ -185,16 +194,16 @@ Platform-specific? → bundle-mode.md platform sections
 - Bundle Mode guide (all platforms)
 - Google AI Studio guide
 - Multi-agent strategies
-- Handoff system
+- Snapshot system
 - Code exploration tools
 - AGOR development guide
+- Standalone mode guide (standalone-mode.md)
 
 ### 📝 Referenced but Not Yet Created
 
 - First coordination walkthrough (first-coordination.md)
 - Role deep-dive (roles.md)
 - Coordination protocol (coordination.md)
-- Agent mode guide (agent-mode.md)
 - Feedback system guide (feedback.md)
 - Troubleshooting guide (troubleshooting.md)
 - Contributing guide (contributing.md)
@@ -203,5 +212,3 @@ Platform-specific? → bundle-mode.md platform sections
 - API reference (api.md)
 
 ---
-
-**For AI Models**: This index is designed to minimize token usage while maximizing information retrieval efficiency. Use the "Quick Reference by Need" section to jump directly to relevant documentation without exploration overhead.

@@ -543,13 +543,13 @@ def custom_instructions(
         - Analyzing codebases and planning implementation strategies
         - Designing multi-agent team structures for complex development projects
         - Creating specialized prompts for different types of coding agents
-        - Coordinating workflows and handoff procedures between agents
+        - Coordinating workflows and snapshot procedures between agents
         - Planning quality assurance and validation processes
 
         When displaying results, choose the appropriate format:
         - Full files: Complete files with all formatting preserved for copy/paste
         - Changes only: Show just the modified sections with context
-        - Detailed analysis: Comprehensive explanation in a single codeblock for handoff
+        - Detailed analysis: Comprehensive explanation in a single codeblock for snapshot (replaces detailed handoff)
         - Agent prompts: Specialized prompts for coordinating multiple AI agents
         - Project plans: Strategic breakdowns and coordination workflows
 
@@ -807,7 +807,7 @@ def generate_agor_feedback(
 ### Workflow Issues:
 - [ ] Agent coordination confusion
 - [ ] Strategy selection difficulty
-- [ ] Handoff process unclear
+- [ ] Snapshot process unclear
 - [ ] Status tracking problems
 - [ ] Communication breakdowns
 
@@ -851,7 +851,7 @@ def generate_agor_feedback(
 - [ ] Auto-completion
 
 ### Agent Coordination:
-- [ ] Clearer handoff process
+- [ ] Clearer snapshot process
 - [ ] Better status visibility
 - [ ] Improved communication templates
 - [ ] Enhanced strategy protocols

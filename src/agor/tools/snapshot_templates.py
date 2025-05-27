@@ -1,0 +1,545 @@
+"""
+Snapshot templates and procedures for seamless agent transitions and context saving.
+
+Enables agents to create snapshots of their work for other agents or for themselves,
+with complete context, including problem definition, progress made, commits, and next steps.
+"""
+
+import datetime
+import subprocess
+from pathlib import Path
+from typing import Dict, List
+
+
+def get_git_context() -> Dict[str, str]:
+    """Get current git context including branch, status, and recent commits."""
+    try:
+        # Get current branch
+        branch = subprocess.check_output(
+            ["git", "branch", "--show-current"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+
+        # Get git status
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+
+        # Get recent commits
+        recent_commits = subprocess.check_output(
+            ["git", "log", "--oneline", "-10"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+
+        # Get current commit hash
+        current_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+
+        # Get uncommitted changes
+        uncommitted = subprocess.check_output(
+            ["git", "diff", "--name-only"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+
+        # Get staged changes
+        staged = subprocess.check_output(
+            ["git", "diff", "--cached", "--name-only"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+
+        return {
+            "branch": branch,
+            "current_commit": current_commit,
+            "status": status,
+            "recent_commits": recent_commits,
+            "uncommitted_changes": uncommitted.split("\n") if uncommitted else [],
+            "staged_changes": staged.split("\n") if staged else [],
+        }
+    except subprocess.CalledProcessError:
+        return {
+            "branch": "unknown",
+            "current_commit": "unknown",
+            "status": "git not available",
+            "recent_commits": "git not available",
+            "uncommitted_changes": [],
+            "staged_changes": [],
+        }
+
+
+def get_agor_version() -> str:
+    """Get AGOR version from package or git tag."""
+    try:
+        # Try to get version from package
+        import pkg_resources
+
+        return pkg_resources.get_distribution("agor").version
+    except Exception:
+        try:
+            # Try to get version from git tag
+            version = subprocess.check_output(
+                ["git", "describe", "--tags", "--abbrev=0"],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+            return version
+        except subprocess.CalledProcessError:
+            return "development"
+
+
+def generate_snapshot_document(
+    problem_description: str,
+    work_completed: List[str],
+    commits_made: List[str],
+    current_status: str,
+    next_steps: List[str],
+    files_modified: List[str],
+    context_notes: str,
+    agent_role: str,
+    snapshot_reason: str, # Renamed parameter
+    estimated_completion: str = "Unknown",
+) -> str:
+    """Generate a comprehensive snapshot document for agent transitions or context saving."""
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    git_context = get_git_context()
+    agor_version = get_agor_version()
+
+    return f"""# 📸 Agent Snapshot Document
+
+**Generated**: {timestamp}
+**From Agent Role**: {agent_role}
+**Snapshot Reason**: {snapshot_reason}
+**AGOR Version**: {agor_version}
+
+## 🔧 Environment Context
+
+**Git Branch**: `{git_context['branch']}`
+**Current Commit**: `{git_context['current_commit'][:8]}...`
+**Repository Status**: {'Clean' if not git_context['status'] else 'Has uncommitted changes'}
+
+## 🎯 Problem Definition
+
+{problem_description}
+
+## 📊 Current Status
+
+**Overall Progress**: {current_status}
+**Estimated Completion**: {estimated_completion}
+
+## ✅ Work Completed
+
+{chr(10).join(f"- {item}" for item in work_completed)}
+
+## 📝 Commits Made
+
+{chr(10).join(f"- `{commit}`" for commit in commits_made)}
+
+## 📁 Files Modified
+
+{chr(10).join(f"- `{file}`" for file in files_modified)}
+
+## 🔄 Next Steps
+
+{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
+
+## 🧠 Context & Important Notes
+
+{context_notes}
+
+## 🔧 Technical Context
+
+### Git Repository State
+**Branch**: `{git_context['branch']}`
+**Current Commit**: `{git_context['current_commit']}`
+**Full Commit Hash**: `{git_context['current_commit']}`
+
+### Repository Status
+```
+{git_context['status'] if git_context['status'] else 'Working directory clean'}
+```
+
+### Uncommitted Changes
+{chr(10).join(f"- `{file}`" for file in git_context['uncommitted_changes']) if git_context['uncommitted_changes'] else '- None'}
+
+### Staged Changes
+{chr(10).join(f"- `{file}`" for file in git_context['staged_changes']) if git_context['staged_changes'] else '- None'}
+
+### Recent Commit History
+```
+{git_context['recent_commits']}
+```
+
+### Key Files to Review
+{chr(10).join(f"- `{file}` - Review recent changes and understand current state" for file in files_modified[:5])}
+
+## 🎯 Snapshot Instructions for Receiving Agent (If Applicable)
+
+### 1. Environment Verification
+```bash
+# Verify you're on the correct branch
+git checkout {git_context['branch']}
+
+# Verify you're at the correct commit
+git log --oneline -1
+# Should show: {git_context['current_commit'][:8]}...
+
+# Check AGOR version compatibility
+# This snapshot was created with AGOR {agor_version}
+# If using different version, consider checking out tag: git checkout {agor_version}
+```
+
+### 2. Context Loading
+```bash
+# Review the current state
+git status
+git log --oneline -10
+
+# Examine modified files
+{chr(10).join(f"# Review {file}" for file in files_modified[:3])}
+```
+
+### 3. Verify Understanding
+- [ ] Read and understand the problem definition
+- [ ] Review all completed work items
+- [ ] Examine commits and understand changes made
+- [ ] Verify current status matches expectations
+- [ ] Understand the next steps planned
+- [ ] Verify AGOR version compatibility
+- [ ] Confirm you're on the correct git branch and commit
+
+### 4. Continue Work
+- [ ] Start with the first item in "Next Steps"
+- [ ] Update this snapshot document with your progress
+- [ ] Commit regularly with clear messages
+- [ ] Update `.agor/agentconvo.md` with your status
+
+### 5. Communication Protocol
+- Update `.agor/agentconvo.md` with snapshot received confirmation (if applicable)
+- Log major decisions and progress updates
+- Create new snapshot document if passing to another agent or for archival
+
+---
+
+**Receiving Agent**: Please confirm snapshot receipt (if applicable) by updating `.agor/agentconvo.md` with:
+```
+[AGENT-ID] [{timestamp}] - SNAPSHOT RECEIVED: {problem_description[:50]}...
+```
+"""
+
+
+def generate_snapshot_prompt(snapshot_file_path: str) -> str:
+    """Generate a prompt for creating a snapshot of work, potentially for another agent."""
+
+    return f"""# 📸 Work Snapshot Created
+
+I've created a snapshot of my current work. Here's the complete context:
+
+## Snapshot Document
+Please read the complete snapshot document at: `{snapshot_file_path}`
+
+## Instructions for Receiving Agent (If Applicable)
+
+### 1. Load Context
+```bash
+# Read the snapshot document
+cat {snapshot_file_path}
+
+# Review current repository state
+git status
+git log --oneline -10
+```
+
+### 2. Confirm Understanding
+After reading the snapshot document, please confirm you understand:
+- The problem being solved
+- Work completed so far
+- Current status and next steps
+- Files that have been modified
+- Technical context and important notes
+
+### 3. Continue the Work
+- Start with the first item in the "Next Steps" section
+- Update the snapshot document with your progress (if continuing this line of work)
+- Follow the communication protocol outlined in the document
+
+### 4. Update Communication Log (If Applicable)
+Add to `.agor/agentconvo.md`:
+```
+[YOUR-AGENT-ID] [{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] - SNAPSHOT RECEIVED: [Brief description of task]
+```
+
+## Ready to Begin?
+Type `receive` to confirm you've read the snapshot document and are ready to continue the work if this is a direct transfer of work. Otherwise, this snapshot is for archival or context preservation.
+"""
+
+
+def generate_receive_snapshot_prompt() -> str:
+    """Generate a prompt for receiving a work snapshot from another agent."""
+
+    return """# 📸 Receiving Work Snapshot
+
+I'm ready to receive a work snapshot from another agent. Please provide:
+
+## Required Information
+
+### 1. Snapshot Document Location
+- Path to the snapshot document (usually in `.agor/snapshots/`)
+- Or paste the complete snapshot document content
+
+### 2. Current Repository State
+```bash
+# Let me check the current state
+git status
+git log --oneline -5
+```
+
+### 3. Verification Steps
+I will:
+- [ ] Read and understand the complete snapshot document
+- [ ] Review the problem definition and context
+- [ ] Examine all completed work and commits
+- [ ] Understand the current status and next steps
+- [ ] Verify the technical context
+
+### 4. Confirmation Process
+Once I understand the snapshot, I will:
+- [ ] Confirm receipt in `.agor/agentconvo.md` (if applicable)
+- [ ] Begin work on the next steps
+- [ ] Update progress regularly
+- [ ] Maintain communication protocols
+
+## Ready to Receive
+Please provide the snapshot document or its location, and I'll take over the work seamlessly.
+"""
+
+
+def create_snapshot_directory() -> Path:
+    """Create snapshot directory structure in .agor/"""
+
+    snapshot_dir = Path(".agor/snapshots")
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create index file if it doesn't exist
+    index_file = snapshot_dir / "index.md"
+    if not index_file.exists():
+        index_content = """# 📸 Snapshot Index
+
+This directory contains snapshot documents for agent transitions and context saving.
+
+## Active Snapshots
+- None currently
+
+## Completed/Archived Snapshots
+- None yet
+
+## Snapshot Naming Convention
+- `YYYY-MM-DD_HHMMSS_problem-summary_snapshot.md`
+- Example: `2024-01-15_143022_fix-authentication-bug_snapshot.md`
+
+## Usage
+- Use `handoff` hotkey to create new snapshot
+- Use `receive` hotkey to accept snapshot (if applicable)
+- Update this index when snapshots are created or archived
+"""
+        index_file.write_text(index_content)
+
+    return snapshot_dir
+
+
+def save_snapshot_document(snapshot_content: str, problem_summary: str) -> Path:
+    """Save snapshot document to .agor/snapshots/ directory."""
+
+    snapshot_dir = create_snapshot_directory()
+
+    # Generate filename with timestamp and problem summary
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    safe_summary = "".join(c for c in problem_summary if c.isalnum() or c in "-_")[:30]
+    filename = f"{timestamp}_{safe_summary}_snapshot.md"
+
+    snapshot_file = snapshot_dir / filename
+    snapshot_file.write_text(snapshot_content)
+
+    # Update index
+    update_snapshot_index(filename, problem_summary, "active")
+
+    return snapshot_file
+
+
+def update_snapshot_index(filename: str, problem_summary: str, status: str):
+    """Update the snapshot index with new or completed/archived snapshots."""
+
+    index_file = Path(".agor/snapshots/index.md")
+    if not index_file.exists():
+        create_snapshot_directory()  # Ensures directory and index exist
+
+    content = index_file.read_text()
+
+    if status == "active":
+        # Add to active snapshots
+        content = content.replace(
+            "## Active Snapshots\n- None currently",
+            f"## Active Snapshots\n- `{filename}` - {problem_summary}",
+        )
+        if "- None currently" not in content and f"`{filename}`" not in content:
+            content = content.replace(
+                "## Active Snapshots\n",
+                f"## Active Snapshots\n- `{filename}` - {problem_summary}\n",
+            )
+    elif status == "completed" or status == "archived": # Added 'archived'
+        # Move from active to completed/archived
+        content = content.replace(f"- `{filename}` - {problem_summary}", "") # Remove from active if present
+        content = content.replace(
+            "## Completed/Archived Snapshots\n- None yet",
+            f"## Completed/Archived Snapshots\n- `{filename}` - {problem_summary}",
+        )
+        if "- None yet" not in content and f"`{filename}`" not in content:
+            content = content.replace(
+                "## Completed/Archived Snapshots\n",
+                f"## Completed/Archived Snapshots\n- `{filename}` - {problem_summary}\n",
+            )
+
+    index_file.write_text(content)
+
+
+def generate_completion_report(
+    original_task: str,
+    work_completed: List[str],
+    commits_made: List[str],
+    final_status: str,
+    files_modified: List[str],
+    results_summary: str,
+    agent_role: str,
+    coordinator_id: str,
+    issues_encountered: str = "None",
+    recommendations: str = "None",
+) -> str:
+    """Generate a completion report document (can be a form of snapshot) to return to coordinator."""
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    git_context = get_git_context()
+    agor_version = get_agor_version()
+
+    return f"""# 🏁 Task Completion Report
+
+**Generated**: {timestamp}
+**From Agent Role**: {agent_role}
+**To Coordinator**: {coordinator_id}
+**AGOR Version**: {agor_version}
+**Task Status**: {final_status}
+
+## 🎯 Original Task
+
+{original_task}
+
+## ✅ Work Completed
+
+{chr(10).join(f"- {item}" for item in work_completed)}
+
+## 📝 Commits Made
+
+{chr(10).join(f"- `{commit}`" for commit in commits_made)}
+
+## 📊 Results Summary
+
+{results_summary}
+
+## 📁 Files Modified
+
+{chr(10).join(f"- `{file}`" for file in files_modified)}
+
+## 🔧 Technical Context
+
+### Git Repository State
+**Branch**: `{git_context['branch']}`
+**Current Commit**: `{git_context['current_commit']}`
+**Repository Status**: {'Clean' if not git_context['status'] else 'Has uncommitted changes'}
+
+### Recent Commit History
+```
+{git_context['recent_commits']}
+```
+
+## ⚠️ Issues Encountered
+
+{issues_encountered}
+
+## 💡 Recommendations
+
+{recommendations}
+
+## 🔄 Next Steps for Coordinator
+
+1. **Review Results**: Examine all completed work and commits
+2. **Verify Quality**: Test functionality and review code changes
+3. **Integration**: Merge changes if satisfactory
+4. **Documentation**: Update project documentation if needed
+5. **Assignment**: Assign next tasks or close this work stream
+
+## 📝 Coordinator Instructions
+
+### 1. Verification Steps
+```bash
+# Verify you're on the correct branch
+git checkout {git_context['branch']}
+
+# Review recent commits
+git log --oneline -10
+
+# Check current status
+git status
+
+# Review modified files
+{chr(10).join(f"# Examine {file}" for file in files_modified[:3])}
+```
+
+### 2. Quality Assurance
+- [ ] Review all commits for quality and completeness
+- [ ] Test functionality if applicable
+- [ ] Verify task requirements were met
+- [ ] Check for any technical debt or issues
+- [ ] Confirm documentation is updated
+
+### 3. Communication Protocol
+Update `.agor/agentconvo.md` with completion acknowledgment:
+```
+[COORDINATOR-ID] [{timestamp}] - TASK COMPLETED: {original_task[:50]}... - Status: {final_status}
+```
+
+### 4. Project Coordination
+- [ ] Mark task as complete in project tracking
+- [ ] Update team on completion status
+- [ ] Assign follow-up tasks if needed
+- [ ] Archive this snapshot document
+
+---
+
+**Task Complete**: This completion report is ready for coordinator review and integration.
+"""
+
+
+def save_completion_report(report_content: str, task_summary: str, coordinator_id: str) -> Path:
+    """Save completion report document (a type of snapshot) for coordinator review."""
+
+    snapshot_dir = create_snapshot_directory() # Use new directory function
+
+    # Generate filename with timestamp and task summary
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    safe_summary = "".join(c for c in task_summary if c.isalnum() or c in "-_")[:30]
+    filename = f"{timestamp}_COMPLETED_{safe_summary}_snapshot.md" # Added _snapshot
+
+    report_file = snapshot_dir / filename
+    report_file.write_text(report_content)
+
+    # Update index
+    update_snapshot_index(filename, f"COMPLETED: {task_summary}", "completed")
+
+    return report_file
+
+
+# Hotkey integration templates
+SNAPSHOT_HOTKEY_HELP = """
+🤝 **Snapshot Commands (using existing hotkeys):**
+handoff) create work snapshot for context or another agent
+receive) receive work snapshot from another agent
+complete) create completion report/snapshot for coordinator
+handoffs) list all snapshot documents
+"""

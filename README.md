@@ -29,8 +29,6 @@ agor bundle /path/to/local/project
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
-AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its handoff capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
-
 ### Agent Mode (Direct Git Access)
 
 **For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
@@ -42,58 +40,22 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ```
+
+AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
+
 ## 📚 Documentation
 
 **[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
 **[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
 **[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
 **[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Comprehensive AI Operational Guide
-**[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Initial AI Bootstrap (Role Selection)
+**[README_ai.md](src/agor/tools/README_ai.md)** - Initial AI Bootstrap (Role Selection)
 **[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself (includes Core Context section)
 **[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 
-## 🎯 Core Capabilities
-
-**Role-Based Initialization**
-
-AGOR offers three primary roles when agents load the protocol:
-
-**🔹 Single Agent Workflow:**
-- **SOLO DEVELOPER**: Deep codebase analysis and implementation
-
-**🔹 Multi-Agent Workflow:**
-- **PROJECT COORDINATOR**: Strategic planning and team coordination
-- **AGENT WORKER**: Task execution and coordination handoffs
-
-## 🔄 Role × Mode Compatibility
-
-| Role | Standalone Mode | Bundled Mode | Best Use Cases |
-|------|----------------|--------------|----------------|
-| **SOLO DEVELOPER** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Solo development, code analysis, feature implementation |
-| **PROJECT COORDINATOR** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Multi-agent planning, strategy design, team coordination |
-| **AGENT WORKER** | ✅ Direct commits or copy-paste | ✅ Copy-paste codeblocks | Task execution, following coordinator instructions |
-
-> **💡 Key Point**: All roles work in both modes. The difference is **how changes are applied** - direct commits (if access available) vs. copy-paste codeblocks.
-
-**Multi-Agent Strategies**
-
-- **Parallel Divergent**: Independent exploration → peer review → synthesis
-- **Pipeline**: Sequential handoffs with specialization
-- **Swarm**: Dynamic task assignment for maximum parallelism
-- **Red Team**: Adversarial build/break cycles for robustness
-- **Mob Programming**: Collaborative coding with rotating roles
-
-**Development Tools**
-
-- **Git integration** with portable binary (works in any environment)
-- **Codebase analysis** with language-specific exploration
-- **Memory persistence** with markdown files or SQLite database (experimental)
-- **Quality gates** and validation checkpoints
-- **Cross-agent coordination** with structured handoff protocols
-
 ## 🔄 Operational Modes
 
-**Fork of AgentGrunt** - AGOR is a fork of AgentGrunt that retains all of its capabilities, replacing patch downloads with full file output in codeblocks (preserving comments, formatting, etc.).
+AGOR enhances the original AgentGrunt capabilities by offering two primary operational modes with improved multi-agent coordination and flexible deployment options:
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
@@ -114,14 +76,77 @@ AGOR offers three primary roles when agents load the protocol:
 - **Platform flexibility**: Works with any AI platform that accepts file uploads
 - **Free tier compatible**: Excellent for Google AI Studio Pro (free)
 
+> **💡 Key Point**: All AGOR roles (Solo Developer, Project Coordinator, Agent Worker) function effectively in both Standalone and Bundled modes. The primary difference lies in how code changes are applied: direct Git commits are possible in Standalone Mode (if the agent has access), while Bundled Mode typically relies on a copy-paste workflow where the user handles the final commit.
+
+## 🎯 Core Capabilities & Features
+
+### Role-Based Workflows
+
+AGOR defines distinct roles to structure AI-driven development tasks. Each role is equipped with a specialized set of tools and designed for specific types of activities:
+
+**🔹 SOLO DEVELOPER**: Focuses on deep codebase analysis, implementation, and answering technical questions. Ideal for solo development tasks, feature implementation, and detailed debugging.
+
+**🔹 PROJECT COORDINATOR**: Handles strategic planning, designs multi-agent workflows, and orchestrates team activities. Best suited for multi-agent project planning, strategy design, and overall team coordination.
+
+**🔹 AGENT WORKER**: Executes specific tasks assigned by a Project Coordinator and participates in coordinated work snapshots. Primarily used for task execution within a team and following established multi-agent workflows.
+
+### Multi-Agent Strategies
+
+- **Parallel Divergent**: Independent exploration → peer review → synthesis
+- **Pipeline**: Sequential snapshots with specialization
+- **Swarm**: Dynamic task assignment for maximum parallelism
+- **Red Team**: Adversarial build/break cycles for robustness
+- **Mob Programming**: Collaborative coding with rotating roles
+
+### Key Development Tools
+
+- **Git integration** with portable binary (works in any environment)
+- **Codebase analysis** with language-specific exploration
+- **Memory persistence** with markdown files or SQLite database (experimental)
+- **Quality gates** and validation checkpoints
+- **Structured Snapshot Protocols** (for multi-agent coordination and solo context management)
+
 ## 📊 Hotkey Interface
 
-**Strategic Planning**: `sp` strategic plan | `bp` break down project | `ar` architecture review
-**Strategy Selection**: `ss` strategy selection | `pd` parallel divergent | `pl` pipeline | `sw` swarm
-**Team Management**: `ct` create team | `tm` team manifest | `hp` handoff prompts
-**Analysis**: `a` analyze codebase | `f` full files | `co` changes only | `da` detailed handoff
-**Memory**: `mem-add` add memory | `mem-search` search memories | `db-stats` database stats (SQLite mode)
-**Coordination**: `init` initialize | `status` check state | `sync` update | `meta` provide feedback
+AGOR utilizes a conversational hotkey system for AI-user interaction. The AI will typically present these options in a menu. This list includes common hotkeys; for comprehensive lists, refer to the role-specific menus in `AGOR_INSTRUCTIONS.md`.
+
+**Strategic Planning**:
+- `sp`: strategic plan
+- `bp`: break down project
+- `ar`: architecture review
+
+**Strategy Selection**:
+- `ss`: strategy selection
+- `pd`: parallel divergent
+- `pl`: pipeline
+- `sw`: swarm
+
+**Team Management**:
+- `ct`: create team
+- `tm`: team manifest
+- `hp`: snapshot prompts
+
+**Analysis**:
+- `a`: analyze codebase
+- `f`: full files
+- `co`: changes only
+- `da`: detailed snapshot
+
+**Memory**:
+- `mem-add`: add memory
+- `mem-search`: search memories
+- `db-stats`: database stats (SQLite mode)
+
+**Editing & Version Control**:
+- `edit`: modify files
+- `commit`: save changes
+- `diff`: show changes
+
+**Coordination**:
+- `init`: initialize
+- `status`: check state
+- `sync`: update
+- `meta`: provide feedback
 
 ## 🏢 Platform Support
 
@@ -146,7 +171,7 @@ AGOR offers three primary roles when agents load the protocol:
 ## 🏗️ Use Cases
 
 **Large-Scale Refactoring** - Coordinate specialized agents for database, API, frontend, and testing
-**Feature Development** - Break down complex features with clear handoff points
+**Feature Development** - Break down complex features with clear snapshot points
 **System Integration** - Plan integration with specialized validation procedures
 **Code Quality Initiatives** - Coordinate security, performance, and maintainability improvements
 **Technical Debt Reduction** - Systematic planning and execution across components

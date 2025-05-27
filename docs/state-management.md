@@ -4,6 +4,8 @@
 
 AGOR's state management system provides structured coordination for multi-agent development strategies. The `.agor/state/` directory contains JSON, YAML, and Markdown files that track strategy progress, agent assignments, and coordination status.
 
+**Note for AGOR Core Developers:** The `.agor/` directory and its state files described herein are intended for *target projects* being managed by AGOR. When developing AGOR itself, these files should generally not be committed to the AGOR repository. Refer to the "[Testing Coordination Strategies & State Management](agor-development-guide.md#testing-coordination-strategies--state-management)" section in the AGOR Development Guide for best practices.
+
 ## Directory Structure
 
 ```

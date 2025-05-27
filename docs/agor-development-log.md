@@ -27,7 +27,41 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
-### 2025-05-26 | Protocol v0.3.0 | CLI Usage Clarification & Agent Guidance
+### 8. YYYY-MM-DD | Protocol v0.4.0 | Terminology and Hotkey Update (Snapshot)
+
+**Technical Focus**: Standardizing core terminology from "handoff" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
+
+**Implementation Details**:
+- Changed `PROTOCOL_VERSION` in `src/agor/constants.py` from "0.3.0" to "0.4.0".
+- Renamed directory reference `.agor/handoffs/` to `.agor/snapshots/` in all code and documentation.
+- Renamed Python module `src/agor/tools/handoff_templates.py` to `src/agor/tools/snapshot_templates.py` and updated all imports.
+- Renamed relevant functions, variables, and constants within `snapshot_templates.py` (e.g., `generate_handoff_document` to `generate_snapshot_document`).
+- Updated hotkeys in `src/agor/tools/AGOR_INSTRUCTIONS.md`:
+    - `handoff` → `snapshot`
+    - `receive` → `load_snapshot`
+    - `handoffs` → `list_snapshots`
+- Performed a global replacement of "handoff" terminology with "snapshot" in all relevant documentation and code comments/strings.
+- Updated `docs/snapshots.md` (formerly `docs/handoffs.md`) content and title.
+
+**Rationale**:
+- The term "snapshot" is more intuitive and versatile, especially for solo developer use cases involving context preservation.
+- Ensures consistency in language across all project assets (code, docs, agent instructions).
+- The scope of changes (terminology, hotkeys, directory structures used by agents) constitutes a protocol update.
+
+**Impact**:
+- Agents will now be instructed using the "snapshot" terminology and new hotkeys.
+- Internal code and documentation are now consistent with this change.
+- Protocol version "0.4.0" signals these modifications.
+
+**Lessons Learned**:
+- Core terminology changes require thorough updates across multiple project facets (code, docs, tests, agent instructions).
+- Protocol versioning is key to signaling the nature of changes to users and developers.
+
+**Next Steps**: Continue with documentation enhancements, particularly elaborating on snapshot scenarios.
+
+---
+
+### 7. 2025-05-26 | Protocol v0.3.0 | CLI Usage Clarification & Agent Guidance
 
 **Technical Focus**: Preventing agent confusion about CLI vs coordination file usage
 
@@ -60,7 +94,7 @@ Each entry includes:
 
 ---
 
-### 2025-05-26 | Protocol v0.3.0 | Protocol Version Reduction
+### 6. 2025-05-26 | Protocol v0.3.0 | Protocol Version Reduction
 
 **Technical Focus**: Establishing realistic protocol versioning strategy
 
@@ -93,7 +127,7 @@ Each entry includes:
 
 ---
 
-### 2025-05-26 | Protocol v0.3.0 | Feedback System Implementation
+### 5. 2025-05-26 | Protocol v0.3.0 | Feedback System Implementation
 
 **Technical Focus**: Creating user feedback collection mechanism to replace "meta" functionality
 
@@ -128,7 +162,7 @@ Each entry includes:
 
 ---
 
-### 2025-05-26 | Protocol v0.3.0 | Strategy Implementation Completion
+### 4. 2025-05-26 | Protocol v0.3.0 | Strategy Implementation Completion
 
 **Technical Focus**: Implementing all missing strategy modules to complete AGOR functionality
 
@@ -162,7 +196,7 @@ Each entry includes:
 
 ---
 
-### 2025-05-26 | Protocol v0.3.0 | Development Guide Protocol Tracking
+### 3. 2025-05-26 | Protocol v0.3.0 | Development Guide Protocol Tracking
 
 **Technical Focus**: Adding protocol version tracking to development documentation
 
@@ -195,7 +229,7 @@ Each entry includes:
 
 ---
 
-### 2025-05-26 | Protocol v0.3.0 | Modularization Cleanup Completion
+### 2. 2025-05-26 | Protocol v0.3.0 | Modularization Cleanup Completion
 
 **Technical Focus**: Removing obsolete monolithic files and fixing all integration issues
 
@@ -230,7 +264,7 @@ Each entry includes:
 
 ---
 
-### 2025-05-26 | Protocol v0.3.0 | Strategy Modularization
+### 1. 2025-05-26 | Protocol v0.3.0 | Strategy Modularization
 
 **Technical Focus**: Breaking down monolithic `strategy_protocols.py` into focused modules
 

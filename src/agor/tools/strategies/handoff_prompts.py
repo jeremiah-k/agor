@@ -1,75 +1,76 @@
 """
-Handoff Prompts Strategy Implementation for AGOR.
+Snapshot Prompts Strategy Implementation for AGOR.
 
-This module provides comprehensive agent handoff coordination capabilities,
-enabling seamless transitions between agents with standardized templates,
-quality assurance, and specialized handoff scenarios.
+This module provides comprehensive agent snapshot coordination capabilities,
+enabling seamless transitions and context preservation between agents 
+(or for solo use) with standardized templates, quality assurance, 
+and specialized snapshot scenarios.
 """
 
 from datetime import datetime
 from pathlib import Path
 
 
-def generate_handoff_prompts(
-    handoff_type: str = "standard",
+def generate_snapshot_prompts( # Renamed function
+    snapshot_type: str = "standard", # Renamed parameter
     from_role: str = "developer",
-    to_role: str = "reviewer",
+    to_role: str = "reviewer", # Can be same as from_role for self-snapshots
     context: str = "",
 ) -> str:
-    """Generate handoff prompts and coordination templates (hp hotkey)."""
+    """Generate snapshot prompts and coordination templates (hp hotkey)."""
 
-    # Import handoff templates
+    # Import snapshot_templates (already updated in previous step)
 
-    # Generate comprehensive handoff guidance
+    # Generate comprehensive snapshot guidance
     implementation_details = f"""
-## HANDOFF PROMPTS IMPLEMENTATION
+## SNAPSHOT PROMPTS IMPLEMENTATION
 
-### Handoff Type: {handoff_type}
+### Snapshot Type: {snapshot_type}
 ### From Role: {from_role}
 ### To Role: {to_role}
-### Context: {context if context else "General development handoff"}
+### Context: {context if context else "General development snapshot"}
 ### Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## HANDOFF PROMPT TEMPLATES
+## SNAPSHOT PROMPT TEMPLATES
 
-{_generate_handoff_prompt_templates(handoff_type, from_role, to_role)}
+{_generate_snapshot_prompt_templates(snapshot_type, from_role, to_role)}
 
 ## ROLE-SPECIFIC PROMPTS
 
 {_generate_role_specific_prompts(from_role, to_role, context)}
 
-## HANDOFF COORDINATION PROTOCOLS
+## SNAPSHOT COORDINATION PROTOCOLS
 
-### Standard Handoff Process:
+### Standard Snapshot Process:
 1. **Preparation Phase**:
    ```
-   [FROM-AGENT] [TIMESTAMP] - HANDOFF_PREP: [task] - Preparing handoff materials
+   [FROM-AGENT] [TIMESTAMP] - SNAPSHOT_PREP: [task] - Preparing snapshot materials
    ```
 
-2. **Handoff Creation**:
+2. **Snapshot Creation**:
    ```
-   [FROM-AGENT] [TIMESTAMP] - HANDOFF_CREATED: [task] - Handoff document ready
-   ```
-
-3. **Handoff Delivery**:
-   ```
-   [FROM-AGENT] [TIMESTAMP] - HANDOFF_REQUEST: [to-agent] - [task] - [handoff-location]
+   [FROM-AGENT] [TIMESTAMP] - SNAPSHOT_CREATED: [task] - Snapshot document ready
    ```
 
-4. **Handoff Reception**:
+3. **Snapshot Delivery/Storage**:
    ```
-   [TO-AGENT] [TIMESTAMP] - HANDOFF_RECEIVED: [task] - Reviewing materials
-   ```
-
-5. **Handoff Acceptance**:
-   ```
-   [TO-AGENT] [TIMESTAMP] - HANDOFF_ACCEPTED: [task] - Work resumed
+   [FROM-AGENT] [TIMESTAMP] - SNAPSHOT_NOTICE: [to-agent/storage] - [task] - [snapshot-location]
    ```
 
-### Emergency Handoff Process:
+4. **Snapshot Reception (if applicable)**:
+   ```
+   [TO-AGENT] [TIMESTAMP] - SNAPSHOT_RECEIVED: [task] - Reviewing materials
+   ```
+
+5. **Snapshot Acceptance/Usage (if applicable)**:
+   ```
+   [TO-AGENT] [TIMESTAMP] - SNAPSHOT_ACCEPTED: [task] - Work resumed or context loaded
+   ```
+
+### Emergency Snapshot Process:
 1. **Immediate Notification**:
    ```
-   [FROM-AGENT] [TIMESTAMP] - EMERGENCY_HANDOFF: [critical-issue] - Immediate assistance needed
+   [FROM-AGENT] [TIMESTAMP] - EMERGENCY_SNAPSHOT: [critical-issue] - Immediate context capture needed
    ```
 
 2. **Quick Context Transfer**:
@@ -77,60 +78,60 @@ def generate_handoff_prompts(
    [FROM-AGENT] [TIMESTAMP] - CONTEXT: [current-state] - [blocker] - [urgency-level]
    ```
 
-3. **Emergency Response**:
+3. **Emergency Response (if applicable)**:
    ```
-   [TO-AGENT] [TIMESTAMP] - EMERGENCY_RESPONSE: [task] - Taking over immediately
+   [TO-AGENT] [TIMESTAMP] - EMERGENCY_RESPONSE: [task] - Taking over immediately using snapshot
    ```
 
-## HANDOFF QUALITY ASSURANCE
+## SNAPSHOT QUALITY ASSURANCE
 
-### Handoff Checklist:
+### Snapshot Checklist:
 - [ ] **Work Status**: Current progress clearly documented
 - [ ] **Deliverables**: All completed work identified and accessible
 - [ ] **Context**: Technical decisions and rationale explained
-- [ ] **Next Steps**: Clear tasks for receiving agent
+- [ ] **Next Steps**: Clear tasks for receiving agent (if applicable) or future self
 - [ ] **Dependencies**: External dependencies and blockers identified
 - [ ] **Quality**: Code quality and testing status documented
-- [ ] **Timeline**: Estimated completion time provided
-- [ ] **Communication**: Handoff logged in agentconvo.md
+- [ ] **Timeline**: Estimated completion time provided (if applicable)
+- [ ] **Communication**: Snapshot logged in agentconvo.md (if applicable)
 
-### Handoff Validation:
+### Snapshot Validation:
 - [ ] **Completeness**: All required information provided
 - [ ] **Clarity**: Instructions are clear and actionable
 - [ ] **Accessibility**: All referenced files and resources available
-- [ ] **Context**: Sufficient background for receiving agent
-- [ ] **Quality**: Work meets standards for handoff
+- [ ] **Context**: Sufficient background for receiving agent or future self
+- [ ] **Quality**: Work meets standards for snapshot
 
-## SPECIALIZED HANDOFF SCENARIOS
+## SPECIALIZED SNAPSHOT SCENARIOS
 
-{_generate_specialized_handoff_scenarios()}
+{_generate_specialized_snapshot_scenarios()}
 
-## HANDOFF TEMPLATES LIBRARY
+## SNAPSHOT TEMPLATES LIBRARY
 
-{_generate_handoff_templates_library()}
+{_generate_snapshot_templates_library()}
 
-## HANDOFF METRICS & OPTIMIZATION
+## SNAPSHOT METRICS & OPTIMIZATION
 
 ### Success Metrics:
-- **Handoff Time**: Time from request to acceptance
-- **Context Transfer**: Receiving agent understanding score
-- **Continuation Quality**: Work quality after handoff
-- **Rework Rate**: Percentage of work requiring revision
+- **Snapshot Creation Time**: Time to generate a complete snapshot
+- **Context Transfer Clarity**: Receiving agent's (or future self's) understanding score
+- **Continuation Quality**: Work quality after loading snapshot
+- **Rework Rate**: Percentage of work requiring revision after loading snapshot
 
 ### Optimization Strategies:
-- **Template Standardization**: Use consistent handoff formats
-- **Context Documentation**: Maintain detailed work logs
-- **Regular Checkpoints**: Frequent progress updates
-- **Knowledge Sharing**: Cross-training and documentation
+- **Template Standardization**: Use consistent snapshot formats
+- **Context Documentation**: Maintain detailed work logs for easy snapshotting
+- **Regular Checkpoints**: Frequent progress updates (can be mini-snapshots)
+- **Knowledge Sharing**: Cross-training and documentation to improve context understanding
 
-## HANDOFF TROUBLESHOOTING
+## SNAPSHOT TROUBLESHOOTING
 
 ### Common Issues:
 1. **Incomplete Context**: Missing technical details or decisions
-   - **Solution**: Use comprehensive handoff templates
+   - **Solution**: Use comprehensive snapshot templates
    - **Prevention**: Regular documentation during work
 
-2. **Unclear Next Steps**: Receiving agent unsure how to proceed
+2. **Unclear Next Steps**: Receiving agent (or future self) unsure how to proceed
    - **Solution**: Provide specific, actionable tasks
    - **Prevention**: Break down work into clear steps
 
@@ -138,23 +139,23 @@ def generate_handoff_prompts(
    - **Solution**: Document all dependencies and provide access
    - **Prevention**: Dependency mapping during planning
 
-4. **Quality Issues**: Work not ready for handoff
-   - **Solution**: Complete quality checks before handoff
+4. **Quality Issues**: Work not ready for snapshot (if for handoff)
+   - **Solution**: Complete quality checks before creating snapshot for others
    - **Prevention**: Continuous quality assurance
 
-### Escalation Procedures:
+### Escalation Procedures (for multi-agent snapshots):
 1. **Agent Level**: Direct communication between agents
 2. **Team Level**: Involve technical lead or coordinator
 3. **Project Level**: Escalate to project management
 4. **Emergency Level**: Immediate intervention required
 
-## HANDOFF AUTOMATION
+## SNAPSHOT AUTOMATION
 
-### Automated Handoff Generation:
+### Automated Snapshot Generation:
 ```python
-# Generate handoff document
-from agor.tools.handoff_templates import generate_handoff_document
-handoff = generate_handoff_document(
+# Generate snapshot document
+from agor.tools.snapshot_templates import generate_snapshot_document 
+snapshot_doc = generate_snapshot_document( 
     problem_description="User authentication system",
     work_completed=["API endpoints", "Database schema", "Unit tests"],
     commits_made=["feat: add auth endpoints", "fix: validation logic"],
@@ -163,15 +164,15 @@ handoff = generate_handoff_document(
     files_modified=["src/auth/api.py", "src/models/user.py"],
     context_notes="Uses JWT tokens, 24hr expiry",
     agent_role="Backend Developer",
-    handoff_reason="Frontend development needed"
+    snapshot_reason="Frontend development needed" # Updated parameter name
 )
 ```
 
 ### Automated Prompt Generation:
 ```python
 # Generate role-specific prompts
-from agor.tools.agent_prompt_templates import generate_handoff_prompt
-prompt = generate_handoff_prompt(
+from agor.tools.agent_prompt_templates import generate_snapshot_prompt # Assuming this function is also updated/renamed
+prompt = generate_snapshot_prompt( # Assuming this function is also updated/renamed
     from_agent="backend-dev",
     to_agent="frontend-dev",
     work_completed="Authentication API complete",
@@ -182,10 +183,10 @@ prompt = generate_handoff_prompt(
 
 ## NEXT STEPS
 
-1. **Review Handoff Templates**: Validate prompt templates and formats
-2. **Setup Handoff Directory**: Initialize .agor/handoffs/ structure
-3. **Train Team**: Ensure all agents understand handoff protocols
-4. **Monitor Quality**: Track handoff success metrics
+1. **Review Snapshot Templates**: Validate prompt templates and formats
+2. **Setup Snapshot Directory**: Initialize .agor/snapshots/ structure
+3. **Train Team**: Ensure all agents understand snapshot protocols
+4. **Monitor Quality**: Track snapshot success metrics
 5. **Iterate and Improve**: Refine templates based on usage
 """
 
@@ -193,58 +194,58 @@ prompt = generate_handoff_prompt(
     agor_dir = Path(".agor")
     agor_dir.mkdir(exist_ok=True)
 
-    # Save to handoff prompts file
-    handoff_file = agor_dir / "handoff-prompts.md"
-    handoff_file.write_text(implementation_details)
+    # Save to snapshot prompts file
+    snapshot_prompts_file = agor_dir / "snapshot-prompts.md" # Renamed file
+    snapshot_prompts_file.write_text(implementation_details)
 
-    # Create handoff templates directory
-    _create_handoff_templates_directory()
+    # Create snapshot templates directory
+    _create_snapshot_templates_directory() # Renamed function
 
     # Create role-specific prompt files
     _create_role_specific_prompt_files(from_role, to_role)
 
-    # Create handoff coordination file
-    _create_handoff_coordination_file(handoff_type, from_role, to_role)
+    # Create snapshot coordination file
+    _create_snapshot_coordination_file(snapshot_type, from_role, to_role) # Renamed function
 
-    return f"""✅ Handoff Prompts Generated
+    return f"""✅ Snapshot Prompts Generated
 
-**Handoff Type**: {handoff_type}
+**Snapshot Type**: {snapshot_type}
 **From Role**: {from_role}
 **To Role**: {to_role}
 **Context**: {context if context else "General development"}
 
 **Generated Resources**:
-- Comprehensive handoff prompt templates
+- Comprehensive snapshot prompt templates
 - Role-specific coordination protocols
 - Quality assurance checklists
-- Specialized handoff scenarios
+- Specialized snapshot scenarios
 - Automation examples and scripts
 
 **Files Created**:
-- `.agor/handoff-prompts.md` - Complete handoff guidance
-- `.agor/handoff-templates/` - Template library
+- `.agor/snapshot-prompts.md` - Complete snapshot guidance
+- `.agor/snapshot-templates/` - Template library
 - `.agor/role-prompts/` - Role-specific prompts
-- `.agor/handoff-coordination.md` - Coordination protocols
+- `.agor/snapshot-coordination.md` - Coordination protocols
 
 **Next Steps**:
-1. Review handoff templates and customize as needed
-2. Train team on handoff protocols
-3. Begin using standardized handoff processes
-4. Monitor handoff quality and optimize
+1. Review snapshot templates and customize as needed
+2. Train team on snapshot protocols
+3. Begin using standardized snapshot processes
+4. Monitor snapshot quality and optimize
 
-**Ready for seamless agent handoffs!**
+**Ready for seamless agent context management and transitions!**
 """
 
 
-def _generate_handoff_prompt_templates(
-    handoff_type: str, from_role: str, to_role: str
+def _generate_snapshot_prompt_templates( # Renamed function
+    snapshot_type: str, from_role: str, to_role: str # Renamed parameter
 ) -> str:
-    """Generate handoff prompt templates."""
-    if handoff_type == "emergency":
+    """Generate snapshot prompt templates."""
+    if snapshot_type == "emergency": # Renamed parameter
         return f"""
-### Emergency Handoff Template
+### Emergency Snapshot Template
 ```
-EMERGENCY HANDOFF: {from_role} → {to_role}
+EMERGENCY SNAPSHOT: {from_role} → {to_role}
 
 CRITICAL ISSUE: [Describe the urgent problem]
 CURRENT STATE: [What's working/broken]
@@ -259,14 +260,14 @@ CONTEXT:
 EMERGENCY CONTACT: [How to reach original agent if needed]
 ```
 """
-    elif handoff_type == "planned":
+    elif snapshot_type == "planned": # Renamed parameter
         return f"""
-### Planned Handoff Template
+### Planned Snapshot Template
 ```
-PLANNED HANDOFF: {from_role} → {to_role}
+PLANNED SNAPSHOT: {from_role} → {to_role}
 
 SCHEDULED: [Date and time]
-REASON: [Why handoff is happening]
+REASON: [Why snapshot is happening]
 PREPARATION TIME: [How long to prepare]
 
 WORK COMPLETED:
@@ -287,9 +288,9 @@ TRANSITION PLAN:
 """
     else:  # standard
         return f"""
-### Standard Handoff Template
+### Standard Snapshot Template
 ```
-HANDOFF: {from_role} → {to_role}
+SNAPSHOT: {from_role} → {to_role}
 
 COMPLETED WORK:
 - [List of deliverables with locations]
@@ -302,7 +303,7 @@ CURRENT STATUS:
 - [Known issues or limitations]
 
 NEXT STEPS:
-- [Immediate tasks for receiving agent]
+- [Immediate tasks for receiving agent (if applicable)]
 - [Medium-term objectives]
 - [Success criteria]
 
@@ -320,11 +321,11 @@ RESOURCES:
 
 
 def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) -> str:
-    """Generate role-specific handoff prompts."""
+    """Generate role-specific snapshot prompts."""
     role_prompts = {
         "developer": {
             "to_reviewer": """
-### Developer → Reviewer Handoff
+### Developer → Reviewer Snapshot
 **Focus**: Code quality, standards compliance, security review
 
 **Developer Deliverables**:
@@ -339,14 +340,14 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Performance impact analysis
 - Standards compliance verification
 
-**Handoff Criteria**:
+**Snapshot Criteria**:
 - All tests passing
 - Code follows team standards
 - Documentation is complete
 - No obvious security issues
 """,
             "to_tester": """
-### Developer → Tester Handoff
+### Developer → Tester Snapshot
 **Focus**: Functional testing, integration validation, user acceptance
 
 **Developer Deliverables**:
@@ -361,14 +362,14 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - User acceptance validation
 - Bug reporting and tracking
 
-**Handoff Criteria**:
+**Snapshot Criteria**:
 - Feature is functionally complete
 - Basic testing completed
 - Test environment ready
 - Test data available
 """,
             "to_devops": """
-### Developer → DevOps Handoff
+### Developer → DevOps Snapshot
 **Focus**: Deployment readiness, infrastructure requirements, monitoring
 
 **Developer Deliverables**:
@@ -383,7 +384,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Monitoring configuration
 - Performance optimization
 
-**Handoff Criteria**:
+**Snapshot Criteria**:
 - Code is deployment-ready
 - Configuration is documented
 - Dependencies are specified
@@ -392,7 +393,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
         },
         "reviewer": {
             "to_developer": """
-### Reviewer → Developer Handoff
+### Reviewer → Developer Snapshot
 **Focus**: Required fixes, improvements, optimization recommendations
 
 **Reviewer Deliverables**:
@@ -407,7 +408,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Optimize performance
 - Update documentation
 
-**Handoff Criteria**:
+**Snapshot Criteria**:
 - Review is complete
 - Issues are prioritized
 - Fix guidance is clear
@@ -416,7 +417,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
         },
         "tester": {
             "to_developer": """
-### Tester → Developer Handoff
+### Tester → Developer Snapshot
 **Focus**: Bug fixes, test failures, quality improvements
 
 **Tester Deliverables**:
@@ -431,7 +432,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Address quality issues
 - Update implementation
 
-**Handoff Criteria**:
+**Snapshot Criteria**:
 - Testing is complete
 - Bugs are documented
 - Reproduction steps provided
@@ -444,8 +445,8 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
         return role_prompts[from_role][f"to_{to_role}"]
     else:
         return f"""
-### {from_role.title()} → {to_role.title()} Handoff
-**Focus**: Role transition and work continuation
+### {from_role.title()} → {to_role.title()} Snapshot
+**Focus**: Role transition and work continuation (or context saving)
 
 **{from_role.title()} Deliverables**:
 - Completed work with documentation
@@ -453,24 +454,24 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 - Next steps and requirements
 - Context and technical details
 
-**{to_role.title()} Tasks**:
-- Review handoff materials
+**{to_role.title()} Tasks (if applicable)**:
+- Review snapshot materials
 - Continue work from current state
 - Address any immediate issues
 - Maintain quality standards
 
-**Handoff Criteria**:
+**Snapshot Criteria**:
 - Work is properly documented
 - Context is clearly explained
-- Next steps are actionable
+- Next steps are actionable (if applicable)
 - Quality standards maintained
 """
 
 
-def _generate_specialized_handoff_scenarios() -> str:
-    """Generate specialized handoff scenarios."""
+def _generate_specialized_snapshot_scenarios() -> str: # Renamed function
+    """Generate specialized snapshot scenarios."""
     return """
-### Cross-Functional Handoffs
+### Cross-Functional Snapshots
 
 #### Backend → Frontend
 - **Focus**: API integration, data contracts, user experience
@@ -487,7 +488,7 @@ def _generate_specialized_handoff_scenarios() -> str:
 - **Key Items**: Deployment configs, monitoring setup, scaling requirements
 - **Success Criteria**: System deploys and runs reliably
 
-### Temporal Handoffs
+### Temporal Snapshots
 
 #### End of Sprint
 - **Focus**: Sprint completion, next sprint preparation
@@ -500,64 +501,64 @@ def _generate_specialized_handoff_scenarios() -> str:
 - **Success Criteria**: Phase objectives met, next phase can begin
 
 #### Project Completion
-- **Focus**: Project closure, maintenance handoff
+- **Focus**: Project closure, maintenance snapshot
 - **Key Items**: Final deliverables, documentation, support procedures
 - **Success Criteria**: Project successfully closed, maintenance ready
 
-### Emergency Handoffs
+### Emergency Snapshots
 
 #### Critical Bug
-- **Focus**: Immediate issue resolution
-- **Key Items**: Bug description, impact assessment, immediate fixes
-- **Success Criteria**: Critical issue resolved quickly
+- **Focus**: Immediate issue resolution, snapshot of state before fix attempt
+- **Key Items**: Bug description, impact assessment, current state before intervention
+- **Success Criteria**: Critical issue resolved quickly, state documented
 
 #### Agent Unavailability
-- **Focus**: Work continuation without original agent
+- **Focus**: Work continuation without original agent, snapshot of last known good state
 - **Key Items**: Current state, immediate tasks, contact information
 - **Success Criteria**: Work continues without significant delay
 
 #### Deadline Pressure
-- **Focus**: Accelerated delivery, scope management
+- **Focus**: Accelerated delivery, scope management, snapshot of current best state
 - **Key Items**: Priority tasks, scope decisions, resource needs
 - **Success Criteria**: Deadline met with acceptable quality
 """
 
 
-def _generate_handoff_templates_library() -> str:
-    """Generate handoff templates library."""
+def _generate_snapshot_templates_library() -> str: # Renamed function
+    """Generate snapshot templates library."""
     return """
-### Quick Handoff Templates
+### Quick Snapshot Templates
 
-#### Minimal Handoff
+#### Minimal Snapshot
 ```
-QUICK HANDOFF: [from] → [to]
+QUICK SNAPSHOT: [from] → [to/self]
 TASK: [brief description]
 STATUS: [current state]
-NEXT: [immediate action needed]
+NEXT: [immediate action needed (if any)]
 FILES: [key files to check]
 ```
 
-#### Bug Fix Handoff
+#### Bug Fix Snapshot
 ```
-BUG HANDOFF: [from] → [to]
+BUG FIX SNAPSHOT: [from] → [to/self]
 BUG: [description and impact]
 REPRODUCTION: [steps to reproduce]
 INVESTIGATION: [what's been tried]
 NEXT: [suggested approach]
 ```
 
-#### Feature Handoff
+#### Feature Snapshot
 ```
-FEATURE HANDOFF: [from] → [to]
+FEATURE SNAPSHOT: [from] → [to/self]
 FEATURE: [description and requirements]
 PROGRESS: [what's implemented]
 REMAINING: [what's left to do]
 TESTS: [testing status]
 ```
 
-#### Review Handoff
+#### Review Snapshot (Code for Review)
 ```
-REVIEW HANDOFF: [from] → [to]
+REVIEW SNAPSHOT: [from] → [to]
 CODE: [location and scope]
 CRITERIA: [review requirements]
 TIMELINE: [review deadline]
@@ -566,7 +567,7 @@ CONTACT: [for questions]
 
 ### Comprehensive Templates
 
-#### Full Project Handoff
+#### Full Project Snapshot
 - Complete project context
 - All deliverables and documentation
 - Team structure and responsibilities
@@ -574,7 +575,7 @@ CONTACT: [for questions]
 - Risk assessment and mitigation
 - Success criteria and metrics
 
-#### Phase Transition Handoff
+#### Phase Transition Snapshot
 - Phase completion summary
 - Quality gate validation
 - Next phase preparation
@@ -584,19 +585,19 @@ CONTACT: [for questions]
 """
 
 
-def _create_handoff_templates_directory():
-    """Create handoff templates directory structure."""
-    templates_dir = Path(".agor") / "handoff-templates"
+def _create_snapshot_templates_directory(): # Renamed function
+    """Create snapshot templates directory structure."""
+    templates_dir = Path(".agor") / "snapshot-templates" # Renamed directory
     templates_dir.mkdir(exist_ok=True)
 
     # Create template files
     templates = {
-        "standard-handoff.md": """
-# Standard Handoff Template
+        "standard-snapshot.md": """ # Renamed file
+# Standard Snapshot Template
 
-## Handoff Information
+## Snapshot Information
 - **From**: [Agent Role/ID]
-- **To**: [Agent Role/ID]
+- **To**: [Agent Role/ID or Self]
 - **Date**: [Timestamp]
 - **Type**: Standard
 
@@ -610,7 +611,7 @@ def _create_handoff_templates_directory():
 **Quality**: [Status]
 **Testing**: [Status]
 
-## Next Steps
+## Next Steps (if applicable)
 1. [Immediate task]
 2. [Follow-up task]
 3. [Future consideration]
@@ -623,16 +624,16 @@ def _create_handoff_templates_directory():
 - [Code repositories]
 - [Access requirements]
 """,
-        "emergency-handoff.md": """
-# Emergency Handoff Template
+        "emergency-snapshot.md": """ # Renamed file
+# Emergency Snapshot Template
 
 ## Emergency Information
 - **From**: [Agent Role/ID]
-- **To**: [Agent Role/ID]
+- **To**: [Agent Role/ID or Self]
 - **Date**: [Timestamp]
 - **Urgency**: [Critical/High/Medium]
 
-## Critical Issue
+## Critical Issue (if applicable)
 **Problem**: [Description]
 **Impact**: [Business/technical impact]
 **Deadline**: [When this must be resolved]
@@ -642,18 +643,18 @@ def _create_handoff_templates_directory():
 **What's Broken**: [Failed components]
 **Last Known Good**: [Previous working state]
 
-## Immediate Actions
+## Immediate Actions (if applicable)
 1. [First priority action]
 2. [Second priority action]
 3. [Fallback option]
 
-## Emergency Contacts
+## Emergency Contacts (if applicable)
 - **Original Agent**: [Contact info]
 - **Technical Lead**: [Contact info]
 - **Escalation**: [Contact info]
 """,
-        "review-handoff.md": """
-# Review Handoff Template
+        "review-snapshot.md": """ # Renamed file
+# Review Snapshot Template (Code for Review)
 
 ## Review Information
 - **Reviewer**: [Agent Role/ID]
@@ -700,26 +701,26 @@ def _create_role_specific_prompt_files(from_role: str, to_role: str):
     # Create role-specific prompt file
     prompt_file = prompts_dir / f"{from_role}-to-{to_role}.md"
     prompt_content = f"""
-# {from_role.title()} to {to_role.title()} Handoff Prompts
+# {from_role.title()} to {to_role.title()} Snapshot Prompts
 
 ## Role Transition Context
 **From Role**: {from_role}
 **To Role**: {to_role}
 **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## Handoff Prompt
+## Snapshot Prompt
 {_generate_role_specific_prompts(from_role, to_role, "")}
 
 ## Communication Templates
 
-### Handoff Request
+### Snapshot Creation Notice
 ```
-[{from_role.upper()}] [TIMESTAMP] - HANDOFF_REQUEST: {to_role} - [task-description] - [handoff-location]
+[{from_role.upper()}] [TIMESTAMP] - SNAPSHOT_CREATED: {to_role} - [task-description] - [snapshot-location]
 ```
 
-### Handoff Acceptance
+### Snapshot Acceptance (if applicable)
 ```
-[{to_role.upper()}] [TIMESTAMP] - HANDOFF_ACCEPTED: [task-description] - Work resumed
+[{to_role.upper()}] [TIMESTAMP] - SNAPSHOT_ACCEPTED: [task-description] - Work resumed or context loaded
 ```
 
 ### Progress Update
@@ -730,62 +731,62 @@ def _create_role_specific_prompt_files(from_role: str, to_role: str):
 ## Quality Checklist
 - [ ] All deliverables documented
 - [ ] Context clearly explained
-- [ ] Next steps actionable
+- [ ] Next steps actionable (if applicable)
 - [ ] Resources accessible
-- [ ] Timeline realistic
+- [ ] Timeline realistic (if applicable)
 
 ## Success Criteria
-- Receiving agent understands the work
-- Work continues without significant delay
+- Receiving agent (or future self) understands the work
+- Work continues without significant delay (if applicable)
 - Quality standards maintained
-- Communication protocols followed
+- Communication protocols followed (if applicable)
 """
     prompt_file.write_text(prompt_content)
 
 
-def _create_handoff_coordination_file(handoff_type: str, from_role: str, to_role: str):
-    """Create handoff coordination tracking file."""
-    coordination_file = Path(".agor") / "handoff-coordination.md"
+def _create_snapshot_coordination_file(snapshot_type: str, from_role: str, to_role: str): # Renamed function
+    """Create snapshot coordination tracking file."""
+    coordination_file = Path(".agor") / "snapshot-coordination.md" # Renamed file
     coordination_content = f"""
-# Handoff Coordination Tracking
+# Snapshot Coordination Tracking
 
-## Current Handoff Configuration
-- **Type**: {handoff_type}
+## Current Snapshot Configuration
+- **Type**: {snapshot_type}
 - **From Role**: {from_role}
 - **To Role**: {to_role}
 - **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## Active Handoffs
+## Active Snapshots
 
-### Pending Handoffs
-- [No pending handoffs currently]
+### Pending Snapshots
+- [No pending snapshots currently]
 
-### In Progress Handoffs
-- [No handoffs in progress currently]
+### In Progress Snapshots (being worked on from)
+- [No snapshots in progress currently]
 
-### Completed Handoffs
-- [No completed handoffs yet]
+### Completed/Archived Snapshots
+- [No completed/archived snapshots yet]
 
-## Handoff Metrics
+## Snapshot Metrics
 
-### Success Rate
-- **Total Handoffs**: 0
-- **Successful**: 0
-- **Failed**: 0
+### Success Rate (for transition snapshots)
+- **Total Snapshots**: 0
+- **Successful Transitions**: 0
+- **Failed Transitions**: 0
 - **Success Rate**: N/A
 
-### Average Times
+### Average Times (for transition snapshots)
 - **Preparation Time**: N/A
 - **Transfer Time**: N/A
 - **Acceptance Time**: N/A
-- **Total Handoff Time**: N/A
+- **Total Transition Time**: N/A
 
 ### Quality Metrics
 - **Context Clarity Score**: N/A
 - **Continuation Success Rate**: N/A
 - **Rework Required**: N/A
 
-## Handoff Process Improvements
+## Snapshot Process Improvements
 
 ### Identified Issues
 - [Issues will be tracked here]
@@ -796,10 +797,10 @@ def _create_handoff_coordination_file(handoff_type: str, from_role: str, to_role
 ### Template Updates
 - [Template improvements will be noted here]
 
-## Communication Log
+## Communication Log (for multi-agent snapshots)
 
-### Handoff Requests
-- [Handoff requests will be logged here]
+### Snapshot Creation Notices
+- [Snapshot creation will be logged here]
 
 ### Status Updates
 - [Status updates will be tracked here]
