@@ -34,9 +34,9 @@ Choose Standalone Mode if:
 ```bash
 # Commands an AI agent might execute in its environment:
 
-# 1. Learn AGOR protocol
+# 1. Learn AGOR protocol (using improved 0.3.1-1 branch)
 cd /tmp
-git clone https://github.com/jeremiah-k/agor.git
+git clone -b 0.3.1-1 https://github.com/jeremiah-k/agor.git
 cd agor
 # Agent reads src/agor/tools/AGOR_INSTRUCTIONS.md and src/agor/tools/README_ai.md
 

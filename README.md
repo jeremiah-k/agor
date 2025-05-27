@@ -34,8 +34,8 @@ agor bundle /path/to/local/project
 **For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
 
 ```bash
-# Clone AGOR to temporary location
-cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+# Clone AGOR to temporary location (using the improved 0.3.1-1 branch)
+cd /tmp && git clone -b 0.3.1-1 https://github.com/jeremiah-k/agor.git && cd agor
 
 # Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
