@@ -5,6 +5,7 @@
 ## 🤖 How to Detect Your Mode
 
 ### Bundle Mode Indicators:
+
 - ✅ `/tmp/agor_tools/` directory exists
 - ✅ `/tmp/agor_tools/git` binary is present
 - ✅ `/tmp/agor_tools/code_exploration.py` exists
@@ -12,6 +13,7 @@
 - ✅ Project is typically in `/tmp/project/` or similar
 
 ### Standalone Mode Indicators:
+
 - ✅ You cloned AGOR repository yourself
 - ✅ You have direct git access to repositories
 - ✅ You're working in a persistent environment
@@ -36,11 +38,13 @@ pwd && ls -la
 Once you've determined your mode:
 
 ### Bundle Mode → Use `BUNDLE_INITIALIZATION.md`
+
 - Streamlined setup
 - Professional user interface
 - Bundled tools and git binary
 
-### Standalone Mode → Use `STANDALONE_INITIALIZATION.md`  
+### Standalone Mode → Use `STANDALONE_INITIALIZATION.md`
+
 - Comprehensive setup
 - Direct repository access
 - System integration

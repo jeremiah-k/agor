@@ -2,8 +2,8 @@
 Snapshot Prompts Strategy Implementation for AGOR.
 
 This module provides comprehensive agent snapshot coordination capabilities,
-enabling seamless transitions and context preservation between agents 
-(or for solo use) with standardized templates, quality assurance, 
+enabling seamless transitions and context preservation between agents
+(or for solo use) with standardized templates, quality assurance,
 and specialized snapshot scenarios.
 """
 
@@ -11,10 +11,10 @@ from datetime import datetime
 from pathlib import Path
 
 
-def generate_snapshot_prompts( # Renamed function
-    snapshot_type: str = "standard", # Renamed parameter
+def generate_snapshot_prompts(  # Renamed function
+    snapshot_type: str = "standard",  # Renamed parameter
     from_role: str = "developer",
-    to_role: str = "reviewer", # Can be same as from_role for self-snapshots
+    to_role: str = "reviewer",  # Can be same as from_role for self-snapshots
     context: str = "",
 ) -> str:
     """Generate snapshot prompts and coordination templates (hp hotkey)."""
@@ -195,17 +195,19 @@ prompt = generate_snapshot_prompt( # Assuming this function is also updated/rena
     agor_dir.mkdir(exist_ok=True)
 
     # Save to snapshot prompts file
-    snapshot_prompts_file = agor_dir / "snapshot-prompts.md" # Renamed file
+    snapshot_prompts_file = agor_dir / "snapshot-prompts.md"  # Renamed file
     snapshot_prompts_file.write_text(implementation_details)
 
     # Create snapshot templates directory
-    _create_snapshot_templates_directory() # Renamed function
+    _create_snapshot_templates_directory()  # Renamed function
 
     # Create role-specific prompt files
     _create_role_specific_prompt_files(from_role, to_role)
 
     # Create snapshot coordination file
-    _create_snapshot_coordination_file(snapshot_type, from_role, to_role) # Renamed function
+    _create_snapshot_coordination_file(
+        snapshot_type, from_role, to_role
+    )  # Renamed function
 
     return f"""✅ Snapshot Prompts Generated
 
@@ -237,11 +239,11 @@ prompt = generate_snapshot_prompt( # Assuming this function is also updated/rena
 """
 
 
-def _generate_snapshot_prompt_templates( # Renamed function
-    snapshot_type: str, from_role: str, to_role: str # Renamed parameter
+def _generate_snapshot_prompt_templates(  # Renamed function
+    snapshot_type: str, from_role: str, to_role: str  # Renamed parameter
 ) -> str:
     """Generate snapshot prompt templates."""
-    if snapshot_type == "emergency": # Renamed parameter
+    if snapshot_type == "emergency":  # Renamed parameter
         return f"""
 ### Emergency Snapshot Template
 ```
@@ -260,7 +262,7 @@ CONTEXT:
 EMERGENCY CONTACT: [How to reach original agent if needed]
 ```
 """
-    elif snapshot_type == "planned": # Renamed parameter
+    elif snapshot_type == "planned":  # Renamed parameter
         return f"""
 ### Planned Snapshot Template
 ```
@@ -468,7 +470,7 @@ def _generate_role_specific_prompts(from_role: str, to_role: str, context: str) 
 """
 
 
-def _generate_specialized_snapshot_scenarios() -> str: # Renamed function
+def _generate_specialized_snapshot_scenarios() -> str:  # Renamed function
     """Generate specialized snapshot scenarios."""
     return """
 ### Cross-Functional Snapshots
@@ -524,7 +526,7 @@ def _generate_specialized_snapshot_scenarios() -> str: # Renamed function
 """
 
 
-def _generate_snapshot_templates_library() -> str: # Renamed function
+def _generate_snapshot_templates_library() -> str:  # Renamed function
     """Generate snapshot templates library."""
     return """
 ### Quick Snapshot Templates
@@ -585,9 +587,9 @@ CONTACT: [for questions]
 """
 
 
-def _create_snapshot_templates_directory(): # Renamed function
+def _create_snapshot_templates_directory():  # Renamed function
     """Create snapshot templates directory structure."""
-    templates_dir = Path(".agor") / "snapshot-templates" # Renamed directory
+    templates_dir = Path(".agor") / "snapshot-templates"  # Renamed directory
     templates_dir.mkdir(exist_ok=True)
 
     # Create template files
@@ -744,9 +746,11 @@ def _create_role_specific_prompt_files(from_role: str, to_role: str):
     prompt_file.write_text(prompt_content)
 
 
-def _create_snapshot_coordination_file(snapshot_type: str, from_role: str, to_role: str): # Renamed function
+def _create_snapshot_coordination_file(
+    snapshot_type: str, from_role: str, to_role: str
+):  # Renamed function
     """Create snapshot coordination tracking file."""
-    coordination_file = Path(".agor") / "snapshot-coordination.md" # Renamed file
+    coordination_file = Path(".agor") / "snapshot-coordination.md"  # Renamed file
     coordination_content = f"""
 # Snapshot Coordination Tracking
 

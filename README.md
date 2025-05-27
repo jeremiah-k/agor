@@ -111,38 +111,45 @@ AGOR defines distinct roles to structure AI-driven development tasks. Each role 
 AGOR utilizes a conversational hotkey system for AI-user interaction. The AI will typically present these options in a menu. This list includes common hotkeys; for comprehensive lists, refer to the role-specific menus in `AGOR_INSTRUCTIONS.md`.
 
 **Strategic Planning**:
+
 - `sp`: strategic plan
 - `bp`: break down project
 - `ar`: architecture review
 
 **Strategy Selection**:
+
 - `ss`: strategy selection
 - `pd`: parallel divergent
 - `pl`: pipeline
 - `sw`: swarm
 
 **Team Management**:
+
 - `ct`: create team
 - `tm`: team manifest
 - `hp`: snapshot prompts
 
 **Analysis**:
+
 - `a`: analyze codebase
 - `f`: full files
 - `co`: changes only
 - `da`: detailed snapshot
 
 **Memory**:
+
 - `mem-add`: add memory
 - `mem-search`: search memories
 - `db-stats`: database stats (SQLite mode)
 
 **Editing & Version Control**:
+
 - `edit`: modify files
 - `commit`: save changes
 - `diff`: show changes
 
 **Coordination**:
+
 - `init`: initialize
 - `status`: check state
 - `sync`: update
@@ -152,7 +159,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 
 **✅ Bundled Mode Platforms**
 
-- **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - *Free tier available*
+- **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - _Free tier available_
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
 - **Other upload-based platforms** (use appropriate format)
 

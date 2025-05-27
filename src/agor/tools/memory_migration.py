@@ -24,7 +24,9 @@ class MemoryMigrationManager:
         self.db_path = self.agor_dir / "memory.db"
         self.sqlite_manager = SQLiteMemoryManager(str(self.db_path))
 
-    def migrate_markdown_to_sqlite(self, preserve_markdown: bool = True) -> Dict[str, int]:
+    def migrate_markdown_to_sqlite(
+        self, preserve_markdown: bool = True
+    ) -> Dict[str, int]:
         """
         Migrate markdown memory files to SQLite database.
 
@@ -39,7 +41,7 @@ class MemoryMigrationManager:
             "coordination_logs": 0,
             "project_state": 0,
             "handoffs": 0,
-            "errors": 0
+            "errors": 0,
         }
 
         try:
@@ -48,7 +50,9 @@ class MemoryMigrationManager:
             if memory_file.exists():
                 project_data = self._parse_project_memory(memory_file)
                 if project_data:
-                    self.sqlite_manager.set_project_state("project_overview", project_data)
+                    self.sqlite_manager.set_project_state(
+                        "project_overview", project_data
+                    )
                     stats["project_state"] += 1
 
             # Migrate agent memory files (agent{N}-memory.md)
@@ -58,15 +62,19 @@ class MemoryMigrationManager:
                 if agent_id:
                     memories = self._parse_agent_memory(agent_file)
                     for memory_type, content, metadata in memories:
-                        self.sqlite_manager.add_memory(agent_id, memory_type, content, metadata)
+                        self.sqlite_manager.add_memory(
+                            agent_id, memory_type, content, metadata
+                        )
                         stats["agent_memories"] += 1
 
             # Migrate agent communication (agentconvo.md)
             agentconvo_file = self.agor_dir / "agentconvo.md"
             if agentconvo_file.exists():
                 coord_logs = self._parse_agentconvo(agentconvo_file)
-                for from_agent, to_agent, msg_type, message, timestamp in coord_logs:
-                    self.sqlite_manager.log_coordination(from_agent, to_agent, msg_type, message)
+                for from_agent, to_agent, msg_type, message, _timestamp in coord_logs:
+                    self.sqlite_manager.log_coordination(
+                        from_agent, to_agent, msg_type, message
+                    )
                     stats["coordination_logs"] += 1
 
             # Migrate handoff files
@@ -89,7 +97,9 @@ class MemoryMigrationManager:
 
         return stats
 
-    def migrate_sqlite_to_markdown(self, overwrite_existing: bool = False) -> Dict[str, int]:
+    def migrate_sqlite_to_markdown(
+        self, overwrite_existing: bool = False
+    ) -> Dict[str, int]:
         """
         Migrate SQLite database to markdown memory files.
 
@@ -104,7 +114,7 @@ class MemoryMigrationManager:
             "coordination_entries": 0,
             "project_state_entries": 0,
             "handoff_files": 0,
-            "errors": 0
+            "errors": 0,
         }
 
         try:
@@ -121,7 +131,9 @@ class MemoryMigrationManager:
 
                 memories = self.sqlite_manager.get_memories(agent_id, limit=1000)
                 if memories:
-                    markdown_content = self._generate_agent_memory_markdown(agent_id, memories)
+                    markdown_content = self._generate_agent_memory_markdown(
+                        agent_id, memories
+                    )
                     agent_file.write_text(markdown_content)
                     stats["agent_memory_files"] += 1
 
@@ -147,7 +159,9 @@ class MemoryMigrationManager:
                 if memory_file.exists() and not overwrite_existing:
                     print(f"⚠️  Skipping {memory_file.name} (already exists)")
                 else:
-                    markdown_content = self._generate_project_memory_markdown(project_state)
+                    markdown_content = self._generate_project_memory_markdown(
+                        project_state
+                    )
                     memory_file.write_text(markdown_content)
                     stats["project_state_entries"] += 1
 
@@ -187,12 +201,16 @@ class MemoryMigrationManager:
             if direction in ["markdown_to_sqlite", "bidirectional"]:
                 md_stats = self.migrate_markdown_to_sqlite(preserve_markdown=True)
                 stats.update({f"md_to_sql_{k}": v for k, v in md_stats.items()})
-                stats["total_synced"] += sum(md_stats.values()) - md_stats.get("errors", 0)
+                stats["total_synced"] += sum(md_stats.values()) - md_stats.get(
+                    "errors", 0
+                )
 
             if direction in ["sqlite_to_markdown", "bidirectional"]:
                 sql_stats = self.migrate_sqlite_to_markdown(overwrite_existing=False)
                 stats.update({f"sql_to_md_{k}": v for k, v in sql_stats.items()})
-                stats["total_synced"] += sum(sql_stats.values()) - sql_stats.get("errors", 0)
+                stats["total_synced"] += sum(sql_stats.values()) - sql_stats.get(
+                    "errors", 0
+                )
 
         except Exception as e:
             stats["errors"] += 1
@@ -208,7 +226,7 @@ class MemoryMigrationManager:
             # Extract structured information
             project_data = {
                 "source": "memory.md",
-                "migrated_at": datetime.now().isoformat()
+                "migrated_at": datetime.now().isoformat(),
             }
 
             # Parse task
@@ -217,17 +235,23 @@ class MemoryMigrationManager:
                 project_data["task"] = task_match.group(1).strip()
 
             # Parse team configuration
-            team_match = re.search(r"## Team Configuration\s*\n(.+?)(?=\n##|\n$)", content, re.DOTALL)
+            team_match = re.search(
+                r"## Team Configuration\s*\n(.+?)(?=\n##|\n$)", content, re.DOTALL
+            )
             if team_match:
                 project_data["team_configuration"] = team_match.group(1).strip()
 
             # Parse key decisions
-            decisions_match = re.search(r"## Key Decisions\s*\n(.+?)(?=\n##|\n$)", content, re.DOTALL)
+            decisions_match = re.search(
+                r"## Key Decisions\s*\n(.+?)(?=\n##|\n$)", content, re.DOTALL
+            )
             if decisions_match:
                 project_data["key_decisions"] = decisions_match.group(1).strip()
 
             # Parse current state
-            state_match = re.search(r"## Current State\s*\n(.+?)(?=\n##|\n$)", content, re.DOTALL)
+            state_match = re.search(
+                r"## Current State\s*\n(.+?)(?=\n##|\n$)", content, re.DOTALL
+            )
             if state_match:
                 project_data["current_state"] = state_match.group(1).strip()
 
@@ -237,7 +261,9 @@ class MemoryMigrationManager:
             print(f"❌ Error parsing {memory_file}: {e}")
             return None
 
-    def _parse_agent_memory(self, agent_file: Path) -> List[Tuple[str, str, Optional[Dict]]]:
+    def _parse_agent_memory(
+        self, agent_file: Path
+    ) -> List[Tuple[str, str, Optional[Dict]]]:
         """Parse agent memory file into structured memories."""
         memories = []
 
@@ -245,10 +271,10 @@ class MemoryMigrationManager:
             content = agent_file.read_text()
 
             # Split content by sections
-            sections = re.split(r'\n## ', content)
+            sections = re.split(r"\n## ", content)
 
             for section in sections[1:]:  # Skip first empty section
-                lines = section.split('\n', 1)
+                lines = section.split("\n", 1)
                 if len(lines) < 2:
                     continue
 
@@ -263,7 +289,9 @@ class MemoryMigrationManager:
                     metadata = None
                     if "Metadata:" in section_content:
                         try:
-                            metadata_match = re.search(r"Metadata:\s*({.+?})", section_content)
+                            metadata_match = re.search(
+                                r"Metadata:\s*({.+?})", section_content
+                            )
                             if metadata_match:
                                 metadata = json.loads(metadata_match.group(1))
                         except json.JSONDecodeError:
@@ -276,7 +304,9 @@ class MemoryMigrationManager:
 
         return memories
 
-    def _parse_agentconvo(self, agentconvo_file: Path) -> List[Tuple[str, str, str, str, str]]:
+    def _parse_agentconvo(
+        self, agentconvo_file: Path
+    ) -> List[Tuple[str, str, str, str, str]]:
         """Parse agentconvo.md file into coordination logs."""
         coord_logs = []
 
@@ -284,7 +314,7 @@ class MemoryMigrationManager:
             content = agentconvo_file.read_text()
 
             # Parse entries with format: [AGENT-ID] [TIMESTAMP] - [MESSAGE]
-            pattern = r'\[([^\]]+)\]\s*\[([^\]]+)\]\s*-\s*(.+)'
+            pattern = r"\[([^\]]+)\]\s*\[([^\]]+)\]\s*-\s*(.+)"
             matches = re.findall(pattern, content, re.MULTILINE)
 
             for agent_id, timestamp, message in matches:
@@ -299,7 +329,15 @@ class MemoryMigrationManager:
                 elif "status" in message.lower():
                     msg_type = "status"
 
-                coord_logs.append((agent_id.strip(), to_agent, msg_type, message.strip(), timestamp.strip()))
+                coord_logs.append(
+                    (
+                        agent_id.strip(),
+                        to_agent,
+                        msg_type,
+                        message.strip(),
+                        timestamp.strip(),
+                    )
+                )
 
         except Exception as e:
             print(f"❌ Error parsing {agentconvo_file}: {e}")
@@ -328,7 +366,7 @@ class MemoryMigrationManager:
                 "context_notes": "",
                 "git_branch": "",
                 "git_commit": "",
-                "agor_version": "unknown"
+                "agor_version": "unknown",
             }
 
             # Simple parsing - look for common patterns
@@ -356,12 +394,12 @@ class MemoryMigrationManager:
     def _extract_agent_id(self, filename: str) -> Optional[str]:
         """Extract agent ID from filename like 'agent1-memory.md' or 'agent-1-memory.md'."""
         # Handle both agent1-memory.md and agent-1-memory.md formats
-        match = re.match(r'(agent-?\d+)-memory\.md', filename)
+        match = re.match(r"(agent-?\d+)-memory\.md", filename)
         if match:
             agent_id = match.group(1)
             # Normalize to agent-N format
-            if not agent_id.startswith('agent-'):
-                agent_id = agent_id.replace('agent', 'agent-')
+            if not agent_id.startswith("agent-"):
+                agent_id = agent_id.replace("agent", "agent-")
             return agent_id
         return None
 
@@ -371,7 +409,9 @@ class MemoryMigrationManager:
 
         if any(word in title_lower for word in ["decision", "choice", "chose"]):
             return "decision"
-        elif any(word in title_lower for word in ["context", "background", "situation"]):
+        elif any(
+            word in title_lower for word in ["context", "background", "situation"]
+        ):
             return "context"
         elif any(word in title_lower for word in ["learning", "learned", "insight"]):
             return "learning"
@@ -395,6 +435,7 @@ class MemoryMigrationManager:
         """Get all coordination logs from SQLite database."""
         try:
             import sqlite3
+
             with self.sqlite_manager._get_connection() as conn:
                 conn.row_factory = sqlite3.Row
                 cursor = conn.execute(
@@ -408,6 +449,7 @@ class MemoryMigrationManager:
         """Get all handoffs from SQLite database."""
         try:
             import sqlite3
+
             with self.sqlite_manager._get_connection() as conn:
                 conn.row_factory = sqlite3.Row
                 cursor = conn.execute("SELECT * FROM handoffs ORDER BY created_at")
@@ -415,10 +457,14 @@ class MemoryMigrationManager:
         except Exception:
             return []
 
-    def _generate_agent_memory_markdown(self, agent_id: str, memories: List[Dict]) -> str:
+    def _generate_agent_memory_markdown(
+        self, agent_id: str, memories: List[Dict]
+    ) -> str:
         """Generate markdown content for agent memory file."""
         content = [f"# {agent_id.upper()} Memory File"]
-        content.append(f"\nMigrated from SQLite database on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        content.append(
+            f"\nMigrated from SQLite database on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
         content.append("")
 
         # Group memories by type
@@ -479,7 +525,9 @@ class MemoryMigrationManager:
     def _generate_project_memory_markdown(self, project_state: Dict) -> str:
         """Generate markdown content for memory.md file."""
         content = ["# Project Memory"]
-        content.append(f"\nMigrated from SQLite database on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        content.append(
+            f"\nMigrated from SQLite database on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
         content.append("")
 
         # Map project state fields to markdown sections
@@ -513,8 +561,19 @@ class MemoryMigrationManager:
             content.append("")
 
         # Add any other fields as JSON
-        other_fields = {k: v for k, v in project_state.items()
-                       if k not in ["task", "team_configuration", "key_decisions", "current_state", "source", "migrated_at"]}
+        other_fields = {
+            k: v
+            for k, v in project_state.items()
+            if k
+            not in [
+                "task",
+                "team_configuration",
+                "key_decisions",
+                "current_state",
+                "source",
+                "migrated_at",
+            ]
+        }
         if other_fields:
             content.append("## Additional Data")
             content.append("```json")
@@ -526,10 +585,10 @@ class MemoryMigrationManager:
 
     def _generate_handoff_markdown(self, handoff: Dict) -> str:
         """Generate markdown content for handoff file."""
-        content = [f"# 🤝 Agent Handoff Document"]
+        content = ["# 🤝 Agent Handoff Document"]
         content.append(f"\n**Handoff ID**: {handoff['handoff_id']}")
         content.append(f"**From**: {handoff['from_agent']}")
-        if handoff['to_agent']:
+        if handoff["to_agent"]:
             content.append(f"**To**: {handoff['to_agent']}")
         content.append(f"**Status**: {handoff['status']}")
         content.append(f"**Created**: {handoff['created_at']}")
@@ -579,19 +638,25 @@ class MemoryMigrationManager:
 
 
 # Convenience functions for migration operations
-def migrate_to_sqlite(agor_dir: str = ".agor", preserve_markdown: bool = True) -> Dict[str, int]:
+def migrate_to_sqlite(
+    agor_dir: str = ".agor", preserve_markdown: bool = True
+) -> Dict[str, int]:
     """Migrate markdown memory files to SQLite database."""
     manager = MemoryMigrationManager(Path(agor_dir))
     return manager.migrate_markdown_to_sqlite(preserve_markdown)
 
 
-def migrate_to_markdown(agor_dir: str = ".agor", overwrite_existing: bool = False) -> Dict[str, int]:
+def migrate_to_markdown(
+    agor_dir: str = ".agor", overwrite_existing: bool = False
+) -> Dict[str, int]:
     """Migrate SQLite database to markdown memory files."""
     manager = MemoryMigrationManager(Path(agor_dir))
     return manager.migrate_sqlite_to_markdown(overwrite_existing)
 
 
-def sync_memory_systems(agor_dir: str = ".agor", direction: str = "bidirectional") -> Dict[str, int]:
+def sync_memory_systems(
+    agor_dir: str = ".agor", direction: str = "bidirectional"
+) -> Dict[str, int]:
     """Synchronize between markdown and SQLite memory systems."""
     manager = MemoryMigrationManager(Path(agor_dir))
     return manager.sync_systems(direction)

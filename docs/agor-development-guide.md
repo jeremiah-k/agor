@@ -18,11 +18,13 @@ This guide ensures consistency, quality, and proper protocol management when dev
 #### 📦 CLI vs Agent Tools - FUNDAMENTAL DISTINCTION
 
 **AGOR CLI Purpose**: Primarily for **bundling repositories** for AI assistant upload
+
 - `agor bundle <repo>` - Main use case
 - `agor version`, `agor config`, `agor git-config` - Utility functions
 - Most users interact with AGOR through bundling, not direct CLI usage
 
 **Agent Tools Purpose**: For **agents working within coordination systems**
+
 - Located in `src/agor/tools/` directory
 - Include coordination files, strategy modules, memory systems
 - Used by agents within `.agor/` coordination workflows
@@ -32,6 +34,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 **THERE ARE TWO COMPLETELY DIFFERENT TYPES OF "COMMANDS":**
 
 **Real CLI Commands** (in `src/agor/main.py`):
+
 - **[CLI] Commands**: `bundle`, `config`, `git-config`, `version` - for developers using AGOR
 - **[AGENT] Commands**: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback` - for agents when they need CLI access
 - These are actual typer commands that can be run from terminal
@@ -39,6 +42,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - Prefixed with [CLI] or [AGENT] to show intended user
 
 **Agent Protocol Hotkeys** (in agent instructions):
+
 - **Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc.
 - These are menu options/verbal commands in agent workflow instructions
 - They are implemented as Python functions in `src/agor/tools/`
@@ -53,6 +57,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 **REALITY CHECK**: AGOR bundles do NOT include setup manifests. Agent coordination uses snapshot documents (which can function as work orders or completion reports).
 
 **Work Snapshots & Completion Reports** (Agent Coordination):
+
 - **Location**: `.agor/snapshots/` directory.
 - **Work Snapshots (as Work Orders)**: Task assignments with context, requirements, next steps.
 - **Completion Snapshots/Reports**: Results summary, commits, issues, recommendations.
@@ -60,6 +65,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - **Implementation**: `handoff_templates.py` (Note: module name might be dated, but generates snapshot documents).
 
 **Bundle Contents** (What's Actually in Bundles):
+
 - **Project files**: Cloned repository with git history
 - **AGOR tools**: `agor_tools/` directory with coordination scripts
 - **Git binary**: Portable git executable for bundle environments
@@ -69,12 +75,14 @@ This guide ensures consistency, quality, and proper protocol management when dev
 #### 🏗️ File Structure Understanding
 
 **Bundle Mode** (Most Common):
+
 - Agent receives bundled archive with AGOR tools
 - Works within extracted bundle
 - Uses coordination files in `.agor/` directory
 - Does NOT use CLI commands - works with files directly
 
 **Standalone Mode** (Less Common):
+
 - Agent has direct repository access
 - Might use some CLI commands for status/coordination
 - Still works primarily with `.agor/` coordination files
@@ -82,18 +90,21 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### 🚦 Development Safety Levels
 
 **✅ Safe to Implement (Low Risk)**:
+
 - Documentation improvements and clarifications
 - Bug fixes in existing implementations
 - Hotkey documentation enhancements
 - Agent best practices reinforcement
 
 **⚠️ Requires Coordination (Medium Risk)**:
+
 - Changes to existing hotkey behavior
 - New hotkey additions
 - Changes to .agor file structure
 - New strategy module additions
 
 **🛑 Requires Team Discussion (High Risk)**:
+
 - Changes to core coordination protocols
 - Modifications to existing strategy implementations
 - Breaking changes to agent_coordination.py
@@ -111,6 +122,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### 🔄 Commit and Push Protocol
 
 **ALWAYS**: Commit often and push often
+
 - Problems can happen and unpushed work is lost
 - Use: `git add . && git commit -m "message" && git push`
 - Update development guide as you work
@@ -121,6 +133,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### 📚 Essential Files for Agent Understanding
 
 **Always read these first when working on AGOR**:
+
 - **`src/agor/tools/README_ai.md`**: Complete AI agent protocol and instructions
 - **`src/agor/tools/handoff_templates.py`**: Agent coordination and snapshot system (Note: module name might be dated)
 - **`docs/agor-development-guide.md`**: This file - development guidelines and context
@@ -129,6 +142,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### 🔍 Quick Context Checks
 
 **Before making changes, always verify**:
+
 ```bash
 # Check current AGOR version
 python -c "from agor import __version__; from agor.constants import PROTOCOL_VERSION; print(f'AGOR: {__version__}, Protocol: {PROTOCOL_VERSION}')"
@@ -160,17 +174,20 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 **CRITICAL**: Agent coordination can be a two-way process using snapshots:
 
 #### 📤 Coordinator → Agent (Work Snapshot as Work Order)
+
 - **Hotkey**: `snapshot` - Create a work snapshot for an agent.
 - **Contains**: Task description, context, requirements, next steps.
 - **File**: `.agor/snapshots/YYYY-MM-DD_HHMMSS_task-summary_snapshot.md` (Note: directory and filename convention may evolve).
 
 #### 📥 Agent → Coordinator (Completion Snapshot/Report)
+
 - **Hotkey**: `complete` - Create a completion snapshot or report.
 - **Contains**: Results summary, commits made, issues, recommendations.
 - **File**: `.agor/snapshots/YYYY-MM-DD_HHMMSS_COMPLETED_task-summary_snapshot.md`
 - **Purpose**: Coordinator review, quality assurance, integration decisions.
 
 #### 📝 Communication Protocol
+
 - **All snapshot events logged in**: `.agor/agentconvo.md`
 - **Work Snapshot (as Work Order)**: `[COORDINATOR-ID] [timestamp] - WORK SNAPSHOT CREATED: description`
 - **Snapshot Receipt**: `[AGENT-ID] [timestamp] - SNAPSHOT RECEIVED: description`
@@ -204,31 +221,31 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 
 ### ✅ Fully Implemented Features
 
-| Feature                 | Hotkey                                | Implementation                       | Status      |
-| ----------------------- | ------------------------------------- | ------------------------------------ | ----------- |
-| **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`        | code_exploration.py                  | ✅ Complete |
-| **Snapshot System**     | `snapshot`, `load_snapshot`, `list_snapshots`      | handoff_templates.py (generates snapshots) | ✅ Complete |
-| **SQLite Memory**       | Internal system only                  | sqlite_memory.py                     | ✅ Complete (Internal) |
-| **Parallel Divergent**  | `pd`                                  | strategies/parallel_divergent.py     | ✅ Complete |
-| **Pipeline Strategy**   | `pl`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
-| **Swarm Strategy**      | `sw`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
-| **Strategy Selection**  | `ss`                                  | strategies/multi_agent_strategies.py | ✅ Complete |
-| **Strategic Planning**  | `sp`                                  | project_planning_templates.py        | ✅ Complete |
-| **Architecture Review** | `ar`                                  | project_planning_templates.py        | ✅ Complete |
-| **Project Breakdown**   | `bp`                                  | strategies/project_breakdown.py      | ✅ Complete |
-| **Team Creation**       | `ct`                                  | strategies/team_creation.py          | ✅ Complete |
-| **Workflow Design**     | `wf`                                  | strategies/workflow_design.py        | ✅ Complete |
-| **Snapshot Prompts**    | `hp`                                  | strategies/handoff_prompts.py (generates snapshot prompts) | ✅ Complete |
-| **Red Team Strategy**   | `rt`                                  | strategies/red_team.py               | ✅ Complete |
-| **Mob Programming**     | `mb`                                  | strategies/mob_programming.py        | ✅ Complete |
-| **Team Management**     | `tm`                                  | strategies/team_management.py        | ✅ Complete |
-| **Quality Gates**       | `qg`                                  | strategies/quality_gates.py          | ✅ Complete |
-| **Error Optimization**  | `eo`                                  | strategies/error_optimization.py     | ✅ Complete |
-| **Dependency Planning** | `dp`                                  | strategies/dependency_planning.py    | ✅ Complete |
-| **Risk Planning**       | `rp`                                  | strategies/risk_planning.py          | ✅ Complete |
-| **Agent Discovery**     | N/A                                   | agent_coordination.py                | ✅ Complete |
-| **Bundle Mode**         | N/A                                   | Complete documentation               | ✅ Complete |
-| **AGOR Meta**           | `meta`                                | agor-meta.md                         | ✅ Complete |
+| Feature                 | Hotkey                                        | Implementation                                             | Status                 |
+| ----------------------- | --------------------------------------------- | ---------------------------------------------------------- | ---------------------- |
+| **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`                | code_exploration.py                                        | ✅ Complete            |
+| **Snapshot System**     | `snapshot`, `load_snapshot`, `list_snapshots` | handoff_templates.py (generates snapshots)                 | ✅ Complete            |
+| **SQLite Memory**       | Internal system only                          | sqlite_memory.py                                           | ✅ Complete (Internal) |
+| **Parallel Divergent**  | `pd`                                          | strategies/parallel_divergent.py                           | ✅ Complete            |
+| **Pipeline Strategy**   | `pl`                                          | strategies/multi_agent_strategies.py                       | ✅ Complete            |
+| **Swarm Strategy**      | `sw`                                          | strategies/multi_agent_strategies.py                       | ✅ Complete            |
+| **Strategy Selection**  | `ss`                                          | strategies/multi_agent_strategies.py                       | ✅ Complete            |
+| **Strategic Planning**  | `sp`                                          | project_planning_templates.py                              | ✅ Complete            |
+| **Architecture Review** | `ar`                                          | project_planning_templates.py                              | ✅ Complete            |
+| **Project Breakdown**   | `bp`                                          | strategies/project_breakdown.py                            | ✅ Complete            |
+| **Team Creation**       | `ct`                                          | strategies/team_creation.py                                | ✅ Complete            |
+| **Workflow Design**     | `wf`                                          | strategies/workflow_design.py                              | ✅ Complete            |
+| **Snapshot Prompts**    | `hp`                                          | strategies/handoff_prompts.py (generates snapshot prompts) | ✅ Complete            |
+| **Red Team Strategy**   | `rt`                                          | strategies/red_team.py                                     | ✅ Complete            |
+| **Mob Programming**     | `mb`                                          | strategies/mob_programming.py                              | ✅ Complete            |
+| **Team Management**     | `tm`                                          | strategies/team_management.py                              | ✅ Complete            |
+| **Quality Gates**       | `qg`                                          | strategies/quality_gates.py                                | ✅ Complete            |
+| **Error Optimization**  | `eo`                                          | strategies/error_optimization.py                           | ✅ Complete            |
+| **Dependency Planning** | `dp`                                          | strategies/dependency_planning.py                          | ✅ Complete            |
+| **Risk Planning**       | `rp`                                          | strategies/risk_planning.py                                | ✅ Complete            |
+| **Agent Discovery**     | N/A                                           | agent_coordination.py                                      | ✅ Complete            |
+| **Bundle Mode**         | N/A                                           | Complete documentation                                     | ✅ Complete            |
+| **AGOR Meta**           | `meta`                                        | agor-meta.md                                               | ✅ Complete            |
 
 ### 🟡 Partially Implemented Features
 
@@ -266,12 +283,14 @@ All planned AGOR strategy modules have been implemented and are fully functional
 **Problem**: CLI mixed user-facing commands with agent coordination commands, causing confusion about what's for developers vs AI agents.
 
 **Solution Implemented**:
+
 - ✅ **Completed**: Added [CLI] prefixes to user commands: `bundle`, `config`, `git-config`, `version`
 - ✅ **Completed**: Added [AGENT] prefixes to agent commands: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback`
 - ✅ **Completed**: Updated development guide with clear distinction between CLI commands and agent hotkeys
 - ✅ **Completed**: Clarified that agent hotkeys (`a`, `f`, `co`, etc.) are protocol directives, not CLI commands
 
 **Implementation Details**:
+
 - **[CLI] Commands**: `bundle`, `config`, `git-config`, `version` - for developers using AGOR
 - **[AGENT] Commands**: `init`, `pd`, `ss`, `status`, `sync`, `agent-status`, `custom-instructions`, `generate-agor-feedback` - for agents when they need CLI access
 - **Agent Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc. - protocol directives in agent instructions, NOT CLI commands
@@ -283,12 +302,14 @@ All planned AGOR strategy modules have been implemented and are fully functional
 **Problem**: Role selection menu was broken in bundle uploads - AI was skipping role selection and jumping to default initialization, creating a "jumbled mess" of output.
 
 **Root Cause Analysis**:
+
 1. **Bundle Creation**: Works correctly - copies README_ai.md to agor_tools/ and generates proper prompt
 2. **AI Prompt**: Works correctly - tells AI to "read agor_tools/README_ai.md completely"
 3. **Role Selection Instructions**: Were too weak - AI was ignoring "Before proceeding, determine your role"
 4. **Menu Structure**: Had confusing headers mixed into user-facing display
 
 **Solution Implemented**:
+
 - ✅ **Strong mandatory warnings**: Added explicit "DO NOT PROCEED WITHOUT ROLE SELECTION" instructions
 - ✅ **Preserved Role A/B/C headers**: Kept formal role identifiers as requested
 - ✅ **Clean menu display**: Role headers inside menu but properly formatted
@@ -296,6 +317,7 @@ All planned AGOR strategy modules have been implemented and are fully functional
 - ✅ **SINGLE-AGENT vs MULTI-AGENT guidance**: Clear workflow distinction
 
 **Files Modified**:
+
 - `src/agor/tools/README_ai.md` - Enhanced role selection protocol
 - `.agor/handoff/restore_role_boot.md` - Documentation of changes
 
@@ -423,6 +445,7 @@ agor git-config               # Set up git configuration
 **✅ REALITY**: Most "hotkeys" are **agent menu options**, not CLI commands.
 
 - **Agent Menu Hotkeys**: `pd`, `ss`, `init`, `a`, `f`, `mem-add`, etc.
+
   - These are menu options agents use within coordination workflows
   - They trigger agent actions and generate coordination files
   - They are NOT direct CLI commands for users
@@ -759,11 +782,13 @@ AGOR's core functionality includes initializing and managing coordination strate
 ### Avoid Committing Local State to the AGOR Repository
 
 The AGOR project's root `.gitignore` file is configured to ignore common operational state files and directories, such as:
+
 ```gitignore
 /.agor/state/
 /.agor/memory.db
 /.agor/agent-instructions/ # If these were example outputs
 ```
+
 This helps prevent accidental commits of local test states into the main AGOR codebase. Always ensure your local AGOR repository is clean of such files before committing unrelated changes.
 
 ### Best Practice: Use a Separate Sample Project for Testing
@@ -771,7 +796,7 @@ This helps prevent accidental commits of local test states into the main AGOR co
 To thoroughly test AGOR CLI commands that interact with or create state (e.g., `agor init`, `agor pd`, `agor status`, `agor agent-status`):
 
 1.  **Create a dedicated sample project directory** outside of your AGOR development repository. This project can be a minimal mock-up of a typical user project.
-2.  **Run `agor` commands from within this sample project's directory.** This will correctly create an `.agor/` directory and its state files *within that sample project*, mimicking real user experience without polluting the AGOR development repository.
+2.  **Run `agor` commands from within this sample project's directory.** This will correctly create an `.agor/` directory and its state files _within that sample project_, mimicking real user experience without polluting the AGOR development repository.
 3.  You can then inspect the state files in the sample project's `.agor/` directory to verify AGOR's behavior.
 
 This approach provides a clean environment for testing stateful operations and ensures that the AGOR project's own `.agor/` directory (if it contains any legitimate, version-controlled template files or example outputs) remains pristine.

@@ -516,7 +516,9 @@ Update `.agor/agentconvo.md` with completion acknowledgment:
 """
 
 
-def save_completion_report(report_content: str, task_summary: str, coordinator_id: str) -> Path:
+def save_completion_report(
+    report_content: str, task_summary: str, coordinator_id: str
+) -> Path:
     """Save completion report document for coordinator review."""
 
     handoff_dir = create_handoff_directory()

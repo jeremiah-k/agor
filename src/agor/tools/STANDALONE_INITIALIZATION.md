@@ -9,6 +9,7 @@ This guide is for agents that have cloned AGOR themselves and have direct access
 ## 🎯 Step 1: Role Confirmation
 
 You should have already selected your role from README_ai.md:
+
 - **Role A**: SOLO DEVELOPER
 - **Role B**: PROJECT COORDINATOR
 - **Role C**: AGENT WORKER
@@ -18,12 +19,14 @@ You should have already selected your role from README_ai.md:
 ### Essential Setup (All Roles)
 
 1. **Verify AGOR tools access**:
+
    ```bash
    # You should be in the AGOR repository directory
    ls src/agor/tools/  # Verify tools are available
    ```
 
 2. **Navigate to target project**:
+
    ```bash
    # Go to the project you're working on
    cd /path/to/target/project
@@ -32,6 +35,7 @@ You should have already selected your role from README_ai.md:
    ```
 
 3. **Set up git configuration**:
+
    ```bash
    # Configure git identity (use system git)
    git config user.name "AGOR AI Agent"
@@ -102,12 +106,14 @@ Select an option:
 ## 🔄 Key Differences from Bundle Mode
 
 ### Advantages:
+
 - **Direct git access**: Can push/pull directly to repositories
 - **System integration**: Access to full system capabilities
 - **Real-time collaboration**: Multiple agents can work on live repositories
 - **No file size limits**: Complete repository access
 
 ### Considerations:
+
 - **Security**: Direct commit access requires careful permission management
 - **Environment setup**: Must have git and other tools installed
 - **Coordination**: .agor/ files must be committed/pushed for multi-agent coordination
@@ -137,6 +143,7 @@ git push
 ## 🤝 Multi-Agent Coordination
 
 In standalone mode, coordination happens through:
+
 - **Shared .agor/ directory**: Version controlled coordination files
 - **Real-time git operations**: Push/pull coordination state
 - **Direct repository access**: All agents work on the same live repository

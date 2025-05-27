@@ -5,19 +5,23 @@
 ## 🔄 Menu Flow Principles
 
 ### 1. **Clear Feedback Loop**
+
 When a user selects a hotkey, always provide:
+
 - ✅ Confirmation of what action is being taken
 - ✅ Clear indication of what's happening
 - ✅ Results or next steps
 - ✅ Return to menu or next action options
 
 ### 2. **Progressive Disclosure**
+
 - **Level 1**: Main role menu (clean, simple)
 - **Level 2**: Action confirmation and parameters
 - **Level 3**: Execution and results
 - **Level 4**: Next actions or return to menu
 
 ### 3. **Consistent Patterns**
+
 All hotkey interactions should follow this pattern:
 
 ```
@@ -76,6 +80,7 @@ Agent Menu: [Clean menu with next options]
 ## 🚫 What NOT to Do
 
 ❌ **Don't expose technical details**:
+
 ```
 # BAD
 tree('.') – show project structure
@@ -83,6 +88,7 @@ analyze_file_structure(path) – analyze any file
 ```
 
 ✅ **Do provide clean options**:
+
 ```
 # GOOD
 tree) directory structure
@@ -90,6 +96,7 @@ a) analyze codebase
 ```
 
 ❌ **Don't leave users hanging**:
+
 ```
 # BAD
 [Performs action]
@@ -98,6 +105,7 @@ a) analyze codebase
 ```
 
 ✅ **Do provide clear next steps**:
+
 ```
 # GOOD
 [Performs action]
@@ -223,18 +231,21 @@ After any hotkey action, always:
 ## 💡 Best Practices
 
 ### For Bundle Mode:
+
 - Keep interface polished and professional
 - Hide all technical implementation details
 - Focus on user experience
 - Provide clear guidance at each step
 
 ### For Standalone Mode:
+
 - Can be slightly more technical
 - Still maintain clean menus
 - Provide git operation feedback
 - Show coordination status
 
 ### For All Modes:
+
 - Always return to clean menus after actions
 - Never leave users without next steps
 - Maintain consistent formatting

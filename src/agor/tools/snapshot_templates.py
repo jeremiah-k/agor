@@ -94,7 +94,7 @@ def generate_snapshot_document(
     files_modified: List[str],
     context_notes: str,
     agent_role: str,
-    snapshot_reason: str, # Renamed parameter
+    snapshot_reason: str,  # Renamed parameter
     estimated_completion: str = "Unknown",
 ) -> str:
     """Generate a comprehensive snapshot document for agent transitions or context saving."""
@@ -384,9 +384,11 @@ def update_snapshot_index(filename: str, problem_summary: str, status: str):
                 "## Active Snapshots\n",
                 f"## Active Snapshots\n- `{filename}` - {problem_summary}\n",
             )
-    elif status == "completed" or status == "archived": # Added 'archived'
+    elif status == "completed" or status == "archived":  # Added 'archived'
         # Move from active to completed/archived
-        content = content.replace(f"- `{filename}` - {problem_summary}", "") # Remove from active if present
+        content = content.replace(
+            f"- `{filename}` - {problem_summary}", ""
+        )  # Remove from active if present
         content = content.replace(
             "## Completed/Archived Snapshots\n- None yet",
             f"## Completed/Archived Snapshots\n- `{filename}` - {problem_summary}",
@@ -516,15 +518,17 @@ Update `.agor/agentconvo.md` with completion acknowledgment:
 """
 
 
-def save_completion_report(report_content: str, task_summary: str, coordinator_id: str) -> Path:
+def save_completion_report(
+    report_content: str, task_summary: str, coordinator_id: str
+) -> Path:
     """Save completion report document (a type of snapshot) for coordinator review."""
 
-    snapshot_dir = create_snapshot_directory() # Use new directory function
+    snapshot_dir = create_snapshot_directory()  # Use new directory function
 
     # Generate filename with timestamp and task summary
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
     safe_summary = "".join(c for c in task_summary if c.isalnum() or c in "-_")[:30]
-    filename = f"{timestamp}_COMPLETED_{safe_summary}_snapshot.md" # Added _snapshot
+    filename = f"{timestamp}_COMPLETED_{safe_summary}_snapshot.md"  # Added _snapshot
 
     report_file = snapshot_dir / filename
     report_file.write_text(report_content)

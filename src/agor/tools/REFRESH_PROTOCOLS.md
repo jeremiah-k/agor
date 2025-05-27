@@ -5,6 +5,7 @@
 ## 🎯 The Refresh Challenge
 
 During longer AGOR sessions, both users and agents can:
+
 - Lose track of current context
 - Forget available options
 - Get confused about their role or mode
@@ -16,6 +17,7 @@ During longer AGOR sessions, both users and agents can:
 ## 🔄 Refresh Mechanisms
 
 ### 1. **Soft Refresh** - Context Reminder
+
 **Hotkey**: `?` or `help`
 **Purpose**: Quick reminder without full reset
 
@@ -40,6 +42,7 @@ What would you like to do?
 ```
 
 ### 2. **Menu Refresh** - Full Options Display
+
 **Hotkey**: `menu` or `m`
 **Purpose**: Redisplay full role-specific menu
 
@@ -52,6 +55,7 @@ Select an option:
 ```
 
 ### 3. **Clean Reset** - Fresh Start
+
 **Hotkey**: `reset` or `restart`
 **Purpose**: Clean slate without losing context
 
@@ -72,6 +76,7 @@ Select an option:
 ```
 
 ### 4. **Role Reminder** - Identity Refresh
+
 **Hotkey**: `role` or `who`
 **Purpose**: Remind about current role and capabilities
 
@@ -88,6 +93,7 @@ Select an option:
 ```
 
 ### 5. **Guide Refresh** - Protocol Reminder
+
 **Hotkey**: `guide` or `protocol`
 **Purpose**: Quick protocol reminder without full restart
 
@@ -108,18 +114,21 @@ Select an option:
 ## 🎨 Design Principles
 
 ### **Elegant Integration**
+
 - Refresh options feel natural, not like error recovery
 - Consistent with overall AGOR aesthetic
 - Quick and non-disruptive
 - Preserve user context and progress
 
 ### **Progressive Disclosure**
+
 - `?` - Minimal context reminder
 - `menu` - Full options without explanation
 - `reset` - Fresh start with context preservation
 - `guide` - Protocol and role reminder
 
 ### **Context Preservation**
+
 - Never lose user's work or progress
 - Remember last actions and current state
 - Maintain role and mode information
@@ -128,6 +137,7 @@ Select an option:
 ## 📋 Implementation in Menus
 
 ### Add to All Role Menus:
+
 ```
 **🔄 Session Management:**
 ?) quick help    menu) full options    reset) clean restart
@@ -135,6 +145,7 @@ role) role reminder    guide) protocol refresh
 ```
 
 ### Or More Subtle Integration:
+
 ```
 **🔄 Navigation:**
 ?) help    menu) options    reset) restart    guide) protocol
@@ -143,12 +154,14 @@ role) role reminder    guide) protocol refresh
 ## 🎯 Contextual Refresh Triggers
 
 ### **When to Suggest Refresh**:
+
 1. **After Errors**: "Something went wrong? Try `reset` for a clean start"
 2. **Long Sessions**: "Been working a while? Type `?` for a quick refresher"
 3. **User Confusion**: "Not sure what to do? Try `menu` to see all options"
 4. **Mode Switches**: "Switched contexts? Type `role` to confirm your current role"
 
 ### **Proactive Refresh Suggestions**:
+
 ```
 💡 **Session Tip**: Type `?` anytime for quick help, or `menu` to see all options
 
@@ -160,12 +173,14 @@ role) role reminder    guide) protocol refresh
 ## 🔄 Smart Refresh Logic
 
 ### **Context-Aware Suggestions**:
+
 - After 10+ actions: Suggest `?` for quick refresh
 - After errors: Suggest `reset` for clean start
 - When user seems confused: Suggest `menu` for full options
 - When switching between different types of actions: Suggest `role` reminder
 
 ### **Adaptive Messaging**:
+
 ```python
 # Pseudo-logic for smart refresh suggestions
 if action_count > 10:
@@ -179,12 +194,14 @@ elif user_input_unclear:
 ## 🎨 Visual Design
 
 ### **Consistent Formatting**:
+
 - Use 🔄 emoji for all refresh-related actions
 - Maintain AGOR's professional aesthetic
 - Keep refresh messages brief and helpful
 - Use consistent language patterns
 
 ### **Non-Intrusive Placement**:
+
 - Include refresh options in menus naturally
 - Don't make them prominent unless needed
 - Provide as helpful suggestions, not requirements
@@ -205,15 +222,18 @@ elif user_input_unclear:
 ## 🎯 Implementation Strategy
 
 ### **Phase 1**: Add basic refresh hotkeys to all menus
+
 - `?` for quick help
 - `menu` for full options
 - `reset` for clean restart
 
 ### **Phase 2**: Add contextual suggestions
+
 - Smart triggers based on session state
 - Helpful tips without being intrusive
 
 ### **Phase 3**: Advanced context preservation
+
 - Remember user preferences
 - Adaptive refresh suggestions
 - Session state management
@@ -223,6 +243,7 @@ elif user_input_unclear:
 ### **Handling Refresh Hotkeys**:
 
 **When user types `?` or `help`**:
+
 ```
 🎼 AGOR Quick Reference
 
@@ -244,11 +265,13 @@ What would you like to do?
 ```
 
 **When user types `menu`**:
+
 - Simply redisplay the full role-specific menu
 - No extra explanation needed
 - Clean, fresh presentation
 
 **When user types `reset`**:
+
 ```
 🔄 AGOR Clean Reset
 
@@ -266,6 +289,7 @@ Select an option:
 ```
 
 **When user types `role`**:
+
 ```
 🎭 Role Reminder
 
@@ -279,6 +303,7 @@ Select an option:
 ```
 
 **When user types `guide`**:
+
 ```
 📋 AGOR Protocol Reminder
 
@@ -294,7 +319,9 @@ Select an option:
 ```
 
 ### **Smart Suggestions**:
+
 After certain conditions, include helpful tips:
+
 - After 10+ actions: "💡 Type `?` for a quick refresher"
 - After errors: "💡 Try `reset` for a clean start"
 - When user seems confused: "💡 Type `menu` to see all options"

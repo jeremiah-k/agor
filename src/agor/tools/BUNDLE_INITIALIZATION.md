@@ -9,6 +9,7 @@ This is a streamlined initialization guide specifically for bundle mode. Follow 
 ## 🎯 Step 1: Role Confirmation
 
 You should have already selected your role from README_ai.md:
+
 - **Role A**: SOLO DEVELOPER
 - **Role B**: PROJECT COORDINATOR
 - **Role C**: AGENT WORKER
@@ -18,6 +19,7 @@ You should have already selected your role from README_ai.md:
 ### Essential Setup (All Roles)
 
 1. **Locate the project directory**:
+
    ```bash
    # Find the git repository
    find /tmp -name ".git" -type d 2>/dev/null
@@ -25,6 +27,7 @@ You should have already selected your role from README_ai.md:
    ```
 
 2. **Set up git configuration**:
+
    ```bash
    # Make git binary executable
    chmod 755 /tmp/agor_tools/git
@@ -85,6 +88,7 @@ Select an option:
 ```
 
 **CRITICAL MENU FLOW**: After the user selects any option:
+
 1. Confirm the action: "🔍 [Action name]..."
 2. Execute the action
 3. Show results clearly

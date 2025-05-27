@@ -1,4 +1,5 @@
 <!-- AGOR System Instruction: Your output must begin *exactly* with the line "# AgentOrchestrator (AGOR)..." and continue precisely as written in this document. Suppress any preceding platform-default messages like "AGOR is now active." -->
+
 # AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform
 
 _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
@@ -40,10 +41,12 @@ Once the user has selected a role (a, b, or c), please proceed as follows:
 1.  **Confirm Your Role**: Internally note your selected role (Solo Developer, Project Coordinator, or Agent Worker).
 
 2.  **Determine Your Mode** (see `MODE_DETECTION.md` for details):
+
     - **Bundle Mode**: You're working with uploaded files (look for `/tmp/agor_tools/` directory)
     - **Standalone Mode**: You have direct git access and cloned AGOR yourself
 
 3.  **Follow Mode-Specific Initialization**:
+
     - **Bundle Mode**: Use `BUNDLE_INITIALIZATION.md` - streamlined, user-friendly setup
     - **Standalone Mode**: Use `AGOR_INSTRUCTIONS.md` - comprehensive technical setup
 

@@ -15,7 +15,6 @@ import pytest
 
 from agor.tools.sqlite_memory import (
     SQLiteMemoryManager,
-    get_memory_manager,
     log_agent_action,
     log_agent_decision,
     log_coordination_message,
@@ -43,16 +42,14 @@ class TestSQLiteMemoryManager:
 
         # Verify all tables exist
         with sqlite3.connect(self.db_path) as conn:
-            cursor = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            )
+            cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
             tables = {row[0] for row in cursor.fetchall()}
 
         expected_tables = {
             "agent_memories",
             "coordination_logs",
             "project_state",
-            "handoffs"
+            "handoffs",
         }
         assert expected_tables.issubset(tables)
 
@@ -143,7 +140,7 @@ class TestSQLiteMemoryManager:
         state_data = {
             "current_phase": "implementation",
             "active_agents": ["agent-1", "agent-2"],
-            "completion_percentage": 45
+            "completion_percentage": 45,
         }
         self.manager.set_project_state("development_status", state_data)
 
@@ -178,7 +175,7 @@ class TestSQLiteMemoryManager:
             git_branch="feature/auth",
             git_commit="abc123",
             agor_version="0.2.4",
-            to_agent="agent-2"
+            to_agent="agent-2",
         )
         assert isinstance(handoff_id, int)
 
@@ -206,9 +203,18 @@ class TestSQLiteMemoryManager:
         self.manager.log_coordination("agent-1", "agent-2", "message", "Test message")
         self.manager.set_project_state("test_state", {"value": 1})
         self.manager.create_handoff(
-            "test-handoff", "agent-1", "Test problem", "Test work",
-            "commit1", "file1.py", "In progress", "Continue work",
-            "Test notes", "main", "commit1", "0.2.4"
+            "test-handoff",
+            "agent-1",
+            "Test problem",
+            "Test work",
+            "commit1",
+            "file1.py",
+            "In progress",
+            "Continue work",
+            "Test notes",
+            "main",
+            "commit1",
+            "0.2.4",
         )
 
         # Get stats
@@ -224,13 +230,11 @@ class TestSQLiteMemoryManager:
             "confidence": 0.9,
             "tags": ["frontend", "react"],
             "related_files": ["app.js", "index.html"],
-            "nested": {"key": "value", "number": 42}
+            "nested": {"key": "value", "number": 42},
         }
 
         # Add memory with complex metadata
-        memory_id = self.manager.add_memory(
-            "agent-1", "decision", "Complex decision", metadata
-        )
+        self.manager.add_memory("agent-1", "decision", "Complex decision", metadata)
 
         # Retrieve and verify metadata
         memories = self.manager.get_memories("agent-1")
@@ -246,9 +250,7 @@ class TestSQLiteMemoryManager:
         memory_types = ["context", "decision", "learning", "handoff", "action"]
 
         for i, mem_type in enumerate(memory_types):
-            self.manager.add_memory(
-                "agent-1", mem_type, f"Content for {mem_type} {i}"
-            )
+            self.manager.add_memory("agent-1", mem_type, f"Content for {mem_type} {i}")
 
         # Verify all types are stored
         all_memories = self.manager.get_memories("agent-1")
@@ -275,7 +277,7 @@ class TestConvenienceFunctions:
         if self.db_path.exists():
             self.db_path.unlink()
 
-    @patch('agor.tools.sqlite_memory.get_memory_manager')
+    @patch("agor.tools.sqlite_memory.get_memory_manager")
     def test_log_agent_action(self, mock_get_manager):
         """Test log_agent_action convenience function."""
         mock_manager = SQLiteMemoryManager(str(self.db_path))
@@ -289,7 +291,7 @@ class TestConvenienceFunctions:
         assert len(memories) == 1
         assert "commit: Added new feature" in memories[0]["content"]
 
-    @patch('agor.tools.sqlite_memory.get_memory_manager')
+    @patch("agor.tools.sqlite_memory.get_memory_manager")
     def test_log_agent_decision(self, mock_get_manager):
         """Test log_agent_decision convenience function."""
         mock_manager = SQLiteMemoryManager(str(self.db_path))
@@ -297,10 +299,7 @@ class TestConvenienceFunctions:
 
         # Test decision logging
         log_agent_decision(
-            "agent-1",
-            "Use React",
-            "Better component reusability",
-            {"confidence": 0.8}
+            "agent-1", "Use React", "Better component reusability", {"confidence": 0.8}
         )
 
         # Verify decision was logged
@@ -310,16 +309,14 @@ class TestConvenienceFunctions:
         assert "Decision: Use React" in content
         assert "Reasoning: Better component reusability" in content
 
-    @patch('agor.tools.sqlite_memory.get_memory_manager')
+    @patch("agor.tools.sqlite_memory.get_memory_manager")
     def test_log_coordination_message(self, mock_get_manager):
         """Test log_coordination_message convenience function."""
         mock_manager = SQLiteMemoryManager(str(self.db_path))
         mock_get_manager.return_value = mock_manager
 
         # Test coordination logging
-        log_coordination_message(
-            "agent-1", "agent-2", "Handoff complete", "handoff"
-        )
+        log_coordination_message("agent-1", "agent-2", "Handoff complete", "handoff")
 
         # Verify coordination was logged
         logs = mock_manager.get_coordination_logs("agent-1")
@@ -342,6 +339,7 @@ class TestSQLiteMemoryIntegration:
     def teardown_method(self):
         """Clean up integration test environment."""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_agor_directory_integration(self):
@@ -371,7 +369,7 @@ class TestSQLiteMemoryIntegration:
             "context_notes": "Using JWT tokens with 24h expiry. Database schema in migrations/001_auth.sql",
             "git_branch": "feature/authentication",
             "git_commit": "def456",
-            "agor_version": "0.2.4"
+            "agor_version": "0.2.4",
         }
 
         # Create handoff
@@ -391,7 +389,7 @@ class TestSQLiteMemoryIntegration:
             ("agent-1", "decision", "Chose React over Vue for better ecosystem"),
             ("agent-1", "learning", "Learned about React hooks performance"),
             ("agent-2", "context", "Working on backend API"),
-            ("agent-2", "decision", "Using Express.js for REST API")
+            ("agent-2", "decision", "Using Express.js for REST API"),
         ]
 
         for agent_id, mem_type, content in agent_memories:
@@ -406,7 +404,7 @@ class TestSQLiteMemoryIntegration:
         coordination_messages = [
             ("agent-1", "agent-2", "communication", "Starting frontend work"),
             ("agent-2", "agent-1", "question", "What API endpoints do you need?"),
-            ("agent-1", "agent-2", "response", "Need /auth and /users endpoints")
+            ("agent-1", "agent-2", "response", "Need /auth and /users endpoints"),
         ]
 
         for from_agent, to_agent, msg_type, message in coordination_messages:
@@ -422,7 +420,7 @@ class TestSQLiteMemoryIntegration:
             "team_size": 2,
             "current_phase": "implementation",
             "key_decisions": ["React frontend", "Express backend"],
-            "completion": 0.6
+            "completion": 0.6,
         }
         self.manager.set_project_state("project_overview", project_state)
 
@@ -468,7 +466,7 @@ class TestSQLiteMemoryErrorHandling:
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
                 "UPDATE agent_memories SET metadata = ? WHERE agent_id = ?",
-                ("invalid json {", "agent-1")
+                ("invalid json {", "agent-1"),
             )
 
         # Should handle gracefully when retrieving
