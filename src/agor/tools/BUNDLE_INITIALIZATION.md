@@ -2,13 +2,15 @@
 
 **For AI agents working in bundle mode (uploaded archives)**
 
+**How to know you're in Bundle Mode**: Look for `/tmp/agor_tools/` directory with bundled tools.
+
 This is a streamlined initialization guide specifically for bundle mode. Follow these steps exactly.
 
 ## 🎯 Step 1: Role Confirmation
 
 You should have already selected your role from README_ai.md:
 - **Role A**: SOLO DEVELOPER
-- **Role B**: PROJECT COORDINATOR  
+- **Role B**: PROJECT COORDINATOR
 - **Role C**: AGENT WORKER
 
 ## 🔧 Step 2: Bundle Mode Setup
@@ -26,11 +28,11 @@ You should have already selected your role from README_ai.md:
    ```bash
    # Make git binary executable
    chmod 755 /tmp/agor_tools/git
-   
+
    # Configure git identity
    /tmp/agor_tools/git config user.name "AgentOrchestrator"
    /tmp/agor_tools/git config user.email "agor@example.local"
-   
+
    # Verify setup
    /tmp/agor_tools/git status
    ```
@@ -102,7 +104,7 @@ Select an option:
 ## 🚫 What NOT to Show Users
 
 ❌ `tree('.') – show project structure`
-❌ `grep('.', 'def ') – search for function definitions`  
+❌ `grep('.', 'def ') – search for function definitions`
 ❌ `analyze_file_structure(path) – analyze any file`
 ❌ Any Python function calls or technical documentation
 
