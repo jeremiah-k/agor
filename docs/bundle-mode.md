@@ -192,6 +192,25 @@ agor bundle /path/to/your/project -b feature1,feature2
 agor bundle /path/to/your/project
 ```
 
+## 🧠 The Advantage of Full Codebase Context
+
+When you create a bundle with AGOR, you're providing the AI with a remarkably comprehensive understanding of your project. This isn't just about the current state of your files; by default, AGOR includes:
+
+*   **The Entire Repository**: Every file and directory tracked by Git is included.
+*   **Full Git History**: The AI has access to the complete history of changes, including all branches, commits, and tags.
+*   **Portable Git Tools**: The bundle contains a functional Git binary, allowing the AI to run actual Git commands for deep analysis (e.g., `git log`, `git diff <commit>`, `git blame`).
+
+**Why is this a significant advantage?**
+
+Many AI coding tools or integrations operate with a limited view of your codebase—perhaps only open files, a specific directory, or no history at all. AGOR's approach offers superior context:
+
+*   **Holistic Understanding**: The AI can understand how different parts of your project connect, how features have evolved, and why certain design decisions were made by examining the commit history.
+*   **Better Analysis & Debugging**: When analyzing code or debugging issues, the AI can trace changes across branches, identify when a bug might have been introduced, or understand the context of a particular line of code by looking at its history (`git blame`).
+*   **More Accurate Answers**: When you ask questions about the codebase, the AI can provide much more insightful and accurate answers because it's not guessing based on a partial view.
+*   **Effective Large-Scale Changes**: For refactoring or implementing features that span multiple files or modules, the AI can operate with a much clearer picture of potential impacts.
+
+This comprehensive context empowers the AI to act more like an experienced developer with deep project knowledge, leading to higher quality assistance, more accurate code generation, and more insightful analysis. While bundling all branches is the default and provides maximum context, AGOR also offers [Branch-Specific Bundling](#branch-specific-bundling) options if you need to create smaller, more focused bundles.
+
 ## 🎭 Role Selection
 
 After uploading and initializing, AGOR will prompt for role selection:

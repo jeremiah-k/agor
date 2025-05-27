@@ -53,7 +53,7 @@ cd your-project
 **How It Works:**
 1. You bundle your project using AGOR CLI
 2. Upload the bundle to your AI platform
-3. Agent analyzes and works within the bundled environment
+3. Agent analyzes and works within the bundled environment. This bundle uniquely includes the **entirety of your codebase and its full Git history (all branches by default)**, giving the AI deep contextual understanding for more accurate analysis and effective editing, a capability not always present in other tools.
 4. Agent provides edited files in code blocks
 5. You manually copy-paste changes and commit them yourself
 
@@ -78,6 +78,9 @@ agor bundle https://github.com/your-username/your-project
 - Debugging and troubleshooting
 - Solo development work
 - Technical deep-dives
+- Managing complex tasks by breaking them down with structured context.
+- Preserving detailed progress and context across multiple work sessions, especially when dealing with AI context window limitations.
+- Creating 'handoffs to self' to seamlessly resume work or switch between different AI models/assistants while maintaining full context.
 
 **Works in Both Modes:**
 - **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
@@ -96,6 +99,15 @@ agor bundle https://github.com/your-username/your-project
 2. Explore specific code areas (`f`, `co`)
 3. Implement changes or provide detailed explanations
 4. Document findings and decisions
+
+**Why Use AGOR as a Solo Developer?**
+
+While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for solo developers:
+
+*   **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)handoffs can bring clarity to complex projects.
+*   **Context Preservation**: AI assistants often have context window limits. Using AGOR's `handoff` hotkey (even if you're handing off to yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
+*   **Tool Integration**: AGOR provides a consistent interface for interacting with your codebase, including integrated Git commands and analysis tools, all within the AI's workflow.
+*   **Future Scalability**: If your solo project grows to involve more collaborators (human or AI), you'll already have a structured process in place.
 
 ### 📋 PROJECT COORDINATOR
 

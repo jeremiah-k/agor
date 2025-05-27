@@ -17,7 +17,7 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 ### Core Concepts
 
 - **[Multi-Agent Strategies](strategies.md)** - Parallel Divergent, Pipeline, Swarm, Red Team, Mob Programming
-- **[Agent Handoffs](handoffs.md)** - Seamless agent transitions and work handoffs
+- **[Agent Handoffs](handoffs.md)** - Seamless agent transitions, work handoffs, and solo context management.
 
 ### AI Tools & Instructions
 
