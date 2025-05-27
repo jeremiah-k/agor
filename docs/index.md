@@ -14,6 +14,13 @@
 - **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
 
+### "I need to check protocol updates or compatibility"
+
+- **[docs/protocol-changelog.md](protocol-changelog.md)** - Protocol version history and compatibility guide
+  - Current: Protocol v0.4.0 with snapshot system and standalone mode
+  - Breaking changes, new capabilities, and migration notes
+  - Reference commits and specific line numbers for changes
+
 ### "I need to understand roles and initialization"
 
 - **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** - Complete AI protocol (563 lines)

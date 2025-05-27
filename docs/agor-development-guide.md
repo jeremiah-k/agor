@@ -139,6 +139,9 @@ python -c "from agor import __version__; from agor.constants import PROTOCOL_VER
 # Check agent tools directory
 ls src/agor/tools/
 
+# Review protocol changes
+cat docs/protocol-changelog.md
+
 # Check if .agor coordination exists
 ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 ```
