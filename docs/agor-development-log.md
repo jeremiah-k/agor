@@ -27,6 +27,39 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 9. 2024-12-19 | Protocol v0.4.0 | Bundle Mode Menu Display Fix
+
+**Technical Focus**: Fixing bundle mode initialization where agents were showing internal function calls instead of clean user menus.
+
+**Implementation Details**:
+- Created `BUNDLE_INITIALIZATION.md` for streamlined bundle mode setup with clear step-by-step instructions
+- Added critical warnings in `AGOR_INSTRUCTIONS.md` Section 4 to prevent showing technical documentation to users
+- Strengthened menu display instructions for all three roles (Solo Developer, Project Coordinator, Agent Worker)
+- Updated `README_ai.md` to clearly distinguish between bundle mode and standalone mode initialization paths
+- Added explicit "DO NOT SHOW TO USERS" warnings for internal technical documentation
+
+**Rationale**:
+- Bundle mode users were seeing technical function calls like `tree('.')`, `grep('.', 'def ')`, `analyze_file_structure(path)` instead of clean menu options
+- This created a poor user experience and exposed internal implementation details
+- Need clear separation between user-facing menus and internal technical documentation
+- Bundle mode requires more streamlined initialization than standalone mode
+
+**Impact**:
+- Bundle mode agents should now display clean, professional menus instead of technical function names
+- Clear distinction between bundle mode (streamlined) and standalone mode (comprehensive) initialization
+- Better user experience with polished interface
+- Internal technical documentation properly hidden from end users
+
+**Lessons Learned**:
+- Bundle mode and standalone mode have different UX requirements and should have separate initialization paths
+- AI agents need very explicit instructions about what to show vs. hide from users
+- Technical documentation sections need clear warnings to prevent accidental exposure
+- Menu display instructions need to be strengthened with "CRITICAL" and "EXACTLY" language
+
+**Next Steps**: Test bundle mode initialization with real AI platforms to verify the fix works correctly.
+
+---
+
 ### 8. YYYY-MM-DD | Protocol v0.4.0 | Terminology and Hotkey Update (Snapshot)
 
 **Technical Focus**: Standardizing core terminology from "handoff" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
