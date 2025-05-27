@@ -36,8 +36,8 @@ AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgru
 **Example Workflow:**
 
 ```bash
-# Agent executes these commands (using improved 0.3.1-1 branch)
-cd /tmp && git clone -b 0.3.1-1 https://github.com/jeremiah-k/agor.git && cd agor
+# Agent executes these commands
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 # Agent then clones your project and works directly
@@ -217,8 +217,8 @@ agor bundle your-project -f zip --sqlite
 **Workflow:**
 
 ```bash
-# Agent executes (using improved 0.3.1-1 branch):
-cd /tmp && git clone -b 0.3.1-1 https://github.com/jeremiah-k/agor.git && cd agor
+# Agent executes:
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 # Agent then works directly with your repositories
 ```
@@ -304,10 +304,9 @@ agor bundle your-project -f tar.gz
 
 ### "Agent doesn't understand the protocol"
 
-**Solution:** Ensure the agent has loaded both instruction files from the correct branch:
+**Solution:** Ensure the agent has loaded both instruction files:
+
 ```bash
-# Make sure to use the improved 0.3.1-1 branch
-cd /tmp && git clone -b 0.3.1-1 https://github.com/jeremiah-k/agor.git && cd agor
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ```
 

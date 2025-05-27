@@ -18,12 +18,11 @@ You should have already selected your role from README_ai.md:
 
 ### Essential Setup (All Roles)
 
-1. **Clone AGOR with improved protocols**:
+1. **Verify AGOR tools access**:
+
    ```bash
-   # Clone the improved 0.3.1-1 branch
-   cd /tmp && git clone -b 0.3.1-1 https://github.com/jeremiah-k/agor.git && cd agor
-   # Load the protocols
-   cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
+   # You should be in the AGOR repository directory
+   ls src/agor/tools/  # Verify tools are available
    ```
 
 2. **Navigate to target project**:
