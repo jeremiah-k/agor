@@ -42,7 +42,7 @@
 
 ### "I need to hand off work to another agent"
 
-- **[docs/handoffs.md](handoffs.md)** - Comprehensive handoff system
+- **[docs/handoffs.md](handoffs.md)** - Comprehensive handoff system (for multi-agent and solo context management)
 - **[src/agor/tools/handoff_templates.py](../src/agor/tools/handoff_templates.py)** - Handoff generation code
   - Functions: generate_handoff_document(), get_git_context(), get_agor_version()
   - Captures: problem, progress, commits, files, next steps, git state, AGOR version
@@ -88,7 +88,7 @@
 | **[bundle-mode.md](bundle-mode.md)**                       | Complete Bundle Mode guide | All platforms, models, troubleshooting      | ~300  |
 | **[google-ai-studio.md](google-ai-studio.md)**             | Google AI Studio guide     | Function Calling setup, troubleshooting     | ~300  |
 | **[strategies.md](strategies.md)**                         | Multi-agent coordination   | 5 strategies with examples, decision matrix | ~400  |
-| **[handoffs.md](handoffs.md)**                             | Agent transition system    | Handoff creation, receiving, best practices | ~500  |
+| **[handoffs.md](handoffs.md)**                             | Agent transitions & solo context management    | Handoff creation, receiving, solo use benefits | ~500  |
 | **[coordination-example.md](coordination-example.md)**     | Strategy implementation    | Complete example, before/after comparison   | ~300  |
 | **[coordination-audit.md](coordination-audit.md)**         | Implementation audit       | Hotkey analysis, gaps, harmonization        | ~400  |
 | **[agor-development-guide.md](agor-development-guide.md)** | Development checklist      | For agents working on AGOR itself           | ~400  |
@@ -141,7 +141,7 @@
 - **Communication**: .agor/agentconvo.md format and usage
 - **Memory**: .agor/memory.md and agent-specific files
 - **SQLite Memory**: .agor/memory.db database-based storage (experimental)
-- **Handoffs**: Complete transition procedures with git state
+- **Handoffs**: Complete transition procedures with git state (also for solo context snapshots)
 - **Strategies**: 5 multi-agent patterns with implementation details
 - **Strategy Implementation**: Concrete execution protocols (strategy_protocols.py)
 - **Agent Discovery**: Role assignment and next actions (agent_coordination.py)
