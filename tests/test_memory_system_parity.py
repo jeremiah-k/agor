@@ -5,7 +5,6 @@ Tests that both memory systems provide equivalent functionality and can
 be used interchangeably in AGOR coordination workflows.
 """
 
-import json
 import tempfile
 from pathlib import Path
 
@@ -33,6 +32,7 @@ class TestMemorySystemParity:
     def teardown_method(self):
         """Clean up test environment."""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_agent_memory_parity(self):
@@ -89,13 +89,20 @@ class TestMemorySystemParity:
         coordination_data = [
             ("agent-1", "agent-2", "handoff", "Passing authentication work to you"),
             ("agent-2", "agent-1", "question", "What database schema should I use?"),
-            ("agent-1", "agent-2", "response", "Use the schema in migrations/001_auth.sql"),
+            (
+                "agent-1",
+                "agent-2",
+                "response",
+                "Use the schema in migrations/001_auth.sql",
+            ),
             ("agent-2", "all", "status", "Frontend authentication UI is complete"),
         ]
 
         # Add to SQLite
         for from_agent, to_agent, msg_type, message in coordination_data:
-            self.sqlite_manager.log_coordination(from_agent, to_agent, msg_type, message)
+            self.sqlite_manager.log_coordination(
+                from_agent, to_agent, msg_type, message
+            )
 
         # Migrate to markdown
         stats = self.migration_manager.migrate_sqlite_to_markdown()
@@ -123,26 +130,26 @@ class TestMemorySystemParity:
             "team_configuration": {
                 "size": 3,
                 "roles": ["backend", "frontend", "security"],
-                "active_agents": ["agent-1", "agent-2", "agent-3"]
+                "active_agents": ["agent-1", "agent-2", "agent-3"],
             },
             "current_phase": "implementation",
             "key_decisions": [
                 "Use JWT for authentication",
                 "React for frontend",
                 "PostgreSQL for database",
-                "Docker for deployment"
+                "Docker for deployment",
             ],
             "completion_metrics": {
                 "backend": 0.7,
                 "frontend": 0.5,
                 "security": 0.3,
-                "overall": 0.5
+                "overall": 0.5,
             },
             "next_milestones": [
                 "Complete authentication system",
                 "Implement user dashboard",
-                "Security audit and testing"
-            ]
+                "Security audit and testing",
+            ],
         }
 
         # Store in SQLite
@@ -189,7 +196,7 @@ class TestMemorySystemParity:
             "context_notes": "JWT secret is in .env file. Database migrations in migrations/ folder. API docs in docs/auth.md",
             "git_branch": "feature/authentication",
             "git_commit": "ghi789",
-            "agor_version": "0.2.4"
+            "agor_version": "0.2.4",
         }
 
         # Create handoff in SQLite
@@ -241,7 +248,9 @@ class TestMemorySystemParity:
         agent1_react = self.sqlite_manager.search_memories("React", agent_id="agent-1")
         assert len(agent1_react) == 1
 
-        decision_results = self.sqlite_manager.search_memories("framework", memory_type="decision")
+        decision_results = self.sqlite_manager.search_memories(
+            "framework", memory_type="decision"
+        )
         assert len(decision_results) == 1
 
         # Migrate to markdown and verify search capability through file content
@@ -259,18 +268,22 @@ class TestMemorySystemParity:
 
         # Migrate to SQLite
         stats = self.migration_manager.migrate_markdown_to_sqlite()
-        original_counts = {
+        {
             "memories": stats["agent_memories"],
             "coordination": stats["coordination_logs"],
-            "state": stats["project_state"]
+            "state": stats["project_state"],
         }
 
         # Work with SQLite system
         self.sqlite_manager.add_memory("agent-3", "context", "New work in SQLite")
-        self.sqlite_manager.log_coordination("agent-3", "agent-1", "status", "SQLite system working")
+        self.sqlite_manager.log_coordination(
+            "agent-3", "agent-1", "status", "SQLite system working"
+        )
 
         # Migrate back to markdown
-        stats = self.migration_manager.migrate_sqlite_to_markdown(overwrite_existing=True)
+        stats = self.migration_manager.migrate_sqlite_to_markdown(
+            overwrite_existing=True
+        )
 
         # Verify no data loss and new data included
         agent3_file = self.agor_dir / "agent-3-memory.md"
@@ -301,7 +314,8 @@ class TestMemorySystemParity:
         """Create sample markdown files for testing."""
         # Create agent memory files
         agent1_memory = self.agor_dir / "agent-1-memory.md"
-        agent1_memory.write_text("""# AGENT-1 Memory File
+        agent1_memory.write_text(
+            """# AGENT-1 Memory File
 
 ## Current Task
 Implementing user authentication system
@@ -320,10 +334,12 @@ Implementing user authentication system
 - Add password reset functionality
 - Implement 2FA support
 - Write comprehensive tests
-""")
+"""
+        )
 
         agent2_memory = self.agor_dir / "agent-2-memory.md"
-        agent2_memory.write_text("""# AGENT-2 Memory File
+        agent2_memory.write_text(
+            """# AGENT-2 Memory File
 
 ## Current Task
 Building React frontend components
@@ -337,11 +353,13 @@ Building React frontend components
 - Login form component complete
 - User dashboard in progress
 - API integration 70% done
-""")
+"""
+        )
 
         # Create agentconvo.md
         agentconvo = self.agor_dir / "agentconvo.md"
-        agentconvo.write_text("""# Agent Communication Log
+        agentconvo.write_text(
+            """# Agent Communication Log
 
 Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 
@@ -353,11 +371,13 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 [agent-2] [2024-01-27 12:00] - Login form component ready for integration
 [agent-1] [2024-01-27 14:00] - Authentication API endpoints complete
 [agent-2] [2024-01-27 15:30] - Frontend integration successful, testing UI flows
-""")
+"""
+        )
 
         # Create memory.md
         memory = self.agor_dir / "memory.md"
-        memory.write_text("""# Project Memory
+        memory.write_text(
+            """# Project Memory
 
 ## Task
 Build secure web application with user authentication
@@ -376,14 +396,16 @@ Build secure web application with user authentication
 - Authentication system: 80% complete
 - Frontend components: 60% complete
 - Integration testing: In progress
-""")
+"""
+        )
 
         # Create handoff directory and file
         handoff_dir = self.agor_dir / "handoffs"
         handoff_dir.mkdir(exist_ok=True)
 
         handoff_file = handoff_dir / "2024-01-27_143022_auth-implementation.md"
-        handoff_file.write_text("""# 🤝 Agent Handoff Document
+        handoff_file.write_text(
+            """# 🤝 Agent Handoff Document
 
 **Handoff ID**: 2024-01-27_143022_auth-implementation
 **From**: agent-1
@@ -431,7 +453,8 @@ API documentation is in docs/auth.md. Rate limiting is set to 5 attempts per min
 **Commit**: ghi789
 
 **AGOR Version**: 0.2.4
-""")
+"""
+        )
 
 
 if __name__ == "__main__":

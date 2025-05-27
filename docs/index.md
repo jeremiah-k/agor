@@ -89,18 +89,18 @@
 
 ### Core Documentation (docs/)
 
-| File                                                       | Purpose                    | Key Sections                                | Lines |
-| ---------------------------------------------------------- | -------------------------- | ------------------------------------------- | ----- |
-| **[README.md](README.md)**                                 | Documentation overview     | Navigation map, quick links                 | 60    |
-| **[agent-start-here.md](agent-start-here.md)**             | **Agent entry point**      | **Immediate guidance, discovery commands**  | ~100  |
-| **[quick-start.md](quick-start.md)**                       | 5-minute setup guide       | Installation, bundling, platform setup      | ~200  |
-| **[bundle-mode.md](bundle-mode.md)**                       | Complete Bundle Mode guide | All platforms, models, troubleshooting      | ~300  |
-| **[google-ai-studio.md](google-ai-studio.md)**             | Google AI Studio guide     | Function Calling setup, troubleshooting     | ~300  |
-| **[standalone-mode.md](standalone-mode.md)** | Standalone Mode Guide | Setup, usage, advantages of direct git access | ~250  |
-| **[strategies.md](strategies.md)**                         | Multi-agent coordination   | 5 strategies with examples, decision matrix | ~400  |
-| **[snapshots.md](snapshots.md)**                           | Agent state snapshots & context management    | Snapshot creation, receiving, solo use benefits | ~550+ |
-| **[coordination-example.md](coordination-example.md)**     | Strategy implementation    | Complete example, before/after comparison   | ~300  |
-| **[agor-development-guide.md](agor-development-guide.md)** | Development checklist      | For agents working on AGOR itself           | ~400  |
+| File                                                       | Purpose                                    | Key Sections                                    | Lines |
+| ---------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- | ----- |
+| **[README.md](README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
+| **[agent-start-here.md](agent-start-here.md)**             | **Agent entry point**                      | **Immediate guidance, discovery commands**      | ~100  |
+| **[quick-start.md](quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
+| **[bundle-mode.md](bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
+| **[google-ai-studio.md](google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
+| **[standalone-mode.md](standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
+| **[strategies.md](strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
+| **[snapshots.md](snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
+| **[coordination-example.md](coordination-example.md)**     | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
+| **[agor-development-guide.md](agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 

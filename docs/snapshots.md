@@ -6,10 +6,10 @@ One of AGOR's most powerful features is seamless agent transitions using snapsho
 
 While the concept of a "snapshot" can imply passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **solo developers**. Think of it as creating a comprehensive "snapshot" of your current work:
 
-*   **Context Preservation Across Sessions**: If you're stepping away from a task and want to ensure you can pick it up seamlessly later (perhaps hours, days, or even weeks later), creating a snapshot for your "future self" captures all relevant code changes, analysis, decisions, and next steps.
-*   **Managing AI Context Limits**: Large language models have context windows. If a task is complex and requires more back-and-forth than a single session can hold, creating a snapshot allows you to effectively "reset" the context for the AI while providing it with a structured, detailed summary of everything it needs to continue. You can then start a new conversation with the AI, provide the snapshot document, and carry on.
-*   **Switching Tools or Models**: If you start a task with one AI model and wish to continue with another, a snapshot document provides a standardized way to transfer the complete state of your work.
-*   **Structured Self-Correction**: If you've gone down a path and need to backtrack or rethink, creating a snapshot of your current state can be a useful way to document what you've done before exploring a new direction.
+- **Context Preservation Across Sessions**: If you're stepping away from a task and want to ensure you can pick it up seamlessly later (perhaps hours, days, or even weeks later), creating a snapshot for your "future self" captures all relevant code changes, analysis, decisions, and next steps.
+- **Managing AI Context Limits**: Large language models have context windows. If a task is complex and requires more back-and-forth than a single session can hold, creating a snapshot allows you to effectively "reset" the context for the AI while providing it with a structured, detailed summary of everything it needs to continue. You can then start a new conversation with the AI, provide the snapshot document, and carry on.
+- **Switching Tools or Models**: If you start a task with one AI model and wish to continue with another, a snapshot document provides a standardized way to transfer the complete state of your work.
+- **Structured Self-Correction**: If you've gone down a path and need to backtrack or rethink, creating a snapshot of your current state can be a useful way to document what you've done before exploring a new direction.
 
 So, as you read about the snapshot system, remember that while many examples involve multiple agents, the underlying mechanisms and benefits offer significant advantages for managing and preserving context in solo development workflows as well.
 
@@ -46,6 +46,7 @@ SOLO DEVELOPER → AGENT WORKER (Security Specialist)
 AGENT WORKER → AGENT WORKER (Different Shift)
 "I'm ending my work session, here's where I left off"
 ```
+
 This is ideal for solo developers or any agent needing to pause work and resume later with full context, effectively creating a detailed bookmark of their progress.
 
 ### 4. Managing AI Context Windows

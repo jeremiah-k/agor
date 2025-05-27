@@ -38,9 +38,9 @@ agor bundle /path/to/your/project -f zip
 1. **Upload your .zip bundle** using the file attachment button
 2. **Copy and paste the generated prompt** (AGOR creates this automatically)
 3. **Select your role** when prompted:
-   - **SOLO DEVELOPER** - Deep codebase analysis and implementation *(Single Agent)*
-   - **PROJECT COORDINATOR** - Strategic planning and team coordination *(Multi-Agent)*
-   - **AGENT WORKER** - Task execution and processing work snapshots *(Multi-Agent)*
+   - **SOLO DEVELOPER** - Deep codebase analysis and implementation _(Single Agent)_
+   - **PROJECT COORDINATOR** - Strategic planning and team coordination _(Multi-Agent)_
+   - **AGENT WORKER** - Task execution and processing work snapshots _(Multi-Agent)_
 
 ## 🔧 Critical Configuration
 
@@ -132,23 +132,29 @@ Google AI Studio works great for **single-agent workflows**, but you can also co
 ### Common Issues
 
 **AI simulates commands or reports functions unavailable**
+
 - ✅ **Ensure Function Calling is enabled in model settings.** This is the most common cause. Look for a "Function Calling" or "Tools" toggle in the Google AI Studio model settings. Without this, the AI cannot execute actual commands or use provided tools.
 
 **Git commands being simulated**
+
 - ✅ Remind AI about the real git binary: "You have a real, functional git binary at `/tmp/agor_tools/git`. Please make it executable with `chmod 755 /tmp/agor_tools/git` and use it directly for all Git operations (e.g., `/tmp/agor_tools/git status`). Do not simulate commands."
 
 **Git commands fail (e.g., permission denied or command not found initially)**
+
 - ✅ Remind the AI to make the bundled Git binary executable: `chmod 755 /tmp/agor_tools/git`. It should then use the full path: `/tmp/agor_tools/git <command>`.
 - ✅ If the AI reports `git: command not found`, explicitly tell it: "The git binary is located at `/tmp/agor_tools/git`. You must use this full path to execute git commands, for example: `/tmp/agor_tools/git --version`."
 
 **AI cannot find the Git repository**
+
 - ✅ Instruct the AI to search its environment recursively for the `.git` directory (e.g., `find /tmp -name .git -type d`) and then navigate to the project's root directory (the parent directory of the `.git` folder).
 
 **Bundle extraction fails**
+
 - ✅ Use `.zip` format (not `.tar.gz`) for Google AI Studio.
 - ✅ Re-upload if extraction seems incomplete or if the AI cannot find expected files in `/tmp/PROJECT_NAME_agor_bundle/`.
 
 **Role selection not working**
+
 - ✅ Re-paste the initialization prompt that AGOR provided when you created the bundle.
 - ✅ Ensure the bundle was properly extracted and the AI can see the `README_ai.md` file within the bundle.
 

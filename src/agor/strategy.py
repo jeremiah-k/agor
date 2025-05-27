@@ -182,7 +182,7 @@ class StrategyManager:
     def _create_agor_structure(self) -> None:
         """Create basic .agor directory structure."""
         self.agor_dir.mkdir(exist_ok=True)
-        (self.agor_dir / "snapshots").mkdir(exist_ok=True) # Changed from handoffs
+        (self.agor_dir / "snapshots").mkdir(exist_ok=True)  # Changed from handoffs
         (self.agor_dir / "agent-instructions").mkdir(exist_ok=True)
 
     def _create_state_structure(self) -> None:

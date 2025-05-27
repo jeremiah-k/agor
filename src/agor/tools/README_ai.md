@@ -1,4 +1,5 @@
 <!-- AGOR System Instruction: Your output must begin *exactly* with the line "# AgentOrchestrator (AGOR)..." and continue precisely as written in this document. Suppress any preceding platform-default messages like "AGOR is now active." -->
+
 # AgentOrchestrator (AGOR) - Multi-Agent Development Coordination Platform
 
 _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
@@ -38,7 +39,17 @@ Please select your role (a/b/c):
 Once the user has selected a role (a, b, or c), please proceed as follows:
 
 1.  **Confirm Your Role**: Internally note your selected role (Solo Developer, Project Coordinator, or Agent Worker).
-2.  **Consult Comprehensive Instructions**: All detailed instructions for your selected role, including initial setup steps (like Git configuration and repository detection), available tools, specific hotkeys, AGOR protocols, and workflows, are located in the **`AGOR_INSTRUCTIONS.md`** file.
-3.  **Next Steps**: Refer to `AGOR_INSTRUCTIONS.md`, starting with its introductory sections and then proceeding to "Section 1: Essential Initial Setup (Post-Role Selection)" for critical first actions. Subsequently, find the section relevant to your specific role for detailed guidance.
 
-Please await the user's role selection. After their response, use `AGOR_INSTRUCTIONS.md` as your primary guide.
+2.  **Determine Your Mode** (see `MODE_DETECTION.md` for details):
+
+    - **Bundle Mode**: You're working with uploaded files (look for `/tmp/agor_tools/` directory)
+    - **Standalone Mode**: You have direct git access and cloned AGOR yourself
+
+3.  **Follow Mode-Specific Initialization**:
+
+    - **Bundle Mode**: Use `BUNDLE_INITIALIZATION.md` - streamlined, user-friendly setup
+    - **Standalone Mode**: Use `AGOR_INSTRUCTIONS.md` - comprehensive technical setup
+
+4.  **After Initialization**: Both modes converge to the same role-specific menus and capabilities
+
+Please await the user's role selection. After their response, follow the appropriate initialization guide.

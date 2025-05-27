@@ -27,33 +27,158 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 11. 2024-12-19 | Protocol v0.4.0 | Elegant Refresh and Navigation Protocols
+
+**Technical Focus**: Adding smooth, non-disruptive refresh mechanisms for users and agents during longer AGOR sessions.
+
+**Implementation Details**:
+
+- Created `REFRESH_PROTOCOLS.md` with comprehensive refresh mechanism design
+- Added "Session Navigation" section to all role menus with elegant refresh hotkeys
+- Implemented progressive disclosure refresh system:
+  - `?` - Quick help and context reminder
+  - `menu` - Full options redisplay
+  - `reset` - Clean restart while preserving context
+  - `role` - Role and capability reminder
+  - `guide` - Protocol refresh
+- Added implementation guide for agents with specific response templates
+- Designed refresh options to feel like natural navigation tools, not error recovery
+- Maintained professional UX aesthetic throughout refresh interactions
+
+**Rationale**:
+
+- Users and agents can get lost or confused during longer sessions
+- Need smooth way to reorient without disrupting workflow
+- Refresh mechanisms should feel elegant and helpful, not tacky or intrusive
+- Context preservation is critical - users shouldn't lose their progress
+- Different levels of refresh needed for different situations
+
+**Impact**:
+
+- Users can quickly reorient themselves with `?` for context reminder
+- Clean menu redisplay with `menu` when options are forgotten
+- Fresh start capability with `reset` while preserving work context
+- Professional, non-disruptive refresh experience
+- Agents have clear templates for handling refresh requests
+
+**Lessons Learned**:
+
+- Refresh mechanisms need to feel like helpful navigation, not error recovery
+- Progressive disclosure works well: minimal help → full options → clean restart
+- Context preservation is crucial for user confidence
+- Implementation templates help agents provide consistent refresh experiences
+- Elegant integration into existing menus maintains professional feel
+
+**Next Steps**: Monitor user feedback on refresh mechanisms and refine based on usage patterns.
+
+---
+
+### 10. 2024-12-19 | Protocol v0.4.0 | Menu Flow and User Experience Enhancement
+
+**Technical Focus**: Creating comprehensive menu flow guidelines and mode-specific initialization paths for better user experience.
+
+**Implementation Details**:
+
+- Created `MENU_FLOW_GUIDE.md` with detailed UX guidelines and templates for all role menus
+- Added `STANDALONE_INITIALIZATION.md` for agents with direct git access
+- Added `MODE_DETECTION.md` for quick mode identification
+- Enhanced all role menus with critical menu flow instructions
+- Defined clear action-feedback-menu loop pattern: confirm → execute → results → completion → menu
+- Added completion confirmations and next steps guidance to prevent users being left hanging
+
+**Rationale**:
+
+- Bundle mode and standalone mode have different capabilities and should have tailored initialization
+- Users need clear feedback loops and consistent experience across all hotkey actions
+- Agents were not providing smooth transitions between actions and menus
+- Need professional, polished interface that hides technical complexity
+
+**Impact**:
+
+- Clear separation between bundle mode (streamlined, user-friendly) and standalone mode (comprehensive, technical)
+- Consistent menu flow pattern across all roles and actions
+- Better user experience with clear feedback and next steps
+- Professional interface that maintains user engagement
+
+**Lessons Learned**:
+
+- UX consistency requires explicit templates and guidelines for AI agents
+- Mode detection and initialization paths need to be clearly separated
+- Menu flow patterns must be explicitly defined to prevent agents from leaving users hanging
+- Professional user experience requires hiding technical implementation details
+
+**Next Steps**: Test the improved menu flow with real users and refine based on feedback.
+
+---
+
+### 9. 2024-12-19 | Protocol v0.4.0 | Bundle Mode Menu Display Fix
+
+**Technical Focus**: Fixing bundle mode initialization where agents were showing internal function calls instead of clean user menus.
+
+**Implementation Details**:
+
+- Created `BUNDLE_INITIALIZATION.md` for streamlined bundle mode setup with clear step-by-step instructions
+- Added critical warnings in `AGOR_INSTRUCTIONS.md` Section 4 to prevent showing technical documentation to users
+- Strengthened menu display instructions for all three roles (Solo Developer, Project Coordinator, Agent Worker)
+- Updated `README_ai.md` to clearly distinguish between bundle mode and standalone mode initialization paths
+- Added explicit "DO NOT SHOW TO USERS" warnings for internal technical documentation
+
+**Rationale**:
+
+- Bundle mode users were seeing technical function calls like `tree('.')`, `grep('.', 'def ')`, `analyze_file_structure(path)` instead of clean menu options
+- This created a poor user experience and exposed internal implementation details
+- Need clear separation between user-facing menus and internal technical documentation
+- Bundle mode requires more streamlined initialization than standalone mode
+
+**Impact**:
+
+- Bundle mode agents should now display clean, professional menus instead of technical function names
+- Clear distinction between bundle mode (streamlined) and standalone mode (comprehensive) initialization
+- Better user experience with polished interface
+- Internal technical documentation properly hidden from end users
+
+**Lessons Learned**:
+
+- Bundle mode and standalone mode have different UX requirements and should have separate initialization paths
+- AI agents need very explicit instructions about what to show vs. hide from users
+- Technical documentation sections need clear warnings to prevent accidental exposure
+- Menu display instructions need to be strengthened with "CRITICAL" and "EXACTLY" language
+
+**Next Steps**: Test bundle mode initialization with real AI platforms to verify the fix works correctly.
+
+---
+
 ### 8. YYYY-MM-DD | Protocol v0.4.0 | Terminology and Hotkey Update (Snapshot)
 
 **Technical Focus**: Standardizing core terminology from "handoff" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
 
 **Implementation Details**:
+
 - Changed `PROTOCOL_VERSION` in `src/agor/constants.py` from "0.3.0" to "0.4.0".
 - Renamed directory reference `.agor/handoffs/` to `.agor/snapshots/` in all code and documentation.
 - Renamed Python module `src/agor/tools/handoff_templates.py` to `src/agor/tools/snapshot_templates.py` and updated all imports.
 - Renamed relevant functions, variables, and constants within `snapshot_templates.py` (e.g., `generate_handoff_document` to `generate_snapshot_document`).
 - Updated hotkeys in `src/agor/tools/AGOR_INSTRUCTIONS.md`:
-    - `handoff` → `snapshot`
-    - `receive` → `load_snapshot`
-    - `handoffs` → `list_snapshots`
+  - `handoff` → `snapshot`
+  - `receive` → `load_snapshot`
+  - `handoffs` → `list_snapshots`
 - Performed a global replacement of "handoff" terminology with "snapshot" in all relevant documentation and code comments/strings.
 - Updated `docs/snapshots.md` (formerly `docs/handoffs.md`) content and title.
 
 **Rationale**:
+
 - The term "snapshot" is more intuitive and versatile, especially for solo developer use cases involving context preservation.
 - Ensures consistency in language across all project assets (code, docs, agent instructions).
 - The scope of changes (terminology, hotkeys, directory structures used by agents) constitutes a protocol update.
 
 **Impact**:
+
 - Agents will now be instructed using the "snapshot" terminology and new hotkeys.
 - Internal code and documentation are now consistent with this change.
 - Protocol version "0.4.0" signals these modifications.
 
 **Lessons Learned**:
+
 - Core terminology changes require thorough updates across multiple project facets (code, docs, tests, agent instructions).
 - Protocol versioning is key to signaling the nature of changes to users and developers.
 
