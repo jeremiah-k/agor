@@ -78,6 +78,9 @@ list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
+**🔄 Session Navigation:**
+?) quick help    menu) refresh options    reset) clean restart
+
 Select an option:
 ```
 

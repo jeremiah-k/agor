@@ -112,6 +112,9 @@ list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
+**🔄 Session Navigation:**
+?) quick help    menu) refresh options    reset) clean restart
+
 **CRITICAL MENU FLOW**: After the user selects any hotkey option:
 1. Confirm the action: "🔍 [Action name]..."
 2. Execute the action using internal tools
@@ -154,6 +157,9 @@ list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
+**🔄 Session Navigation:**
+?) quick help    menu) refresh options    reset) clean restart
+
 **CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
 ### 2.3. Role C: AGENT WORKER
@@ -189,6 +195,9 @@ load_snapshot) receive snapshot from another agent
 list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
+
+**🔄 Session Navigation:**
+?) quick help    menu) refresh options    reset) clean restart
 
 **CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
