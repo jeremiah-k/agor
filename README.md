@@ -29,6 +29,8 @@ agor bundle /path/to/local/project
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
+AGOR facilitates AI-driven development through a distinct set of interactions: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
+
 ### Agent Mode (Direct Git Access)
 
 **For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
@@ -45,8 +47,8 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 **[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
 **[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
 **[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
-**[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup
-**[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Complete AI protocol
+**[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Comprehensive AI Operational Guide
+**[src/agor/tools/README_ai.md](src/agor/tools/README_ai.md)** - Initial AI Bootstrap (Role Selection)
 **[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself (includes Core Context section)
 **[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
 

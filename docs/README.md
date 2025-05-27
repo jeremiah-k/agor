@@ -21,9 +21,9 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 
 ### AI Tools & Instructions
 
-- **[AGOR Instructions](../src/agor/tools/AGOR_INSTRUCTIONS.md)** - Agent Mode setup for git-capable agents
+- **[Comprehensive AI Operational Guide](../src/agor/tools/AGOR_INSTRUCTIONS.md)** - The main detailed guide for AI operations after role selection.
 - **[Bundle Instructions](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
-- **[Complete AI Protocol](../src/agor/tools/README_ai.md)** - Comprehensive agent instructions
+- **[Initial AI Bootstrap (Role Selection)](../src/agor/tools/README_ai.md)** - Minimal entry point for AI role selection.
 - **[Feedback System](../src/agor/tools/agor-meta.md)** - Help improve AGOR through structured feedback
 
 ---
@@ -34,12 +34,23 @@ AGOR isn't just another AI tool - it's a **coordination platform** that enables 
 
 Think of it as the difference between having one really smart developer versus having a **coordinated team** of specialists who can work together seamlessly. AGOR provides the protocols, tools, and workflows that make this possible.
 
+### Understanding AGOR's Interactions
+
+AGOR involves different types of interactions and commands, depending on whether you are a developer using the AGOR CLI, or an AI agent operating within the AGOR framework:
+
+1.  **Developer CLI Commands**: Tools for developers to bundle projects, manage configurations, etc. (e.g., `agor bundle`).
+2.  **AI Conversational Hotkeys**: Interactive commands (e.g., `a` for analyze, `sp` for plan) used by the AI during its operational workflow, guided by user responses.
+3.  **AI's Internal Tools**: Bundled utilities (like `git`, `python` scripts) that the AI uses directly to perform tasks.
+
+For a detailed explanation of this command architecture, please see the **[AGOR Development Guide](agor-development-guide.md#agor-architecture-understanding)**.
+
 ## 🚀 Quick Navigation
 
 **🤖 AI Agent entering project?** → **[START HERE](agent-start-here.md)** - Immediate guidance and discovery
 **New to AGOR?** → Start with [Quick Start Guide](quick-start.md)
 **Want to get started quickly?** → Check out [Google AI Studio Guide](google-ai-studio.md)
-**Need comprehensive instructions?** → See [Complete AI Protocol](../src/agor/tools/README_ai.md)
+**Need comprehensive AI operational instructions?** → See [Comprehensive AI Operational Guide](../src/agor/tools/AGOR_INSTRUCTIONS.md)
+**AI starting point (role selection)?** → See [Initial AI Bootstrap (Role Selection)](../src/agor/tools/README_ai.md)
 **Want to contribute?** → Use [Feedback System](../src/agor/tools/agor-meta.md)
 
 ---
