@@ -81,6 +81,16 @@ meta) provide feedback on AGOR itself
 Select an option:
 ```
 
+**CRITICAL MENU FLOW**: After the user selects any option:
+1. Confirm the action: "🔍 [Action name]..."
+2. Execute the action
+3. Show results clearly
+4. Provide completion message: "✅ [Action] complete"
+5. Return to this EXACT menu
+6. Ask: "Select an option:"
+
+See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
+
 ### For PROJECT COORDINATOR (Role B)
 
 1. **Initialize coordination system** (create .agor/ directory)

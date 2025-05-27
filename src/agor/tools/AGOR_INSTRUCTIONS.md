@@ -112,6 +112,16 @@ list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
+**CRITICAL MENU FLOW**: After the user selects any hotkey option:
+1. Confirm the action: "🔍 [Action name]..."
+2. Execute the action using internal tools
+3. Show results clearly to the user
+4. Provide completion message: "✅ [Action] complete"
+5. Return to the appropriate role-specific menu
+6. Ask: "Select an option:"
+
+See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
+
 ### 2.2. Role B: PROJECT COORDINATOR
 - **Focus**: Strategic planning, agent coordination, managing multi-agent development workflows.
 - **Initial Actions**:
@@ -143,6 +153,8 @@ load_snapshot) receive snapshot from another agent
 list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
+
+**CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
 ### 2.3. Role C: AGENT WORKER
 - **Focus**: Receiving and executing specific tasks from a project coordinator.
@@ -177,6 +189,8 @@ load_snapshot) receive snapshot from another agent
 list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
+
+**CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
 ---
 ## 3. Core AGOR Protocols and Workflows
