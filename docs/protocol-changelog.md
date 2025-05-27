@@ -19,12 +19,20 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ## Protocol v0.4.0 (2024-12-27)
 
+### 🔄 **BREAKING CHANGE: Handoff → Snapshot Terminology**
+
+**Global Terminology Update**
+- **"Handoff"** terminology replaced with **"Snapshot"** throughout all documentation and code
+- Hotkey changes: `handoff` → `snapshot`, `receive` → `load_snapshot`, `handoffs` → `list_snapshots`
+- File renames: `docs/handoffs.md` → `docs/snapshots.md`, `handoff_templates.py` → `snapshot_templates.py`
+- Directory structure: `.agor/handoffs/` → `.agor/snapshots/`
+
 ### 🆕 Major Features Added
 
-**Agent Snapshot System** (`docs/snapshots.md`)
+**Enhanced Agent Snapshot System** (`docs/snapshots.md`)
 - Complete context preservation for agent transitions
 - Self-snapshot capability for solo developers
-- Structured handoff templates with git context
+- Structured snapshot templates with git context
 - Cross-session work continuity support
 
 **Standalone Mode** (`docs/standalone-mode.md`)
@@ -61,21 +69,25 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 - `get_git_context()`: Capture complete repository state
 - Template system for structured transitions
 
-**Enhanced Handoffs** (`src/agor/tools/strategies/handoff_prompts.py`)
+**Enhanced Snapshots** (`src/agor/tools/strategies/handoff_prompts.py`)
 - Improved work order generation
 - Better completion report templates
 - Enhanced agent coordination protocols
+- Updated terminology throughout codebase
 
 ### 🎯 Protocol Compatibility
 
-**Breaking Changes**: None (0.x.x development phase)
+**Breaking Changes**:
+- Terminology change from "handoff" to "snapshot" (hotkeys and file names changed)
+- Agents using old hotkey names will need to update to new terminology
 
 **New Capabilities**:
-- Agents can now create and consume snapshots
+- Agents can now create and consume snapshots (formerly handoffs)
 - Enhanced context preservation across sessions
 - Improved multi-agent coordination workflows
+- Standalone mode for direct Git repository access
 
-**Backward Compatibility**: Full compatibility with v0.3.x agents
+**Migration Required**: Update hotkey usage from `handoff`/`receive`/`handoffs` to `snapshot`/`load_snapshot`/`list_snapshots`
 
 ---
 
@@ -118,7 +130,7 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 **Role System**
 - Solo Developer (Role A)
-- Project Coordinator (Role B) 
+- Project Coordinator (Role B)
 - Agent Worker (Role C)
 
 **Development Strategies**
