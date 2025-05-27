@@ -182,7 +182,7 @@ class StrategyManager:
     def _create_agor_structure(self) -> None:
         """Create basic .agor directory structure."""
         self.agor_dir.mkdir(exist_ok=True)
-        (self.agor_dir / "handoffs").mkdir(exist_ok=True)
+        (self.agor_dir / "snapshots").mkdir(exist_ok=True) # Changed from handoffs
         (self.agor_dir / "agent-instructions").mkdir(exist_ok=True)
 
     def _create_state_structure(self) -> None:
@@ -553,7 +553,7 @@ You are working **independently** with {agents-1} other agents on the same probl
             (
                 "⚡ Pipeline",
                 min(pl_score, 10),
-                "Sequential handoffs with specialization at each stage",
+                "Sequential work via snapshots with specialization at each stage",
             )
         )
 

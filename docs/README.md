@@ -11,13 +11,15 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 ### Getting Started
 
 - **[Quick Start Guide](quick-start.md)** - Get up and running in 5 minutes
+- **[Bundle Mode Guide](bundle-mode.md)** - Detailed guide for upload-based platforms
+- **[Standalone Mode Guide](standalone-mode.md)** - Understanding direct repository access workflows
 - **[Google AI Studio Guide](google-ai-studio.md)** - Platform setup and best practices
 - **[Documentation Index](index.md)** - Token-efficient lookup for AI models
 
 ### Core Concepts
 
 - **[Multi-Agent Strategies](strategies.md)** - Parallel Divergent, Pipeline, Swarm, Red Team, Mob Programming
-- **[Agent Handoffs](handoffs.md)** - Seamless agent transitions, work handoffs, and solo context management.
+- **[Agent Snapshots](snapshots.md)** - Capturing work state for transitions and context management.
 
 ### AI Tools & Instructions
 

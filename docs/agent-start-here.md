@@ -1,6 +1,8 @@
 # 🤖 Agent Start Here - AGOR Entry Point
 
-**New to this project? Start here for immediate guidance.**
+**This guide is primarily for AI agents that are joining an AGOR-managed project where coordination might already be in progress, and the agent hasn't received specific initial instructions (like a direct handoff or role assignment from a Project Coordinator). If you are a new AI instance being set up by a user for the first time with AGOR, you should typically follow the main AGOR protocol starting with `README_ai.md` and `AGOR_INSTRUCTIONS.md` for role selection and initial setup.**
+
+If you find yourself in an environment with an existing `.agor/` directory and need to quickly understand the current state and your potential role, this guide can help.
 
 ## 🎯 Quick Discovery
 
@@ -77,7 +79,7 @@ cat .agor/agent1-memory.md
 
 ## 🎯 Remember
 
-1. **Always start with `discover_my_role()`** - it gives you concrete next actions
+1. **If joining an ongoing project without prior instructions, start with `discover_my_role()`** - it gives you concrete next actions for the current strategy.
 2. **Check the Documentation Index** for comprehensive information
 3. **Follow the existing AGOR protocols** - communication via agentconvo.md, memory files, etc.
 4. **When in doubt, check strategy-active.md** - it contains current strategy details

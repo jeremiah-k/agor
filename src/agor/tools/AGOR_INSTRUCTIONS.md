@@ -96,7 +96,7 @@ Find your selected role below for detailed guidance, including specific initiali
 
 **SOLO DEVELOPER Menu (Role A):**
 **📊 Analysis & Display:**
-a ) analyze codebase f ) full files co) changes only da) detailed handoff m ) show diff
+a ) analyze codebase f ) full files co) changes only da) detailed snapshot m ) show diff
 **🔍 Code Exploration:**
 bfs) breadth-first search grep) search patterns tree) directory structure
 **✏️ Editing & Changes:**
@@ -105,10 +105,10 @@ edit) modify files commit) save changes diff) show changes
 doc) generate docs comment) add comments explain) code explanation
 **🎯 Planning Support:**
 sp) strategic plan bp) break down project
-**🤝 Handoff Procedures:**
-handoff) create handoff document for another agent
-receive) receive handoff from another agent
-handoffs) list all handoff documents
+**🤝 Snapshot Procedures:**
+snapshot) create snapshot document for another agent
+load_snapshot) receive snapshot from another agent
+list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -132,15 +132,15 @@ sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp
 **⚡ Strategy Selection:**
 ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team ✅ mb) mob programming ✅
 **👥 Team Design:**
-ct) create team ✅ tm) team manifest ✅ hp) handoff prompts ✅ as) assign specialists tc) team coordination
+ct) create team ✅ tm) team manifest ✅ hp) snapshot prompts ✅ as) assign specialists tc) team coordination
 **🔄 Coordination:**
 wf) workflow design ✅ qg) quality gates ✅ eo) execution order init) initialize coordination
 **📊 Basic Analysis:**
-a ) analyze codebase da) detailed handoff
-**🤝 Handoff Procedures:**
-handoff) create handoff document for another agent
-receive) receive handoff from another agent
-handoffs) list all handoff documents
+a ) analyze codebase da) detailed snapshot
+**🤝 Snapshot Procedures:**
+snapshot) create snapshot document for another agent
+load_snapshot) receive snapshot from another agent
+list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -152,6 +152,14 @@ meta) provide feedback on AGOR itself
     3. Provide a brief project overview if available, then enter standby mode.
     4. Announce readiness and await instructions from the coordinator.
 
+    **Joining an Ongoing Project:**
+    If you are an Agent Worker joining a project where an AGOR strategy is already active and you haven't received a direct work snapshot or specific task from the Project Coordinator, you can use the `discover_my_role()` function to get oriented. To do this, you would typically execute:
+    ```python
+    from agor.tools.agent_coordination import discover_my_role
+    print(discover_my_role("your_agent_id")) # Replace "your_agent_id"
+    ```
+    This will provide information about the active strategy, your potential role, and next steps. However, always prioritize instructions from your Project Coordinator if available.
+
     After completing these initial actions, you MUST display the **AGENT WORKER Menu (Role C)** (as defined below) to the user and await their command.
 
 **AGENT WORKER Menu (Role C):**
@@ -160,13 +168,13 @@ status) check coordination sync) update from main ch) checkpoint planning
 **📨 Communication:**
 log) update agent log msg) post to agentconvo report) status report
 **📋 Task Management:**
-task) receive task complete) mark complete handoff) prepare handoff
+task) receive task complete) mark complete snapshot) prepare snapshot
 **📊 Basic Analysis:**
 a ) analyze codebase f ) full files co) changes only
-**🤝 Handoff Procedures:**
-handoff) create handoff document for another agent
-receive) receive handoff from another agent
-handoffs) list all handoff documents
+**🤝 Snapshot Procedures:**
+snapshot) create snapshot document for another agent
+load_snapshot) receive snapshot from another agent
+list_snapshots) list all snapshot documents
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -186,8 +194,8 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 **Team & Coordination:**
 - **`ct`**: Design team structure with specialized roles and coordination protocols
 - **`tm`**: Generate team documentation with roles, prompts, and performance tracking
-- **`hp`**: Create agent handoff prompts with context and transition procedures
-- **`wf`**: Design workflow with handoff procedures and quality gates
+- **`hp`**: Create agent snapshot prompts with context and transition procedures
+- **`wf`**: Design workflow with snapshot procedures and quality gates
 - **`qg`**: Define quality gates and acceptance criteria with validation procedures
 - **`eo`**: Plan execution sequence considering dependencies and optimization strategies
 
@@ -209,7 +217,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`a`**: Perform comprehensive codebase analysis with structure, dependencies, and recommendations
 - **`f`**: Display complete files with full content and formatting preserved
 - **`co`**: Show only changed sections with before/after context for focused review
-- **`da`**: Generate detailed handoff analysis in single codeblock for agent transitions
+- **`da`**: Generate detailed work snapshot analysis in single codeblock for agent transitions
 - **`m`**: Show git diff of current changes (equivalent to `git diff`). No parameters required.
 
 **Code Exploration:**
@@ -239,9 +247,9 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`report`**: Generate comprehensive status report including completed work, current tasks, and next steps
 
 **Task Management:**
-- **`task`**: Receive and acknowledge task assignment from coordinator. Usage: task will be provided by coordinator
+- **`task`**: Receive and acknowledge task assignment from coordinator (often as a work snapshot). Usage: task will be provided by coordinator
 - **`complete`**: Mark current task as complete and update all coordination files. Usage: provide completion summary
-- **`handoff`**: Prepare handoff document for next agent with comprehensive context and status
+- **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status.
 
 **Meta-Development:**
 - **`meta`**: Provide feedback on AGOR itself (report issues, suggestions, or exceptional workflows)
@@ -253,28 +261,28 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`?`**: Display help or this menu
 
 ### 3.2. Agent Coordination System
-**CRITICAL**: Agent coordination uses **work orders** and **completion reports**.
-**Purpose**: Structured coordinator-agent communication
-**Location**: `.agor/handoffs/` directory
+**CRITICAL**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**.
+**Purpose**: Structured coordinator-agent communication and work state capture.
+**Location**: `.agor/snapshots/` directory.
 **Format**: Structured markdown with git context, progress, and next steps
 ```bash
-# Check for coordination documents
-ls .agor/handoffs/
-cat .agor/handoffs/index.md
+# Check for snapshot documents
+ls .agor/snapshots/
+cat .agor/snapshots/index.md # If an index exists
 
-# Read a specific work order
-cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
+# Read a specific snapshot (work order example)
+cat .agor/snapshots/2024-01-15_143022_fix-authentication-bug_snapshot.md
 ```
-**Work Order & Completion Report Workflow**
-**CRITICAL**: Agent coordination is a two-way process:
-**📤 Work Assignment (Coordinator → Agent)**
-1. **Creating Work Orders**: Use `handoff` hotkey to generate work order
-2. **Agent Receipt**: Agent uses `receive` hotkey to accept work order
-3. **Communication**: Update `.agor/agentconvo.md` to confirm order receipt
-4. **Work Execution**: Follow next steps outlined in work order
+**Work Snapshot & Completion Report Workflow**
+**CRITICAL**: Agent coordination can be a two-way process using snapshots:
+**📤 Work Assignment (Coordinator → Agent via Snapshot)**
+1. **Creating Work Snapshots**: Coordinator uses `snapshot` hotkey to generate a snapshot detailing the work.
+2. **Agent Receipt**: Agent uses `load_snapshot` hotkey to accept the work snapshot.
+3. **Communication**: Update `.agor/agentconvo.md` to confirm snapshot receipt.
+4. **Work Execution**: Follow next steps outlined in the work snapshot.
 
-**📥 Task Completion (Agent → Coordinator)**
-1. **Completion Report**: Use `complete` hotkey to generate completion report
+**📥 Task Completion (Agent → Coordinator via Snapshot)**
+1. **Completion Snapshot/Report**: Agent uses `complete` hotkey (which may generate a snapshot or report).
 2. **Results Summary**: Include work completed, commits, issues, recommendations
 3. **Coordinator Review**: Coordinator reviews results and provides feedback
 4. **Integration**: Coordinator decides on integration and next steps
@@ -307,7 +315,7 @@ cat .agor/handoffs/2024-01-15_143022_fix-authentication-bug.md
 **OUTPUT FORMATS:**
 - **`f`**: Complete files with all formatting preserved
 - **`co`**: Only changed sections with before/after context
-- **`da`**: Detailed analysis in single codeblock for agent handoff
+- **`da`**: Detailed analysis in single codeblock for agent snapshot
 
 ### 3.4. Multi-Agent Coordination Protocol
 **AGENT MEMORY & COMMUNICATION SYSTEM:**
@@ -364,9 +372,9 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 ### 3.5. Development Strategies
 AGOR supports 5 multi-agent development strategies:
 🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
-⚡ **Pipeline** (`pl`): Sequential handoffs with specialization
-🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue
-⚔️ **Red Team** (`rt`): Adversarial build/break cycles
+⚡ **Pipeline** (`pl`): Sequential work via snapshots with specialization
+🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue (tasks can be snapshots)
+⚔️ **Red Team** (`rt`): Adversarial build/break cycles (states captured as snapshots)
 👥 **Mob Programming** (`mb`): Collaborative coding with rotating roles
 
 Use `ss` to analyze your project and get strategy recommendations.
@@ -406,16 +414,17 @@ Understanding how strategy parameters translate to concrete coordination states:
 - **Team Creation**: team-structure.md + role-assignments.md + coordination-protocols.md
 - **Quality Gates**: quality-gates.md + quality-metrics.md + gate-{name}.md files
 
-### 3.6. Handoff Procedures
-AGOR provides comprehensive handoff procedures for seamless agent transitions. Use these when:
-- You need to pass work to another agent
-- You're taking over work from another agent
-- You're switching roles mid-project
-- You need to document current progress for future reference
+### 3.6. Snapshot Procedures
+AGOR provides comprehensive snapshot procedures for seamless agent transitions and context preservation. Use these when:
+- You need to pass work to another agent.
+- You're taking over work from another agent.
+- You're switching roles mid-project.
+- You need to document current progress for future reference (self-snapshot).
+- You need to preserve context before a complex operation or for a later session.
 
-**Creating a Handoff (`handoff` hotkey)**
-When you need to hand off work to another agent:
-1. **Use the `handoff` hotkey**
+**Creating a Snapshot (`snapshot` hotkey)**
+When you need to create a snapshot of your work (for another agent or for yourself):
+1. **Use the `snapshot` hotkey.**
 2. **Provide comprehensive context**:
    - Problem description and goals
    - Work completed so far
@@ -426,39 +435,39 @@ When you need to hand off work to another agent:
    - Important context and gotchas
    - Technical notes and decisions made
 3. **AGOR generates**:
-   - Complete handoff document in `.agor/handoffs/`
-   - Handoff prompt for the receiving agent
+   - Complete snapshot document in `.agor/snapshots/`
+   - Snapshot prompt for the receiving agent (if applicable)
    - Updates to coordination logs
 
-**Receiving a Handoff (`receive` hotkey)**
-When taking over work from another agent:
-1. **Use the `receive` hotkey**
-2. **Review the handoff document** thoroughly
+**Receiving a Snapshot (`load_snapshot` hotkey)**
+When taking over work based on a snapshot from another agent:
+1. **Use the `load_snapshot` hotkey.**
+2. **Review the snapshot document** thoroughly.
 3. **Verify understanding** of:
    - The problem being solved
    - Work completed and current status
    - Technical context and decisions
    - Next steps and priorities
-4. **Confirm receipt** in `.agor/agentconvo.md`
-5. **Continue the work** from where the previous agent left off
+4. **Confirm receipt** in `.agor/agentconvo.md` (if applicable for multi-agent work).
+5. **Continue the work** from the state described in the snapshot.
 
-**Handoff Best Practices**
-**For Handoff Creators:**
-- Be comprehensive - include everything the next agent needs to know
-- Document your reasoning and decision-making process
-- Include specific git commits and file changes
-- Explain any workarounds or temporary solutions
-- Provide clear next steps with priorities
+**Snapshot Best Practices**
+**For Snapshot Creators:**
+- Be comprehensive - include everything the next agent (or your future self) needs to know.
+- Document your reasoning and decision-making process.
+- Include specific git commits and file changes.
+- Explain any workarounds or temporary solutions.
+- Provide clear next steps with priorities.
 
-**For Handoff Recipients:**
-- Read the entire handoff document before starting
-- Verify the current repository state matches the handoff
-- Ask questions if anything is unclear
-- Update the handoff document with your progress
-- Maintain the same level of documentation quality
+**For Snapshot Recipients:**
+- Read the entire snapshot document before starting.
+- Verify the current repository state matches the snapshot.
+- Ask questions if anything is unclear.
+- Update the snapshot document with your progress if you are continuing work based on it and plan to create another snapshot.
+- Maintain the same level of documentation quality.
 
-**Handoff Document Structure**
-Each handoff includes:
+**Snapshot Document Structure**
+Each snapshot document includes:
 - **Problem Definition**: What we're trying to solve
 - **Work Completed**: Detailed list of accomplishments
 - **Commits Made**: Git history with explanations
@@ -466,19 +475,19 @@ Each handoff includes:
 - **Current Status**: Where things stand now
 - **Next Steps**: Prioritized action items
 - **Technical Context**: Important implementation details
-- **Handoff Instructions**: How to continue the work
+- **Snapshot Instructions**: How to continue the work
 
-**Managing Handoffs (`handoffs` hotkey)**
-Use the `handoffs` hotkey to:
-- List all active and completed handoffs
-- Review handoff history
-- Find specific handoff documents
-- Update handoff status (active → completed)
+**Managing Snapshots (`list_snapshots` hotkey)**
+Use the `list_snapshots` hotkey to:
+- List all active and completed snapshots.
+- Review snapshot history.
+- Find specific snapshot documents.
+- Update snapshot status (active → completed, if applicable).
 
 ### 3.7. Memory Persistence & Best Practices
 **Memory Persistence:**
 - Check/create `.agor/memory.md` at start
-- Update with decisions, progress, team structure, and handoffs
+- Update with decisions, progress, team structure, and work snapshots
 - Include: project summary, agent roles, current state, key decisions
 
 **Best Practices:**
@@ -576,8 +585,8 @@ print(create_team("e-commerce platform", team_size=5, project_type="web_app"))
 from agor.tools.strategies.workflow_design import design_workflow
 print(design_workflow("user management system", team_size=4, project_type="web_app"))
 
-# For handoff prompts (hp hotkey)
-from agor.tools.strategies.handoff_prompts import generate_handoff_prompts
+# For snapshot prompts (hp hotkey)
+from agor.tools.strategies.handoff_prompts import generate_handoff_prompts # Module name might be dated
 print(generate_handoff_prompts("standard", "developer", "reviewer", "auth system"))
 
 # For team management (tm hotkey)

@@ -76,14 +76,15 @@ agor bundle . --sqlite
 2. **Upload your .tar.gz bundle**
 3. **Copy-paste the generated prompt**
 
-### Option C: Agent Mode (Git-capable AIs)
+### Option C: Standalone Mode (Direct Git Access)
 
+This mode is for AI agents that can directly clone Git repositories and execute shell commands (e.g., Jules by Google, Augment Code Remote Agents). The agent first learns the AGOR protocol:
 ```bash
-# For Augment Code, Jules, etc.
-cd /tmp
-git clone https://github.com/jeremiah-k/agor.git
-cd agor
-cat src/agor/tools/AGOR_INSTRUCTIONS.md
+# For AI agents with direct Git access (e.g., Jules by Google, Augment Code)
+# Agent typically executes these commands to understand AGOR protocol:
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+cat src/agor/tools/README_ai.md && cat src/agor/tools/AGOR_INSTRUCTIONS.md
+# Then, the agent would clone and work on your project repository.
 ```
 
 ## 🎭 Step 4: Select Your Role
@@ -110,7 +111,7 @@ AGOR will ask you to choose a role. Pick based on what you want to do:
 
 **"I'm following instructions from a coordinator"**
 
-- Task execution and handoffs
+- Task execution and work snapshots
 - Coordination communication
 - Status reporting
 
@@ -165,7 +166,7 @@ Let's walk through a typical coordination session:
    → Search across codebase
 
 4. Type: da
-   → Generate detailed handoff for other agents
+   → Generate detailed snapshot for other agents
 ```
 
 ## 💡 Pro Tips
@@ -218,7 +219,7 @@ Now that you have AGOR running, explore these advanced topics:
 
 - **[Bundle Mode Guide](bundle-mode.md)** - Complete platform setup and optimization
 - **[Multi-Agent Strategies](strategies.md)** - Learn coordination patterns
-- **[Agent Handoffs](handoffs.md)** - Master agent transitions
+- **[Agent Snapshots](snapshots.md)** - Master agent transitions and context management
 - **[Complete AI Protocol](../src/agor/tools/README_ai.md)** - Comprehensive instructions
 
 ## 🆘 Need Help?
@@ -232,7 +233,7 @@ Now that you have AGOR running, explore these advanced topics:
 **Want to understand more?**
 
 - Read [Complete AI Protocol](../src/agor/tools/README_ai.md)
-- Explore [Agent Handoffs](handoffs.md)
+- Explore [Agent Snapshots](snapshots.md)
 - Try [Advanced Strategies](strategies.md)
 
 ---

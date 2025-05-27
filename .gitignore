@@ -8,3 +8,9 @@ build/
 .vscode/
 .coverage
 htmlcov/
+
+# AGOR operational state files and example agent instructions
+# These should not be committed to the AGOR project repository itself.
+/.agor/state/
+/.agor/memory.db
+/.agor/agent-instructions/

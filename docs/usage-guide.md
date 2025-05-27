@@ -80,7 +80,7 @@ agor bundle https://github.com/your-username/your-project
 - Technical deep-dives
 - Managing complex tasks by breaking them down with structured context.
 - Preserving detailed progress and context across multiple work sessions, especially when dealing with AI context window limitations.
-- Creating 'handoffs to self' to seamlessly resume work or switch between different AI models/assistants while maintaining full context.
+- Creating 'self-snapshots' to seamlessly resume work or switch between different AI models/assistants while maintaining full context.
 
 **Works in Both Modes:**
 - **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
@@ -104,8 +104,8 @@ agor bundle https://github.com/your-username/your-project
 
 While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for solo developers:
 
-*   **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)handoffs can bring clarity to complex projects.
-*   **Context Preservation**: AI assistants often have context window limits. Using AGOR's `handoff` hotkey (even if you're handing off to yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
+*   **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)snapshots can bring clarity to complex projects.
+*   **Context Preservation**: AI assistants often have context window limits. Using AGOR's `snapshot` hotkey (even if you're creating a snapshot for yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
 *   **Tool Integration**: AGOR provides a consistent interface for interacting with your codebase, including integrated Git commands and analysis tools, all within the AI's workflow.
 *   **Future Scalability**: If your solo project grows to involve more collaborators (human or AI), you'll already have a structured process in place.
 
@@ -127,7 +127,7 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 **Key Capabilities:**
 - Initialize coordination strategies (`pd`, `pl`, `sw`, `rt`, `mb`)
 - Create specialized agent teams (`ct`)
-- Design handoff procedures (`hp`)
+- Design snapshot procedures (`hp` - snapshot prompts)
 - Monitor team progress and coordination
 
 **Typical Workflow:**
@@ -138,11 +138,11 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 
 ### 🤖 AGENT WORKER
 
-**Primary Purpose:** Task execution and coordination handoffs
+**Primary Purpose:** Task execution and processing work snapshots
 
 **Best For:**
-- Receiving specific tasks from coordinators
-- Executing specialized development work
+- Receiving specific tasks from coordinators (often as snapshots)
+- Executing specialized development work based on snapshots
 - Following established workflows
 - Team coordination and communication
 
@@ -152,15 +152,15 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 - **Team coordination** capabilities available in both modes
 
 **Key Capabilities:**
-- Excels at receiving and executing handoffs
+- Excels at receiving and executing work based on snapshots
 - Maintains coordination with other agents
 - Reports progress and status
 
 **Typical Workflow:**
 1. Check coordination status (`status`)
-2. Receive task assignment (`task`)
+2. Receive task assignment (`task` - often a snapshot)
 3. Execute assigned work
-4. Report completion and hand off (`complete`, `handoff`)
+4. Report completion and create a new snapshot (`complete`, `snapshot`)
 
 ## 🔧 Platform-Specific Guidance
 
@@ -224,7 +224,7 @@ agor bundle your-project -f tar.gz
 - **Roles**: Multiple SOLO DEVELOPER agents working independently
 - **Outcome**: Best ideas synthesized into final solution
 
-**⚡ Pipeline** - Sequential handoffs with specialization
+**⚡ Pipeline** - Sequential work via snapshots with specialization
 - **Use for**: Complex features requiring different expertise
 - **Roles**: Specialized agents (Backend → Frontend → Testing → DevOps)
 - **Outcome**: Polished, well-integrated solution
@@ -268,7 +268,7 @@ agor bundle your-project -f tar.gz
 1. **Use Standalone Mode** for real-time collaboration
 2. **Designate one PROJECT COORDINATOR** for planning
 3. **Assign specialized AGENT WORKER** roles
-4. **Implement structured handoff procedures**
+4. **Implement structured snapshot procedures**
 
 ## 🔍 Troubleshooting Common Issues
 

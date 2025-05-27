@@ -31,7 +31,7 @@ ARCHIVE_EXTENSIONS = {
 # Protocol version - increment when coordination protocols change
 # This is separate from AGOR version and tracks protocol compatibility
 # 0.x.x = Development/testing phase, 1.0.0+ = Production-ready
-PROTOCOL_VERSION = "0.3.0"
+PROTOCOL_VERSION = "0.4.0"
 
 # Version checking
 VERSION_CHECK_URL = "https://api.github.com/repos/jeremiah-k/agor/releases/latest"
