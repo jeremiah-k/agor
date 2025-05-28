@@ -121,12 +121,30 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 ### 🔄 Commit and Push Protocol
 
-**ALWAYS**: Commit often and push often
+**🚨 CRITICAL PROTOCOL**: Commit and push after EVERY logical change
 
-- Problems can happen and unpushed work is lost
-- Use: `git add . && git commit -m "message" && git push`
-- Update development guide as you work
-- If agent struggles, generate a snapshot prompt for continuation
+**Why this matters**:
+- Agent environments can be unstable - unpushed work is LOST FOREVER
+- Collaboration requires visible progress for handoffs
+- Recovery from errors requires committed checkpoints
+
+**Required Command Pattern**:
+```bash
+git add . && git commit -m "🔧 Descriptive message" && git push
+```
+
+**When to commit and push**:
+- ✅ After completing any file edit
+- ✅ After implementing any feature or fix
+- ✅ Before switching tasks or taking breaks
+- ✅ After updating documentation
+- ✅ When encountering errors (commit working state first)
+- ✅ Before generating snapshots for handoffs
+
+**Commit Message Format**:
+- Use emoji prefixes: 🔧 (fix), 📝 (docs), ✨ (feature), 🧪 (test)
+- Be descriptive: "Fix bundle creation for Windows paths" not "fix bug"
+- Reference issues when applicable: "Fixes #123: Add SQLite memory support"
 
 ---
 
