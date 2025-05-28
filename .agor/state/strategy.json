@@ -1,7 +1,0 @@
-{
-  "mode": "pd",
-  "task": "implement e2e encryption for login system",
-  "agents": ["agent1", "agent2", "agent3"],
-  "created": "2025-05-26T01:18:36.806222",
-  "status": "initialized"
-}
