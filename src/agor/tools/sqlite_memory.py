@@ -573,4 +573,5 @@ state-get) get project state
 handoff-create) create database handoff
 handoff-status) update handoff status
 db-stats) show database statistics
+sqlite-validate) validate setup and path resolution
 """
