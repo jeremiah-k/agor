@@ -121,7 +121,9 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 ### 🔄 Commit and Push Protocol
 
-**Frequent commits are essential** for AGOR development
+**⚠️ CRITICAL: Commit and push frequently - ALWAYS together!**
+
+**Frequent commits AND pushes are essential** for AGOR development
 
 **Why this approach works well**:
 
@@ -129,6 +131,8 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - Collaboration benefits from visible progress for handoffs
 - Recovery from errors is easier with regular checkpoints
 - Git history becomes a useful development log
+- **Remote backup prevents work loss** when agent sessions end unexpectedly
+- **Enables seamless handoffs** between agents working on the same task
 
 **Recommended Command Pattern**:
 
@@ -153,13 +157,17 @@ auto_commit_memory("Implemented memory sync hotkeys", "progress", "dev")
 create_snapshot("Memory Integration", "Completed hotkey implementation")
 ```
 
-**Good times to commit and push**:
+**Good times to commit and push** (remember: ALWAYS do both together):
 
 - After completing file edits or features
 - Before switching tasks or taking breaks
 - After updating documentation
 - When you have a working state (even if incomplete)
 - Before generating snapshots for handoffs
+- **Every 15-30 minutes during active development**
+- **Immediately after any significant progress**
+- **Before testing or running complex operations**
+- **When implementing integration features like memory sync**
 
 **Commit Message Guidelines**:
 

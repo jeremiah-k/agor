@@ -874,9 +874,33 @@ If used, the schema might include tables for:
 - `communication_log`: Inter-agent messages.
   Consult specific strategy or system documentation for detailed schema if SQLite mode is active.
 
-### 6.2. Memory Synchronization Hotkeys (Advanced)
+### 6.2. Memory Synchronization System (Production Ready)
 
-If working on AGOR development itself, advanced memory synchronization hotkeys are available for Git-based memory persistence:
+**AGOR now includes automatic memory synchronization** that seamlessly integrates with agent workflows. This system provides persistent memory across agent sessions using Git-based storage.
+
+#### Automatic Memory Sync Integration
+
+**Memory sync is automatically initialized** when:
+- Agents join projects (`discover_current_situation`)
+- Coordination systems are initialized (`agor init`, `agor pd`, etc.)
+- Strategy managers are created
+- SQLite memory managers are instantiated
+
+**Memory sync is automatically saved** when:
+- Agents complete work (`complete_agent_work`)
+- Agent sessions end
+- Memory state needs to be persisted
+
+#### Memory Sync Status in Agent Commands
+
+The `agor status` command now includes memory sync information:
+- Active memory branch name
+- Available memory branches
+- Memory sync health status
+
+#### Manual Memory Sync Hotkeys (Advanced)
+
+For development work on AGOR itself, manual memory sync hotkeys are available:
 
 **Memory Sync Commands:**
 - **`mem-sync-start`**: Initialize memory branch and sync on startup
@@ -892,4 +916,31 @@ If working on AGOR development itself, advanced memory synchronization hotkeys a
 4. Use mem-sync-restore to recover from previous sessions
 ```
 
-**Note**: These are development-focused hotkeys for AGOR itself, not for general agent coordination. For normal project work, continue using standard `.agor/memory.md` files.
+#### Memory Branch Architecture
+
+**Memory branches** are separate from working branches:
+- **Memory branches**: Store `.agor/` content (memories, snapshots, coordination)
+- **Working branches**: Store source code, documentation, development logs
+- **Clean separation**: Prevents memory pollution in source code
+- **Simplified approach**: Memory branches created from HEAD~1 (not orphaned)
+
+#### Error Handling
+
+Memory sync is designed to be **transparent and non-disruptive**:
+- If memory sync fails, agent workflows continue normally
+- Graceful fallback to standard `.agor/memory.md` files
+- Warning messages for sync issues, but no workflow interruption
+- Automatic retry mechanisms for transient failures
+
+#### For Agent Developers
+
+**When developing AGOR itself:**
+- Memory sync provides persistent context across development sessions
+- Use manual hotkeys for fine-grained control
+- Memory branches enable seamless handoffs between development agents
+- Integration tests validate memory sync workflows
+
+**For normal project work:**
+- Memory sync works automatically in the background
+- Continue using standard `.agor/memory.md` files for coordination
+- Memory persistence enhances agent continuity across sessions

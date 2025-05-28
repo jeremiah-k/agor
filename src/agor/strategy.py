@@ -36,6 +36,9 @@ class StrategyManager:
         # Initialize basic coordination files
         self._init_basic_files(task, agents)
 
+        # Initialize memory sync for agent workflows
+        self._init_memory_sync_for_agents()
+
         # Log initialization
         self._log_event(f"Initialized .agor/ coordination for task: {task}")
 
@@ -97,6 +100,9 @@ class StrategyManager:
                 print(f"🔄 Active Strategy: {strategy.get('mode', 'unknown')}")
                 print(f"🎯 Task: {strategy.get('task', 'unknown')}")
                 print(f"👥 Agents: {len(strategy.get('agents', []))}")
+
+        # Show memory sync status
+        self._show_memory_sync_status()
 
         # Show agent status
         self._show_agent_status()
@@ -578,3 +584,43 @@ You are working **independently** with {agents-1} other agents on the same probl
         strategies.sort(key=lambda x: x[1], reverse=True)
 
         return strategies
+
+    def _init_memory_sync_for_agents(self) -> None:
+        """Initialize memory sync for agent workflows."""
+        try:
+            # Memory sync is already initialized via SQLiteMemoryManager
+            # This method provides explicit feedback about memory sync status
+            if hasattr(self.memory_manager, 'memory_sync_manager') and self.memory_manager.memory_sync_manager:
+                active_branch = self.memory_manager.active_memory_branch_name
+                if active_branch:
+                    print(f"🧠 Memory sync active on branch: {active_branch}")
+                else:
+                    print("🧠 Memory sync initialized (no active branch yet)")
+            else:
+                print("⚠️ Memory sync not available - continuing without memory persistence")
+        except Exception as e:
+            print(f"⚠️ Memory sync initialization warning: {e}")
+            # Don't fail coordination setup if memory sync has issues
+
+    def _show_memory_sync_status(self) -> None:
+        """Show current memory sync status."""
+        try:
+            if hasattr(self.memory_manager, 'memory_sync_manager') and self.memory_manager.memory_sync_manager:
+                active_branch = self.memory_manager.active_memory_branch_name
+                if active_branch:
+                    print(f"🧠 Memory Sync: Active on branch '{active_branch}'")
+
+                    # Show available memory branches
+                    memory_sync = self.memory_manager.memory_sync_manager
+                    local_branches = memory_sync.list_memory_branches(remote=False)
+                    remote_branches = memory_sync.list_memory_branches(remote=True)
+
+                    if local_branches or remote_branches:
+                        all_branches = sorted(list(set(local_branches + remote_branches)), reverse=True)
+                        print(f"   Available memory branches: {', '.join(all_branches[:3])}{'...' if len(all_branches) > 3 else ''}")
+                else:
+                    print("🧠 Memory Sync: Initialized (no active branch)")
+            else:
+                print("⚠️ Memory Sync: Not available")
+        except Exception as e:
+            print(f"⚠️ Memory Sync: Error - {e}")

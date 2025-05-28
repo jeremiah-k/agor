@@ -25,6 +25,9 @@ class AgentCoordinationHelper:
         This is the main entry point for agents joining a project.
         """
 
+        # Initialize memory sync for agent workflows
+        self._init_agent_memory_sync()
+
         # Check if AGOR coordination exists
         if not self.agor_dir.exists():
             return {
@@ -571,3 +574,67 @@ def check_strategy_status() -> str:
 - .agor/agentconvo.md - Agent communication
 - .agor/task-queue.json - Task queue (if Swarm strategy)
 """
+
+    def _init_agent_memory_sync(self) -> None:
+        """Initialize memory sync for agent workflows."""
+        try:
+            # Import and initialize SQLiteMemoryManager for memory sync
+            from .sqlite_memory import SQLiteMemoryManager
+
+            # Initialize memory manager if .agor directory exists
+            if self.agor_dir.exists():
+                memory_db_path = str(self.agor_dir / "memory.db")
+                memory_manager = SQLiteMemoryManager(memory_db_path)
+
+                # Memory sync is automatically initialized in SQLiteMemoryManager.__init__
+                # This provides feedback about the initialization
+                if hasattr(memory_manager, 'memory_sync_manager') and memory_manager.memory_sync_manager:
+                    active_branch = memory_manager.active_memory_branch_name
+                    if active_branch:
+                        print(f"🧠 Agent memory sync active on branch: {active_branch}")
+                    else:
+                        print("🧠 Agent memory sync initialized")
+                else:
+                    print("⚠️ Agent memory sync not available - continuing without memory persistence")
+            else:
+                print("📝 No .agor directory found - memory sync will be initialized when coordination starts")
+        except Exception as e:
+            print(f"⚠️ Agent memory sync initialization warning: {e}")
+            # Don't fail agent discovery if memory sync has issues
+
+    def complete_agent_work(self, agent_id: str, completion_message: str = "Agent work completed") -> bool:
+        """Complete agent work with automatic memory sync."""
+        try:
+            # Import and use SQLiteMemoryManager for completion sync
+            from .sqlite_memory import SQLiteMemoryManager
+
+            if self.agor_dir.exists():
+                memory_db_path = str(self.agor_dir / "memory.db")
+                memory_manager = SQLiteMemoryManager(memory_db_path)
+
+                # Perform completion sync if memory sync is available
+                if hasattr(memory_manager, 'memory_sync_manager') and memory_manager.memory_sync_manager:
+                    print(f"💾 Saving {agent_id} memory state...")
+
+                    # Use shutdown_and_sync to save memory state
+                    sync_success = memory_manager.shutdown_and_sync(
+                        commit_message=f"{agent_id}: {completion_message}",
+                        restore_original_branch_override=None  # Stay on memory branch
+                    )
+
+                    if sync_success:
+                        print(f"✅ {agent_id} memory state saved successfully")
+                        return True
+                    else:
+                        print(f"⚠️ {agent_id} memory sync failed - work completed but memory not saved")
+                        return False
+                else:
+                    print(f"📝 {agent_id} work completed (no memory sync available)")
+                    return True
+            else:
+                print(f"📝 {agent_id} work completed (no .agor directory)")
+                return True
+
+        except Exception as e:
+            print(f"⚠️ {agent_id} completion error: {e}")
+            return False
