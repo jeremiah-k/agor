@@ -59,7 +59,20 @@ You should have already selected your role from README_ai.md:
        pass
    ```
 
-4. **Load code exploration tools**:
+4. **Commit and Push Protocol (MANDATORY)**:
+
+   **CRITICAL**: Follow AGOR's development protocol:
+   - Commit and push frequently to prevent work loss
+   - Use the combined command: `git add . && git commit -m "message" && git push`
+   - Never leave substantial work uncommitted
+   - Push after every significant change or completion of a logical unit
+
+   Example:
+   ```bash
+   git add . && git commit -m "🔧 Fix authentication bug in user module" && git push
+   ```
+
+5. **Load code exploration tools**:
    ```python
    # Load the bundled tools
    exec(open('/tmp/agor_tools/code_exploration.py').read())
