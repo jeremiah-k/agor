@@ -121,27 +121,27 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 ### 🔄 Commit and Push Protocol
 
-**🚨 CRITICAL PROTOCOL**: Commit and push after EVERY logical change
+**Frequent commits are essential** for AGOR development
 
-**Why this matters**:
-- Agent environments can be unstable - unpushed work is LOST FOREVER
-- Collaboration requires visible progress for handoffs
-- Recovery from errors requires committed checkpoints
+**Why this approach works well**:
+- Agent environments can be unstable, making frequent saves important
+- Collaboration benefits from visible progress for handoffs
+- Recovery from errors is easier with regular checkpoints
+- Git history becomes a useful development log
 
-**Required Command Pattern**:
+**Recommended Command Pattern**:
 ```bash
 git add . && git commit -m "🔧 Descriptive message" && git push
 ```
 
-**When to commit and push**:
-- ✅ After completing any file edit
-- ✅ After implementing any feature or fix
-- ✅ Before switching tasks or taking breaks
-- ✅ After updating documentation
-- ✅ When encountering errors (commit working state first)
-- ✅ Before generating snapshots for handoffs
+**Good times to commit and push**:
+- After completing file edits or features
+- Before switching tasks or taking breaks
+- After updating documentation
+- When you have a working state (even if incomplete)
+- Before generating snapshots for handoffs
 
-**Commit Message Format**:
+**Commit Message Guidelines**:
 - Use emoji prefixes: 🔧 (fix), 📝 (docs), ✨ (feature), 🧪 (test)
 - Be descriptive: "Fix bundle creation for Windows paths" not "fix bug"
 - Reference issues when applicable: "Fixes #123: Add SQLite memory support"

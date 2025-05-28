@@ -26,29 +26,33 @@ You should have already selected your role from README_ai.md:
    cd /tmp/project  # or wherever the .git directory was found
    ```
 
-2. **Git Verification (MANDATORY)**:
+2. **Git Setup and Verification**:
 
    ```bash
    # Ensure git binary is executable
    chmod +x /tmp/agor_tools/git
 
-   # Configure git if needed
+   # Configure git identity
    /tmp/agor_tools/git config --global user.name "AI Agent"
    /tmp/agor_tools/git config --global user.email "agent@example.com"
 
-   # Check available branches and prompt user to select
+   # Test git functionality and show available branches
    /tmp/agor_tools/git branch -a
    ```
 
-   **STOP HERE**: Ask the user which branch they want to work on before proceeding.
+   This step serves two purposes:
+   - Verifies the bundled git binary works correctly
+   - Shows you what branches are available to work with
 
-3. **File Editing Rules (MANDATORY)**:
+   **Ask the user which branch they want to work on before proceeding.**
 
-   **CRITICAL**: When editing files, you MUST:
-   - Always output the complete edited file in a single fenced code block
-   - Never provide partial snippets unless explicitly requested
+3. **File Editing Guidelines**:
+
+   When editing files, please follow these practices for best results:
+   - Output the complete edited file in a single fenced code block
+   - Avoid partial snippets unless specifically requested
    - Include the full file path as a comment at the top
-   - Ensure the output is ready for direct copy-paste integration
+   - Make the output ready for direct copy-paste integration
 
    Example format:
    ```python
@@ -59,13 +63,17 @@ You should have already selected your role from README_ai.md:
        pass
    ```
 
-4. **Commit and Push Protocol (MANDATORY)**:
+4. **Commit and Push Best Practices**:
 
-   **CRITICAL**: Follow AGOR's development protocol:
-   - Commit and push frequently to prevent work loss
+   AGOR development works best with frequent commits because:
+   - Agent environments can be unstable, and unpushed work may be lost
+   - Frequent commits create recovery points if something goes wrong
+   - Other agents can see your progress for coordination
+
+   Recommended approach:
    - Use the combined command: `git add . && git commit -m "message" && git push`
-   - Never leave substantial work uncommitted
-   - Push after every significant change or completion of a logical unit
+   - Commit after completing logical units of work
+   - Push regularly to keep your work safe
 
    Example:
    ```bash
