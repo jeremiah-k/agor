@@ -9,6 +9,7 @@
 ### "I need to get started with AGOR"
 
 - **[docs/agent-start-here.md](agent-start-here.md)** - **START HERE** - Agent entry point with immediate guidance
+- **[docs/session-startup-checklist.md](session-startup-checklist.md)** - **ESSENTIAL** - Checklist for every agent session
 - **[docs/usage-guide.md](usage-guide.md)** - **COMPREHENSIVE GUIDE** - Complete overview of modes, roles, and workflows
 - **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
 - **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
