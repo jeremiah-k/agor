@@ -9,7 +9,7 @@ to interact with the SQLite database through familiar commands.
 import json
 from pathlib import Path
 
-from .sqlite_memory import SQLiteMemoryManager, get_memory_manager
+from .sqlite_memory import SQLiteMemoryManager, get_memory_manager, validate_sqlite_setup
 
 
 def mem_add_hotkey() -> str:
@@ -483,6 +483,40 @@ def db_stats_hotkey() -> str:
         return f"❌ Error retrieving database statistics: {e}"
 
 
+def sqlite_validate_hotkey() -> str:
+    """
+    Hotkey: sqlite-validate
+    Validate SQLite memory system setup and path resolution.
+    """
+    print("🔍 SQLite Memory System Validation")
+    print("=" * 50)
+
+    # Test validation
+    success, message = validate_sqlite_setup()
+
+    if success:
+        print(f"✅ {message}")
+
+        # Show additional info
+        try:
+            manager = get_memory_manager()
+            print(f"💾 Database Path: {manager.db_path}")
+            print(f"📁 Database Exists: {manager.db_path.exists()}")
+            print(f"💾 Database Size: {manager.db_path.stat().st_size if manager.db_path.exists() else 0} bytes")
+
+            # Test basic operations
+            stats = manager.get_database_stats()
+            print(f"📊 Total Records: {sum(stats.values())}")
+
+        except Exception as e:
+            print(f"⚠️ Additional info error: {e}")
+
+        return "✅ SQLite memory system validation successful"
+    else:
+        print(f"❌ {message}")
+        return f"❌ SQLite validation failed: {message}"
+
+
 # Hotkey registry for SQLite memory commands
 SQLITE_HOTKEY_REGISTRY = {
     "mem-add": mem_add_hotkey,
@@ -494,6 +528,7 @@ SQLITE_HOTKEY_REGISTRY = {
     "handoff-create": handoff_create_hotkey,
     "handoff-status": handoff_status_hotkey,
     "db-stats": db_stats_hotkey,
+    "sqlite-validate": sqlite_validate_hotkey,
 }
 
 
@@ -539,6 +574,7 @@ def get_sqlite_hotkey_help() -> str:
 
 **Database:**
 - `db-stats` - Show database statistics and record counts
+- `sqlite-validate` - Validate SQLite setup and path resolution
 
 **Note:** SQLite memory system provides structured storage alternative to markdown files.
 Database location: `.agor/memory.db`
