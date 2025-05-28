@@ -7,9 +7,65 @@ more sophisticated memory patterns than simple markdown files.
 """
 
 import json
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+
+def resolve_memory_db_path(db_path: str = ".agor/memory.db") -> str:
+    """
+    Resolve the correct path for the SQLite memory database.
+
+    Handles different environments:
+    - Bundle mode: Look for project directory in /tmp/
+    - Standalone mode: Use current working directory
+    - Explicit path: Use as-is if absolute
+
+    Args:
+        db_path: Default or requested database path
+
+    Returns:
+        Resolved absolute path to the database
+    """
+    # If absolute path provided, use as-is
+    if os.path.isabs(db_path):
+        return db_path
+
+    # Try to detect bundle mode vs standalone mode
+    current_dir = Path.cwd()
+
+    # Bundle mode detection: look for /tmp/agor_tools/ or similar patterns
+    if "/tmp" in str(current_dir) or any(p.name == "agor_tools" for p in current_dir.parents):
+        # Bundle mode: find the project directory
+        # Look for .git directory to identify project root
+        project_dir = None
+
+        # Check current directory and parents for .git
+        for check_dir in [current_dir] + list(current_dir.parents):
+            if (check_dir / ".git").exists():
+                project_dir = check_dir
+                break
+
+        # If no .git found, look in /tmp for project directories
+        if not project_dir:
+            tmp_path = Path("/tmp")
+            if tmp_path.exists():
+                for item in tmp_path.iterdir():
+                    if item.is_dir() and (item / ".git").exists():
+                        project_dir = item
+                        break
+
+        # Default to current directory if no project found
+        if not project_dir:
+            project_dir = current_dir
+
+        resolved_path = project_dir / db_path
+    else:
+        # Standalone mode: use current directory
+        resolved_path = current_dir / db_path
+
+    return str(resolved_path.resolve())
 
 
 class SQLiteMemoryManager:
@@ -25,6 +81,10 @@ class SQLiteMemoryManager:
 
     def __init__(self, db_path: str = ".agor/memory.db"):
         """Initialize SQLite memory manager."""
+        # Resolve path if it's not already absolute
+        if not os.path.isabs(db_path):
+            db_path = resolve_memory_db_path(db_path)
+
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_database()
@@ -427,8 +487,49 @@ class SQLiteMemoryManager:
 
 # Convenience functions for common operations
 def get_memory_manager(db_path: str = ".agor/memory.db") -> SQLiteMemoryManager:
-    """Get a SQLite memory manager instance."""
-    return SQLiteMemoryManager(db_path)
+    """Get a SQLite memory manager instance with proper path resolution."""
+    resolved_path = resolve_memory_db_path(db_path)
+    return SQLiteMemoryManager(resolved_path)
+
+
+def validate_sqlite_setup(db_path: str = ".agor/memory.db") -> tuple[bool, str]:
+    """
+    Validate that SQLite memory setup is working correctly.
+
+    Args:
+        db_path: Database path to test
+
+    Returns:
+        Tuple of (success: bool, message: str)
+    """
+    try:
+        resolved_path = resolve_memory_db_path(db_path)
+
+        # Test creating a manager and basic operations
+        manager = SQLiteMemoryManager(resolved_path)
+
+        # Test write operation
+        test_id = manager.add_memory(
+            "test-agent",
+            "validation",
+            "SQLite validation test",
+            {"test": True}
+        )
+
+        # Test read operation
+        memories = manager.get_memories("test-agent", memory_type="validation")
+
+        if not memories or len(memories) == 0:
+            return False, f"Failed to retrieve test memory from {resolved_path}"
+
+        # Clean up test data
+        with sqlite3.connect(resolved_path) as conn:
+            conn.execute("DELETE FROM agent_memories WHERE id = ?", (test_id,))
+
+        return True, f"SQLite memory system validated at {resolved_path}"
+
+    except Exception as e:
+        return False, f"SQLite validation failed: {e}"
 
 
 def log_agent_action(
@@ -472,4 +573,5 @@ state-get) get project state
 handoff-create) create database handoff
 handoff-status) update handoff status
 db-stats) show database statistics
+sqlite-validate) validate setup and path resolution
 """
