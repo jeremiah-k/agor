@@ -27,6 +27,61 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 13. 2025-05-28 | v0.3.4-dev | Memory Sync Hotkeys and Development Tooling Enhancement
+
+**Technical Focus**: Complete memory synchronization system integration with agent hotkeys and enhanced development workflow tooling.
+
+**Implementation Details**:
+- **Memory Sync Hotkeys**: Added 4 new hotkeys to `sqlite_hotkeys.py`:
+  - `mem-sync-start` - Initialize memory branch and sync on startup
+  - `mem-sync-save` - Save current memory state to memory branch
+  - `mem-sync-restore` - Restore memory state from a memory branch
+  - `mem-sync-status` - Show current memory synchronization status
+- **Development Tooling**: Created comprehensive `dev_tooling.py` with:
+  - `quick_commit_push()` - One-shot commit/push with timestamps
+  - `auto_commit_memory()` - Cross-branch memory operations
+  - `test_tooling()` - Session validation function
+  - Multiple timestamp utilities (NTP, file-safe, precise)
+  - Robust import handling for development environments
+- **Settings Integration**: Added `memory_file` setting to `settings.py`
+- **Import Resolution**: Temporarily resolved circular imports between `memory_sync.py` and `sqlite_memory.py`
+
+**Rationale**:
+- Memory sync needed to be accessible through agent protocol hotkeys, not just CLI commands
+- Development workflow required streamlined commit/push operations for frequent saves
+- Circular imports prevented full integration, requiring careful dependency management
+- Agent sessions needed reliable tooling validation at startup
+
+**Impact**:
+- Memory synchronization now fully accessible through agent hotkey interface
+- Development workflow significantly streamlined with automated tooling
+- SQLite hotkey registry expanded to 14 total commands
+- Foundation established for Git-based memory persistence
+- Development guide updated with tooling initialization requirements
+
+**Lessons Learned**:
+- Circular imports in complex systems require lazy loading or dependency injection patterns
+- Development tooling should handle both installed and development environments gracefully
+- Agent hotkeys are the correct integration point for memory operations, not CLI commands
+- Frequent commits with automated tooling improve development reliability in agent environments
+- Comprehensive testing functions prevent session startup issues
+
+**Next Steps**:
+- Resolve circular import issues with lazy loading pattern
+- Test memory sync operations with actual Git commands
+- Integrate memory sync into agent initialization/completion workflows
+- Create comprehensive integration tests for memory sync workflow
+
+**Files Modified**:
+- `src/agor/tools/dev_tooling.py` (new) - Development workflow utilities
+- `src/agor/tools/sqlite_hotkeys.py` - Added memory sync hotkeys
+- `src/agor/settings.py` - Added memory_file setting
+- `src/agor/memory_sync.py` - Fixed imports and settings usage
+- `src/agor/tools/sqlite_memory.py` - Temporarily disabled circular imports
+- `docs/agor-development-guide.md` - Added tooling initialization section
+
+---
+
 ### 12. 2025-01-28 | v0.3.3 | SQLite Memory Integration and CLI Cleanup
 
 **Technical Focus**: Finalizing SQLite memory system path resolution and cleaning up CLI branding for production readiness.

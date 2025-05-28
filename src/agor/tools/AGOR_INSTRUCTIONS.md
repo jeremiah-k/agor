@@ -873,3 +873,23 @@ If used, the schema might include tables for:
 - `tasks`: Task breakdown, assignments, and progress.
 - `communication_log`: Inter-agent messages.
   Consult specific strategy or system documentation for detailed schema if SQLite mode is active.
+
+### 6.2. Memory Synchronization Hotkeys (Advanced)
+
+If working on AGOR development itself, advanced memory synchronization hotkeys are available for Git-based memory persistence:
+
+**Memory Sync Commands:**
+- **`mem-sync-start`**: Initialize memory branch and sync on startup
+- **`mem-sync-save`**: Save current memory state to memory branch
+- **`mem-sync-restore`**: Restore memory state from a memory branch
+- **`mem-sync-status`**: Show current memory synchronization status
+
+**Usage Pattern:**
+```
+1. Use mem-sync-start at beginning of development session
+2. Use mem-sync-save periodically to checkpoint memory state
+3. Use mem-sync-status to check synchronization state
+4. Use mem-sync-restore to recover from previous sessions
+```
+
+**Note**: These are development-focused hotkeys for AGOR itself, not for general agent coordination. For normal project work, continue using standard `.agor/memory.md` files.
