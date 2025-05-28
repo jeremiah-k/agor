@@ -9,7 +9,11 @@ to interact with the SQLite database through familiar commands.
 import json
 from pathlib import Path
 
-from .sqlite_memory import SQLiteMemoryManager, get_memory_manager, validate_sqlite_setup
+from .sqlite_memory import (
+    SQLiteMemoryManager,
+    get_memory_manager,
+    validate_sqlite_setup,
+)
 
 
 def mem_add_hotkey() -> str:
@@ -502,7 +506,9 @@ def sqlite_validate_hotkey() -> str:
             manager = get_memory_manager()
             print(f"💾 Database Path: {manager.db_path}")
             print(f"📁 Database Exists: {manager.db_path.exists()}")
-            print(f"💾 Database Size: {manager.db_path.stat().st_size if manager.db_path.exists() else 0} bytes")
+            print(
+                f"💾 Database Size: {manager.db_path.stat().st_size if manager.db_path.exists() else 0} bytes"
+            )
 
             # Test basic operations
             stats = manager.get_database_stats()

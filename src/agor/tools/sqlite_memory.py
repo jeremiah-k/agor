@@ -36,7 +36,9 @@ def resolve_memory_db_path(db_path: str = ".agor/memory.db") -> str:
     current_dir = Path.cwd()
 
     # Bundle mode detection: look for /tmp/agor_tools/ or similar patterns
-    if "/tmp" in str(current_dir) or any(p.name == "agor_tools" for p in current_dir.parents):
+    if "/tmp" in str(current_dir) or any(
+        p.name == "agor_tools" for p in current_dir.parents
+    ):
         # Bundle mode: find the project directory
         # Look for .git directory to identify project root
         project_dir = None
@@ -510,10 +512,7 @@ def validate_sqlite_setup(db_path: str = ".agor/memory.db") -> tuple[bool, str]:
 
         # Test write operation
         test_id = manager.add_memory(
-            "test-agent",
-            "validation",
-            "SQLite validation test",
-            {"test": True}
+            "test-agent", "validation", "SQLite validation test", {"test": True}
         )
 
         # Test read operation

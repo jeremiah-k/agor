@@ -41,6 +41,7 @@ You should have already selected your role from README_ai.md:
    ```
 
    This step serves two purposes:
+
    - Verifies the bundled git binary works correctly
    - Shows you what branches are available to work with
 
@@ -49,12 +50,14 @@ You should have already selected your role from README_ai.md:
 3. **File Editing Guidelines**:
 
    When editing files, please follow these practices for best results:
+
    - Output the complete edited file in a single fenced code block
    - Avoid partial snippets unless specifically requested
    - Include the full file path as a comment at the top
    - Make the output ready for direct copy-paste integration
 
    Example format:
+
    ```python
    # File: src/example/module.py
 
@@ -66,16 +69,19 @@ You should have already selected your role from README_ai.md:
 4. **Commit and Push Best Practices**:
 
    AGOR development works best with frequent commits because:
+
    - Agent environments can be unstable, and unpushed work may be lost
    - Frequent commits create recovery points if something goes wrong
    - Other agents can see your progress for coordination
 
    Recommended approach:
+
    - Use the combined command: `git add . && git commit -m "message" && git push`
    - Commit after completing logical units of work
    - Push regularly to keep your work safe
 
    Example:
+
    ```bash
    git add . && git commit -m "🔧 Fix authentication bug in user module" && git push
    ```
