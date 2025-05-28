@@ -18,6 +18,20 @@ You should have already selected your role from README_ai.md:
 
 ### Essential Setup (All Roles)
 
+**Dependency Installation (If Needed)**:
+If you encounter import errors when using AGOR tools (e.g., `ModuleNotFoundError: No module named 'platformdirs'`):
+
+```bash
+# ✅ CORRECT: Install tool dependencies
+pip install -r requirements.txt
+
+# ❌ WRONG: Do not install AGOR itself
+# pip install .
+# pip install -e .
+```
+
+**Important**: You are working WITH the AGOR codebase, not installing it as a package.
+
 1. **Verify AGOR tools access**:
 
    ```bash

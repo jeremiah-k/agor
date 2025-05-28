@@ -1,3 +1,10 @@
+# AGOR Tool Dependencies
+# These are required for AGOR's internal tools to function properly.
+#
+# FOR AGENTS: Install these with `pip install -r requirements.txt`
+# DO NOT install AGOR itself with `pip install .` or `pip install -e .`
+# You are working WITH the AGOR codebase, not installing it as a package.
+
 fastapi
 httpx
 plumbum

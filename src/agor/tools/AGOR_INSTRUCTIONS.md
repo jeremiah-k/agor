@@ -35,6 +35,36 @@ As an AGOR agent, you'll interact with the system and the user in several ways. 
 
 After confirming your role, please perform these initial setup steps.
 
+### 1.0. Dependency Installation (Standalone Mode Only)
+
+**CRITICAL FOR STANDALONE MODE AGENTS**: If you encounter import errors for AGOR tools (e.g., `ModuleNotFoundError: No module named 'platformdirs'`), you need to install AGOR's tool dependencies.
+
+**⚠️ IMPORTANT DISTINCTION**:
+- **DO install tool dependencies**: `pip install -r requirements.txt`
+- **DO NOT install AGOR itself**: Never run `pip install .` or `pip install -e .`
+
+**Why this matters**:
+- AGOR's tools require certain Python packages (platformdirs, pydantic, etc.)
+- But you're working WITH the AGOR codebase, not installing it as a package
+- Installing AGOR as a package can cause conflicts and is unnecessary
+
+**Correct approach for dependency issues**:
+```bash
+# ✅ CORRECT: Install tool dependencies
+pip install -r requirements.txt
+
+# ❌ WRONG: Do not install AGOR itself
+# pip install .
+# pip install -e .
+```
+
+**When to do this**:
+- Only if you get import errors when trying to use AGOR tools
+- Only in standalone mode (bundle mode includes dependencies)
+- Only once per environment
+
+**After installing dependencies**, continue with the setup steps below.
+
 ### 1.1. Robust Repository Detection
 
 Execute this sequence until a valid git repository is found:
