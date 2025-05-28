@@ -199,6 +199,30 @@ cat docs/protocol-changelog.md
 ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 ```
 
+### 🧪 **CRITICAL: Test Development Tooling During Initialization**
+
+**⚠️ ALWAYS test our development tooling at the start of each session:**
+
+```python
+# Test all development utilities
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling, get_timestamp
+
+# Verify tooling works
+test_tooling()
+print(f"Session started at: {get_timestamp()}")
+```
+
+**Why this is essential:**
+- Validates git binary access and repository status
+- Confirms timestamp utilities are working correctly
+- Ensures quick_commit_push() function is available for frequent commits
+- Identifies any import or dependency issues early
+- Establishes baseline functionality for the development session
+
+**Use the tooling throughout your session for efficient development!**
+
 ### 🤝 Multi-Agent Coordination Principles
 
 1. **Snapshots are a primary coordination mechanism** - not CLI commands

@@ -21,7 +21,7 @@ class MemorySyncManager:
         """
         self.repo_path = repo_path if repo_path else pathlib.Path().resolve()
         self.git_binary = git_manager.get_git_binary()
-        self.memory_file_relative_path = getattr(settings, 'MEMORY_FILE', '.agor/memory.db')
+        self.memory_file_relative_path = settings.memory_file
 
     def _run_git_command(self, command: List[str]) -> str:
         """

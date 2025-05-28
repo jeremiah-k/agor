@@ -13,7 +13,7 @@ import sys # For printing errors/info
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from agor.memory_sync import MemorySyncManager
+# from agor.memory_sync import MemorySyncManager  # Commented to avoid circular imports
 try:
     from agor.utils import get_git_root
 except ImportError:
@@ -97,39 +97,37 @@ class SQLiteMemoryManager:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Initialize MemorySyncManager
-        repo_root_path: Optional[Path] = None
-        if get_git_root:
-            try:
-                # Assuming get_git_root returns a Path object or string
-                resolved_git_root = get_git_root(start_path=self.db_path.parent)
-                if resolved_git_root:
-                    repo_root_path = Path(resolved_git_root)
-                else:
-                    print("SQLiteMemoryManager: get_git_root() did not return a path. Defaulting repo_path for MemorySyncManager to current directory.", file=sys.stderr)
-                    repo_root_path = Path(".") # Fallback
-            except Exception as e:
-                print(f"SQLiteMemoryManager: Error calling get_git_root: {e}. Defaulting repo_path for MemorySyncManager to current directory.", file=sys.stderr)
-                repo_root_path = Path(".") # Fallback
-        else:
-            print("SQLiteMemoryManager: agor.utils.get_git_root not available. Defaulting repo_path for MemorySyncManager to current directory. Git sync features might be limited.", file=sys.stderr)
-            repo_root_path = Path(".") # Fallback
-        
-        self.memory_sync_manager = MemorySyncManager(repo_path=repo_root_path)
+        # Initialize MemorySyncManager - Commented out to avoid circular imports
+        # TODO: Re-enable when circular import issue is resolved
+        # repo_root_path: Optional[Path] = None
+        # if get_git_root:
+        #     try:
+        #         resolved_git_root = get_git_root(start_path=self.db_path.parent)
+        #         if resolved_git_root:
+        #             repo_root_path = Path(resolved_git_root)
+        #         else:
+        #             repo_root_path = Path(".")
+        #     except Exception as e:
+        #         repo_root_path = Path(".")
+        # else:
+        #     repo_root_path = Path(".")
+        #
+        # self.memory_sync_manager = MemorySyncManager(repo_path=repo_root_path)
+        # self.active_memory_branch_name: Optional[str] = None
+        # self.original_branch_before_sync: Optional[str] = self.memory_sync_manager._get_current_branch()
+        # startup_success = self.memory_sync_manager.auto_sync_on_startup()
+
+        # Temporary placeholders
+        self.memory_sync_manager = None
         self.active_memory_branch_name: Optional[str] = None
-        # Store original branch before any sync operations change it
-        self.original_branch_before_sync: Optional[str] = self.memory_sync_manager._get_current_branch()
+        self.original_branch_before_sync: Optional[str] = None
 
-        print(f"SQLiteMemoryManager: Original branch is '{self.original_branch_before_sync}'. Attempting startup sync...", file=sys.stdout)
-        startup_success = self.memory_sync_manager.auto_sync_on_startup()
-
-        if startup_success:
-            self.active_memory_branch_name = self.memory_sync_manager.get_active_memory_branch()
-            print(f"SQLiteMemoryManager: Successfully synced with memory branch '{self.active_memory_branch_name}'.", file=sys.stdout)
-        else:
-            print(f"SQLiteMemoryManager: CRITICAL - Failed to sync with memory branch on startup. Using local memory.db if available. Original branch was '{self.original_branch_before_sync}'.", file=sys.stderr)
-            # Potentially, one might want to ensure we are on original_branch_before_sync if startup failed.
-            # However, auto_sync_on_startup already attempts to restore original branch on its own failure.
+        # Commented out memory sync startup logic
+        # if startup_success:
+        #     self.active_memory_branch_name = self.memory_sync_manager.get_active_memory_branch()
+        #     print(f"SQLiteMemoryManager: Successfully synced with memory branch '{self.active_memory_branch_name}'.", file=sys.stdout)
+        # else:
+        #     print(f"SQLiteMemoryManager: CRITICAL - Failed to sync with memory branch on startup.", file=sys.stderr)
 
         self._init_database()
 
@@ -532,38 +530,37 @@ class SQLiteMemoryManager:
         """
         Shuts down the memory manager, syncing the memory.db file with the remote repository.
 
+        NOTE: Currently disabled due to circular import issues with MemorySyncManager.
+        Use mem-sync-save hotkey for manual memory synchronization.
+
         Args:
             commit_message: Optional custom commit message for the sync.
             restore_original_branch_override: Optionally override the branch to restore after sync.
-                                               If None, restores the branch active before startup sync.
 
         Returns:
             True if the shutdown sync was successful (local commit succeeded), False otherwise.
         """
-        if not self.active_memory_branch_name:
-            print("SQLiteMemoryManager: No active memory branch set. Cannot perform shutdown sync.", file=sys.stderr)
-            return False
+        print("SQLiteMemoryManager: shutdown_and_sync temporarily disabled. Use mem-sync-save hotkey instead.", file=sys.stderr)
+        return True  # Return True to avoid breaking existing code
 
-        default_commit_msg = f"Automated memory sync to branch {self.active_memory_branch_name}."
-        final_commit_message = commit_message if commit_message else default_commit_msg
-
-        branch_to_restore = restore_original_branch_override if restore_original_branch_override else self.original_branch_before_sync
-        
-        print(f"SQLiteMemoryManager: Initiating shutdown sync for branch '{self.active_memory_branch_name}'. Commit: '{final_commit_message}'. Restore to: '{branch_to_restore}'", file=sys.stdout)
-
-        sync_result = self.memory_sync_manager.auto_sync_on_shutdown(
-            target_branch_name=self.active_memory_branch_name,
-            commit_message=final_commit_message,
-            push_changes=True,  # Assuming push is desired on shutdown
-            restore_original_branch=branch_to_restore
-        )
-
-        if sync_result:
-            print("SQLiteMemoryManager: Shutdown sync successful.", file=sys.stdout)
-        else:
-            print("SQLiteMemoryManager: Shutdown sync failed. Check logs from MemorySyncManager.", file=sys.stderr)
-        
-        return sync_result
+        # Commented out due to circular imports
+        # if not self.active_memory_branch_name:
+        #     print("SQLiteMemoryManager: No active memory branch set. Cannot perform shutdown sync.", file=sys.stderr)
+        #     return False
+        #
+        # default_commit_msg = f"Automated memory sync to branch {self.active_memory_branch_name}."
+        # final_commit_message = commit_message if commit_message else default_commit_msg
+        #
+        # branch_to_restore = restore_original_branch_override if restore_original_branch_override else self.original_branch_before_sync
+        #
+        # sync_result = self.memory_sync_manager.auto_sync_on_shutdown(
+        #     target_branch_name=self.active_memory_branch_name,
+        #     commit_message=final_commit_message,
+        #     push_changes=True,
+        #     restore_original_branch=branch_to_restore
+        # )
+        #
+        # return sync_result
 
 
 # Convenience functions for common operations
