@@ -26,21 +26,40 @@ You should have already selected your role from README_ai.md:
    cd /tmp/project  # or wherever the .git directory was found
    ```
 
-2. **Set up git configuration**:
+2. **Git Verification (MANDATORY)**:
 
    ```bash
-   # Make git binary executable
-   chmod 755 /tmp/agor_tools/git
+   # Ensure git binary is executable
+   chmod +x /tmp/agor_tools/git
 
-   # Configure git identity
-   /tmp/agor_tools/git config user.name "AgentOrchestrator"
-   /tmp/agor_tools/git config user.email "agor@example.local"
+   # Configure git if needed
+   /tmp/agor_tools/git config --global user.name "AI Agent"
+   /tmp/agor_tools/git config --global user.email "agent@example.com"
 
-   # Verify setup
-   /tmp/agor_tools/git status
+   # Check available branches and prompt user to select
+   /tmp/agor_tools/git branch -a
    ```
 
-3. **Load code exploration tools**:
+   **STOP HERE**: Ask the user which branch they want to work on before proceeding.
+
+3. **File Editing Rules (MANDATORY)**:
+
+   **CRITICAL**: When editing files, you MUST:
+   - Always output the complete edited file in a single fenced code block
+   - Never provide partial snippets unless explicitly requested
+   - Include the full file path as a comment at the top
+   - Ensure the output is ready for direct copy-paste integration
+
+   Example format:
+   ```python
+   # File: src/example/module.py
+
+   def example_function():
+       # Your complete file content here
+       pass
+   ```
+
+4. **Load code exploration tools**:
    ```python
    # Load the bundled tools
    exec(open('/tmp/agor_tools/code_exploration.py').read())
