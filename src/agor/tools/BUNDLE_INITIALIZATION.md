@@ -26,21 +26,61 @@ You should have already selected your role from README_ai.md:
    cd /tmp/project  # or wherever the .git directory was found
    ```
 
-2. **Set up git configuration**:
+2. **Git Setup and Verification**:
 
    ```bash
-   # Make git binary executable
-   chmod 755 /tmp/agor_tools/git
+   # Ensure git binary is executable
+   chmod +x /tmp/agor_tools/git
 
    # Configure git identity
-   /tmp/agor_tools/git config user.name "AgentOrchestrator"
-   /tmp/agor_tools/git config user.email "agor@example.local"
+   /tmp/agor_tools/git config --global user.name "AI Agent"
+   /tmp/agor_tools/git config --global user.email "agent@example.com"
 
-   # Verify setup
-   /tmp/agor_tools/git status
+   # Test git functionality and show available branches
+   /tmp/agor_tools/git branch -a
    ```
 
-3. **Load code exploration tools**:
+   This step serves two purposes:
+   - Verifies the bundled git binary works correctly
+   - Shows you what branches are available to work with
+
+   **Ask the user which branch they want to work on before proceeding.**
+
+3. **File Editing Guidelines**:
+
+   When editing files, please follow these practices for best results:
+   - Output the complete edited file in a single fenced code block
+   - Avoid partial snippets unless specifically requested
+   - Include the full file path as a comment at the top
+   - Make the output ready for direct copy-paste integration
+
+   Example format:
+   ```python
+   # File: src/example/module.py
+
+   def example_function():
+       # Your complete file content here
+       pass
+   ```
+
+4. **Commit and Push Best Practices**:
+
+   AGOR development works best with frequent commits because:
+   - Agent environments can be unstable, and unpushed work may be lost
+   - Frequent commits create recovery points if something goes wrong
+   - Other agents can see your progress for coordination
+
+   Recommended approach:
+   - Use the combined command: `git add . && git commit -m "message" && git push`
+   - Commit after completing logical units of work
+   - Push regularly to keep your work safe
+
+   Example:
+   ```bash
+   git add . && git commit -m "🔧 Fix authentication bug in user module" && git push
+   ```
+
+5. **Load code exploration tools**:
    ```python
    # Load the bundled tools
    exec(open('/tmp/agor_tools/code_exploration.py').read())

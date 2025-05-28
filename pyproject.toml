@@ -45,7 +45,6 @@ dev = [
 
 [project.scripts]
 agor = "agor.main:app"
-agentgrunt = "agor.main:app"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/jeremiah-k/agor/issues"

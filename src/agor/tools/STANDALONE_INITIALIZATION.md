@@ -34,16 +34,31 @@ You should have already selected your role from README_ai.md:
    # git clone https://github.com/user/project.git && cd project
    ```
 
-3. **Set up git configuration**:
+3. **Git Setup and Verification**:
 
    ```bash
    # Configure git identity (use system git)
    git config user.name "AGOR AI Agent"
    git config user.email "ai-agent@example.com"
 
-   # Verify setup
-   git status
+   # Test git functionality with a test commit
+   git checkout -b agor-git-test
+   echo "# AGOR Git Test" > .agor-test.md
+   git add .agor-test.md
+   git commit -m "Test: Verify git configuration works"
+
+   # Clean up the test
+   git checkout HEAD~1  # or main/master
+   git branch -D agor-git-test
+   rm -f .agor-test.md
    ```
+
+   This verification step:
+   - Tests that git commits work properly with your configuration
+   - Ensures you can create branches and make commits
+   - Cleans up after itself to leave the repository unchanged
+
+   If the test commit fails, you'll need to resolve git configuration issues before proceeding.
 
 4. **Load AGOR tools** (if needed):
    ```python
