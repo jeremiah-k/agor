@@ -18,8 +18,14 @@ def setup_quality_gates(
 ) -> str:
     """Setup quality gates and validation checkpoints (qg hotkey)."""
 
-    # Import the quality gates template
-    from ..project_planning_templates import generate_quality_gates_template
+    # Import the quality gates template - dual-mode for bundle compatibility
+    try:
+        from ..project_planning_templates import generate_quality_gates_template
+    except ImportError:
+        # Bundle-mode fallback
+        import os, sys
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        from project_planning_templates import generate_quality_gates_template
 
     # Get the base template
     template = generate_quality_gates_template()

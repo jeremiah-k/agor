@@ -18,8 +18,14 @@ def design_workflow(
 ) -> str:
     """Design agent workflow and coordination patterns (wf hotkey)."""
 
-    # Import the workflow template
-    from ..project_planning_templates import generate_workflow_template
+    # Import the workflow template - dual-mode for bundle compatibility
+    try:
+        from ..project_planning_templates import generate_workflow_template
+    except ImportError:
+        # Bundle-mode fallback
+        import os, sys
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        from project_planning_templates import generate_workflow_template
 
     # Get the base template
     template = generate_workflow_template()
