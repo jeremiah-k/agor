@@ -54,6 +54,7 @@ You should have already selected your role from README_ai.md:
    ```
 
    This verification step:
+
    - Tests that git commits work properly with your configuration
    - Ensures you can create branches and make commits
    - Cleans up after itself to leave the repository unchanged

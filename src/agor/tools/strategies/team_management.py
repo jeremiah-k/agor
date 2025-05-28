@@ -22,7 +22,9 @@ def manage_team(
         from ..project_planning_templates import generate_team_management_template
     except ImportError:
         # Bundle-mode fallback
-        import os, sys
+        import os
+        import sys
+
         sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
         from project_planning_templates import generate_team_management_template
 
