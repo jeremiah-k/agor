@@ -136,6 +136,23 @@ This guide ensures consistency, quality, and proper protocol management when dev
 git add . && git commit -m "🔧 Descriptive message" && git push
 ```
 
+**🛠️ Development Tooling Available**:
+
+For streamlined development, use the new dev tooling functions in `src/agor/tools/dev_tooling.py`:
+
+```python
+from agor.tools.dev_tooling import quick_commit_push, auto_commit_memory, create_snapshot
+
+# Quick commit and push in one operation
+quick_commit_push("Fix memory sync integration", "🔧")
+
+# Auto-commit memory to memory branch without switching
+auto_commit_memory("Implemented memory sync hotkeys", "progress", "dev")
+
+# Create comprehensive development snapshot
+create_snapshot("Memory Integration", "Completed hotkey implementation")
+```
+
 **Good times to commit and push**:
 
 - After completing file edits or features
