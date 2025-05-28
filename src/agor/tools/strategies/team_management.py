@@ -17,8 +17,14 @@ def manage_team(
 ) -> str:
     """Manage ongoing team coordination and performance (tm hotkey)."""
 
-    # Import the team management template
-    from ..project_planning_templates import generate_team_management_template
+    # Import the team management template - dual-mode for bundle compatibility
+    try:
+        from ..project_planning_templates import generate_team_management_template
+    except ImportError:
+        # Bundle-mode fallback
+        import os, sys
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        from project_planning_templates import generate_team_management_template
 
     # Get the base template
     template = generate_team_management_template()

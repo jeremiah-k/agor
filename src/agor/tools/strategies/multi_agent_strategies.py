@@ -12,11 +12,22 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
 
-from ..project_planning_templates import (
-    generate_mob_programming_strategy,
-    generate_parallel_divergent_strategy,
-    generate_red_team_strategy,
-)
+# Dual-mode importing for bundle and package compatibility
+try:
+    from ..project_planning_templates import (
+        generate_mob_programming_strategy,
+        generate_parallel_divergent_strategy,
+        generate_red_team_strategy,
+    )
+except ImportError:
+    # Bundle-mode fallback
+    import os, sys
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+    from project_planning_templates import (
+        generate_mob_programming_strategy,
+        generate_parallel_divergent_strategy,
+        generate_red_team_strategy,
+    )
 
 
 class StrategyProtocol:

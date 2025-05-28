@@ -9,7 +9,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from ..project_planning_templates import generate_mob_programming_strategy
+# Dual-mode importing for bundle and package compatibility
+try:
+    from ..project_planning_templates import generate_mob_programming_strategy
+except ImportError:
+    # Bundle-mode fallback
+    import os, sys
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+    from project_planning_templates import generate_mob_programming_strategy
 
 
 class StrategyProtocol:
