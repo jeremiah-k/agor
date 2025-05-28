@@ -9,8 +9,7 @@ build/
 .coverage
 htmlcov/
 
-# AGOR operational state files and example agent instructions
+# AGOR operational state files and coordination content
 # These should not be committed to the AGOR project repository itself.
-/.agor/state/
-/.agor/memory.db
-/.agor/agent-instructions/
+# Memory branches handle .agor/ content separately from working branches.
+/.agor/
