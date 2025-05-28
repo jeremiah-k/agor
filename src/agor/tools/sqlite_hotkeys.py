@@ -523,6 +523,256 @@ def sqlite_validate_hotkey() -> str:
         return f"❌ SQLite validation failed: {message}"
 
 
+def mem_sync_start_hotkey() -> str:
+    """
+    Hotkey: mem-sync-start
+    Initialize memory branch and sync on startup.
+
+    Sets up memory synchronization with Git-based persistence.
+    """
+    print("🔄 Memory Sync: Initialize and Start")
+    print("=" * 50)
+
+    try:
+        # Import memory sync manager
+        import sys
+        from pathlib import Path
+
+        # Add src to path for development environments
+        repo_root = Path.cwd()
+        if (repo_root / "src").exists():
+            sys.path.insert(0, str(repo_root / "src"))
+
+        from agor.memory_sync import MemorySyncManager
+
+        # Initialize memory sync manager
+        manager = MemorySyncManager()
+
+        # Get preferred branch name from user
+        preferred_branch = input("Preferred memory branch name (optional): ").strip()
+        preferred_branch = preferred_branch if preferred_branch else None
+
+        print("\n🚀 Starting memory synchronization...")
+
+        # Perform startup sync
+        success = manager.auto_sync_on_startup(preferred_branch)
+
+        if success:
+            active_branch = manager.get_active_memory_branch()
+            if active_branch:
+                return f"✅ Memory sync started successfully on branch: {active_branch}"
+            else:
+                return "✅ Memory sync started successfully"
+        else:
+            return "❌ Failed to start memory synchronization"
+
+    except ImportError as e:
+        return f"❌ Memory sync not available: {e}"
+    except Exception as e:
+        return f"❌ Error starting memory sync: {e}"
+
+
+def mem_sync_save_hotkey() -> str:
+    """
+    Hotkey: mem-sync-save
+    Save current memory state to memory branch.
+
+    Commits current memory files to the active memory branch.
+    """
+    print("💾 Memory Sync: Save Current State")
+    print("=" * 50)
+
+    try:
+        # Import memory sync manager
+        import sys
+        from pathlib import Path
+
+        # Add src to path for development environments
+        repo_root = Path.cwd()
+        if (repo_root / "src").exists():
+            sys.path.insert(0, str(repo_root / "src"))
+
+        from agor.memory_sync import MemorySyncManager
+        from agor.tools.dev_tooling import get_precise_timestamp
+
+        # Initialize memory sync manager
+        manager = MemorySyncManager()
+
+        # Check if we're on a memory branch
+        active_branch = manager.get_active_memory_branch()
+        if not active_branch:
+            return "❌ Not currently on a memory branch. Use mem-sync-start first."
+
+        # Get commit message from user
+        default_message = f"Save memory state at {get_precise_timestamp()}"
+        commit_message = input(f"Commit message (default: '{default_message}'): ").strip()
+        commit_message = commit_message if commit_message else default_message
+
+        print(f"\n💾 Saving memory state to branch: {active_branch}")
+
+        # Perform save operation (without restoring original branch)
+        success = manager.auto_sync_on_shutdown(
+            active_branch,
+            commit_message,
+            push_changes=True,
+            restore_original_branch=None  # Stay on memory branch
+        )
+
+        if success:
+            return f"✅ Memory state saved successfully to {active_branch}"
+        else:
+            return "❌ Failed to save memory state"
+
+    except ImportError as e:
+        return f"❌ Memory sync not available: {e}"
+    except Exception as e:
+        return f"❌ Error saving memory state: {e}"
+
+
+def mem_sync_restore_hotkey() -> str:
+    """
+    Hotkey: mem-sync-restore
+    Restore memory state from a memory branch.
+
+    Switches to and pulls latest state from a memory branch.
+    """
+    print("🔄 Memory Sync: Restore from Branch")
+    print("=" * 50)
+
+    try:
+        # Import memory sync manager
+        import sys
+        from pathlib import Path
+
+        # Add src to path for development environments
+        repo_root = Path.cwd()
+        if (repo_root / "src").exists():
+            sys.path.insert(0, str(repo_root / "src"))
+
+        from agor.memory_sync import MemorySyncManager
+
+        # Initialize memory sync manager
+        manager = MemorySyncManager()
+
+        # List available memory branches
+        local_branches = manager.list_memory_branches(remote=False)
+        remote_branches = manager.list_memory_branches(remote=True)
+
+        all_branches = sorted(list(set(local_branches + remote_branches)), reverse=True)
+
+        if not all_branches:
+            return "❌ No memory branches found. Use mem-sync-start to create one."
+
+        print("\nAvailable memory branches:")
+        for i, branch in enumerate(all_branches, 1):
+            location = "local" if branch in local_branches else "remote"
+            print(f"  {i}. {branch} ({location})")
+
+        # Get user selection
+        try:
+            selection = input("\nSelect branch number (or enter branch name): ").strip()
+
+            if selection.isdigit():
+                branch_index = int(selection) - 1
+                if 0 <= branch_index < len(all_branches):
+                    target_branch = all_branches[branch_index]
+                else:
+                    return "❌ Invalid branch selection"
+            else:
+                target_branch = selection
+                if not target_branch.startswith(manager.MEMORY_BRANCH_PREFIX):
+                    target_branch = manager.MEMORY_BRANCH_PREFIX + target_branch
+        except ValueError:
+            return "❌ Invalid selection"
+
+        print(f"\n🔄 Restoring from memory branch: {target_branch}")
+
+        # Ensure branch exists and switch to it
+        success = manager.ensure_memory_branch_exists(
+            target_branch,
+            switch_if_exists=True,
+            attempt_pull=True
+        )
+
+        if success:
+            return f"✅ Successfully restored memory state from {target_branch}"
+        else:
+            return f"❌ Failed to restore from memory branch {target_branch}"
+
+    except ImportError as e:
+        return f"❌ Memory sync not available: {e}"
+    except Exception as e:
+        return f"❌ Error restoring memory state: {e}"
+
+
+def mem_sync_status_hotkey() -> str:
+    """
+    Hotkey: mem-sync-status
+    Show current memory synchronization status.
+
+    Displays active branch, available branches, and sync state.
+    """
+    print("📊 Memory Sync: Status Overview")
+    print("=" * 50)
+
+    try:
+        # Import memory sync manager
+        import sys
+        from pathlib import Path
+
+        # Add src to path for development environments
+        repo_root = Path.cwd()
+        if (repo_root / "src").exists():
+            sys.path.insert(0, str(repo_root / "src"))
+
+        from agor.memory_sync import MemorySyncManager
+
+        # Initialize memory sync manager
+        manager = MemorySyncManager()
+
+        output = []
+
+        # Current branch status
+        active_branch = manager.get_active_memory_branch()
+        if active_branch:
+            output.append(f"🌿 Active memory branch: {active_branch}")
+        else:
+            output.append("📝 Not currently on a memory branch")
+
+        # List available branches
+        local_branches = manager.list_memory_branches(remote=False)
+        remote_branches = manager.list_memory_branches(remote=True)
+
+        if local_branches:
+            output.append(f"\n📁 Local memory branches ({len(local_branches)}):")
+            for branch in sorted(local_branches, reverse=True):
+                marker = " (active)" if branch == active_branch else ""
+                output.append(f"  • {branch}{marker}")
+
+        if remote_branches:
+            output.append(f"\n🌐 Remote memory branches ({len(remote_branches)}):")
+            for branch in sorted(remote_branches, reverse=True):
+                output.append(f"  • {branch}")
+
+        if not local_branches and not remote_branches:
+            output.append("\n❌ No memory branches found")
+            output.append("💡 Use 'mem-sync-start' to initialize memory synchronization")
+
+        # Memory file status
+        memory_file_path = manager.repo_path / manager.memory_file_relative_path
+        if memory_file_path.exists():
+            output.append(f"\n💾 Memory file: {manager.memory_file_relative_path} (exists)")
+        else:
+            output.append(f"\n⚠️  Memory file: {manager.memory_file_relative_path} (not found)")
+
+        return "\n".join(output)
+
+    except ImportError as e:
+        return f"❌ Memory sync not available: {e}"
+    except Exception as e:
+        return f"❌ Error checking memory sync status: {e}"
+
+
 # Hotkey registry for SQLite memory commands
 SQLITE_HOTKEY_REGISTRY = {
     "mem-add": mem_add_hotkey,
@@ -535,6 +785,11 @@ SQLITE_HOTKEY_REGISTRY = {
     "handoff-status": handoff_status_hotkey,
     "db-stats": db_stats_hotkey,
     "sqlite-validate": sqlite_validate_hotkey,
+    # Memory synchronization hotkeys
+    "mem-sync-start": mem_sync_start_hotkey,
+    "mem-sync-save": mem_sync_save_hotkey,
+    "mem-sync-restore": mem_sync_restore_hotkey,
+    "mem-sync-status": mem_sync_status_hotkey,
 }
 
 
@@ -567,6 +822,12 @@ def get_sqlite_hotkey_help() -> str:
 - `mem-get` - Retrieve memories for an agent
 - `mem-search` - Search memory content across agents
 
+**Memory Synchronization:**
+- `mem-sync-start` - Initialize memory branch and sync on startup
+- `mem-sync-save` - Save current memory state to memory branch
+- `mem-sync-restore` - Restore memory state from a memory branch
+- `mem-sync-status` - Show current memory synchronization status
+
 **Coordination:**
 - `coord-log` - Log coordination message between agents
 
@@ -584,6 +845,7 @@ def get_sqlite_hotkey_help() -> str:
 
 **Note:** SQLite memory system provides structured storage alternative to markdown files.
 Database location: `.agor/memory.db`
+Memory sync uses Git branches with prefix: `agor/mem/`
 """
 
 

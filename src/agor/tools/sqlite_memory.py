@@ -9,8 +9,15 @@ more sophisticated memory patterns than simple markdown files.
 import json
 import os
 import sqlite3
+import sys # For printing errors/info
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+# from agor.memory_sync import MemorySyncManager  # Commented to avoid circular imports
+try:
+    from agor.utils import get_git_root
+except ImportError:
+    get_git_root = None
 
 
 def resolve_memory_db_path(db_path: str = ".agor/memory.db") -> str:
@@ -76,7 +83,7 @@ class SQLiteMemoryManager:
 
     Provides structured storage for:
     - Agent memories and context
-    - Coordination logs and handoffs
+    - Coordination logs and snapshots
     - Project state and progress tracking
     - Cross-agent communication
     """
@@ -89,6 +96,39 @@ class SQLiteMemoryManager:
 
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Initialize MemorySyncManager - Commented out to avoid circular imports
+        # TODO: Re-enable when circular import issue is resolved
+        # repo_root_path: Optional[Path] = None
+        # if get_git_root:
+        #     try:
+        #         resolved_git_root = get_git_root(start_path=self.db_path.parent)
+        #         if resolved_git_root:
+        #             repo_root_path = Path(resolved_git_root)
+        #         else:
+        #             repo_root_path = Path(".")
+        #     except Exception as e:
+        #         repo_root_path = Path(".")
+        # else:
+        #     repo_root_path = Path(".")
+        #
+        # self.memory_sync_manager = MemorySyncManager(repo_path=repo_root_path)
+        # self.active_memory_branch_name: Optional[str] = None
+        # self.original_branch_before_sync: Optional[str] = self.memory_sync_manager._get_current_branch()
+        # startup_success = self.memory_sync_manager.auto_sync_on_startup()
+
+        # Temporary placeholders
+        self.memory_sync_manager = None
+        self.active_memory_branch_name: Optional[str] = None
+        self.original_branch_before_sync: Optional[str] = None
+
+        # Commented out memory sync startup logic
+        # if startup_success:
+        #     self.active_memory_branch_name = self.memory_sync_manager.get_active_memory_branch()
+        #     print(f"SQLiteMemoryManager: Successfully synced with memory branch '{self.active_memory_branch_name}'.", file=sys.stdout)
+        # else:
+        #     print(f"SQLiteMemoryManager: CRITICAL - Failed to sync with memory branch on startup.", file=sys.stderr)
+
         self._init_database()
 
     def _init_database(self):
@@ -100,7 +140,7 @@ class SQLiteMemoryManager:
                 CREATE TABLE IF NOT EXISTS agent_memories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     agent_id TEXT NOT NULL,
-                    memory_type TEXT NOT NULL,  -- 'context', 'decision', 'learning', 'handoff'
+                    memory_type TEXT NOT NULL,  -- 'context', 'decision', 'learning', 'snapshot'
                     content TEXT NOT NULL,
                     metadata TEXT,  -- JSON metadata
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -112,7 +152,7 @@ class SQLiteMemoryManager:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     from_agent TEXT,
                     to_agent TEXT,
-                    message_type TEXT NOT NULL,  -- 'handoff', 'status', 'request', 'response'
+                    message_type TEXT NOT NULL,  -- 'snapshot', 'status', 'request', 'response'
                     content TEXT NOT NULL,
                     metadata TEXT,  -- JSON metadata
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -129,10 +169,10 @@ class SQLiteMemoryManager:
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
 
-                -- Handoffs table
-                CREATE TABLE IF NOT EXISTS handoffs (
+                -- Snapshots table (formerly Handoffs)
+                CREATE TABLE IF NOT EXISTS snapshots (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    handoff_id TEXT UNIQUE NOT NULL,
+                    snapshot_id TEXT UNIQUE NOT NULL, -- formerly handoff_id
                     from_agent TEXT NOT NULL,
                     to_agent TEXT,
                     status TEXT DEFAULT 'active',  -- 'active', 'received', 'completed'
@@ -154,8 +194,8 @@ class SQLiteMemoryManager:
                 CREATE INDEX IF NOT EXISTS idx_agent_memories_agent_id ON agent_memories(agent_id);
                 CREATE INDEX IF NOT EXISTS idx_agent_memories_type ON agent_memories(memory_type);
                 CREATE INDEX IF NOT EXISTS idx_coordination_logs_agents ON coordination_logs(from_agent, to_agent);
-                CREATE INDEX IF NOT EXISTS idx_handoffs_status ON handoffs(status);
-                CREATE INDEX IF NOT EXISTS idx_handoffs_agents ON handoffs(from_agent, to_agent);
+                CREATE INDEX IF NOT EXISTS idx_snapshots_status ON snapshots(status); -- formerly idx_handoffs_status
+                CREATE INDEX IF NOT EXISTS idx_snapshots_agents ON snapshots(from_agent, to_agent); -- formerly idx_handoffs_agents
             """
             )
 
@@ -306,9 +346,9 @@ class SQLiteMemoryManager:
                     return result[0]
             return None
 
-    def create_handoff(
+    def create_snapshot(
         self,
-        handoff_id: str,
+        snapshot_id: str, # formerly handoff_id
         from_agent: str,
         problem_description: str,
         work_completed: str,
@@ -322,18 +362,18 @@ class SQLiteMemoryManager:
         agor_version: str,
         to_agent: Optional[str] = None,
     ) -> int:
-        """Create a new handoff record."""
+        """Create a new snapshot record."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO handoffs (
-                    handoff_id, from_agent, to_agent, problem_description,
+                INSERT INTO snapshots (
+                    snapshot_id, from_agent, to_agent, problem_description,
                     work_completed, commits_made, files_modified, current_status,
                     next_steps, context_notes, git_branch, git_commit, agor_version
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    handoff_id,
+                    snapshot_id,
                     from_agent,
                     to_agent,
                     problem_description,
@@ -350,34 +390,34 @@ class SQLiteMemoryManager:
             )
             return cursor.lastrowid
 
-    def update_handoff_status(
-        self, handoff_id: str, status: str, to_agent: Optional[str] = None
+    def update_snapshot_status(
+        self, snapshot_id: str, status: str, to_agent: Optional[str] = None
     ):
-        """Update handoff status."""
+        """Update snapshot status."""
         with sqlite3.connect(self.db_path) as conn:
             if to_agent:
                 conn.execute(
                     """
-                    UPDATE handoffs
+                    UPDATE snapshots
                     SET status = ?, to_agent = ?, updated_at = CURRENT_TIMESTAMP
-                    WHERE handoff_id = ?
+                    WHERE snapshot_id = ?
                     """,
-                    (status, to_agent, handoff_id),
+                    (status, to_agent, snapshot_id),
                 )
             else:
                 conn.execute(
                     """
-                    UPDATE handoffs
+                    UPDATE snapshots
                     SET status = ?, updated_at = CURRENT_TIMESTAMP
-                    WHERE handoff_id = ?
+                    WHERE snapshot_id = ?
                     """,
-                    (status, handoff_id),
+                    (status, snapshot_id),
                 )
 
-    def get_handoffs(
+    def get_snapshots(
         self, status: Optional[str] = None, agent_id: Optional[str] = None
     ) -> List[Dict[str, Any]]:
-        """Retrieve handoffs."""
+        """Retrieve snapshots."""
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
 
@@ -396,7 +436,7 @@ class SQLiteMemoryManager:
 
             cursor = conn.execute(
                 f"""
-                SELECT * FROM handoffs
+                SELECT * FROM snapshots
                 WHERE {where_clause}
                 ORDER BY created_at DESC
                 """,
@@ -405,23 +445,23 @@ class SQLiteMemoryManager:
 
             return [dict(row) for row in cursor.fetchall()]
 
-    def get_handoff(self, handoff_id: str) -> Optional[Dict[str, Any]]:
-        """Get a specific handoff by ID."""
+    def get_snapshot(self, snapshot_id: str) -> Optional[Dict[str, Any]]:
+        """Get a specific snapshot by ID."""
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.execute(
-                "SELECT * FROM handoffs WHERE handoff_id = ?", (handoff_id,)
+                "SELECT * FROM snapshots WHERE snapshot_id = ?", (snapshot_id,)
             )
             row = cursor.fetchone()
             return dict(row) if row else None
 
-    def get_agent_handoffs(self, agent_id: str) -> List[Dict[str, Any]]:
-        """Get all handoffs for a specific agent (sent or received)."""
+    def get_agent_snapshots(self, agent_id: str) -> List[Dict[str, Any]]:
+        """Get all snapshots for a specific agent (sent or received)."""
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.execute(
                 """
-                SELECT * FROM handoffs
+                SELECT * FROM snapshots
                 WHERE from_agent = ? OR to_agent = ?
                 ORDER BY created_at DESC
                 """,
@@ -479,12 +519,48 @@ class SQLiteMemoryManager:
                 "agent_memories",
                 "coordination_logs",
                 "project_state",
-                "handoffs",
+                "snapshots", # formerly handoffs
             ]:
                 cursor = conn.execute(f"SELECT COUNT(*) FROM {table}")
                 stats[table] = cursor.fetchone()[0]
 
             return stats
+
+    def shutdown_and_sync(self, commit_message: Optional[str] = None, restore_original_branch_override: Optional[str] = None) -> bool:
+        """
+        Shuts down the memory manager, syncing the memory.db file with the remote repository.
+
+        NOTE: Currently disabled due to circular import issues with MemorySyncManager.
+        Use mem-sync-save hotkey for manual memory synchronization.
+
+        Args:
+            commit_message: Optional custom commit message for the sync.
+            restore_original_branch_override: Optionally override the branch to restore after sync.
+
+        Returns:
+            True if the shutdown sync was successful (local commit succeeded), False otherwise.
+        """
+        print("SQLiteMemoryManager: shutdown_and_sync temporarily disabled. Use mem-sync-save hotkey instead.", file=sys.stderr)
+        return True  # Return True to avoid breaking existing code
+
+        # Commented out due to circular imports
+        # if not self.active_memory_branch_name:
+        #     print("SQLiteMemoryManager: No active memory branch set. Cannot perform shutdown sync.", file=sys.stderr)
+        #     return False
+        #
+        # default_commit_msg = f"Automated memory sync to branch {self.active_memory_branch_name}."
+        # final_commit_message = commit_message if commit_message else default_commit_msg
+        #
+        # branch_to_restore = restore_original_branch_override if restore_original_branch_override else self.original_branch_before_sync
+        #
+        # sync_result = self.memory_sync_manager.auto_sync_on_shutdown(
+        #     target_branch_name=self.active_memory_branch_name,
+        #     commit_message=final_commit_message,
+        #     push_changes=True,
+        #     restore_original_branch=branch_to_restore
+        # )
+        #
+        # return sync_result
 
 
 # Convenience functions for common operations
@@ -569,8 +645,8 @@ mem-search) search memory content
 coord-log) log coordination message
 state-set) set project state
 state-get) get project state
-handoff-create) create database handoff
-handoff-status) update handoff status
+snapshot-create) create database snapshot
+snapshot-status) update snapshot status
 db-stats) show database statistics
 sqlite-validate) validate setup and path resolution
 """

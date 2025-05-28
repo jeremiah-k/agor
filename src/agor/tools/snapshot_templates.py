@@ -541,9 +541,9 @@ def save_completion_report(
 
 # Hotkey integration templates
 SNAPSHOT_HOTKEY_HELP = """
-🤝 **Snapshot Commands (using existing hotkeys):**
-handoff) create work snapshot for context or another agent
-receive) receive work snapshot from another agent
+📸 **Snapshot Commands:**
+snapshot) create work snapshot for context or another agent
+receive-snapshot) receive work snapshot from another agent (or load context)
 complete) create completion report/snapshot for coordinator
-handoffs) list all snapshot documents
+snapshots) list all snapshot documents
 """

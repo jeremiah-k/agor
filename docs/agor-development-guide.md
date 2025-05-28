@@ -136,6 +136,23 @@ This guide ensures consistency, quality, and proper protocol management when dev
 git add . && git commit -m "🔧 Descriptive message" && git push
 ```
 
+**🛠️ Development Tooling Available**:
+
+For streamlined development, use the new dev tooling functions in `src/agor/tools/dev_tooling.py`:
+
+```python
+from agor.tools.dev_tooling import quick_commit_push, auto_commit_memory, create_snapshot
+
+# Quick commit and push in one operation
+quick_commit_push("Fix memory sync integration", "🔧")
+
+# Auto-commit memory to memory branch without switching
+auto_commit_memory("Implemented memory sync hotkeys", "progress", "dev")
+
+# Create comprehensive development snapshot
+create_snapshot("Memory Integration", "Completed hotkey implementation")
+```
+
 **Good times to commit and push**:
 
 - After completing file edits or features
@@ -181,6 +198,30 @@ cat docs/protocol-changelog.md
 # Check if .agor coordination exists
 ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 ```
+
+### 🧪 **CRITICAL: Test Development Tooling During Initialization**
+
+**⚠️ ALWAYS test our development tooling at the start of each session:**
+
+```python
+# Test all development utilities
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling, get_timestamp
+
+# Verify tooling works
+test_tooling()
+print(f"Session started at: {get_timestamp()}")
+```
+
+**Why this is essential:**
+- Validates git binary access and repository status
+- Confirms timestamp utilities are working correctly
+- Ensures quick_commit_push() function is available for frequent commits
+- Identifies any import or dependency issues early
+- Establishes baseline functionality for the development session
+
+**Use the tooling throughout your session for efficient development!**
 
 ### 🤝 Multi-Agent Coordination Principles
 
