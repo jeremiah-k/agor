@@ -78,7 +78,10 @@ class MemorySyncManager:
 
     def _create_memory_branch(self, branch_name: str) -> bool:
         """
-        Creates a new orphan branch for memory synchronization.
+        Creates a new memory branch using simplified approach (HEAD~1).
+
+        Creates branch from HEAD~1 to ensure it's unmergeable with working branches
+        but avoids complex orphan branch conflicts.
 
         Args:
             branch_name: The name for the new memory branch.
@@ -87,16 +90,16 @@ class MemorySyncManager:
             True if the branch was created successfully, False otherwise.
         """
         try:
-            # Create an orphan branch (no history)
-            self._run_git_command(["checkout", "--orphan", branch_name])
+            # Create branch from 1 commit behind HEAD (simplified approach)
+            # This makes it unmergeable but avoids orphan branch complexity
+            self._run_git_command(["checkout", "-b", branch_name, "HEAD~1"])
 
-            # Clear the working directory of any files from the previous branch.
-            # This ensures the memory branch is clean.
-            # Note: This command can be destructive if run in the wrong context,
-            # but _run_git_command operates within self.repo_path.
-            self._run_git_command(["rm", "-rf", "."])
+            # Create .agor directory if it doesn't exist
+            agor_dir = self.repo_path / ".agor"
+            agor_dir.mkdir(exist_ok=True)
 
-            # Create an initial empty commit
+            # Create an initial commit with .agor directory
+            self._run_git_command(["add", ".agor"])
             self._run_git_command(["commit", "--allow-empty", "-m", f"Initial commit for memory branch {branch_name}"])
 
             return True
