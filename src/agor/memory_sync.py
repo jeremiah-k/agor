@@ -4,8 +4,8 @@ import sys
 from datetime import datetime
 from typing import List, Optional
 
-from agor.git_manager import git_binary
-from agor import settings
+from agor.git_binary import git_manager
+from agor.settings import settings
 
 class MemorySyncManager:
     """Manages the synchronization of the memory file with a remote git repository."""
@@ -20,8 +20,8 @@ class MemorySyncManager:
             repo_path: The path to the git repository. If None, defaults to the current working directory.
         """
         self.repo_path = repo_path if repo_path else pathlib.Path().resolve()
-        self.git_binary = git_binary()
-        self.memory_file_relative_path = settings.MEMORY_FILE
+        self.git_binary = git_manager.get_git_binary()
+        self.memory_file_relative_path = getattr(settings, 'MEMORY_FILE', '.agor/memory.db')
 
     def _run_git_command(self, command: List[str]) -> str:
         """
@@ -89,16 +89,16 @@ class MemorySyncManager:
         try:
             # Create an orphan branch (no history)
             self._run_git_command(["checkout", "--orphan", branch_name])
-            
+
             # Clear the working directory of any files from the previous branch.
             # This ensures the memory branch is clean.
             # Note: This command can be destructive if run in the wrong context,
             # but _run_git_command operates within self.repo_path.
             self._run_git_command(["rm", "-rf", "."])
-            
+
             # Create an initial empty commit
             self._run_git_command(["commit", "--allow-empty", "-m", f"Initial commit for memory branch {branch_name}"])
-            
+
             return True
         except RuntimeError:
             # If any git command fails, _run_git_command will raise RuntimeError
@@ -151,7 +151,7 @@ class MemorySyncManager:
                     # We want to return "agor/mem/..."
                     if branch_name.startswith(f"origin/{self.MEMORY_BRANCH_PREFIX}"):
                         branch_name = branch_name[len("origin/"):]
-                
+
                 if branch_name: # Ensure no empty strings are added
                     branches.append(branch_name)
             return list(set(branches)) # Return unique branch names
@@ -190,7 +190,7 @@ class MemorySyncManager:
                         return True # Considered a success in this context
                 # If it's a different error, re-raise to be caught by the outer try-except
                 raise e
-            
+
             return True
         except RuntimeError as e:
             # This catches errors from `git add` or other errors from `git commit`
@@ -278,7 +278,7 @@ class MemorySyncManager:
                 if attempt_pull:
                     if not self._pull_and_rebase_memory_branch(branch_name):
                         print(f"Warning: Failed to pull and rebase existing local branch '{branch_name}'. Continuing...", file=sys.stderr)
-                
+
                 if switch_if_exists:
                     if not self._switch_to_branch(branch_name):
                         print(f"Error: Failed to switch to existing local branch '{branch_name}'.", file=sys.stderr)
@@ -303,7 +303,7 @@ class MemorySyncManager:
                 except RuntimeError as e_checkout:
                     print(f"Error: Failed to checkout branch '{branch_name}' from remote: {e_checkout}", file=sys.stderr)
                     return False
-            
+
             # At this point, checkout was successful
             if attempt_pull: # Usually desired after checking out a remote branch
                 if not self._pull_and_rebase_memory_branch(branch_name):
@@ -411,7 +411,7 @@ class MemorySyncManager:
             print("No preferred memory branch specified. Determining most recent or creating new.", file=sys.stdout)
             local_branches = self.list_memory_branches(remote=False)
             remote_branches = self.list_memory_branches(remote=True)
-            
+
             all_potential_branches = sorted(list(set(local_branches + remote_branches)), reverse=True)
 
             if all_potential_branches:
