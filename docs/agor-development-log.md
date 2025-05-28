@@ -27,6 +27,49 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 12. 2025-01-28 | v0.3.3 | SQLite Memory Integration and CLI Cleanup
+
+**Technical Focus**: Finalizing SQLite memory system path resolution and cleaning up CLI branding for production readiness.
+
+**Implementation Details**:
+
+- Enhanced SQLite memory path resolution with intelligent environment detection
+- Added `resolve_memory_db_path()` function for bundle vs standalone mode compatibility
+- Implemented `sqlite-validate` hotkey for debugging memory setup issues
+- Removed `agentgrunt` CLI alias, standardized on `agor` as sole entry point
+- Enhanced bundle and standalone initialization with practical git verification
+- Added comprehensive error handling and validation feedback
+- Cleaned up development artifacts and fixed critical syntax errors
+- Applied trunk upgrades and automated code quality improvements
+
+**Rationale**:
+
+- SQLite memory operations were failing due to incorrect path resolution in different environments
+- Bundle mode (ChatGPT, etc.) and standalone mode have different execution contexts
+- CLI branding needed cleanup - `agentgrunt` was legacy compatibility that caused confusion
+- Development artifacts were accumulating and needed proper cleanup
+- Code quality tools needed updates and error fixes for clean builds
+
+**Impact**:
+
+- SQLite memory functions now work reliably across all environments
+- Agents can debug memory issues with `sqlite-validate` hotkey
+- Clean CLI with single `agor` command eliminates user confusion
+- Enhanced git verification catches setup issues early
+- Codebase ready for production release with no critical issues
+
+**Lessons Learned**:
+
+- Path resolution in multi-environment systems requires careful environment detection
+- Validation tools are essential for debugging complex setup issues
+- CLI branding cleanup should be done decisively to avoid confusion
+- Regular development cleanup prevents technical debt accumulation
+- Automated code quality tools catch issues early but need regular maintenance
+
+**Next Steps**: Foundation laid for advanced memory management features and cross-platform agent coordination.
+
+---
+
 ### 11. 2024-12-19 | Protocol v0.4.0 | Elegant Refresh and Navigation Protocols
 
 **Technical Focus**: Adding smooth, non-disruptive refresh mechanisms for users and agents during longer AGOR sessions.
