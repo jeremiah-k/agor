@@ -202,8 +202,8 @@ class TestSQLiteMemoryManager:
         self.manager.add_memory("agent-1", "decision", "Test decision")
         self.manager.log_coordination("agent-1", "agent-2", "message", "Test message")
         self.manager.set_project_state("test_state", {"value": 1})
-        self.manager.create_handoff(
-            "test-handoff",
+        self.manager.create_snapshot(
+            "test-snapshot",
             "agent-1",
             "Test problem",
             "Test work",
@@ -222,7 +222,7 @@ class TestSQLiteMemoryManager:
         assert stats["agent_memories"] == 1
         assert stats["coordination_logs"] == 1
         assert stats["project_state"] == 1
-        assert stats["handoffs"] == 1
+        assert stats["snapshots"] == 1
 
     def test_metadata_handling(self):
         """Test JSON metadata storage and retrieval."""
@@ -247,7 +247,7 @@ class TestSQLiteMemoryManager:
 
     def test_memory_types(self):
         """Test different memory types are handled correctly."""
-        memory_types = ["context", "decision", "learning", "handoff", "action"]
+        memory_types = ["context", "decision", "learning", "snapshot", "action"]
 
         for i, mem_type in enumerate(memory_types):
             self.manager.add_memory("agent-1", mem_type, f"Content for {mem_type} {i}")
@@ -316,13 +316,13 @@ class TestConvenienceFunctions:
         mock_get_manager.return_value = mock_manager
 
         # Test coordination logging
-        log_coordination_message("agent-1", "agent-2", "Handoff complete", "handoff")
+        log_coordination_message("agent-1", "agent-2", "Snapshot complete", "snapshot")
 
         # Verify coordination was logged
         logs = mock_manager.get_coordination_logs("agent-1")
         assert len(logs) == 1
-        assert logs[0]["content"] == "Handoff complete"
-        assert logs[0]["message_type"] == "handoff"
+        assert logs[0]["content"] == "Snapshot complete"
+        assert logs[0]["message_type"] == "snapshot"
 
 
 class TestSQLiteMemoryIntegration:
@@ -353,11 +353,11 @@ class TestSQLiteMemoryIntegration:
         memories = self.manager.get_memories("agent-1")
         assert len(memories) == 1
 
-    def test_handoff_integration(self):
-        """Test handoff integration with AGOR handoff system."""
-        # Create handoff that matches AGOR handoff format
-        handoff_data = {
-            "handoff_id": "2024-01-27_143022_auth-implementation",
+    def test_snapshot_integration(self):
+        """Test snapshot integration with AGOR snapshot system."""
+        # Create snapshot that matches AGOR snapshot format
+        snapshot_data = {
+            "snapshot_id": "2024-01-27_143022_auth-implementation",
             "from_agent": "agent-1",
             "to_agent": "agent-2",
             "problem_description": "Implement user authentication system",
@@ -372,14 +372,14 @@ class TestSQLiteMemoryIntegration:
             "agor_version": "0.2.4",
         }
 
-        # Create handoff
-        handoff_id = self.manager.create_handoff(**handoff_data)
-        assert isinstance(handoff_id, int)
+        # Create snapshot
+        snapshot_id = self.manager.create_snapshot(**snapshot_data)
+        assert isinstance(snapshot_id, int)
 
-        # Verify handoff can be retrieved
-        retrieved = self.manager.get_handoff(handoff_data["handoff_id"])
-        assert retrieved["problem_description"] == handoff_data["problem_description"]
-        assert retrieved["git_branch"] == handoff_data["git_branch"]
+        # Verify snapshot can be retrieved
+        retrieved = self.manager.get_snapshot(snapshot_data["snapshot_id"])
+        assert retrieved["problem_description"] == snapshot_data["problem_description"]
+        assert retrieved["git_branch"] == snapshot_data["git_branch"]
 
     def test_memory_parity_with_markdown(self):
         """Test that SQLite memory provides equivalent functionality to markdown memory."""
@@ -494,21 +494,21 @@ class TestSQLiteMemoryErrorHandling:
         results = manager.search_memories("nonexistent")
         assert len(results) == 0
 
-    def test_nonexistent_handoff_operations(self):
-        """Test operations on non-existent handoffs."""
+    def test_nonexistent_snapshot_operations(self):
+        """Test operations on non-existent snapshots."""
         manager = SQLiteMemoryManager(str(self.db_path))
 
-        # Get non-existent handoff
-        handoff = manager.get_handoff("non-existent")
-        assert handoff is None
+        # Get non-existent snapshot
+        snapshot = manager.get_snapshot("non-existent")
+        assert snapshot is None
 
-        # Update non-existent handoff status
+        # Update non-existent snapshot status
         # Should handle gracefully (no error, no effect)
-        manager.update_handoff_status("non-existent", "completed")
+        manager.update_snapshot_status("non-existent", "completed")
 
-        # Verify no handoffs exist
+        # Verify no snapshots exist
         stats = manager.get_database_stats()
-        assert stats["handoffs"] == 0
+        assert stats["snapshots"] == 0
 
 
 if __name__ == "__main__":
