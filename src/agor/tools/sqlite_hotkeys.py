@@ -416,21 +416,21 @@ def snapshot_status_hotkey() -> str:
     except Exception as e:
         return f"❌ Error accessing SQLite database: {e}"
 
-    # Get handoff ID
-    handoff_id = input("Handoff ID: ").strip()
-    if not handoff_id:
-        return "❌ Handoff ID is required"
+    # Get snapshot ID
+    snapshot_id = input("Snapshot ID: ").strip()
+    if not snapshot_id:
+        return "❌ Snapshot ID is required"
 
-    # Check if handoff exists
-    handoff = manager.get_handoff(handoff_id)
-    if not handoff:
-        return f"❌ Handoff '{handoff_id}' not found"
+    # Check if snapshot exists
+    snapshot = manager.get_snapshot(snapshot_id)
+    if not snapshot:
+        return f"❌ Snapshot '{snapshot_id}' not found"
 
-    print(f"\nCurrent status: {handoff['status']}")
+    print(f"\nCurrent status: {snapshot['status']}")
     print("\nAvailable statuses:")
-    print("- active: Handoff is active and waiting")
-    print("- received: Handoff has been received")
-    print("- completed: Handoff work is completed")
+    print("- active: Snapshot is active and waiting")
+    print("- received: Snapshot has been received")
+    print("- completed: Snapshot work is completed")
 
     new_status = input("New status: ").strip()
     if not new_status:
@@ -438,10 +438,10 @@ def snapshot_status_hotkey() -> str:
 
     # Update status
     try:
-        manager.update_handoff_status(handoff_id, new_status)
-        return f"✅ Handoff '{handoff_id}' status updated to '{new_status}'"
+        manager.update_snapshot_status(snapshot_id, new_status)
+        return f"✅ Snapshot '{snapshot_id}' status updated to '{new_status}'"
     except Exception as e:
-        return f"❌ Error updating handoff status: {e}"
+        return f"❌ Error updating snapshot status: {e}"
 
 
 def db_stats_hotkey() -> str:
@@ -468,7 +468,7 @@ def db_stats_hotkey() -> str:
         output.append(f"Agent Memories: {stats['agent_memories']}")
         output.append(f"Coordination Logs: {stats['coordination_logs']}")
         output.append(f"Project States: {stats['project_state']}")
-        output.append(f"Handoffs: {stats['handoffs']}")
+        output.append(f"Snapshots: {stats['snapshots']}")
         output.append("")
 
         # Database file info
@@ -781,8 +781,8 @@ SQLITE_HOTKEY_REGISTRY = {
     "coord-log": coord_log_hotkey,
     "state-set": state_set_hotkey,
     "state-get": state_get_hotkey,
-    "handoff-create": handoff_create_hotkey,
-    "handoff-status": handoff_status_hotkey,
+    "snapshot-create": snapshot_create_hotkey,
+    "snapshot-status": snapshot_status_hotkey,
     "db-stats": db_stats_hotkey,
     "sqlite-validate": sqlite_validate_hotkey,
     # Memory synchronization hotkeys
@@ -835,9 +835,9 @@ def get_sqlite_hotkey_help() -> str:
 - `state-set` - Set project state data
 - `state-get` - Get project state data
 
-**Handoffs:**
-- `handoff-create` - Create database handoff record
-- `handoff-status` - Update handoff status
+**Snapshots:**
+- `snapshot-create` - Create database snapshot record
+- `snapshot-status` - Update snapshot status
 
 **Database:**
 - `db-stats` - Show database statistics and record counts
