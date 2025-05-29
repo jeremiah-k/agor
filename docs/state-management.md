@@ -1,7 +1,5 @@
 # AGOR State Management System
 
-Note: The `agor <command>` CLI tools described in this document are primarily intended for human developers setting up or managing AGOR environments and strategies. While some commands are tagged for potential agent use in the AGOR Development Guide, AI agents within AGOR typically interact with the system via hotkeys and by manipulating files in the `.agor/` directory as described in `AGOR_INSTRUCTIONS.md`. If agents need to invoke these CLI commands, it would be under specific advanced scenarios not covered by standard hotkeys.
-
 ## Overview
 
 AGOR's state management system provides structured coordination for multi-agent development strategies. The `.agor/state/` directory contains JSON, YAML, and Markdown files that track strategy progress, agent assignments, and coordination status.

@@ -22,7 +22,7 @@ AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgru
 
 - You have an AI agent with direct repository access
 - You want agents to make commits directly (if they have commit access)
-- You're using platforms like Augment Code Remote Agents
+- You're using platforms like Augment Code Remote Agents or Jules by Google
 - You need real-time collaboration between multiple agents
 
 **How It Works:**
@@ -190,12 +190,12 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 - Use **Bundled Mode** with `.zip` format
 - **Any role works** - choose based on your workflow needs
 - Enable Function Calling in your project settings
-
+- Use `--sqlite` flag for enhanced memory features
 
 **Workflow:**
 
 ```bash
-agor bundle your-project -f zip
+agor bundle your-project -f zip --sqlite
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
 # - SOLO DEVELOPER: For code analysis and implementation
@@ -204,7 +204,7 @@ agor bundle your-project -f zip
 # All roles work with copy-paste workflow
 ```
 
-### Augment Code Remote Agents
+### Augment Code Remote Agents / Jules by Google
 
 **Setup:**
 
