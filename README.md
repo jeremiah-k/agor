@@ -31,41 +31,23 @@ agor bundle /path/to/local/project
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
-**For AI agents with direct git access and file system capabilities (e.g., Augment Code Remote Agents).**
+**For AI agents with direct git access** (e.g., Augment Code Remote Agents)
 
-These agents operate directly on a cloned repository and do not use pre-packaged bundles.
+**Simple Setup:**
 
-**Initialization Protocol for Direct Access Agents:**
+```bash
+# 1. Clone AGOR for instructions (if not already available)
+git clone https://github.com/jeremiah-k/agor.git /tmp/agor
 
-1.  **Ensure AGOR Protocols are Accessible:**
-    *   **If working on the AGOR project itself:** The necessary instruction files (`src/agor/tools/README_ai.md`, `src/agor/tools/AGOR_INSTRUCTIONS.md`) and utility scripts are directly available within the `src/agor/tools/` directory of the AGOR repository.
-    *   **If working on a separate user project:**
-        *   **Option A (AGOR tools embedded):** The project may already have AGOR tools (e.g., in a `.agor_tools/` directory or similar). You will need the path to these files.
-        *   **Option B (Clone AGOR separately):** If the project does not embed AGOR tools, you may need to clone the AGOR repository into a known temporary location (e.g., `/tmp/agor_repo/`) to access its instructional files and Python utilities.
-        ```bash
-        # Example: If needing to clone AGOR separately
-        git clone https://github.com/jeremiah-k/agor.git /tmp/agor_repo
-        ```
+# 2. Read the AI instructions
+cat /tmp/agor/src/agor/tools/README_ai.md
+cat /tmp/agor/src/agor/tools/AGOR_INSTRUCTIONS.md
 
-2.  **Load AGOR Instructions:**
-    *   Read and internalize `README_ai.md` first, followed by `AGOR_INSTRUCTIONS.md`.
-    *   Adjust paths as per step 1. Example if AGOR was cloned to `/tmp/agor_repo/`:
-        ```bash
-        cat /tmp/agor_repo/src/agor/tools/README_ai.md
-        cat /tmp/agor_repo/src/agor/tools/AGOR_INSTRUCTIONS.md
-        ```
-    *   If AGOR tools are embedded in the project (e.g., in `.agor_tools/`), use that path:
-        ```bash
-        cat .agor_tools/README_ai.md
-        cat .agor_tools/AGOR_INSTRUCTIONS.md
-        ```
+# 3. Start working on your project
+# (AGOR tools are accessed from /tmp/agor/src/agor/tools/ as needed)
+```
 
-3.  **Operating Environment:**
-    *   You are working directly within the user's project repository.
-    *   Use standard `git` commands available in your environment for version control.
-    *   Python utility scripts (e.g., for code exploration, strategy management) may need to be invoked using their path from the AGOR tools location (e.g., `python /tmp/agor_repo/src/agor/tools/code_exploration.py ...`). Ensure these scripts are executable or run via `python`.
-
-4.  **Follow AGOR Protocols:** After role selection (guided by `README_ai.md`), follow the operational procedures, hotkey interactions, and coordination mechanisms detailed in `AGOR_INSTRUCTIONS.md`.
+**That's it!** The instructions will guide you through role selection and coordination.
 
 
 
@@ -85,43 +67,23 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
-**For AI agents with direct git access and file system capabilities (e.g., Augment Code Remote Agents).**
+**For AI agents with direct git access** (e.g., Augment Code Remote Agents)
 
-These agents operate directly on a cloned repository and do not use pre-packaged bundles.
+**Simple Setup:**
 
-**Initialization Protocol for Direct Access Agents:**
+```bash
+# 1. Clone AGOR for instructions (if not already available)
+git clone https://github.com/jeremiah-k/agor.git /tmp/agor
 
-1.  **Ensure AGOR Protocols are Accessible:**
-    *   **If working on the AGOR project itself:** The necessary instruction files (`src/agor/tools/README_ai.md`, `src/agor/tools/AGOR_INSTRUCTIONS.md`) and utility scripts are directly available within the `src/agor/tools/` directory of the AGOR repository.
-    *   **If working on a separate user project:**
-        *   **Option A (AGOR tools embedded):** The project may already have AGOR tools (e.g., in a `.agor_tools/` directory or similar). You will need the path to these files.
-        *   **Option B (Clone AGOR separately):** If the project does not embed AGOR tools, you may need to clone the AGOR repository into a known temporary location (e.g., `/tmp/agor_repo/`) to access its instructional files and Python utilities.
-        ```bash
-        # Example: If needing to clone AGOR separately
-        git clone https://github.com/jeremiah-k/agor.git /tmp/agor_repo
-        ```
+# 2. Read the AI instructions
+cat /tmp/agor/src/agor/tools/README_ai.md
+cat /tmp/agor/src/agor/tools/AGOR_INSTRUCTIONS.md
 
-2.  **Load AGOR Instructions:**
-    *   Read and internalize `README_ai.md` first, followed by `AGOR_INSTRUCTIONS.md`.
-    *   Adjust paths as per step 1. Example if AGOR was cloned to `/tmp/agor_repo/`:
-        ```bash
-        cat /tmp/agor_repo/src/agor/tools/README_ai.md
-        cat /tmp/agor_repo/src/agor/tools/AGOR_INSTRUCTIONS.md
-        ```
-    *   If AGOR tools are embedded in the project (e.g., in `.agor_tools/`), use that path:
-        ```bash
-        cat .agor_tools/README_ai.md
-        cat .agor_tools/AGOR_INSTRUCTIONS.md
-        ```
+# 3. Start working on your project
+# (AGOR tools are accessed from /tmp/agor/src/agor/tools/ as needed)
+```
 
-3.  **Operating Environment:**
-    *   You are working directly within the user's project repository.
-    *   Use standard `git` commands available in your environment for version control.
-    *   Python utility scripts (e.g., for code exploration, strategy management) may need to be invoked using their path from the AGOR tools location (e.g., `python /tmp/agor_repo/src/agor/tools/code_exploration.py ...`). Ensure these scripts are executable or run via `python`.
-
-4.  **Follow AGOR Protocols:** After role selection (guided by `README_ai.md`), follow the operational procedures, hotkey interactions, and coordination mechanisms detailed in `AGOR_INSTRUCTIONS.md`.
-
-
+**That's it!** The instructions will guide you through role selection and coordination.
 
 ### 📦 Bundled Mode (Upload-Based Platforms)
 
