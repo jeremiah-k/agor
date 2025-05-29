@@ -190,12 +190,12 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 - Use **Bundled Mode** with `.zip` format
 - **Any role works** - choose based on your workflow needs
 - Enable Function Calling in your project settings
-- Use `--sqlite` flag for enhanced memory features
+
 
 **Workflow:**
 
 ```bash
-agor bundle your-project -f zip --sqlite
+agor bundle your-project -f zip
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
 # - SOLO DEVELOPER: For code analysis and implementation

@@ -25,7 +25,7 @@ agor bundle /path/to/local/project
 # Upload bundle to your AI platform and follow embedded instructions
 ```
 
-**Bundle Options**: Use `-f zip` for Google AI Studio, `--sqlite` for memory features, `--branch` for specific branches
+**Bundle Options**: Use `-f zip` for Google AI Studio, `--branch` for specific branches
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 

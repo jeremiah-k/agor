@@ -15,7 +15,7 @@ agor git-config --name "Your Name" --email "your@email.com"  # Set manually
 # Bundle for your platform
 agor bundle /path/to/your/project -f zip    # Google AI Studio
 agor bundle /path/to/your/project           # ChatGPT (.tar.gz)
-agor bundle /path/to/your/project --sqlite  # With SQLite memory (experimental)
+
 ```
 
 ## 🤖 Platform-Specific Setup
@@ -169,15 +169,7 @@ agor bundle /path/to/your/project -f zip
 - Optimized file structure
 - Recommended for Google AI Studio
 
-### SQLite Memory (Experimental)
 
-```bash
-agor bundle /path/to/your/project --sqlite
-```
-
-- Includes SQLite database for structured memory
-- Advanced memory management capabilities
-- Use `mem-add`, `mem-search`, `db-stats` hotkeys
 
 ### Branch-Specific Bundling
 
@@ -259,11 +251,7 @@ After uploading and initializing, AGOR will prompt for role selection:
 - `ct` - Create team
 - `bp` - Break down project
 
-**Memory (SQLite mode)**:
 
-- `mem-add` - Add memory entry
-- `mem-search` - Search memories
-- `db-stats` - Database statistics
 
 ## 🆘 Troubleshooting
 
@@ -307,7 +295,6 @@ chmod 755 /tmp/agor_tools/git
 
 **Memory issues**:
 
-- Use SQLite mode for better memory management
 - Clear conversation and re-initialize if needed
 - Break large tasks into smaller chunks
 
