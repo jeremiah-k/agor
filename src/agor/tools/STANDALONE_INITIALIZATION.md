@@ -18,14 +18,65 @@ You should have already selected your role from README_ai.md:
 
 ### Essential Setup (All Roles)
 
-1. **Verify AGOR tools access**:
+1. **Initial Documentation Review**:
+
+   First, read these essential files to understand the current state:
+
+   ```bash
+   # Read the development guide and AI readme
+   cat docs/agor-development-guide.md
+   cat docs/agent-start-here.md
+   cat src/agor/tools/README_ai.md
+   ```
+
+2. **Check Recent Development Context**:
+
+   ```bash
+   # Check the last few commits to understand recent work
+   git log --oneline -10
+   ```
+
+3. **Configure Git Identity**:
+
+   ```bash
+   # Set up git configuration (if not already configured)
+   git config user.name "Your Name"
+   git config user.email "your.email@example.com"
+
+   # Or verify existing configuration
+   git config --list | grep -E "(user\.|author\.|committer\.)"
+   ```
+
+4. **Install Development Dependencies**:
+
+   ```bash
+   # Install required Python packages
+   pip install -r requirements.txt
+   ```
+
+5. **Test Development Tooling**:
+
+   ```bash
+   # Test the AGOR development tooling to ensure everything works
+   python3 -c "
+   import sys
+   sys.path.insert(0, 'src')
+   from agor.tools.dev_tooling import test_tooling, get_timestamp
+
+   # Verify tooling works
+   test_tooling()
+   print(f'Session started at: {get_timestamp()}')
+   "
+   ```
+
+6. **Verify AGOR tools access**:
 
    ```bash
    # You should be in the AGOR repository directory
    ls src/agor/tools/  # Verify tools are available
    ```
 
-2. **Navigate to target project**:
+7. **Navigate to target project**:
 
    ```bash
    # Go to the project you're working on
@@ -34,14 +85,10 @@ You should have already selected your role from README_ai.md:
    # git clone https://github.com/user/project.git && cd project
    ```
 
-3. **Git Setup and Verification**:
+8. **Verify Git Functionality**:
 
    ```bash
-   # Configure git identity (use system git)
-   git config user.name "AGOR AI Agent"
-   git config user.email "ai-agent@example.com"
-
-   # Test git functionality with a test commit
+   # Test git functionality with a test commit (optional verification)
    git checkout -b agor-git-test
    echo "# AGOR Git Test" > .agor-test.md
    git add .agor-test.md
@@ -61,7 +108,7 @@ You should have already selected your role from README_ai.md:
 
    If the test commit fails, you'll need to resolve git configuration issues before proceeding.
 
-4. **Load AGOR tools** (if needed):
+9. **Load AGOR tools** (if needed):
    ```python
    # Import AGOR tools from the cloned repository
    import sys
