@@ -492,7 +492,7 @@ def _generate_workflow_snapshots(project_type: str) -> str:
 
 #### Snapshot Documentation Template:
 ```
-HANDOFF: [from-agent] → [to-agent] - [phase-name]
+SNAPSHOT: [from-agent] → [to-agent] - [phase-name]
 COMPLETED:
 - [Deliverable 1 with location]
 - [Deliverable 2 with location]
@@ -509,7 +509,7 @@ NOTES:
 - [Recommendations for next phase]
 ```
 
-#### Emergency Handoff Procedure:
+#### Emergency Snapshot Procedure:
 - **Immediate**: Critical blocker requires different expertise
 - **Planned**: Scheduled agent rotation or availability change
 - **Quality**: Phase fails quality gates, needs rework
@@ -543,7 +543,7 @@ def _generate_parallel_tracks(team_size: int, project_type: str) -> str:
 **Synchronization Points:**
 - Daily: Progress updates and blocker resolution
 - Weekly: Integration testing and alignment
-- Phase End: Complete integration and handoff
+- Phase End: Complete integration and snapshot
 """
     else:
         return """
@@ -765,13 +765,13 @@ def _create_phase_coordination_files(project_type: str, complexity: str):
 - **Blockers**: None
 - **Next Steps**: [What needs to be done next]
 
-## Handoff Preparation
+## Snapshot Preparation
 
 ### Prerequisites for Next Phase
 - [Requirement 1]
 - [Requirement 2]
 
-### Handoff Documentation
+### Snapshot Documentation
 - [Will be completed when phase is done]
 
 ## Notes
@@ -806,7 +806,7 @@ def _create_workflow_metrics_file(team_size: int, project_type: str, complexity:
 - **Quality Gate Pass Rate**: [Percentage of gates passed first time]
 
 ### Collaboration Metrics
-- **Handoff Success Rate**: [Successful handoffs vs total handoffs]
+- **Snapshot Success Rate**: [Successful snapshots vs total snapshots]
 - **Communication Frequency**: [Messages per day in agentconvo.md]
 - **Help Request Response Time**: [Time to respond to blockers]
 - **Knowledge Sharing**: [Documentation updates per agent]
