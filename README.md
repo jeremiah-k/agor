@@ -58,10 +58,6 @@ print(f'Session started at: {get_timestamp()}')
 cat docs/agor-development-guide.md
 cat docs/agent-start-here.md
 git log --oneline -10
-
-# Set up git configuration if needed
-git config user.name "Your Name"
-git config user.email "your.email@example.com"
 ```
 
 AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
