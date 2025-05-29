@@ -29,8 +29,7 @@ agor bundle /path/to/your/project -m
 # Bundle main/master + specific branches
 agor bundle /path/to/your/project -b feature1,feature2
 
-# Bundle with SQLite memory backend support
-agor bundle /path/to/your/project --sqlite
+
 ```
 
 ### Step 3: Upload to AI Platform
@@ -143,65 +142,7 @@ agor bundle ~/my-project
 # 5. ChatGPT becomes AgentOrchestrator and analyzes your project
 ```
 
-## 🗄️ SQLite Memory Backend
 
-AGOR can include a portable SQLite binary. This SQLite instance serves as a backend component for AGOR's Memory Synchronization System, providing structured storage for certain coordination data. Agents primarily interact with memory via markdown files and snapshot hotkeys; the SQLite component works behind the scenes.
-
-### Enabling SQLite Mode
-
-```bash
-# Bundle with SQLite support
-agor bundle /path/to/your/project --sqlite
-
-# Or combine with other options
-agor bundle /path/to/your/project -f zip --sqlite
-```
-
-### SQLite Features
-
-**Structured Memory Storage (Internal Backend Functionality)**:
-
-- Backend storage for agent memories, including context, decisions, and learning.
-- Backend for cross-agent coordination logs.
-- Backend for project state management.
-- Backend for structured snapshot data and related events.
-
-**Database Schema (Internal View)**:
-
-- `agent_memories` - Individual agent memory entries
-- `coordination_logs` - Cross-agent communication
-- `project_state` - Key-value project state storage
-- `snapshots` - Structured snapshot records and metadata
-
-**Memory Interaction for Agents**:
-
-Agents interact with memory using:
-- Markdown files (e.g., `.agor/memory.md`, `agentN-memory.md`).
-- Snapshot creation and loading hotkeys (e.g., `snapshot`, `load_snapshot`).
-Direct SQLite hotkeys (like `mem-add`, `db-stats`) are not part of standard agent-facing operations.
-
-### Important Notes
-
-- **Backend Component**: The `--sqlite` flag includes this backend component. It is part of the production-ready Memory Synchronization System.
-
-- **Database Location**: `.agor/memory.db` in your project
-- **Fallback**: Falls back to markdown files if SQLite is unavailable
-- **Compatibility**: The Memory Synchronization System aims to be compatible with markdown-based workflows.
-- **Binary Source**: SQLite binary from [1bin project](https://github.com/nikvdp/1bin)
-
-### When to Use SQLite Mode
-
-**Use SQLite Mode When**:
-
-- Working with multiple agents that need shared memory
-- Requiring structured queries across agent memories
-- Managing complex coordination workflows
-- Needing persistent state across sessions
-
-**Agent Interaction Reminder**:
-
-- Agents primarily use markdown files and snapshot hotkeys for memory operations.
-- The SQLite database is a backend component managed by the Memory Synchronization System.
 
 ---
 
