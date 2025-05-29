@@ -40,7 +40,7 @@ class MemoryMigrationManager:
             "agent_memories": 0,
             "coordination_logs": 0,
             "project_state": 0,
-            "handoffs": 0,
+            "snapshots": 0,
             "errors": 0,
         }
 
@@ -84,8 +84,12 @@ class MemoryMigrationManager:
                 for handoff_file in handoff_files:
                     handoff_data = self._parse_handoff_file(handoff_file)
                     if handoff_data:
-                        self.sqlite_manager.create_handoff(**handoff_data)
-                        stats["handoffs"] += 1
+                        # Map handoff_id to snapshot_id for new schema
+                        snapshot_data = handoff_data.copy()
+                        if 'handoff_id' in snapshot_data:
+                            snapshot_data['snapshot_id'] = snapshot_data.pop('handoff_id')
+                        self.sqlite_manager.create_snapshot(**snapshot_data)
+                        stats["snapshots"] += 1
 
             # Optionally backup markdown files
             if not preserve_markdown:
@@ -113,7 +117,7 @@ class MemoryMigrationManager:
             "agent_memory_files": 0,
             "coordination_entries": 0,
             "project_state_entries": 0,
-            "handoff_files": 0,
+            "snapshot_files": 0,
             "errors": 0,
         }
 
@@ -165,19 +169,19 @@ class MemoryMigrationManager:
                     memory_file.write_text(markdown_content)
                     stats["project_state_entries"] += 1
 
-            # Create handoff files
-            handoffs = self._get_all_handoffs()
-            handoff_dir = self.agor_dir / "handoffs"
-            handoff_dir.mkdir(exist_ok=True)
+            # Create snapshot files (formerly handoff files)
+            snapshots = self._get_all_snapshots()
+            snapshot_dir = self.agor_dir / "snapshots"
+            snapshot_dir.mkdir(exist_ok=True)
 
-            for handoff in handoffs:
-                handoff_file = handoff_dir / f"{handoff['handoff_id']}.md"
-                if handoff_file.exists() and not overwrite_existing:
+            for snapshot in snapshots:
+                snapshot_file = snapshot_dir / f"{snapshot['snapshot_id']}.md"
+                if snapshot_file.exists() and not overwrite_existing:
                     continue
 
-                markdown_content = self._generate_handoff_markdown(handoff)
-                handoff_file.write_text(markdown_content)
-                stats["handoff_files"] += 1
+                markdown_content = self._generate_snapshot_markdown(snapshot)
+                snapshot_file.write_text(markdown_content)
+                stats["snapshot_files"] += 1
 
         except Exception as e:
             stats["errors"] += 1
@@ -445,14 +449,14 @@ class MemoryMigrationManager:
         except Exception:
             return []
 
-    def _get_all_handoffs(self) -> List[Dict]:
-        """Get all handoffs from SQLite database."""
+    def _get_all_snapshots(self) -> List[Dict]:
+        """Get all snapshots from SQLite database."""
         try:
             import sqlite3
 
             with self.sqlite_manager._get_connection() as conn:
                 conn.row_factory = sqlite3.Row
-                cursor = conn.execute("SELECT * FROM handoffs ORDER BY created_at")
+                cursor = conn.execute("SELECT * FROM snapshots ORDER BY created_at")
                 return [dict(row) for row in cursor.fetchall()]
         except Exception:
             return []
