@@ -41,7 +41,7 @@ def mem_add_hotkey() -> str:
     print("- context: Situational information and background")
     print("- decision: Choices made and reasoning")
     print("- learning: Insights and knowledge gained")
-    print("- handoff: Handoff-related information")
+    print("- snapshot: Snapshot-related information")
     print("- action: Actions taken and their results")
 
     memory_type = input("Memory type: ").strip()
@@ -211,7 +211,7 @@ def coord_log_hotkey() -> str:
 
     print("\nMessage Types:")
     print("- communication: General communication")
-    print("- handoff: Work handoff")
+    print("- snapshot: Work snapshot")
     print("- question: Question to another agent")
     print("- response: Response to a question")
     print("- status: Status update")
@@ -327,14 +327,14 @@ Use 'state-get' with a specific key to retrieve state data."""
         return f"❌ Error retrieving project state: {e}"
 
 
-def handoff_create_hotkey() -> str:
+def snapshot_create_hotkey() -> str:
     """
-    Hotkey: handoff-create
-    Create handoff record in SQLite database.
+    Hotkey: snapshot-create
+    Create snapshot record in SQLite database.
 
-    Creates structured handoff with all necessary information.
+    Creates structured snapshot with all necessary information.
     """
-    print("🤝 Create Database Handoff")
+    print("🤝 Create Database Snapshot")
     print("=" * 50)
 
     try:
@@ -342,10 +342,10 @@ def handoff_create_hotkey() -> str:
     except Exception as e:
         return f"❌ Error accessing SQLite database: {e}"
 
-    # Get handoff information
-    handoff_id = input("Handoff ID (e.g., 'handoff-001'): ").strip()
-    if not handoff_id:
-        return "❌ Handoff ID is required"
+    # Get snapshot information
+    snapshot_id = input("Snapshot ID (e.g., 'snapshot-001'): ").strip()
+    if not snapshot_id:
+        return "❌ Snapshot ID is required"
 
     from_agent = input("From agent: ").strip()
     if not from_agent:
@@ -375,10 +375,10 @@ def handoff_create_hotkey() -> str:
     except ImportError:
         agor_version = "unknown"
 
-    # Create handoff
+    # Create snapshot
     try:
-        handoff_db_id = manager.create_handoff(
-            handoff_id=handoff_id,
+        snapshot_db_id = manager.create_snapshot(
+            snapshot_id=snapshot_id,
             from_agent=from_agent,
             to_agent=to_agent,
             problem_description=problem_description,
@@ -394,21 +394,21 @@ def handoff_create_hotkey() -> str:
         )
 
         return (
-            f"✅ Handoff '{handoff_id}' created successfully (DB ID: {handoff_db_id})"
+            f"✅ Snapshot '{snapshot_id}' created successfully (DB ID: {snapshot_db_id})"
         )
 
     except Exception as e:
-        return f"❌ Error creating handoff: {e}"
+        return f"❌ Error creating snapshot: {e}"
 
 
-def handoff_status_hotkey() -> str:
+def snapshot_status_hotkey() -> str:
     """
-    Hotkey: handoff-status
-    Update handoff status in SQLite database.
+    Hotkey: snapshot-status
+    Update snapshot status in SQLite database.
 
-    Updates the status of an existing handoff.
+    Updates the status of an existing snapshot.
     """
-    print("🔄 Update Handoff Status")
+    print("🔄 Update Snapshot Status")
     print("=" * 50)
 
     try:
