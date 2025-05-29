@@ -1,12 +1,12 @@
 # 📸 Agent Snapshot System
 
-One of AGOR's most powerful features is seamless agent transitions using snapshots. Whether you're switching roles, passing work to a specialist, or need to step away mid-task, AGOR's snapshot system ensures no context is lost.
+One of AGOR's most powerful features is seamless agent transitions. Whether you're switching roles, passing work to a specialist, or need to step away mid-task, AGOR's snapshot system ensures no context is lost.
 
 ## 💡 Snapshots for Everyone (Including Solo Developers!)
 
-While the concept of a "snapshot" can imply passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **solo developers**. Think of it as creating a comprehensive "snapshot" of your current work:
+While the concept of a "snapshot" naturally brings to mind passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **solo developers**. Think of it as creating a comprehensive "snapshot" of your current work:
 
-- **Context Preservation Across Sessions**: If you're stepping away from a task and want to ensure you can pick it up seamlessly later (perhaps hours, days, or even weeks later), creating a snapshot for your "future self" captures all relevant code changes, analysis, decisions, and next steps.
+- **Context Preservation Across Sessions**: If you're stepping away from a task and want to ensure you can pick it up seamlessly later (perhaps hours, days, or even weeks later), creating a snapshot to your "future self" captures all relevant code changes, analysis, decisions, and next steps.
 - **Managing AI Context Limits**: Large language models have context windows. If a task is complex and requires more back-and-forth than a single session can hold, creating a snapshot allows you to effectively "reset" the context for the AI while providing it with a structured, detailed summary of everything it needs to continue. You can then start a new conversation with the AI, provide the snapshot document, and carry on.
 - **Switching Tools or Models**: If you start a task with one AI model and wish to continue with another, a snapshot document provides a standardized way to transfer the complete state of your work.
 - **Structured Self-Correction**: If you've gone down a path and need to backtrack or rethink, creating a snapshot of your current state can be a useful way to document what you've done before exploring a new direction.
@@ -15,7 +15,7 @@ So, as you read about the snapshot system, remember that while many examples inv
 
 ## 🎯 Why Snapshots Matter
 
-In traditional development, context switching is expensive. When one developer passes work to another, critical information gets lost:
+In traditional development, context switching is expensive. When one developer hands off work to another, critical information gets lost:
 
 - **Why** certain decisions were made
 - **What** approaches were tried and failed
@@ -33,31 +33,21 @@ PROJECT COORDINATOR → SOLO DEVELOPER
 "I've planned the architecture, now I need someone to implement it"
 ```
 
-### 2. Specialization Transition
+### 2. Specialization Snapshot
 
 ```
 SOLO DEVELOPER → AGENT WORKER (Security Specialist)
 "I've built the feature, now I need security review and hardening"
 ```
 
-### 3. Cross-Session Work (Self-Snapshot for Continuity)
+### 3. Time-Based Transitions
 
 ```
 AGENT WORKER → AGENT WORKER (Different Shift)
 "I'm ending my work session, here's where I left off"
 ```
 
-This is ideal for solo developers or any agent needing to pause work and resume later with full context, effectively creating a detailed bookmark of their progress.
-
-### 4. Managing AI Context Windows
-
-When a conversation with an AI model approaches its context limit, creating a snapshot allows you to summarize the work done and provide a clean, structured starting point for a new conversation or session. This ensures the AI has all necessary information without being burdened by a long, truncated history.
-
-### 5. Switching Tools or AI Models
-
-If you start a task with one Large Language Model (LLM) or AI assistant and wish to continue or get a second opinion from another, a snapshot document provides a standardized, portable format to transfer the complete state of your work, including code, analysis, and current objectives.
-
-### 6. Escalation Snapshots
+### 4. Escalation Snapshots
 
 ```
 AGENT WORKER → PROJECT COORDINATOR
@@ -235,27 +225,27 @@ How to continue the work:
 
 ## 🔍 AGOR Version Compatibility
 
-Each snapshot document includes the AGOR version used to create it. This is critical for maintaining protocol compatibility:
+Each handoff document includes the AGOR version used to create it. This is critical for maintaining protocol compatibility:
 
 ### Why Version Matters
 
 - **Protocol Evolution**: AGOR coordination protocols evolve over time
 - **Hotkey Changes**: New hotkeys and commands are added in different versions
-- **Template Updates**: Snapshot templates and procedures may change
+- **Template Updates**: Handoff templates and procedures may change
 - **Feature Compatibility**: New features may not be available in older versions
 
 ### Version Verification
 
-When receiving a snapshot:
+When receiving a handoff:
 
 ```bash
 # Check your current AGOR version
 agor --version
 
-# If versions don't match, consider checking out the snapshot version
-git checkout v0.2.0  # Example: checkout the version used in snapshot
+# If versions don't match, consider checking out the handoff version
+git checkout v0.2.0  # Example: checkout the version used in handoff
 
-# Or update to latest if snapshot is from newer version
+# Or update to latest if handoff is from newer version
 pipx upgrade agor
 ```
 
@@ -281,11 +271,11 @@ pipx upgrade agor
 **If you have older AGOR version:**
 
 ```bash
-# Option 1: Upgrade to match or exceed snapshot version
+# Option 1: Upgrade to match or exceed handoff version
 pipx upgrade agor
 
-# Option 2: Use git to checkout snapshot version
-git checkout v0.2.0  # Use version from snapshot
+# Option 2: Use git to checkout handoff version
+git checkout v0.2.0  # Use version from handoff
 ```
 
 **If you have newer AGOR version:**
@@ -296,49 +286,49 @@ git checkout v0.2.0  # Use version from snapshot
 
 **If major version difference:**
 
-- Review snapshot document carefully
+- Review handoff document carefully
 - Check for protocol changes in release notes
-- Consider using exact version match for critical snapshots
+- Consider using exact version match for critical handoffs
 
-## 🔧 Advanced Snapshot Patterns
+## 🔧 Advanced Handoff Patterns
 
-### Multi-Agent Snapshots
+### Multi-Agent Handoffs
 
 When work needs to go to multiple agents:
 
 ```
-COORDINATOR creates snapshot for parallel work:
+COORDINATOR creates handoff for parallel work:
 ├── Agent A: Frontend implementation
 ├── Agent B: Backend API
 └── Agent C: Database schema
 ```
 
-### Iterative Snapshots
+### Iterative Handoffs
 
 For complex features requiring multiple passes:
 
 ```
-Round 1: ANALYST → Basic implementation (creates snapshot)
-Round 2: SECURITY AGENT → Security hardening (receives snapshot, creates new one)
-Round 3: PERFORMANCE AGENT → Optimization (and so on)
+Round 1: ANALYST → Basic implementation
+Round 2: SECURITY AGENT → Security hardening
+Round 3: PERFORMANCE AGENT → Optimization
 Round 4: INTEGRATION AGENT → System integration
 ```
 
-### Emergency Snapshots
+### Emergency Handoffs
 
 When urgent issues arise:
 
 ```
-CURRENT AGENT creates emergency snapshot:
+CURRENT AGENT creates emergency handoff:
 - Immediate problem description
 - Current debugging state
 - Attempted solutions
 - Escalation path
 ```
 
-## 📊 Snapshot Quality Metrics
+## 📊 Handoff Quality Metrics
 
-### Good Snapshots Include:
+### Good Handoffs Include:
 
 - ✅ Clear problem definition
 - ✅ Complete work inventory
@@ -347,7 +337,7 @@ CURRENT AGENT creates emergency snapshot:
 - ✅ Technical context and decisions
 - ✅ Testing and verification steps
 
-### Poor Snapshots Lack:
+### Poor Handoffs Lack:
 
 - ❌ Vague problem description
 - ❌ Incomplete work summary
@@ -358,23 +348,23 @@ CURRENT AGENT creates emergency snapshot:
 
 ## 🎯 Integration with AGOR Strategies
 
-Snapshots work seamlessly with all AGOR strategies:
+Handoffs work seamlessly with all AGOR strategies:
 
-**Parallel Divergent**: Snapshots for capturing independent work before synthesis.
-**Pipeline**: Structured snapshots between pipeline stages.
-**Swarm**: Snapshots for tasks as agents complete them.
-**Red Team**: Snapshots for capturing build/break phase states.
-**Mob Programming**: Snapshots for capturing session state during role rotations.
+**Parallel Divergent**: Handoffs between exploration and synthesis phases
+**Pipeline**: Structured handoffs between pipeline stages
+**Swarm**: Dynamic handoffs as agents complete tasks
+**Red Team**: Handoffs between build and break phases
+**Mob Programming**: Handoffs during role rotations
 
-## 🔄 Snapshot Lifecycle
+## 🔄 Handoff Lifecycle
 
-1. **Creation**: Agent creates comprehensive snapshot document using the `snapshot` hotkey.
-2. **Notification**: Receiving agent is notified (if applicable) via coordination channels.
-3. **Review**: Receiving agent reviews and verifies snapshot.
-4. **Confirmation**: Receipt is confirmed in coordination logs (if applicable).
-5. **Continuation**: Work continues seamlessly from the snapshot point.
-6. **Archival**: Snapshots serve as a record of work at a specific point in time.
+1. **Creation**: Agent creates comprehensive handoff document
+2. **Notification**: Receiving agent is notified via coordination channels
+3. **Review**: Receiving agent reviews and verifies handoff
+4. **Confirmation**: Receipt is confirmed in coordination logs
+5. **Continuation**: Work continues seamlessly from handoff point
+6. **Completion**: Handoff is marked complete when work finishes
 
 ---
 
-**Ready to create your first snapshot?** Use the `snapshot` hotkey and experience seamless context preservation and agent transitions! 🚀
+**Ready to create your first handoff?** Use the `handoff` hotkey and experience seamless agent transitions! 🚀
