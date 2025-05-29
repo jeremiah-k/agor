@@ -6,7 +6,7 @@ for different types of coding agents in a multi-agent development environment.
 """
 
 
-def generate_specialist_prompt(role, context, task, handoff_requirements):
+def generate_specialist_prompt(role, context, task, snapshot_requirements):
     """Generate a focused prompt for a specialist agent"""
     return f"""
 You are a {role} specialist in a coordinated development team.
@@ -15,7 +15,7 @@ CONTEXT: {context}
 TASK: {task}
 
 DELIVERABLES:
-{handoff_requirements}
+{snapshot_requirements}
 
 FORMAT:
 - Complete working code with comments
@@ -26,10 +26,10 @@ Focus on {role} best practices and seamless team integration.
 """
 
 
-def generate_handoff_prompt(from_agent, to_agent, work_completed, next_tasks, context):
-    """Generate a handoff prompt for agent-to-agent transitions"""
+def generate_snapshot_prompt(from_agent, to_agent, work_completed, next_tasks, context):
+    """Generate a snapshot prompt for agent-to-agent transitions"""
     return f"""
-AGENT HANDOFF: {from_agent} → {to_agent}
+AGENT SNAPSHOT: {from_agent} → {to_agent}
 
 COMPLETED WORK:
 {work_completed}
@@ -44,7 +44,7 @@ REQUIREMENTS:
 - Review all provided materials first
 - Build upon previous work without breaking functionality
 - Document your changes and decisions
-- Prepare handoff materials for next agent
+- Prepare snapshot materials for next agent
 
 ACKNOWLEDGE: Confirm receipt and report any issues immediately.
 """
@@ -123,7 +123,7 @@ PHASE:
 
 RESPONSIBILITIES:
 - Monitor team progress and resolve blockers
-- Coordinate handoffs and synchronization
+- Coordinate snapshots and synchronization
 - Ensure quality standards and code reviews
 - Manage risks and timeline
 
@@ -327,12 +327,12 @@ GUIDELINES:
 # DETAILED EXAMPLES FOR AGENT COORDINATION
 
 
-def get_example_handoff():
-    """Example of proper agent handoff format"""
+def get_example_snapshot():
+    """Example of proper agent snapshot format"""
     return """
-EXAMPLE HANDOFF:
+EXAMPLE SNAPSHOT:
 
-AGENT HANDOFF: Backend Developer → Frontend Developer
+AGENT SNAPSHOT: Backend Developer → Frontend Developer
 
 COMPLETED WORK:
 - Created core API endpoints at /api/core/
@@ -367,25 +367,25 @@ SPECIALIST ROLE EXAMPLES:
 **BACKEND DEVELOPER:**
 - APIs, business logic, database integration
 - Delivers: API endpoints, data models, service layers
-- Handoff to: Frontend (API specs), Tester (test data)
+- Snapshot to: Frontend (API specs), Tester (test data)
 
 **FRONTEND DEVELOPER:**
 - UI components, user experience, API integration
 - Delivers: React components, state management, user flows
-- Handoff to: Tester (UI tests), DevOps (build artifacts)
+- Snapshot to: Tester (UI tests), DevOps (build artifacts)
 
 **TESTER:**
 - Test creation, validation, quality assurance
 - Delivers: Test suites, coverage reports, bug reports
-- Handoff to: Developer (fixes needed), DevOps (test automation)
+- Snapshot to: Developer (fixes needed), DevOps (test automation)
 
 **DEVOPS:**
 - Deployment, infrastructure, monitoring
 - Delivers: CI/CD pipelines, deployment configs, monitoring setup
-- Handoff to: Team (deployment process), Reviewer (security audit)
+- Snapshot to: Team (deployment process), Reviewer (security audit)
 
 **REVIEWER:**
 - Code quality, security, performance optimization
 - Delivers: Review reports, approval status, improvement recommendations
-- Handoff to: Developer (fixes), Coordinator (approval for next phase)
+- Snapshot to: Developer (fixes), Coordinator (approval for next phase)
 """
