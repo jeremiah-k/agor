@@ -93,4 +93,44 @@ Create branch work-0.3.4-4 and focus on production integration of memory sync in
 Ready for Phase 3: Production integration of memory sync into agent workflows.
 
 ---
+
+## Documentation-Cleanup-Session - 2025-01-29 13:30 UTC
+
+# Documentation Cleanup and Snapshot Enhancement Session
+
+## Current Work Session - 2025-01-29
+**Agent**: Augment Agent (Documentation Review & Enhancement)
+**Branch**: work-0.3.5-2
+**Focus**: Terminology standardization and snapshot workflow enhancement
+
+### Tasks Assigned:
+1. **Terminology Cleanup**: Remove all "handoff"/"hand off"/"hand_off" references, replace with "snapshot"
+2. **MENU_FLOW_GUIDE Investigation**: Determine if missing file is needed, where content exists
+3. **Snapshot Workflow Enhancement**: Add snapshot options to menus for:
+   - Work orders (coordinator → agent)
+   - Status/completion reports (agent → coordinator)
+   - Context preservation (any agent)
+4. **Menu Updates**: Enhance Solo Developer and Project Coordinator menus with snapshot options
+5. **Documentation Alignment**: Ensure all docs support enhanced snapshot workflows
+
+### Requirements for Snapshots:
+- Single codeblock format (no nested codeblocks)
+- Use `` two backticks instead of ``` for internal code
+- Include initialization sequence for fresh agents
+- Include memory branch information
+- Detailed context writeup
+- Work completed and work needed
+- All relevant particulars
+
+### Progress Tracking:
+- [x] Initial documentation review completed
+- [x] Setup test (commit/push) successful
+- [x] Memory file updated
+- [ ] Terminology cleanup (handoff → snapshot)
+- [ ] MENU_FLOW_GUIDE investigation
+- [ ] Snapshot workflow design
+- [ ] Menu enhancements
+- [ ] Documentation updates
+
+---
 *Memory stored using new simplified branch approach (HEAD~1) - IMPLEMENTED*

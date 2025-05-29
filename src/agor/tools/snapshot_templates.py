@@ -336,7 +336,7 @@ This directory contains snapshot documents for agent transitions and context sav
 - Example: `2024-01-15_143022_fix-authentication-bug_snapshot.md`
 
 ## Usage
-- Use `handoff` hotkey to create new snapshot
+- Use `snapshot` hotkey to create new snapshot
 - Use `receive` hotkey to accept snapshot (if applicable)
 - Update this index when snapshots are created or archived
 """
