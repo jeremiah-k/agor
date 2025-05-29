@@ -49,7 +49,7 @@ class TestSQLiteMemoryManager:
             "agent_memories",
             "coordination_logs",
             "project_state",
-            "handoffs",
+            "snapshots",
         }
         assert expected_tables.issubset(tables)
 
@@ -117,7 +117,7 @@ class TestSQLiteMemoryManager:
         """Test coordination message logging."""
         # Log coordination message
         log_id = self.manager.log_coordination(
-            "agent-1", "agent-2", "handoff", "Passing frontend work to you"
+            "agent-1", "agent-2", "snapshot", "Passing frontend work to you"
         )
         assert isinstance(log_id, int)
 
@@ -126,13 +126,13 @@ class TestSQLiteMemoryManager:
         assert len(logs) == 1
         assert logs[0]["from_agent"] == "agent-1"
         assert logs[0]["to_agent"] == "agent-2"
-        assert logs[0]["message_type"] == "handoff"
+        assert logs[0]["message_type"] == "snapshot"
 
         # Test filtering by message type
-        handoff_logs = self.manager.get_coordination_logs(
-            "agent-1", message_type="handoff"
+        snapshot_logs = self.manager.get_coordination_logs(
+            "agent-1", message_type="snapshot"
         )
-        assert len(handoff_logs) == 1
+        assert len(snapshot_logs) == 1
 
     def test_project_state_management(self):
         """Test project state storage and retrieval."""
@@ -159,11 +159,11 @@ class TestSQLiteMemoryManager:
         final_state = self.manager.get_project_state("development_status")
         assert final_state == updated_data
 
-    def test_handoff_management(self):
-        """Test handoff creation and management."""
-        # Create handoff
-        handoff_id = self.manager.create_handoff(
-            handoff_id="handoff-001",
+    def test_snapshot_management(self):
+        """Test snapshot creation and management."""
+        # Create snapshot
+        snapshot_id = self.manager.create_snapshot(
+            snapshot_id="snapshot-001",
             from_agent="agent-1",
             problem_description="Implement user authentication",
             work_completed="Created login form and validation",
@@ -177,24 +177,24 @@ class TestSQLiteMemoryManager:
             agor_version="0.2.4",
             to_agent="agent-2",
         )
-        assert isinstance(handoff_id, int)
+        assert isinstance(snapshot_id, int)
 
-        # Get handoff
-        handoff = self.manager.get_handoff("handoff-001")
-        assert handoff is not None
-        assert handoff["from_agent"] == "agent-1"
-        assert handoff["to_agent"] == "agent-2"
-        assert handoff["status"] == "active"
+        # Get snapshot
+        snapshot = self.manager.get_snapshot("snapshot-001")
+        assert snapshot is not None
+        assert snapshot["from_agent"] == "agent-1"
+        assert snapshot["to_agent"] == "agent-2"
+        assert snapshot["status"] == "active"
 
-        # Update handoff status
-        self.manager.update_handoff_status("handoff-001", "received")
-        updated_handoff = self.manager.get_handoff("handoff-001")
-        assert updated_handoff["status"] == "received"
+        # Update snapshot status
+        self.manager.update_snapshot_status("snapshot-001", "received")
+        updated_snapshot = self.manager.get_snapshot("snapshot-001")
+        assert updated_snapshot["status"] == "received"
 
-        # List handoffs for agent
-        agent_handoffs = self.manager.get_agent_handoffs("agent-1")
-        assert len(agent_handoffs) == 1
-        assert agent_handoffs[0]["handoff_id"] == "handoff-001"
+        # List snapshots for agent
+        agent_snapshots = self.manager.get_agent_snapshots("agent-1")
+        assert len(agent_snapshots) == 1
+        assert agent_snapshots[0]["snapshot_id"] == "snapshot-001"
 
     def test_database_stats(self):
         """Test database statistics functionality."""
