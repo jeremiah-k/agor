@@ -25,23 +25,49 @@ agor bundle /path/to/local/project
 # Upload bundle to your AI platform and follow embedded instructions
 ```
 
-**Bundle Options**: Use `-f zip` for Google AI Studio, `--sqlite` for memory features, `--branch` for specific branches
+**Bundle Options**: Use `-f zip` for Google AI Studio, `--branch` for specific branches
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
-### Agent Mode (Direct Git Access)
+### 🚀 Standalone Mode (Direct Git Access)
 
-**For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
+**For AI agents with direct git access and file system capabilities (e.g., Augment Code Remote Agents).**
 
-```bash
-# Clone AGOR to temporary location
-cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+These agents operate directly on a cloned repository and do not use pre-packaged bundles.
 
-# Load protocol and return to your project
-cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
-```
+**Initialization Protocol for Direct Access Agents:**
 
-AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
+1.  **Ensure AGOR Protocols are Accessible:**
+    *   **If working on the AGOR project itself:** The necessary instruction files (`src/agor/tools/README_ai.md`, `src/agor/tools/AGOR_INSTRUCTIONS.md`) and utility scripts are directly available within the `src/agor/tools/` directory of the AGOR repository.
+    *   **If working on a separate user project:**
+        *   **Option A (AGOR tools embedded):** The project may already have AGOR tools (e.g., in a `.agor_tools/` directory or similar). You will need the path to these files.
+        *   **Option B (Clone AGOR separately):** If the project does not embed AGOR tools, you may need to clone the AGOR repository into a known temporary location (e.g., `/tmp/agor_repo/`) to access its instructional files and Python utilities.
+        ```bash
+        # Example: If needing to clone AGOR separately
+        git clone https://github.com/jeremiah-k/agor.git /tmp/agor_repo
+        ```
+
+2.  **Load AGOR Instructions:**
+    *   Read and internalize `README_ai.md` first, followed by `AGOR_INSTRUCTIONS.md`.
+    *   Adjust paths as per step 1. Example if AGOR was cloned to `/tmp/agor_repo/`:
+        ```bash
+        cat /tmp/agor_repo/src/agor/tools/README_ai.md
+        cat /tmp/agor_repo/src/agor/tools/AGOR_INSTRUCTIONS.md
+        ```
+    *   If AGOR tools are embedded in the project (e.g., in `.agor_tools/`), use that path:
+        ```bash
+        cat .agor_tools/README_ai.md
+        cat .agor_tools/AGOR_INSTRUCTIONS.md
+        ```
+
+3.  **Operating Environment:**
+    *   You are working directly within the user's project repository.
+    *   Use standard `git` commands available in your environment for version control.
+    *   Python utility scripts (e.g., for code exploration, strategy management) may need to be invoked using their path from the AGOR tools location (e.g., `python /tmp/agor_repo/src/agor/tools/code_exploration.py ...`). Ensure these scripts are executable or run via `python`.
+
+4.  **Follow AGOR Protocols:** After role selection (guided by `README_ai.md`), follow the operational procedures, hotkey interactions, and coordination mechanisms detailed in `AGOR_INSTRUCTIONS.md`.
+
+
 
 ## 📚 Documentation
 
@@ -59,13 +85,43 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
-**For agents with repository access** (Augment Code Remote Agents, Jules by Google, etc.)
+**For AI agents with direct git access and file system capabilities (e.g., Augment Code Remote Agents).**
 
-- **Direct commits**: Agents can make commits directly if they have commit access
-- **Fallback method**: Copy-paste codeblocks if no commit access
-- **Full git operations**: Branch creation, merging, pull requests
-- **Real-time collaboration**: Multiple agents working on live repositories
-- **No file size limits**: Complete repository access
+These agents operate directly on a cloned repository and do not use pre-packaged bundles.
+
+**Initialization Protocol for Direct Access Agents:**
+
+1.  **Ensure AGOR Protocols are Accessible:**
+    *   **If working on the AGOR project itself:** The necessary instruction files (`src/agor/tools/README_ai.md`, `src/agor/tools/AGOR_INSTRUCTIONS.md`) and utility scripts are directly available within the `src/agor/tools/` directory of the AGOR repository.
+    *   **If working on a separate user project:**
+        *   **Option A (AGOR tools embedded):** The project may already have AGOR tools (e.g., in a `.agor_tools/` directory or similar). You will need the path to these files.
+        *   **Option B (Clone AGOR separately):** If the project does not embed AGOR tools, you may need to clone the AGOR repository into a known temporary location (e.g., `/tmp/agor_repo/`) to access its instructional files and Python utilities.
+        ```bash
+        # Example: If needing to clone AGOR separately
+        git clone https://github.com/jeremiah-k/agor.git /tmp/agor_repo
+        ```
+
+2.  **Load AGOR Instructions:**
+    *   Read and internalize `README_ai.md` first, followed by `AGOR_INSTRUCTIONS.md`.
+    *   Adjust paths as per step 1. Example if AGOR was cloned to `/tmp/agor_repo/`:
+        ```bash
+        cat /tmp/agor_repo/src/agor/tools/README_ai.md
+        cat /tmp/agor_repo/src/agor/tools/AGOR_INSTRUCTIONS.md
+        ```
+    *   If AGOR tools are embedded in the project (e.g., in `.agor_tools/`), use that path:
+        ```bash
+        cat .agor_tools/README_ai.md
+        cat .agor_tools/AGOR_INSTRUCTIONS.md
+        ```
+
+3.  **Operating Environment:**
+    *   You are working directly within the user's project repository.
+    *   Use standard `git` commands available in your environment for version control.
+    *   Python utility scripts (e.g., for code exploration, strategy management) may need to be invoked using their path from the AGOR tools location (e.g., `python /tmp/agor_repo/src/agor/tools/code_exploration.py ...`). Ensure these scripts are executable or run via `python`.
+
+4.  **Follow AGOR Protocols:** After role selection (guided by `README_ai.md`), follow the operational procedures, hotkey interactions, and coordination mechanisms detailed in `AGOR_INSTRUCTIONS.md`.
+
+
 
 ### 📦 Bundled Mode (Upload-Based Platforms)
 
@@ -102,7 +158,7 @@ AGOR defines distinct roles to structure AI-driven development tasks. Each role 
 
 - **Git integration** with portable binary (works in any environment)
 - **Codebase analysis** with language-specific exploration
-- **Memory persistence** with markdown files or SQLite database (experimental)
+- **Memory persistence** via Memory Branches (which includes an SQLite backend for structured data alongside markdown files for notes).
 - **Quality gates** and validation checkpoints
 - **Structured Snapshot Protocols** (for multi-agent coordination and solo context management)
 
@@ -136,12 +192,6 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 - `co`: changes only
 - `da`: detailed snapshot
 
-**Memory**:
-
-- `mem-add`: add memory
-- `mem-search`: search memories
-- `db-stats`: database stats (SQLite mode)
-
 **Editing & Version Control**:
 
 - `edit`: modify files
@@ -166,7 +216,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 **✅ Standalone Mode Platforms**
 
 - **Augment Code Remote Agents** (direct git access)
-- **Jules by Google** (direct git access)
+
 - **Any AI agent with git and shell access**
 
 **Bundle Formats**
@@ -196,7 +246,6 @@ agor git-config --show                      # Show current configuration
 
 # Custom bundle options
 agor bundle repo --branch feature-branch   # Specific branch
-agor bundle repo --sqlite                   # With SQLite memory
 agor bundle repo -f zip                     # Google AI Studio format
 ```
 

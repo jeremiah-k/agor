@@ -29,8 +29,7 @@ agor bundle /path/to/your/project -m
 # Bundle main/master + specific branches
 agor bundle /path/to/your/project -b feature1,feature2
 
-# Bundle with SQLite memory support (experimental)
-agor bundle /path/to/your/project --sqlite
+
 ```
 
 ### Step 3: Upload to AI Platform
@@ -96,7 +95,7 @@ Based on your role selection, the AI will initialize with:
 - **Direct repository access** - can work with any repository URL
 - **No file size limitations** - full repository access
 - **Real-time updates** - can pull latest AGOR improvements
-- **For**: Augment Code, Jules by Google, other advanced AI agents
+- **For**: Augment Code Remote Agents, other advanced AI agents with direct git access
 
 ## Bundle Contents
 
@@ -143,67 +142,7 @@ agor bundle ~/my-project
 # 5. ChatGPT becomes AgentOrchestrator and analyzes your project
 ```
 
-## 🗄️ SQLite Memory Mode (Experimental)
 
-AGOR can include a portable SQLite binary for database-based memory management instead of markdown files. This provides structured storage and advanced querying capabilities.
-
-### Enabling SQLite Mode
-
-```bash
-# Bundle with SQLite support
-agor bundle /path/to/your/project --sqlite
-
-# Or combine with other options
-agor bundle /path/to/your/project -f zip --sqlite
-```
-
-### SQLite Features
-
-**Structured Memory Storage**:
-
-- Agent memories with types (context, decision, learning, handoff)
-- Cross-agent coordination logs
-- Project state management
-- Advanced handoff tracking with relational data
-
-**Database Schema**:
-
-- `agent_memories` - Individual agent memory entries
-- `coordination_logs` - Cross-agent communication
-- `project_state` - Key-value project state storage
-- `handoffs` - Structured handoff records
-
-**Memory Commands Available**:
-
-- `mem-add`, `mem-get`, `mem-search` - Memory management
-- `coord-log`, `state-set`, `state-get` - Coordination and state
-- `handoff-create`, `handoff-status` - Database handoffs
-- `db-stats` - Database statistics
-
-### Important Notes
-
-⚠️ **Experimental Feature**: SQLite memory mode is experimental and not fully tested.
-
-- **Database Location**: `.agor/memory.db` in your project
-- **Fallback**: Falls back to markdown files if SQLite is unavailable
-- **Compatibility**: All operations are backwards compatible with file-based mode
-- **Binary Source**: SQLite binary from [1bin project](https://github.com/nikvdp/1bin)
-
-### When to Use SQLite Mode
-
-**Use SQLite Mode When**:
-
-- Working with multiple agents that need shared memory
-- Requiring structured queries across agent memories
-- Managing complex coordination workflows
-- Needing persistent state across sessions
-
-**Stick with Markdown When**:
-
-- Working solo or with simple coordination
-- Preferring human-readable memory files
-- Avoiding experimental features
-- Working in environments where SQLite might not be available
 
 ---
 
