@@ -71,7 +71,7 @@ This file captures feedback, suggestions, and improvements for AGOR itself from 
 
 ### 🎯 **Workflow Improvements**
 
-- Better coordination patterns, snapshot procedures / snapshot-based workflows
+- Better coordination patterns, handoff procedures
 - Multi-agent collaboration enhancements
 
 ### 🏆 **Success Stories**

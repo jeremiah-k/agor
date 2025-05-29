@@ -16,57 +16,58 @@ You should have already selected your role from README_ai.md:
 
 ## 🔧 Step 2: Standalone Mode Setup
 
-These steps assume you are already operating *within* the target project's repository. The main task is to access AGOR's instructional files and utility scripts.
-
 ### Essential Setup (All Roles)
 
-1.  **Locate/Access AGOR Instructional Files and Utilities:**
-    Determine how AGOR's instructional files (`README_ai.md`, `AGOR_INSTRUCTIONS.md`) and Python utilities are accessible. Consider these scenarios to identify the path to these tools:
-    *   **Scenario A (Working on AGOR itself):** Tools are in `src/agor/tools/`.
-    *   **Scenario B (Embedded in user project):** Tools might be in `.agor_tools/`.
-    *   **Scenario C (AGOR cloned separately for protocols):** Tools might be in `/tmp/agor_protocols/src/agor/tools/`.
+1. **Verify AGOR tools access**:
 
-    You will use this path to `cat` `README_ai.md` and `AGOR_INSTRUCTIONS.md`, and to execute Python utilities.
+   ```bash
+   # You should be in the AGOR repository directory
+   ls src/agor/tools/  # Verify tools are available
+   ```
 
-2.  **Git Setup and Verification (in the current target project repository):**
+2. **Navigate to target project**:
 
-    ```bash
-    # Configure git identity (use system git)
-    # Ensure these are appropriate for the user's project context and your operational guidelines
-    git config user.name "AGOR AI Agent (Standalone)"
-    git config user.email "ai-agent.standalone@example.com"
+   ```bash
+   # Go to the project you're working on
+   cd /path/to/target/project
+   # or clone it if needed:
+   # git clone https://github.com/user/project.git && cd project
+   ```
 
-    # Test git functionality with a temporary test commit
-    CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
-    TEST_BRANCH="agor-git-test-$(date +%s)"
-    git checkout -b "$TEST_BRANCH"
-    echo "# AGOR Git Test $(date)" > .agor-standalone-test.md
-    git add .agor-standalone-test.md
-    if git commit -m "Test: Verify git configuration in Standalone Mode"; then
-      echo "Git commit successful."
-      git checkout "$CURRENT_BRANCH"
-      git branch -D "$TEST_BRANCH"
-      rm -f .agor-standalone-test.md
-    else
-      echo "ERROR: Git commit failed. Please check your Git configuration and repository permissions."
-      # Attempt to cleanup
-      git reset HEAD .agor-standalone-test.md
-      git checkout "$CURRENT_BRANCH"
-      git branch -D "$TEST_BRANCH" 2>/dev/null || true
-      rm -f .agor-standalone-test.md
-      echo "Please resolve Git issues before proceeding."
-      # Agent should halt or seek guidance if this fails.
-    fi
-    ```
-    This verification step ensures you can make commits in the current project repository. If it fails, you must resolve git configuration or permission issues.
+3. **Git Setup and Verification**:
 
-3.  **Using AGOR Python Utilities** (if required by `AGOR_INSTRUCTIONS.md` for your role/task):
-    When `AGOR_INSTRUCTIONS.md` refers to executing a Python script (e.g., for code exploration, strategy management):
-    *   Invoke it using `python path/to/agor/tools/script_name.py [arguments]`. The `path/to/agor/tools/` is determined in Step 2.1.
-    *   Example (if AGOR tools were accessed from `/tmp/agor_protocols/`):
-        ```bash
-        python /tmp/agor_protocols/src/agor/tools/code_exploration.py --pattern "my_function" .
-        ```
+   ```bash
+   # Configure git identity (use system git)
+   git config user.name "AGOR AI Agent"
+   git config user.email "ai-agent@example.com"
+
+   # Test git functionality with a test commit
+   git checkout -b agor-git-test
+   echo "# AGOR Git Test" > .agor-test.md
+   git add .agor-test.md
+   git commit -m "Test: Verify git configuration works"
+
+   # Clean up the test
+   git checkout HEAD~1  # or main/master
+   git branch -D agor-git-test
+   rm -f .agor-test.md
+   ```
+
+   This verification step:
+
+   - Tests that git commits work properly with your configuration
+   - Ensures you can create branches and make commits
+   - Cleans up after itself to leave the repository unchanged
+
+   If the test commit fails, you'll need to resolve git configuration issues before proceeding.
+
+4. **Load AGOR tools** (if needed):
+   ```python
+   # Import AGOR tools from the cloned repository
+   import sys
+   sys.path.append('/path/to/agor/src')
+   from agor.tools import code_exploration
+   ```
 
 ## 📊 Step 3: Role-Specific Initialization
 

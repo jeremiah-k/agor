@@ -231,30 +231,6 @@ print(f"Session started at: {get_timestamp()}")
 
 **Use the tooling throughout your session for efficient development!**
 
-### 🚫 **CRITICAL: DO NOT CREATE PULL REQUESTS**
-
-**⚠️ AGENTS MUST NOT CREATE PRs - COMMIT AND PUSH ONLY!**
-
-**Why agents should NOT create PRs:**
-- PR creation is a human decision point requiring review and approval
-- Agents should focus on frequent commits and pushes to share progress
-- Humans decide when work is ready for PR review and integration
-- Multiple commits on a branch can be squashed/organized by humans before PR
-
-**What agents SHOULD do:**
-- ✅ Commit and push frequently to share progress
-- ✅ Use descriptive commit messages for human review
-- ✅ Create comprehensive work when ready for handoff
-- ✅ Document progress in commit history
-
-**What agents should NOT do:**
-- ❌ Create pull requests
-- ❌ Merge branches
-- ❌ Make integration decisions
-- ❌ Approve or review PRs
-
-**Exception**: Only create PRs if explicitly instructed by a human with specific PR details.
-
 ### 🤝 Multi-Agent Coordination Principles
 
 1. **Snapshots are a primary coordination mechanism** - not CLI commands

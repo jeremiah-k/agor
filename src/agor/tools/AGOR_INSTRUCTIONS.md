@@ -321,7 +321,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 ### 3.2. Agent Coordination System
 
-**Key Point**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**.
+**CRITICAL**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**.
 **Purpose**: Structured coordinator-agent communication and work state capture.
 **Location**: `.agor/snapshots/` directory.
 **Format**: Structured markdown with git context, progress, and next steps
@@ -336,7 +336,7 @@ cat .agor/snapshots/2024-01-15_143022_fix-authentication-bug_snapshot.md
 ```
 
 **Work Snapshot & Completion Report Workflow**
-**Key Point**: Agent coordination can be a two-way process using snapshots:
+**CRITICAL**: Agent coordination can be a two-way process using snapshots:
 **📤 Work Assignment (Coordinator → Agent via Snapshot)**
 
 1. **Creating Work Snapshots**: Coordinator uses `snapshot` hotkey to generate a snapshot detailing the work.
