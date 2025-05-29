@@ -21,7 +21,7 @@ These steps assume you are already operating *within* the target project's repos
 ### Essential Setup (All Roles)
 
 1.  **Locate/Access AGOR Instructional Files and Utilities:**
-    Determine how AGOR's instructional files (`README_ai.md`, `AGOR_INSTRUCTIONS.md`) and Python utilities are accessible. Refer to the scenarios in `docs/jules-direct-access-guide.md` (Scenarios A, B, C) to identify the path to these tools. For example:
+    Determine how AGOR's instructional files (`README_ai.md`, `AGOR_INSTRUCTIONS.md`) and Python utilities are accessible. Consider these scenarios to identify the path to these tools:
     *   **Scenario A (Working on AGOR itself):** Tools are in `src/agor/tools/`.
     *   **Scenario B (Embedded in user project):** Tools might be in `.agor_tools/`.
     *   **Scenario C (AGOR cloned separately for protocols):** Tools might be in `/tmp/agor_protocols/src/agor/tools/`.

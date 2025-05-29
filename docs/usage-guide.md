@@ -22,7 +22,7 @@ AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgru
 
 - You have an AI agent with direct repository access
 - You want agents to make commits directly (if they have commit access)
-- You're using platforms like Augment Code Remote Agents or Jules by Google
+- You're using platforms like Augment Code Remote Agents
 - You need real-time collaboration between multiple agents
 
 **How It Works:**
@@ -204,7 +204,7 @@ agor bundle your-project -f zip --sqlite
 # All roles work with copy-paste workflow
 ```
 
-### Augment Code Remote Agents / Jules by Google
+### Augment Code Remote Agents
 
 **Setup:**
 

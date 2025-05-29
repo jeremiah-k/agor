@@ -6,7 +6,7 @@
 
 Choose Standalone Mode if:
 
-- **You're using AI platforms with direct environment access**: Such as Jules by Google, Augment Code Remote Agents, or other systems where the AI can clone repositories and run shell commands.
+- **You're using AI platforms with direct environment access**: Such as Augment Code Remote Agents, or other systems where the AI can clone repositories and run shell commands.
 - **You want the AI to make direct Git commits**: If your setup allows and you trust the AI with commit access, this mode enables true end-to-end automation.
 - **Real-time collaboration is needed**: Multiple agents (AI or human) can work on the same live repository, pulling changes and coordinating in real time.
 - **Your project is very large or complex**: Avoiding the bundling step can be quicker for very large repositories, and there are no file size limitations imposed by uploads.

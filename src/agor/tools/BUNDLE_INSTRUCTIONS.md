@@ -95,7 +95,7 @@ Based on your role selection, the AI will initialize with:
 - **Direct repository access** - can work with any repository URL
 - **No file size limitations** - full repository access
 - **Real-time updates** - can pull latest AGOR improvements
-- **For**: Augment Code, Jules by Google, other advanced AI agents
+- **For**: Augment Code Remote Agents, other advanced AI agents with direct git access
 
 ## Bundle Contents
 

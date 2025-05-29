@@ -78,10 +78,10 @@ agor bundle . --sqlite
 
 ### Option C: Standalone Mode (Direct Git Access)
 
-This mode is for AI agents that can directly clone Git repositories and execute shell commands (e.g., Jules by Google, Augment Code Remote Agents). The agent first learns the AGOR protocol:
+This mode is for AI agents that can directly clone Git repositories and execute shell commands (e.g., Augment Code Remote Agents). The agent first learns the AGOR protocol:
 
 ```bash
-# For AI agents with direct Git access (e.g., Jules by Google, Augment Code)
+# For AI agents with direct Git access (e.g., Augment Code Remote Agents)
 # Agent typically executes these commands to understand AGOR protocol:
 cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 cat src/agor/tools/README_ai.md && cat src/agor/tools/AGOR_INSTRUCTIONS.md
