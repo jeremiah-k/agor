@@ -139,7 +139,7 @@ def generate_snapshot_prompts(  # Renamed function
    - **Solution**: Document all dependencies and provide access
    - **Prevention**: Dependency mapping during planning
 
-4. **Quality Issues**: Work not ready for snapshot (if for handoff)
+4. **Quality Issues**: Work not ready for snapshot (if for transition)
    - **Solution**: Complete quality checks before creating snapshot for others
    - **Prevention**: Continuous quality assurance
 
