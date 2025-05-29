@@ -225,27 +225,27 @@ How to continue the work:
 
 ## 🔍 AGOR Version Compatibility
 
-Each handoff document includes the AGOR version used to create it. This is critical for maintaining protocol compatibility:
+Each snapshot document includes the AGOR version used to create it. This is critical for maintaining protocol compatibility:
 
 ### Why Version Matters
 
 - **Protocol Evolution**: AGOR coordination protocols evolve over time
 - **Hotkey Changes**: New hotkeys and commands are added in different versions
-- **Template Updates**: Handoff templates and procedures may change
+- **Template Updates**: Snapshot templates and procedures may change
 - **Feature Compatibility**: New features may not be available in older versions
 
 ### Version Verification
 
-When receiving a handoff:
+When receiving a snapshot:
 
 ```bash
 # Check your current AGOR version
 agor --version
 
-# If versions don't match, consider checking out the handoff version
-git checkout v0.2.0  # Example: checkout the version used in handoff
+# If versions don't match, consider checking out the snapshot version
+git checkout v0.2.0  # Example: checkout the version used in snapshot
 
-# Or update to latest if handoff is from newer version
+# Or update to latest if snapshot is from newer version
 pipx upgrade agor
 ```
 
@@ -271,11 +271,11 @@ pipx upgrade agor
 **If you have older AGOR version:**
 
 ```bash
-# Option 1: Upgrade to match or exceed handoff version
+# Option 1: Upgrade to match or exceed snapshot version
 pipx upgrade agor
 
-# Option 2: Use git to checkout handoff version
-git checkout v0.2.0  # Use version from handoff
+# Option 2: Use git to checkout snapshot version
+git checkout v0.2.0  # Use version from snapshot
 ```
 
 **If you have newer AGOR version:**
@@ -286,24 +286,24 @@ git checkout v0.2.0  # Use version from handoff
 
 **If major version difference:**
 
-- Review handoff document carefully
+- Review snapshot document carefully
 - Check for protocol changes in release notes
-- Consider using exact version match for critical handoffs
+- Consider using exact version match for critical snapshots
 
-## 🔧 Advanced Handoff Patterns
+## 🔧 Advanced Snapshot Patterns
 
-### Multi-Agent Handoffs
+### Multi-Agent Snapshots
 
 When work needs to go to multiple agents:
 
 ```
-COORDINATOR creates handoff for parallel work:
+COORDINATOR creates snapshot for parallel work:
 ├── Agent A: Frontend implementation
 ├── Agent B: Backend API
 └── Agent C: Database schema
 ```
 
-### Iterative Handoffs
+### Iterative Snapshots
 
 For complex features requiring multiple passes:
 
@@ -314,21 +314,21 @@ Round 3: PERFORMANCE AGENT → Optimization
 Round 4: INTEGRATION AGENT → System integration
 ```
 
-### Emergency Handoffs
+### Emergency Snapshots
 
 When urgent issues arise:
 
 ```
-CURRENT AGENT creates emergency handoff:
+CURRENT AGENT creates emergency snapshot:
 - Immediate problem description
 - Current debugging state
 - Attempted solutions
 - Escalation path
 ```
 
-## 📊 Handoff Quality Metrics
+## 📊 Snapshot Quality Metrics
 
-### Good Handoffs Include:
+### Good Snapshots Include:
 
 - ✅ Clear problem definition
 - ✅ Complete work inventory
@@ -337,7 +337,7 @@ CURRENT AGENT creates emergency handoff:
 - ✅ Technical context and decisions
 - ✅ Testing and verification steps
 
-### Poor Handoffs Lack:
+### Poor Snapshots Lack:
 
 - ❌ Vague problem description
 - ❌ Incomplete work summary
@@ -348,23 +348,23 @@ CURRENT AGENT creates emergency handoff:
 
 ## 🎯 Integration with AGOR Strategies
 
-Handoffs work seamlessly with all AGOR strategies:
+Snapshots work seamlessly with all AGOR strategies:
 
-**Parallel Divergent**: Handoffs between exploration and synthesis phases
-**Pipeline**: Structured handoffs between pipeline stages
-**Swarm**: Dynamic handoffs as agents complete tasks
-**Red Team**: Handoffs between build and break phases
-**Mob Programming**: Handoffs during role rotations
+**Parallel Divergent**: Snapshots between exploration and synthesis phases
+**Pipeline**: Structured snapshots between pipeline stages
+**Swarm**: Dynamic snapshots as agents complete tasks
+**Red Team**: Snapshots between build and break phases
+**Mob Programming**: Snapshots during role rotations
 
-## 🔄 Handoff Lifecycle
+## 🔄 Snapshot Lifecycle
 
-1. **Creation**: Agent creates comprehensive handoff document
+1. **Creation**: Agent creates comprehensive snapshot document
 2. **Notification**: Receiving agent is notified via coordination channels
-3. **Review**: Receiving agent reviews and verifies handoff
+3. **Review**: Receiving agent reviews and verifies snapshot
 4. **Confirmation**: Receipt is confirmed in coordination logs
-5. **Continuation**: Work continues seamlessly from handoff point
-6. **Completion**: Handoff is marked complete when work finishes
+5. **Continuation**: Work continues seamlessly from snapshot point
+6. **Completion**: Snapshot is marked complete when work finishes
 
 ---
 
-**Ready to create your first handoff?** Use the `handoff` hotkey and experience seamless agent transitions! 🚀
+**Ready to create your first snapshot?** Use the `snapshot` hotkey and experience seamless agent transitions! 🚀
