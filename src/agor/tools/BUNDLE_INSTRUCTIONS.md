@@ -29,7 +29,7 @@ agor bundle /path/to/your/project -m
 # Bundle main/master + specific branches
 agor bundle /path/to/your/project -b feature1,feature2
 
-# Bundle with SQLite memory support (experimental)
+# Bundle with SQLite memory backend support
 agor bundle /path/to/your/project --sqlite
 ```
 
@@ -143,9 +143,9 @@ agor bundle ~/my-project
 # 5. ChatGPT becomes AgentOrchestrator and analyzes your project
 ```
 
-## 🗄️ SQLite Memory Mode (Experimental)
+## 🗄️ SQLite Memory Backend
 
-AGOR can include a portable SQLite binary for database-based memory management instead of markdown files. This provides structured storage and advanced querying capabilities.
+AGOR can include a portable SQLite binary. This SQLite instance serves as a backend component for AGOR's Memory Synchronization System, providing structured storage for certain coordination data. Agents primarily interact with memory via markdown files and snapshot hotkeys; the SQLite component works behind the scenes.
 
 ### Enabling SQLite Mode
 
@@ -159,34 +159,34 @@ agor bundle /path/to/your/project -f zip --sqlite
 
 ### SQLite Features
 
-**Structured Memory Storage**:
+**Structured Memory Storage (Internal Backend Functionality)**:
 
-- Agent memories with types (context, decision, learning, handoff)
-- Cross-agent coordination logs
-- Project state management
-- Advanced handoff tracking with relational data
+- Backend storage for agent memories, including context, decisions, and learning.
+- Backend for cross-agent coordination logs.
+- Backend for project state management.
+- Backend for structured snapshot data and related events.
 
-**Database Schema**:
+**Database Schema (Internal View)**:
 
 - `agent_memories` - Individual agent memory entries
 - `coordination_logs` - Cross-agent communication
 - `project_state` - Key-value project state storage
-- `handoffs` - Structured handoff records
+- `snapshots` - Structured snapshot records and metadata
 
-**Memory Commands Available**:
+**Memory Interaction for Agents**:
 
-- `mem-add`, `mem-get`, `mem-search` - Memory management
-- `coord-log`, `state-set`, `state-get` - Coordination and state
-- `handoff-create`, `handoff-status` - Database handoffs
-- `db-stats` - Database statistics
+Agents interact with memory using:
+- Markdown files (e.g., `.agor/memory.md`, `agentN-memory.md`).
+- Snapshot creation and loading hotkeys (e.g., `snapshot`, `load_snapshot`).
+Direct SQLite hotkeys (like `mem-add`, `db-stats`) are not part of standard agent-facing operations.
 
 ### Important Notes
 
-⚠️ **Experimental Feature**: SQLite memory mode is experimental and not fully tested.
+- **Backend Component**: The `--sqlite` flag includes this backend component. It is part of the production-ready Memory Synchronization System.
 
 - **Database Location**: `.agor/memory.db` in your project
 - **Fallback**: Falls back to markdown files if SQLite is unavailable
-- **Compatibility**: All operations are backwards compatible with file-based mode
+- **Compatibility**: The Memory Synchronization System aims to be compatible with markdown-based workflows.
 - **Binary Source**: SQLite binary from [1bin project](https://github.com/nikvdp/1bin)
 
 ### When to Use SQLite Mode
@@ -198,12 +198,10 @@ agor bundle /path/to/your/project -f zip --sqlite
 - Managing complex coordination workflows
 - Needing persistent state across sessions
 
-**Stick with Markdown When**:
+**Agent Interaction Reminder**:
 
-- Working solo or with simple coordination
-- Preferring human-readable memory files
-- Avoiding experimental features
-- Working in environments where SQLite might not be available
+- Agents primarily use markdown files and snapshot hotkeys for memory operations.
+- The SQLite database is a backend component managed by the Memory Synchronization System.
 
 ---
 

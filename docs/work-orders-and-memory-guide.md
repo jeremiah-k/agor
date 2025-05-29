@@ -1,6 +1,6 @@
 # 📋 Work Orders and Memory System Guide
 
-This guide explains AGOR's work order system, memory branches, and the critical handoff protocols that enable seamless agent coordination and context preservation.
+This guide explains AGOR's work order system, memory branches, and the important snapshot protocols that enable seamless agent coordination and context preservation.
 
 ## 🎯 Overview
 
