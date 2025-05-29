@@ -3,7 +3,7 @@ Workflow Design Strategy Implementation for AGOR.
 
 This module provides comprehensive workflow planning and phase management capabilities,
 enabling teams to design coordinated development workflows with clear phases, quality gates,
-and handoff procedures.
+and snapshot procedures.
 """
 
 from datetime import datetime
@@ -62,8 +62,8 @@ PHASE_BLOCKED: [agent-id] - [phase-name] - [blocker-description] - [timestamp]
 ### Quality Gates:
 {_generate_workflow_quality_gates(complexity)}
 
-### Handoff Procedures:
-{_generate_workflow_handoffs(project_type)}
+### Snapshot Procedures:
+{_generate_workflow_snapshots(project_type)}
 
 ## WORKFLOW EXECUTION
 
@@ -118,14 +118,14 @@ RECOVERY_COMPLETE: [agent-id] - [resolution] - [lessons-learned] - [timestamp]
 - **Velocity**: Features completed per sprint
 - **Quality**: Bug rates, review feedback scores
 - **Efficiency**: Rework percentage, idle time
-- **Collaboration**: Handoff success rate, communication frequency
+- **Collaboration**: Snapshot success rate, communication frequency
 
 ## WORKFLOW OPTIMIZATION
 
 ### Continuous Improvement:
 1. **Weekly Retrospectives**: What worked, what didn't, improvements
 2. **Metrics Review**: Analyze performance indicators, identify bottlenecks
-3. **Process Refinement**: Adjust phases, handoffs, quality gates
+3. **Process Refinement**: Adjust phases, snapshots, quality gates
 4. **Tool Enhancement**: Improve coordination tools and templates
 
 ### Adaptation Triggers:
@@ -139,7 +139,7 @@ RECOVERY_COMPLETE: [agent-id] - [resolution] - [lessons-learned] - [timestamp]
 - [ ] **Workflow Design Approved**: All agents understand the process
 - [ ] **Phase Definitions Clear**: Entry/exit criteria defined
 - [ ] **Quality Gates Established**: Standards and review processes
-- [ ] **Handoff Procedures Documented**: Clear transition protocols
+- [ ] **Snapshot Procedures Documented**: Clear transition protocols
 - [ ] **Monitoring Setup**: Progress tracking and metrics collection
 - [ ] **Error Handling Defined**: Recovery procedures and escalation
 - [ ] **Communication Protocols**: Regular updates and coordination
@@ -149,7 +149,7 @@ RECOVERY_COMPLETE: [agent-id] - [resolution] - [lessons-learned] - [timestamp]
 
 1. **Review Workflow Design**: Validate phases and assignments with team
 2. **Setup Coordination**: Initialize .agor workflow tracking files
-3. **Define Standards**: Establish quality gates and handoff criteria
+3. **Define Standards**: Establish quality gates and snapshot criteria
 4. **Begin Execution**: Start with first phase and monitor progress
 5. **Iterate and Improve**: Regular retrospectives and optimization
 """
@@ -481,18 +481,18 @@ def _generate_workflow_quality_gates(complexity: str) -> str:
     return base_gates
 
 
-def _generate_workflow_handoffs(project_type: str) -> str:
-    """Generate handoff procedures for workflow."""
+def _generate_workflow_snapshots(project_type: str) -> str:
+    """Generate snapshot procedures for workflow."""
     return """
-#### Standard Handoff Procedure:
+#### Standard Snapshot Procedure:
 1. **Completion Signal**: Agent signals phase completion with deliverables
 2. **Quality Check**: Next agent validates prerequisites and quality gates
-3. **Knowledge Transfer**: Brief handoff meeting or documentation review
+3. **Knowledge Transfer**: Brief snapshot meeting or documentation review
 4. **Acceptance**: Receiving agent confirms readiness to proceed
 
-#### Handoff Documentation Template:
+#### Snapshot Documentation Template:
 ```
-HANDOFF: [from-agent] → [to-agent] - [phase-name]
+SNAPSHOT: [from-agent] → [to-agent] - [phase-name]
 COMPLETED:
 - [Deliverable 1 with location]
 - [Deliverable 2 with location]
@@ -509,7 +509,7 @@ NOTES:
 - [Recommendations for next phase]
 ```
 
-#### Emergency Handoff Procedure:
+#### Emergency Snapshot Procedure:
 - **Immediate**: Critical blocker requires different expertise
 - **Planned**: Scheduled agent rotation or availability change
 - **Quality**: Phase fails quality gates, needs rework
@@ -543,7 +543,7 @@ def _generate_parallel_tracks(team_size: int, project_type: str) -> str:
 **Synchronization Points:**
 - Daily: Progress updates and blocker resolution
 - Weekly: Integration testing and alignment
-- Phase End: Complete integration and handoff
+- Phase End: Complete integration and snapshot
 """
     else:
         return """
@@ -765,13 +765,13 @@ def _create_phase_coordination_files(project_type: str, complexity: str):
 - **Blockers**: None
 - **Next Steps**: [What needs to be done next]
 
-## Handoff Preparation
+## Snapshot Preparation
 
 ### Prerequisites for Next Phase
 - [Requirement 1]
 - [Requirement 2]
 
-### Handoff Documentation
+### Snapshot Documentation
 - [Will be completed when phase is done]
 
 ## Notes
@@ -806,7 +806,7 @@ def _create_workflow_metrics_file(team_size: int, project_type: str, complexity:
 - **Quality Gate Pass Rate**: [Percentage of gates passed first time]
 
 ### Collaboration Metrics
-- **Handoff Success Rate**: [Successful handoffs vs total handoffs]
+- **Snapshot Success Rate**: [Successful snapshots vs total snapshots]
 - **Communication Frequency**: [Messages per day in agentconvo.md]
 - **Help Request Response Time**: [Time to respond to blockers]
 - **Knowledge Sharing**: [Documentation updates per agent]

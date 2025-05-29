@@ -33,7 +33,7 @@
 
 - **[docs/strategies.md](strategies.md)** - 5 coordination strategies with decision matrix
   - Parallel Divergent: Independent exploration → synthesis
-  - Pipeline: Sequential handoffs with specialization
+  - Pipeline: Sequential snapshots with specialization
   - Swarm: Dynamic task assignment
   - Red Team: Adversarial build/break cycles
   - Mob Programming: Collaborative coding
@@ -53,8 +53,8 @@
 ### "I need to create or use a work snapshot"
 
 - **[docs/snapshots.md](snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
-- **[src/agor/tools/handoff_templates.py](../src/agor/tools/handoff_templates.py)** - Handoff generation code
-  - Functions: generate_handoff_document(), get_git_context(), get_agor_version()
+- **[src/agor/tools/snapshot_templates.py](../src/agor/tools/snapshot_templates.py)** - Snapshot generation code
+  - Functions: generate_snapshot_document(), get_git_context(), get_agor_version()
   - Captures: problem, progress, commits, files, next steps, git state, AGOR version
 
 ### "I need to analyze code or explore the codebase"
@@ -74,7 +74,7 @@
 - **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 120-220 - Role-specific menus
   - PROJECT COORDINATOR: sp, bp, ar, ss, pd, pl, sw, rt, mb, ct, tm, hp
   - ANALYST/SOLO DEV: a, f, co, da, bfs, grep, tree, edit, commit, diff
-  - AGENT WORKER: status, sync, ch, log, msg, report, task, complete, handoff
+  - AGENT WORKER: status, sync, ch, log, msg, report, task, complete, snapshot
 
 ### "I need to provide feedback on AGOR"
 
@@ -118,7 +118,7 @@
 | ------------------------------------------------------------------------------------ | ------------------- | -------------------------------------------- | ----- |
 | **[code_exploration.py](../src/agor/tools/code_exploration.py)**                     | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
 | **[code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)**           | Tool documentation  | Function reference, examples                 | 179   |
-| **[handoff_templates.py](../src/agor/tools/handoff_templates.py)**                   | Handoff generation  | generate_handoff_document, git_context       | ~400  |
+| **[snapshot_templates.py](../src/agor/tools/snapshot_templates.py)**                 | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
 | **[sqlite_memory.py](../src/agor/tools/sqlite_memory.py)**                           | SQLite memory (exp) | SQLiteMemoryManager, database operations     | ~400  |
 | **[agent_prompt_templates.py](../src/agor/tools/agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
 | **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
@@ -130,14 +130,14 @@
 ### Git Operations
 
 - **Real git binary usage**: [src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md) Lines 5-14
-- **Git context capture**: [src/agor/tools/handoff_templates.py](../src/agor/tools/handoff_templates.py) get_git_context()
+- **Git context capture**: [src/agor/tools/snapshot_templates.py](../src/agor/tools/snapshot_templates.py) get_git_context()
 - **Repository analysis**: [src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md) Lines 103-120
 
 ### Role-Based Workflows
 
 - **PROJECT COORDINATOR**: Strategic planning, team coordination, strategy selection
 - **SOLO DEVELOPER**: Codebase analysis, implementation, technical deep-dives
-- **AGENT WORKER**: Task execution, handoffs, coordination communication
+- **AGENT WORKER**: Task execution, snapshots, coordination communication
 
 ### Platform-Specific Information
 

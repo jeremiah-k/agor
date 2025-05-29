@@ -257,7 +257,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 - **`ss`**: Analyze project and recommend optimal development strategy
 - **`pd`**: Set up Parallel Divergent strategy (multiple independent agents)
-- **`pl`**: Set up Pipeline strategy (sequential agent handoffs)
+- **`pl`**: Set up Pipeline strategy (sequential agent snapshots)
 - **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
 - **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
 - **`mb`**: Set up Mob Programming strategy (collaborative coding)
@@ -475,7 +475,7 @@ Understanding how strategy parameters translate to concrete coordination states:
 
 - **`complexity="simple"`**: Creates 3-4 workflow phases with basic coordination
 - **`complexity="medium"`**: Generates 4-5 phases with intermediate quality gates
-- **`complexity="complex"`**: Creates 5-6 phases with comprehensive validation and handoffs
+- **`complexity="complex"`**: Creates 5-6 phases with comprehensive validation and snapshots
 
 **Quality Focus Parameters:**
 
@@ -694,8 +694,8 @@ from agor.tools.strategies.workflow_design import design_workflow
 print(design_workflow("user management system", team_size=4, project_type="web_app"))
 
 # For snapshot prompts (hp hotkey)
-from agor.tools.strategies.handoff_prompts import generate_handoff_prompts # Module name might be dated
-print(generate_handoff_prompts("standard", "developer", "reviewer", "auth system"))
+from agor.tools.strategies.snapshot_prompts import generate_snapshot_prompts # Module name updated
+print(generate_snapshot_prompts("standard", "developer", "reviewer", "auth system"))
 
 # For team management (tm hotkey)
 from agor.tools.strategies.team_management import manage_team
@@ -937,7 +937,7 @@ Memory sync is designed to be **transparent and non-disruptive**:
 **When developing AGOR itself:**
 - Memory sync provides persistent context across development sessions
 - Use manual hotkeys for fine-grained control
-- Memory branches enable seamless handoffs between development agents
+- Memory branches enable seamless snapshots between development agents
 - Integration tests validate memory sync workflows
 
 **For normal project work:**

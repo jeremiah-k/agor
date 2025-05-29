@@ -41,7 +41,7 @@ def mem_add_hotkey() -> str:
     print("- context: Situational information and background")
     print("- decision: Choices made and reasoning")
     print("- learning: Insights and knowledge gained")
-    print("- handoff: Handoff-related information")
+    print("- snapshot: Snapshot-related information")
     print("- action: Actions taken and their results")
 
     memory_type = input("Memory type: ").strip()
@@ -211,7 +211,7 @@ def coord_log_hotkey() -> str:
 
     print("\nMessage Types:")
     print("- communication: General communication")
-    print("- handoff: Work handoff")
+    print("- snapshot: Work snapshot")
     print("- question: Question to another agent")
     print("- response: Response to a question")
     print("- status: Status update")
@@ -327,14 +327,14 @@ Use 'state-get' with a specific key to retrieve state data."""
         return f"❌ Error retrieving project state: {e}"
 
 
-def handoff_create_hotkey() -> str:
+def snapshot_create_hotkey() -> str:
     """
-    Hotkey: handoff-create
-    Create handoff record in SQLite database.
+    Hotkey: snapshot-create
+    Create snapshot record in SQLite database.
 
-    Creates structured handoff with all necessary information.
+    Creates structured snapshot with all necessary information.
     """
-    print("🤝 Create Database Handoff")
+    print("🤝 Create Database Snapshot")
     print("=" * 50)
 
     try:
@@ -342,10 +342,10 @@ def handoff_create_hotkey() -> str:
     except Exception as e:
         return f"❌ Error accessing SQLite database: {e}"
 
-    # Get handoff information
-    handoff_id = input("Handoff ID (e.g., 'handoff-001'): ").strip()
-    if not handoff_id:
-        return "❌ Handoff ID is required"
+    # Get snapshot information
+    snapshot_id = input("Snapshot ID (e.g., 'snapshot-001'): ").strip()
+    if not snapshot_id:
+        return "❌ Snapshot ID is required"
 
     from_agent = input("From agent: ").strip()
     if not from_agent:
@@ -375,10 +375,10 @@ def handoff_create_hotkey() -> str:
     except ImportError:
         agor_version = "unknown"
 
-    # Create handoff
+    # Create snapshot
     try:
-        handoff_db_id = manager.create_handoff(
-            handoff_id=handoff_id,
+        snapshot_db_id = manager.create_snapshot(
+            snapshot_id=snapshot_id,
             from_agent=from_agent,
             to_agent=to_agent,
             problem_description=problem_description,
@@ -394,21 +394,21 @@ def handoff_create_hotkey() -> str:
         )
 
         return (
-            f"✅ Handoff '{handoff_id}' created successfully (DB ID: {handoff_db_id})"
+            f"✅ Snapshot '{snapshot_id}' created successfully (DB ID: {snapshot_db_id})"
         )
 
     except Exception as e:
-        return f"❌ Error creating handoff: {e}"
+        return f"❌ Error creating snapshot: {e}"
 
 
-def handoff_status_hotkey() -> str:
+def snapshot_status_hotkey() -> str:
     """
-    Hotkey: handoff-status
-    Update handoff status in SQLite database.
+    Hotkey: snapshot-status
+    Update snapshot status in SQLite database.
 
-    Updates the status of an existing handoff.
+    Updates the status of an existing snapshot.
     """
-    print("🔄 Update Handoff Status")
+    print("🔄 Update Snapshot Status")
     print("=" * 50)
 
     try:
@@ -416,21 +416,21 @@ def handoff_status_hotkey() -> str:
     except Exception as e:
         return f"❌ Error accessing SQLite database: {e}"
 
-    # Get handoff ID
-    handoff_id = input("Handoff ID: ").strip()
-    if not handoff_id:
-        return "❌ Handoff ID is required"
+    # Get snapshot ID
+    snapshot_id = input("Snapshot ID: ").strip()
+    if not snapshot_id:
+        return "❌ Snapshot ID is required"
 
-    # Check if handoff exists
-    handoff = manager.get_handoff(handoff_id)
-    if not handoff:
-        return f"❌ Handoff '{handoff_id}' not found"
+    # Check if snapshot exists
+    snapshot = manager.get_snapshot(snapshot_id)
+    if not snapshot:
+        return f"❌ Snapshot '{snapshot_id}' not found"
 
-    print(f"\nCurrent status: {handoff['status']}")
+    print(f"\nCurrent status: {snapshot['status']}")
     print("\nAvailable statuses:")
-    print("- active: Handoff is active and waiting")
-    print("- received: Handoff has been received")
-    print("- completed: Handoff work is completed")
+    print("- active: Snapshot is active and waiting")
+    print("- received: Snapshot has been received")
+    print("- completed: Snapshot work is completed")
 
     new_status = input("New status: ").strip()
     if not new_status:
@@ -438,10 +438,10 @@ def handoff_status_hotkey() -> str:
 
     # Update status
     try:
-        manager.update_handoff_status(handoff_id, new_status)
-        return f"✅ Handoff '{handoff_id}' status updated to '{new_status}'"
+        manager.update_snapshot_status(snapshot_id, new_status)
+        return f"✅ Snapshot '{snapshot_id}' status updated to '{new_status}'"
     except Exception as e:
-        return f"❌ Error updating handoff status: {e}"
+        return f"❌ Error updating snapshot status: {e}"
 
 
 def db_stats_hotkey() -> str:
@@ -468,7 +468,7 @@ def db_stats_hotkey() -> str:
         output.append(f"Agent Memories: {stats['agent_memories']}")
         output.append(f"Coordination Logs: {stats['coordination_logs']}")
         output.append(f"Project States: {stats['project_state']}")
-        output.append(f"Handoffs: {stats['handoffs']}")
+        output.append(f"Snapshots: {stats['snapshots']}")
         output.append("")
 
         # Database file info
@@ -781,8 +781,8 @@ SQLITE_HOTKEY_REGISTRY = {
     "coord-log": coord_log_hotkey,
     "state-set": state_set_hotkey,
     "state-get": state_get_hotkey,
-    "handoff-create": handoff_create_hotkey,
-    "handoff-status": handoff_status_hotkey,
+    "snapshot-create": snapshot_create_hotkey,
+    "snapshot-status": snapshot_status_hotkey,
     "db-stats": db_stats_hotkey,
     "sqlite-validate": sqlite_validate_hotkey,
     # Memory synchronization hotkeys
@@ -835,9 +835,9 @@ def get_sqlite_hotkey_help() -> str:
 - `state-set` - Set project state data
 - `state-get` - Get project state data
 
-**Handoffs:**
-- `handoff-create` - Create database handoff record
-- `handoff-status` - Update handoff status
+**Snapshots:**
+- `snapshot-create` - Create database snapshot record
+- `snapshot-status` - Update snapshot status
 
 **Database:**
 - `db-stats` - Show database statistics and record counts

@@ -87,7 +87,7 @@ class TestMemorySystemParity:
         """Test that coordination logging works equivalently in both systems."""
         # Test coordination messages
         coordination_data = [
-            ("agent-1", "agent-2", "handoff", "Passing authentication work to you"),
+            ("agent-1", "agent-2", "snapshot", "Passing authentication work to you"),
             ("agent-2", "agent-1", "question", "What database schema should I use?"),
             (
                 "agent-1",
@@ -180,11 +180,11 @@ class TestMemorySystemParity:
         assert retrieved_state is not None
         assert "task" in retrieved_state
 
-    def test_handoff_system_parity(self):
-        """Test that handoff management works equivalently in both systems."""
-        # Create comprehensive handoff
-        handoff_data = {
-            "handoff_id": "2024-01-27_auth-handoff",
+    def test_snapshot_system_parity(self):
+        """Test that snapshot management works equivalently in both systems."""
+        # Create comprehensive snapshot
+        snapshot_data = {
+            "snapshot_id": "2024-01-27_auth-snapshot",
             "from_agent": "agent-1",
             "to_agent": "agent-2",
             "problem_description": "Complete user authentication system implementation",
@@ -199,30 +199,30 @@ class TestMemorySystemParity:
             "agor_version": "0.2.4",
         }
 
-        # Create handoff in SQLite
-        handoff_id = self.sqlite_manager.create_handoff(**handoff_data)
-        assert isinstance(handoff_id, int)
+        # Create snapshot in SQLite
+        snapshot_id = self.sqlite_manager.create_snapshot(**snapshot_data)
+        assert isinstance(snapshot_id, int)
 
         # Migrate to markdown
         stats = self.migration_manager.migrate_sqlite_to_markdown()
-        assert stats["handoff_files"] == 1
+        assert stats["snapshot_files"] == 1
 
-        # Verify handoff file was created
-        handoff_dir = self.agor_dir / "handoffs"
-        assert handoff_dir.exists()
+        # Verify snapshot file was created
+        snapshot_dir = self.agor_dir / "snapshots"
+        assert snapshot_dir.exists()
 
-        handoff_files = list(handoff_dir.glob("*.md"))
-        assert len(handoff_files) == 1
+        snapshot_files = list(snapshot_dir.glob("*.md"))
+        assert len(snapshot_files) == 1
 
-        handoff_content = handoff_files[0].read_text()
-        assert "user authentication system" in handoff_content
-        assert "JWT middleware" in handoff_content
-        assert "feature/authentication" in handoff_content
+        snapshot_content = snapshot_files[0].read_text()
+        assert "user authentication system" in snapshot_content
+        assert "JWT middleware" in snapshot_content
+        assert "feature/authentication" in snapshot_content
 
-        # Test handoff status updates
-        self.sqlite_manager.update_handoff_status("2024-01-27_auth-handoff", "received")
-        updated_handoff = self.sqlite_manager.get_handoff("2024-01-27_auth-handoff")
-        assert updated_handoff["status"] == "received"
+        # Test snapshot status updates
+        self.sqlite_manager.update_snapshot_status("2024-01-27_auth-snapshot", "received")
+        updated_snapshot = self.sqlite_manager.get_snapshot("2024-01-27_auth-snapshot")
+        assert updated_snapshot["status"] == "received"
 
     def test_memory_search_parity(self):
         """Test that memory search works equivalently in both systems."""
@@ -399,15 +399,15 @@ Build secure web application with user authentication
 """
         )
 
-        # Create handoff directory and file
-        handoff_dir = self.agor_dir / "handoffs"
-        handoff_dir.mkdir(exist_ok=True)
+        # Create snapshot directory and file
+        snapshot_dir = self.agor_dir / "snapshots"
+        snapshot_dir.mkdir(exist_ok=True)
 
-        handoff_file = handoff_dir / "2024-01-27_143022_auth-implementation.md"
-        handoff_file.write_text(
-            """# 🤝 Agent Handoff Document
+        snapshot_file = snapshot_dir / "2024-01-27_143022_auth-implementation.md"
+        snapshot_file.write_text(
+            """# 🤝 Agent Snapshot Document
 
-**Handoff ID**: 2024-01-27_143022_auth-implementation
+**Snapshot ID**: 2024-01-27_143022_auth-implementation
 **From**: agent-1
 **To**: agent-2
 **Status**: active

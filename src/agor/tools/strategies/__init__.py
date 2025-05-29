@@ -7,7 +7,7 @@ This package contains specialized modules for different aspects of multi-agent d
 - Project planning and coordination
 - Team management and performance tracking
 - Quality assurance and error optimization
-- Workflow design and handoff coordination
+- Workflow design and snapshot coordination
 """
 
 from .mob_programming import MobProgrammingProtocol

@@ -57,7 +57,7 @@ def generate_project_breakdown_template():
 - [ ] Deployment successful
 
 ## Coordination
-- **Handoffs**: [Agent-to-agent work transfer]
+- **Snapshots**: [Agent-to-agent work transfer]
 - **Quality Gates**: [Validation checkpoints]
 - **Escalation**: [Issue resolution process]
 """
@@ -70,28 +70,28 @@ def generate_team_structure_template():
 
 ## Core Team
 1. **Architect** - System design, technical leadership, coordination
-   - Handoff: Architecture specs to all developers
+   - Snapshot: Architecture specs to all developers
 
 2. **Backend Developer** - APIs, business logic, database integration
-   - Handoff: API specs to frontend, test data to tester
+   - Snapshot: API specs to frontend, test data to tester
 
 3. **Frontend Developer** - UI components, user experience, API integration
-   - Handoff: UI components to tester, build artifacts to DevOps
+   - Snapshot: UI components to tester, build artifacts to DevOps
 
 ## Quality Team
 4. **Tester** - Test creation, validation, quality assurance
-   - Handoff: Test suites to DevOps, bug reports to developers
+   - Snapshot: Test suites to DevOps, bug reports to developers
 
 5. **Reviewer** - Code quality, security, performance optimization
-   - Handoff: Approved code to DevOps, fixes needed to developers
+   - Snapshot: Approved code to DevOps, fixes needed to developers
 
 ## Support Team
 6. **DevOps** - Deployment, infrastructure, monitoring
-   - Handoff: Deployed systems to team, deployment process documentation
+   - Snapshot: Deployed systems to team, deployment process documentation
 
 ## Coordination
 - **Daily Sync**: Status updates, dependency checks, risk assessment
-- **Handoffs**: Complete work → document → validate → proceed
+- **Snapshots**: Complete work → document → validate → proceed
 - **Quality Gates**: Code complete → integration ready → review approved → deployment ready
 - **Escalation**: Technical → Architect, Quality → Reviewer, Timeline → Coordinator
 """
@@ -194,7 +194,7 @@ Output   Enhanced  Refined  Final
 3. **Refinement Agent**: Optimizes performance and error handling
 4. **Validation Agent**: Tests, documents, and finalizes
 
-## Handoff Protocol
+## Snapshot Protocol
 ```
 FROM: {previous-agent}
 TO: {next-agent}
@@ -212,7 +212,7 @@ NEXT TASKS:
 ## Benefits
 - **Incremental Progress**: Each step builds value
 - **Specialization**: Agents focus on their strengths
-- **Quality Gates**: Each handoff includes validation
+- **Quality Gates**: Each snapshot includes validation
 - **Clear Dependencies**: Linear progression is easy to track
 
 ## Best Use Cases
@@ -347,7 +347,7 @@ RESEARCHER: "The standard library has a validate() method we should use"
 - **Knowledge Sharing**: All agents learn from each other
 - **Quality**: Continuous review catches errors immediately
 - **Consensus**: Decisions are made collectively
-- **No Handoffs**: No context loss between agents
+- **No Snapshots**: No context loss between agents
 
 ## Best Use Cases
 - Complex problems requiring multiple perspectives
@@ -740,7 +740,7 @@ def generate_team_management_template():
 
 ### Team Health
 - **Communication**: [Frequency and quality of team communication]
-- **Coordination**: [Effectiveness of handoffs and collaboration]
+- **Coordination**: [Effectiveness of snapshots and collaboration]
 - **Morale**: [Team satisfaction and engagement indicators]
 - **Workload**: [Balance of work distribution across team]
 

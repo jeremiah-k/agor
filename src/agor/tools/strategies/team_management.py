@@ -367,7 +367,7 @@ def _generate_efficiency_metrics(team_size: int) -> str:
 - **Agent Utilization**: [Percentage of time spent on productive work]
 - **Idle Time**: [Percentage of time agents are waiting/blocked]
 - **Context Switching**: [Frequency of task changes per agent]
-- **Handoff Efficiency**: [Success rate and speed of agent handoffs]
+- **Snapshot Efficiency**: [Success rate and speed of agent snapshots]
 - **Meeting Overhead**: [Time spent in coordination vs development]
 
 #### Productivity Targets
@@ -375,7 +375,7 @@ def _generate_efficiency_metrics(team_size: int) -> str:
 - **Team Velocity**: {team_size * 5} tasks per day (team target)
 - **Quality Gate**: >90% first-time pass rate for code reviews
 - **Response Time**: <2 hours for help requests
-- **Handoff Success**: >95% successful handoffs without rework
+- **Snapshot Success**: >95% successful snapshots without rework
 """
 
 
@@ -495,7 +495,7 @@ def _generate_quality_metrics() -> str:
 - **Documentation Coverage**: [Percentage of code with documentation]
 
 #### Process Quality Metrics
-- **Handoff Success Rate**: [Percentage of successful agent handoffs]
+- **Snapshot Success Rate**: [Percentage of successful agent snapshots]
 - **Rework Rate**: [Percentage of work requiring revision]
 - **First-Time Pass Rate**: [Percentage passing review on first attempt]
 - **Communication Effectiveness**: [Response time and clarity scores]
@@ -504,7 +504,7 @@ def _generate_quality_metrics() -> str:
 - **Code Review Score**: >8.0/10
 - **Bug Rate**: <2 bugs per 100 lines
 - **Test Coverage**: >80%
-- **Handoff Success**: >95%
+- **Snapshot Success**: >95%
 - **First-Time Pass**: >90%
 """
 
@@ -569,7 +569,7 @@ def _generate_risk_monitoring() -> str:
 **Process Risks**
 - **Communication Breakdown**: Poor team communication
 - **Quality Issues**: Declining code quality or testing
-- **Coordination Problems**: Poor handoffs or collaboration
+- **Coordination Problems**: Poor snapshots or collaboration
 
 **Resource Risks**
 - **Capacity Constraints**: Insufficient team capacity
@@ -696,7 +696,7 @@ def _create_team_management_files(team_size: int, project_name: str):
 - **Communication Frequency**: [Messages per agent per day]
 - **Help Response Time**: [Average time to respond to requests]
 - **Knowledge Sharing**: [Documentation contributions]
-- **Handoff Success Rate**: [Percentage of successful handoffs]
+- **Snapshot Success Rate**: [Percentage of successful snapshots]
 
 ## Daily Tracking
 
@@ -911,7 +911,7 @@ def _initialize_team_metrics(team_size: int):
 - **Issues**: [Communication problems identified]
 
 ### Collaboration
-- **Handoffs**: [Quality of work handoffs]
+- **Snapshots**: [Quality of work snapshots]
 - **Help Requests**: [Response to help requests]
 - **Knowledge Sharing**: [Sharing of expertise]
 
