@@ -549,7 +549,7 @@ def custom_instructions(
         When displaying results, choose the appropriate format:
         - Full files: Complete files with all formatting preserved for copy/paste
         - Changes only: Show just the modified sections with context
-        - Detailed analysis: Comprehensive explanation in a single codeblock for snapshot (replaces detailed handoff)
+        - Detailed analysis: Comprehensive explanation in a single codeblock for snapshot (replaces detailed snapshot)
         - Agent prompts: Specialized prompts for coordinating multiple AI agents
         - Project plans: Strategic breakdowns and coordination workflows
 
