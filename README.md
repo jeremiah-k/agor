@@ -57,7 +57,6 @@ print(f'Session started at: {get_timestamp()}')
 # Review development guide and recent commits
 cat docs/agor-development-guide.md
 cat docs/agent-start-here.md
-git log --oneline -10
 
 # Now return to your project's directory with AGOR initialized
 ```
