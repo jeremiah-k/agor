@@ -56,7 +56,7 @@ test_tooling()
 print(f'Session started at: {get_timestamp()}')
 "
 
-# Review development guide and recent commits
+# Review development guide
 cat docs/agor-development-guide.md
 cat docs/agent-start-here.md
 
