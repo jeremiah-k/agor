@@ -36,14 +36,31 @@ AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgru
 **Example Workflow:**
 
 ```bash
-# Agent executes these commands
+# Clone AGOR to temporary location
 cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+
+# Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Agent then clones your project and works directly
-git clone https://github.com/your-username/your-project.git
-cd your-project
-# Agent makes changes and commits directly
+# Install dependencies and test development tooling
+pip install -r requirements.txt
+
+# Test AGOR development tooling
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling, get_timestamp
+
+# Verify tooling works
+test_tooling()
+print(f'Session started at: {get_timestamp()}')
+"
+
+# Review development guide
+cat docs/agor-development-guide.md
+cat docs/agent-start-here.md
+
+# Now return to your project's directory with AGOR initialized
 ```
 
 ### 📦 Bundled Mode (Upload-Based Platforms)
