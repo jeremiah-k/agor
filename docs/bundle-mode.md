@@ -233,9 +233,9 @@ After uploading and initializing, AGOR will prompt for role selection:
 
 ### 👥 AGENT WORKER
 
-**Best for**: Receiving handoffs, collaborative work
+**Best for**: Receiving snapshots, collaborative work
 
-- Task execution from handoffs (`task`, `complete`)
+- Task execution from snapshots (`task`, `complete`)
 - Team coordination (`status`, `sync`)
 - Communication with other agents (`log`, `msg`)
 
@@ -338,7 +338,7 @@ agor bundle /path/to/your/project
 After successful bundle setup:
 
 1. **Explore [Multi-Agent Strategies](strategies.md)** - Learn coordination patterns
-2. **Master [Agent Handoffs](handoffs.md)** - Seamless agent transitions
+2. **Master [Agent Snapshots](snapshots.md)** - Seamless agent transitions
 3. **Read [Complete AI Protocol](../src/agor/tools/README_ai.md)** - Full capabilities
 
 ---

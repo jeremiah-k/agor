@@ -27,7 +27,7 @@
 - **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** - Complete AI protocol (563 lines)
   - Lines 18-40: Role selection (SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER)
   - Lines 120-220: Role-specific hotkey menus
-  - Lines 450-550: Handoff procedures and meta-development
+  - Lines 450-550: Snapshot procedures and meta-development
 
 ### "I need multi-agent coordination strategies"
 

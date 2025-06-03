@@ -19,14 +19,14 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ## Protocol v0.4.0 (2024-12-27)
 
-### 🔄 **BREAKING CHANGE: Handoff → Snapshot Terminology**
+### 🔄 **BREAKING CHANGE: Snapshot → Snapshot Terminology**
 
 **Global Terminology Update**
 
-- **"Handoff"** terminology replaced with **"Snapshot"** throughout all documentation and code
-- Hotkey changes: `handoff` → `snapshot`, `receive` → `load_snapshot`, `handoffs` → `list_snapshots`
-- File renames: `docs/handoffs.md` → `docs/snapshots.md`, `handoff_templates.py` → `snapshot_templates.py`
-- Directory structure: `.agor/handoffs/` → `.agor/snapshots/`
+- **"Snapshot"** terminology replaced with **"Snapshot"** throughout all documentation and code
+- Hotkey changes: `snapshot` → `snapshot`, `receive` → `load_snapshot`, `snapshots` → `list_snapshots`
+- File renames: `docs/snapshots.md` → `docs/snapshots.md`, `snapshot_templates.py` → `snapshot_templates.py`
+- Directory structure: `.agor/snapshots/` → `.agor/snapshots/`
 
 ### 🆕 Major Features Added
 
@@ -47,7 +47,7 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 - Improved coordination file structures
 - Better agent memory systems
-- Refined handoff procedures
+- Refined snapshot procedures
 
 ### 📚 Documentation Overhaul
 
@@ -73,11 +73,11 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 **New Utilities** (`src/agor/tools/snapshot_templates.py`)
 
-- `create_snapshot()`: Generate comprehensive agent handoffs
+- `create_snapshot()`: Generate comprehensive agent snapshots
 - `get_git_context()`: Capture complete repository state
 - Template system for structured transitions
 
-**Enhanced Snapshots** (`src/agor/tools/strategies/handoff_prompts.py`)
+**Enhanced Snapshots** (`src/agor/tools/strategies/snapshot_prompts.py`)
 
 - Improved work order generation
 - Better completion report templates
@@ -88,17 +88,17 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 **Breaking Changes**:
 
-- Terminology change from "handoff" to "snapshot" (hotkeys and file names changed)
+- Terminology change from "snapshot" to "snapshot" (hotkeys and file names changed)
 - Agents using old hotkey names will need to update to new terminology
 
 **New Capabilities**:
 
-- Agents can now create and consume snapshots (formerly handoffs)
+- Agents can now create and consume snapshots (formerly snapshots)
 - Enhanced context preservation across sessions
 - Improved multi-agent coordination workflows
 - Standalone mode for direct Git repository access
 
-**Migration Required**: Update hotkey usage from `handoff`/`receive`/`handoffs` to `snapshot`/`load_snapshot`/`list_snapshots`
+**Migration Required**: Update hotkey usage from `snapshot`/`receive`/`snapshots` to `snapshot`/`load_snapshot`/`list_snapshots`
 
 ---
 

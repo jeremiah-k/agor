@@ -15,9 +15,9 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 | `co`       | Changes only        | code_exploration.py  | ✅ Working |
 | `tree`     | Directory structure | code_exploration.py  | ✅ Working |
 | `grep`     | Search files        | code_exploration.py  | ✅ Working |
-| `handoff`  | Create handoff      | handoff_templates.py | ✅ Working |
-| `receive`  | Receive handoff     | handoff_templates.py | ✅ Working |
-| `handoffs` | List handoffs       | handoff_templates.py | ✅ Working |
+| `snapshot` | Create snapshot     | snapshot_templates.py | ✅ Working |
+| `receive`  | Receive snapshot    | snapshot_templates.py | ✅ Working |
+| `snapshots`| List snapshots      | snapshot_templates.py | ✅ Working |
 | `meta`     | AGOR feedback       | agor-meta.md         | ✅ Working |
 | `init`     | Initialize role     | README_ai.md         | ✅ Working |
 | `status`   | Check status        | README_ai.md         | ✅ Working |
@@ -32,7 +32,7 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 | `ar`   | Architecture review | ❌ Missing                       | ❌ Missing         | No template or protocol |
 | `ct`   | Create team         | ✅ project_planning_templates.py | ❌ Missing         | Need execution protocol |
 | `tm`   | Team management     | ❌ Missing                       | ❌ Missing         | No template or protocol |
-| `hp`   | Handoff prompts     | ✅ agent_prompt_templates.py     | ❌ Missing         | Need execution protocol |
+| `hp`   | Snapshot prompts    | ✅ agent_prompt_templates.py     | ❌ Missing         | Need execution protocol |
 | `wf`   | Workflow design     | ✅ project_planning_templates.py | ❌ Missing         | Need execution protocol |
 | `qg`   | Quality gates       | ❌ Missing                       | ❌ Missing         | No template or protocol |
 | `eo`   | Error optimization  | ❌ Missing                       | ❌ Missing         | No template or protocol |
@@ -70,11 +70,11 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 
 **Resolution**: These complement each other, no conflicts found.
 
-### **Handoff Documentation Overlap**
+### **Snapshot Documentation Overlap**
 
-1. **handoffs.md** - Handoff procedures
-2. **handoff_templates.py** - Handoff implementation
-3. **agent_prompt_templates.py** - Handoff prompts
+1. **snapshots.md** - Snapshot procedures
+2. **snapshot_templates.py** - Snapshot implementation
+3. **agent_prompt_templates.py** - Snapshot prompts
 
 **Resolution**: These work together, no conflicts found.
 
@@ -105,7 +105,7 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 
 - Template for architecture analysis
 - Review checklist and criteria
-- Integration with handoff system
+- Integration with snapshot system
 
 ### **3. Team Management (`tm`)**
 
@@ -123,7 +123,7 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 
 - Quality criteria templates
 - Validation protocols
-- Integration with handoff system
+- Integration with snapshot system
 
 ### **5. Error Optimization (`eo`)**
 
@@ -149,10 +149,10 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 - **Issue**: `ss` hotkey documented but not connected to strategy_protocols.py
 - **Fix**: Create strategy selection function that uses existing templates
 
-### **2. Handoff Prompt Integration**
+### **2. Snapshot Prompt Integration**
 
-- **Issue**: `hp` hotkey exists but not integrated with handoff_templates.py
-- **Fix**: Connect hp to generate_handoff_prompt functions
+- **Issue**: `hp` hotkey exists but not integrated with snapshot_templates.py
+- **Fix**: Connect hp to generate_snapshot_prompt functions
 
 ### **3. Workflow Design Execution**
 
@@ -212,7 +212,7 @@ def generate_error_optimization_template():
 ## ✅ **What's Working Well**
 
 1. **Core Analysis Tools** - All code exploration hotkeys work perfectly
-2. **Handoff System** - Complete implementation with templates and protocols
+2. **Snapshot System** - Complete implementation with templates and protocols
 3. **Basic Strategies** - PD, Pipeline, Swarm have full implementation
 4. **SQLite Memory** - Experimental features work as documented
 5. **Bundle Mode** - Complete documentation and implementation
