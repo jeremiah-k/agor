@@ -19,12 +19,12 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ## Protocol v0.4.0 (2024-12-27)
 
-### 🔄 **BREAKING CHANGE: Snapshot → Snapshot Terminology**
+### 🔄 **BREAKING CHANGE: Handoff → Snapshot Terminology**
 
 **Global Terminology Update**
 
-- **"Snapshot"** terminology replaced with **"Snapshot"** throughout all documentation and code
-- Hotkey changes: `snapshot` → `snapshot`, `receive` → `load_snapshot`, `snapshots` → `list_snapshots`
+- **"Handoff"** terminology replaced with **"Snapshot"** throughout all documentation and code
+- Hotkey changes: `handoff` → `snapshot`, `receive` → `load_snapshot`, `snapshots` → `list_snapshots`
 - File renames: `docs/snapshots.md` → `docs/snapshots.md`, `snapshot_templates.py` → `snapshot_templates.py`
 - Directory structure: `.agor/snapshots/` → `.agor/snapshots/`
 
@@ -88,17 +88,17 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 **Breaking Changes**:
 
-- Terminology change from "snapshot" to "snapshot" (hotkeys and file names changed)
+- Terminology change from "handoff" to "snapshot" (hotkeys and file names changed)
 - Agents using old hotkey names will need to update to new terminology
 
 **New Capabilities**:
 
-- Agents can now create and consume snapshots (formerly snapshots)
+- Agents can now create and consume snapshots (formerly handoffs)
 - Enhanced context preservation across sessions
 - Improved multi-agent coordination workflows
 - Standalone mode for direct Git repository access
 
-**Migration Required**: Update hotkey usage from `snapshot`/`receive`/`snapshots` to `snapshot`/`load_snapshot`/`list_snapshots`
+**Migration Required**: Update hotkey usage from `handoff`/`receive`/`handoffs` to `snapshot`/`load_snapshot`/`list_snapshots`
 
 ---
 

@@ -351,20 +351,20 @@ Each entry includes:
 
 ### 8. YYYY-MM-DD | Protocol v0.4.0 | Terminology and Hotkey Update (Snapshot)
 
-**Technical Focus**: Standardizing core terminology from "snapshot" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
+**Technical Focus**: Standardizing core terminology from "handoff" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
 
 **Implementation Details**:
 
 - Changed `PROTOCOL_VERSION` in `src/agor/constants.py` from "0.3.0" to "0.4.0".
-- Renamed directory reference `.agor/snapshots/` to `.agor/snapshots/` in all code and documentation.
-- Renamed Python module `src/agor/tools/snapshot_templates.py` to `src/agor/tools/snapshot_templates.py` and updated all imports.
-- Renamed relevant functions, variables, and constants within `snapshot_templates.py` (e.g., `generate_snapshot_document` to `generate_snapshot_document`).
+- Renamed directory reference `.agor/handoffs/` to `.agor/snapshots/` in all code and documentation.
+- Renamed Python module `src/agor/tools/handoff_templates.py` to `src/agor/tools/snapshot_templates.py` and updated all imports.
+- Renamed relevant functions, variables, and constants (e.g., `generate_handoff_document` to `generate_snapshot_document`).
 - Updated hotkeys in `src/agor/tools/AGOR_INSTRUCTIONS.md`:
-  - `snapshot` → `snapshot`
+  - `handoff` → `snapshot`
   - `receive` → `load_snapshot`
   - `snapshots` → `list_snapshots`
-- Performed a global replacement of "snapshot" terminology with "snapshot" in all relevant documentation and code comments/strings.
-- Updated `docs/snapshots.md` (formerly `docs/snapshots.md`) content and title.
+- Performed a global replacement of "handoff" terminology with "snapshot" in all relevant documentation and code comments/strings.
+- Removed `docs/handoffs.md` and consolidated its content into `docs/snapshots.md`, updating the title and content accordingly.
 
 **Rationale**:
 
