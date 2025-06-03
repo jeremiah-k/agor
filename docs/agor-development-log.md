@@ -97,7 +97,7 @@ Each entry includes:
 - **Tooling Verification**: Confirmed development tooling respects memory/working branch separation
 
 **Rationale**:
-- Previous handoff indicated code changes were lost, but testing revealed implementation was complete
+- Previous snapshot indicated code changes were lost, but testing revealed implementation was complete
 - Memory branches should only contain `.agor/` directory contents (memories, snapshots, coordination)
 - Working branches contain source code, documentation, dev logs - never `.agor/` content
 - This separation ensures clean development workflow and prevents memory pollution in source
@@ -110,7 +110,7 @@ Each entry includes:
 - Development workflow optimized for memory/source separation
 
 **Lessons Learned**:
-- Handoff reports may not always reflect actual code state - verification testing is crucial
+- Snapshot reports may not always reflect actual code state - verification testing is crucial
 - Clear branch architecture prevents confusion about what goes where
 - Memory branches are ephemeral (snapshots, coordination), working branches are persistent (source, docs)
 - Lazy loading pattern successfully resolves complex circular import scenarios
@@ -351,20 +351,20 @@ Each entry includes:
 
 ### 8. YYYY-MM-DD | Protocol v0.4.0 | Terminology and Hotkey Update (Snapshot)
 
-**Technical Focus**: Standardizing core terminology from "handoff" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
+**Technical Focus**: Standardizing core terminology from "snapshot" to "snapshot" across the project, updating associated hotkeys, and bumping the protocol version to reflect these conceptual changes.
 
 **Implementation Details**:
 
 - Changed `PROTOCOL_VERSION` in `src/agor/constants.py` from "0.3.0" to "0.4.0".
-- Renamed directory reference `.agor/handoffs/` to `.agor/snapshots/` in all code and documentation.
-- Renamed Python module `src/agor/tools/handoff_templates.py` to `src/agor/tools/snapshot_templates.py` and updated all imports.
-- Renamed relevant functions, variables, and constants within `snapshot_templates.py` (e.g., `generate_handoff_document` to `generate_snapshot_document`).
+- Renamed directory reference `.agor/snapshots/` to `.agor/snapshots/` in all code and documentation.
+- Renamed Python module `src/agor/tools/snapshot_templates.py` to `src/agor/tools/snapshot_templates.py` and updated all imports.
+- Renamed relevant functions, variables, and constants within `snapshot_templates.py` (e.g., `generate_snapshot_document` to `generate_snapshot_document`).
 - Updated hotkeys in `src/agor/tools/AGOR_INSTRUCTIONS.md`:
-  - `handoff` → `snapshot`
+  - `snapshot` → `snapshot`
   - `receive` → `load_snapshot`
-  - `handoffs` → `list_snapshots`
-- Performed a global replacement of "handoff" terminology with "snapshot" in all relevant documentation and code comments/strings.
-- Updated `docs/snapshots.md` (formerly `docs/handoffs.md`) content and title.
+  - `snapshots` → `list_snapshots`
+- Performed a global replacement of "snapshot" terminology with "snapshot" in all relevant documentation and code comments/strings.
+- Updated `docs/snapshots.md` (formerly `docs/snapshots.md`) content and title.
 
 **Rationale**:
 

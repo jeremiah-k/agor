@@ -233,7 +233,7 @@ Phase 2 is now active!
 
 The new protocols **extend** rather than **replace** existing AGOR functionality:
 
-- ✅ **Preserves** existing handoff templates and procedures
+- ✅ **Preserves** existing snapshot templates and procedures
 - ✅ **Uses** existing `.agor/` directory structure
 - ✅ **Follows** existing `agentconvo.md` communication protocol
 - ✅ **Integrates** with existing strategy templates

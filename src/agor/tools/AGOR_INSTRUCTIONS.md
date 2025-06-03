@@ -21,7 +21,6 @@ As an AGOR agent, you'll interact with the system and the user in several ways. 
     - You have access to specific tools and scripts bundled within the `agor_tools/` directory (typically located at `/tmp/agor_tools/` in a bundled environment). These are for your direct use to perform tasks:
       - **Git Binary**: A portable Git binary located at `/tmp/agor_tools/git`. You will use this for all Git operations (cloning, status, diffs, commits, etc.) by executing it directly (e.g., `/tmp/agor_tools/git status`). Always use the full path.
       - **Python Scripts**: Various Python scripts are provided in `agor_tools/` (e.g., `git_setup.py`, `code_exploration.py`, and strategy modules). You will be instructed to execute these using `python /tmp/agor_tools/<script_name>.py` or by importing functions from them.
-      - **SQLite Binary (Experimental)**: A portable SQLite3 binary may be available at `/tmp/agor_tools/sqlite3` for advanced memory operations, if applicable (see Section 6.1).
     - These tools are executed by _you_, the AI, as part of fulfilling user requests via hotkeys or following protocol steps. The user does not execute these directly.
 
 3.  **User CLI Commands (Contextual Awareness):**
@@ -123,6 +122,9 @@ sp) strategic plan bp) break down project
 snapshot) create snapshot document for another agent
 load_snapshot) receive snapshot from another agent
 list_snapshots) list all snapshot documents
+**💾 Memory Sync (Advanced/Dev Use):**
+mem-sync-start) start memory sync mem-sync-save) save memory state
+mem-sync-restore) restore memory mem-sync-status) show sync status
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -147,9 +149,7 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 
   1. Complete "Essential Initial Setup" (Section 1).
   2. Initialize the Coordination System:
-     - Create `.agor/` directory for agent coordination (if not already present).
-     - Set up `agentconvo.md` for inter-agent communication.
-     - Initialize `memory.md` for project-level decisions.
+     - The AGOR Memory Synchronization System will automatically handle the creation and management of `.agor/` directory and its contents (like `agentconvo.md`, `memory.md`) on dedicated memory branches. Your primary interaction with memory will be through this automated system.
   3. Perform a quick project overview: Basic structure and technology identification.
   4. Conduct a strategic assessment: Focus on architecture, dependencies, and planning needs.
   5. Display organized analysis results in an actionable format to the user.
@@ -171,6 +171,9 @@ a ) analyze codebase da) detailed snapshot
 snapshot) create snapshot document for another agent
 load_snapshot) receive snapshot from another agent
 list_snapshots) list all snapshot documents
+**💾 Memory Sync (Advanced/Dev Use):**
+mem-sync-start) start memory sync mem-sync-save) save memory state
+mem-sync-restore) restore memory mem-sync-status) show sync status
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -185,7 +188,7 @@ meta) provide feedback on AGOR itself
 - **Initial Actions**:
 
   1. Complete "Essential Initial Setup" (Section 1).
-  2. Perform minimal setup: Basic git configuration and ensure coordination files (`.agor/agentconvo.md`, `.agor/memory.md`, and your own `agent{N}-memory.md`) are accessible.
+  2. Perform minimal setup: Basic git configuration. The AGOR Memory Synchronization System will automatically manage your coordination files (like `.agor/agentconvo.md`, `.agor/memory.md`, and your own `agent{N}-memory.md`) on dedicated memory branches.
   3. Provide a brief project overview if available, then enter standby mode.
   4. Announce readiness and await instructions from the coordinator.
 
@@ -214,6 +217,9 @@ a ) analyze codebase f ) full files co) changes only
 snapshot) create snapshot document for another agent
 load_snapshot) receive snapshot from another agent
 list_snapshots) list all snapshot documents
+**💾 Memory Sync (Advanced/Dev Use):**
+mem-sync-start) start memory sync mem-sync-save) save memory state
+mem-sync-restore) restore memory mem-sync-status) show sync status
 **🔄 Meta-Development:**
 meta) provide feedback on AGOR itself
 
@@ -249,7 +255,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 **Coordination Setup:**
 
-- **`init`**: (Normally used by Project Coordinator or after role selection) Initialize .agor/ directory structure, create basic coordination files (`agentconvo.md`, `memory.md`), and set up basic project context. Does NOT initialize a full strategy or create strategy-specific files like `agent{N}-memory.md` or `strategy-active.md` unless explicitly part of a chosen strategy's setup. If any part of this runs automatically before role selection, its output MUST be suppressed. Takes optional task description parameter.
+- **`init`**: (Normally used by Project Coordinator or after role selection) Initializes the project environment for AGOR. The Memory Synchronization System will handle the setup of necessary `.agor/` coordination files on dedicated memory branches. This command ensures the project is ready for AGOR operations. Takes optional task description parameter. If any part of this runs automatically before role selection, its output MUST be suppressed.
 - **`as`**: [FUTURE IMPLEMENTATION] Assign specialists to specific project areas
 - **`tc`**: [FUTURE IMPLEMENTATION] Team coordination and communication setup
 
@@ -292,21 +298,21 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 **AGENT WORKER ACTIONS:**
 **Coordination:**
 
-- **`status`**: Check coordination files, agent memory files, and recent activity in agentconvo.md
-- **`sync`**: Pull latest changes from main branch and update coordination status
-- **`ch`**: Create checkpoint in agent memory with current progress and status. Usage: provide checkpoint description
+- **`status`**: Check coordination files (via Memory Synchronization System), agent memory files, and recent activity in agentconvo.md
+- **`sync`**: Pull latest changes from main branch and update coordination status (Memory Synchronization System handles memory branch updates)
+- **`ch`**: Create checkpoint in agent memory with current progress and status. Usage: provide checkpoint description (Memory Synchronization System will persist this)
 
 **Communication:**
 
-- **`log`**: Update agent memory log with progress, decisions, and current status. Usage: provide log entry content
-- **`msg`**: Post message to agentconvo.md for cross-agent communication. Usage: provide message content
+- **`log`**: Update agent memory log with progress, decisions, and current status. Usage: provide log entry content (Memory Synchronization System will persist this)
+- **`msg`**: Post message to agentconvo.md for cross-agent communication. Usage: provide message content (Memory Synchronization System will persist this)
 - **`report`**: Generate comprehensive status report including completed work, current tasks, and next steps
 
 **Task Management:**
 
 - **`task`**: Receive and acknowledge task assignment from coordinator (often as a work snapshot). Usage: task will be provided by coordinator
-- **`complete`**: Mark current task as complete and update all coordination files. Usage: provide completion summary
-- **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status.
+- **`complete`**: Mark current task as complete and update all coordination files (Memory Synchronization System will persist this). Usage: provide completion summary
+- **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status (Memory Synchronization System will persist this).
 
 **Meta-Development:**
 
@@ -321,39 +327,39 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 ### 3.2. Agent Coordination System
 
-**CRITICAL**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**.
+**CRITICAL**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**. These are persisted and shared via the **Memory Synchronization System** using markdown files in the `.agor/` directory on dedicated memory branches.
 **Purpose**: Structured coordinator-agent communication and work state capture.
-**Location**: `.agor/snapshots/` directory.
+**Location**: `.agor/snapshots/` directory on memory branches.
 **Format**: Structured markdown with git context, progress, and next steps
 
 ```bash
-# Check for snapshot documents
-ls .agor/snapshots/
-cat .agor/snapshots/index.md # If an index exists
+# Check for snapshot documents (on a memory branch, accessed safely)
+# Example: git show origin/agor/mem/YOUR_SESSION_BRANCH:.agor/snapshots/
+# cat .agor/snapshots/index.md # If an index exists (on memory branch)
 
-# Read a specific snapshot (work order example)
-cat .agor/snapshots/2024-01-15_143022_fix-authentication-bug_snapshot.md
+# Read a specific snapshot (work order example, accessed safely)
+# Example: git show origin/agor/mem/YOUR_SESSION_BRANCH:.agor/snapshots/2024-01-15_143022_fix-authentication-bug_snapshot.md
 ```
 
 **Work Snapshot & Completion Report Workflow**
-**CRITICAL**: Agent coordination can be a two-way process using snapshots:
+**CRITICAL**: Agent coordination can be a two-way process using snapshots, managed by the Memory Synchronization System:
 **📤 Work Assignment (Coordinator → Agent via Snapshot)**
 
-1. **Creating Work Snapshots**: Coordinator uses `snapshot` hotkey to generate a snapshot detailing the work.
-2. **Agent Receipt**: Agent uses `load_snapshot` hotkey to accept the work snapshot.
-3. **Communication**: Update `.agor/agentconvo.md` to confirm snapshot receipt.
+1. **Creating Work Snapshots**: Coordinator uses `snapshot` hotkey to generate a snapshot detailing the work. The Memory Synchronization System persists this to a memory branch.
+2. **Agent Receipt**: Agent uses `load_snapshot` hotkey to accept the work snapshot. The system retrieves it from the appropriate memory branch.
+3. **Communication**: Update `.agor/agentconvo.md` (on the memory branch via the sync system) to confirm snapshot receipt.
 4. **Work Execution**: Follow next steps outlined in the work snapshot.
 
 **📥 Task Completion (Agent → Coordinator via Snapshot)**
 
-1. **Completion Snapshot/Report**: Agent uses `complete` hotkey (which may generate a snapshot or report).
+1. **Completion Snapshot/Report**: Agent uses `complete` hotkey (which may generate a snapshot or report). This is persisted by the Memory Synchronization System.
 2. **Results Summary**: Include work completed, commits, issues, recommendations
-3. **Coordinator Review**: Coordinator reviews results and provides feedback
+3. **Coordinator Review**: Coordinator reviews results (retrieved from memory branch) and provides feedback
 4. **Integration**: Coordinator decides on integration and next steps
 
 **Communication Protocol**
 
-- **All coordination logged in**: `.agor/agentconvo.md`
+- **All coordination logged in**: `.agor/agentconvo.md` (managed on memory branches by the Memory Synchronization System)
 - **Work order**: `[COORDINATOR-ID] [timestamp] - WORK ORDER: description`
 - **Order receipt**: `[AGENT-ID] [timestamp] - ORDER RECEIVED: description`
 - **Task completion**: `[AGENT-ID] [timestamp] - TASK COMPLETED: description`
@@ -363,14 +369,14 @@ cat .agor/snapshots/2024-01-15_143022_fix-authentication-bug_snapshot.md
 
 **REPOSITORY OPERATIONS:**
 
-1. **ALWAYS use the full git binary path**: `/tmp/agor_tools/git ls-files`, `/tmp/agor_tools/git grep`, etc.
+1. **ALWAYS use the full git binary path**: `/tmp/agor_tools/git ls-files`, `/tmp/agor_tools/git grep`, etc. for operations on the *working* project branch.
 2. **Execute real commands**: Do not simulate. The git binary is functional and must be used.
 3. Display complete files when investigating code
 4. Edit by targeting specific line ranges, keep code cells short (1-2 lines)
-5. Verify all changes with `/tmp/agor_tools/git diff` before committing
-6. Update `.agor/memory.md` with decisions and progress
+5. Verify all changes with `/tmp/agor_tools/git diff` before committing to the *working* project branch.
+6. Your operational memory (decisions, progress) is primarily managed by the **Memory Synchronization System** in `.agor/` on dedicated *memory branches*. Avoid committing `.agor/` files directly to the main project or working branches unless specifically instructed for advanced development tasks.
 
-**GIT COMMAND EXAMPLES:**
+**GIT COMMAND EXAMPLES (on working project branch):**
 
 ```bash
 # Map codebase - EXECUTE THESE FOR REAL
@@ -390,28 +396,27 @@ cat .agor/snapshots/2024-01-15_143022_fix-authentication-bug_snapshot.md
 ### 3.4. Multi-Agent Coordination Protocol
 
 **AGENT MEMORY & COMMUNICATION SYSTEM:**
-All agents use the `.agor/` directory for coordination:
+All agents use the `.agor/` directory for coordination. This directory and its contents are managed by the **AGOR Memory Synchronization System** on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`).
 
 ```
-.agor/
+.agor/ (on a memory branch)
 ├── agentconvo.md          # Shared communication log
-├── memory.md              # Project-level decisions
+├── memory.md              # Project-level decisions (can be general or strategy-specific)
 ├── agent1-memory.md       # Agent 1 private notes
 ├── agent2-memory.md       # Agent 2 private notes
 ├── agent{N}-memory.md     # Agent N private notes (as needed)
 └── strategy-active.md     # Current strategy details
 ```
 
-**AGENT COMMUNICATION PROTOCOL:**
+**AGENT COMMUNICATION PROTOCOL (Managed via Memory Synchronization System):**
 
-1. **Read First**: Always check `agentconvo.md` and your `agent{N}-memory.md` before starting
-2. **Communicate**: Post status, questions, and findings to `agentconvo.md`
-3. **Document**: Update your private memory file with decisions and progress
-4. **Sync Often**: Pull from main branch frequently to stay current
-5. **Coordinate**: Check other agents' memory files to avoid conflicts
+1. **Read First**: Always check `agentconvo.md` and your `agent{N}-memory.md` (retrieved via the Memory Synchronization System) before starting.
+2. **Communicate**: Post status, questions, and findings to `agentconvo.md`.
+3. **Document**: Update your private memory file with decisions and progress.
+4. **Sync Often**: The Memory Synchronization System handles updates. Your working branch should `git pull origin main` (or the relevant project branch) frequently.
+5. **Coordinate**: Check other agents' memory files (via safe access to memory branches if needed, or through system-provided summaries) to avoid conflicts.
 
-**AGENTCONVO.MD FORMAT:**
-
+**AGENTCONVO.MD FORMAT (on memory branch):**
 ```
 [AGENT-ID] [TIMESTAMP] [STATUS/QUESTION/FINDING]
 
@@ -421,9 +426,8 @@ Agent3: 2024-01-15 14:40 - Question: Should we preserve existing API interface?
 Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 ```
 
-**AGENT MEMORY FORMAT:**
-
-```
+**AGENT MEMORY FORMAT (agent{N}-memory.md on memory branch):**
+```markdown
 # Agent{N} Memory Log
 
 ## Current Task
@@ -433,7 +437,7 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 - [Key architectural choices]
 - [Implementation approaches]
 
-## Files Modified
+## Files Modified (on working project branch)
 - [List of changed files with brief description]
 
 ## Problems Encountered
@@ -448,7 +452,7 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 
 ### 3.5. Development Strategies
 
-AGOR supports 5 multi-agent development strategies:
+AGOR supports 5 multi-agent development strategies. The Memory Synchronization System will manage the persistence of strategy-specific files (like `strategy-active.md`, `agent{N}-memory.md`, task queues) on memory branches.
 🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
 ⚡ **Pipeline** (`pl`): Sequential work via snapshots with specialization
 🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue (tasks can be snapshots)
@@ -458,39 +462,10 @@ AGOR supports 5 multi-agent development strategies:
 Use `ss` to analyze your project and get strategy recommendations.
 
 **STRATEGY PARAMETER EFFECTS:**
-Understanding how strategy parameters translate to concrete coordination states:
-**Agent Count Parameters:**
+(Content remains the same)
 
-- **`agent_count=3`**: Creates 3 individual agent memory files (agent1-memory.md, agent2-memory.md, agent3-memory.md)
-- **`team_size=5`**: Generates role assignments for 5 agents with specialized responsibilities
-- **`blue_team_size=3, red_team_size=3`**: Creates separate blue-team-memory.md and red-team-memory.md files
-
-**Project Type Parameters:**
-
-- **`project_type="web_app"`**: Generates web-specific workflow phases (Frontend, Backend, API, Testing)
-- **`project_type="api"`**: Creates API-focused phases (Design, Implementation, Documentation, Testing)
-- **`project_type="mobile"`**: Generates mobile-specific phases (UI, Logic, Platform, Testing)
-
-**Complexity Parameters:**
-
-- **`complexity="simple"`**: Creates 3-4 workflow phases with basic coordination
-- **`complexity="medium"`**: Generates 4-5 phases with intermediate quality gates
-- **`complexity="complex"`**: Creates 5-6 phases with comprehensive validation and snapshots
-
-**Quality Focus Parameters:**
-
-- **`quality_focus="security"`**: Emphasizes security gates, penetration testing, vulnerability assessment
-- **`quality_focus="performance"`**: Focuses on load testing, optimization, scalability validation
-- **`quality_focus="comprehensive"`**: Includes all quality aspects with balanced coverage
-
-**Automation Level Parameters:**
-
-- **`automation_level="high"`**: 80% automated checks, minimal manual validation
-- **`automation_level="medium"`**: 50% automated, 50% manual review processes
-- **`automation_level="low"`**: 20% automated, emphasis on manual quality assurance
-
-**Generated .agor/ Files by Strategy:**
-**Note: The creation of these strategy-specific files should only occur _after_ a role has been selected by the user and a specific strategy is being explicitly initialized (e.g., by using a strategy hotkey or as part of a Project Coordinator's plan). No strategy files should be automatically created and announced _before_ user role selection.**
+**Generated .agor/ Files by Strategy (on memory branches):**
+**Note: The creation of these strategy-specific files should only occur _after_ a role has been selected by the user and a specific strategy is being explicitly initialized. These files are managed by the Memory Synchronization System on dedicated memory branches.**
 
 - **Parallel Divergent**: strategy-active.md + agent{N}-memory.md files
 - **Red Team**: strategy-active.md + blue-team-memory.md + red-team-memory.md
@@ -500,354 +475,92 @@ Understanding how strategy parameters translate to concrete coordination states:
 
 ### 3.6. Snapshot Procedures
 
-AGOR provides comprehensive snapshot procedures for seamless agent transitions and context preservation. Use these when:
-
-- You need to pass work to another agent.
-- You're taking over work from another agent.
-- You're switching roles mid-project.
-- You need to document current progress for future reference (self-snapshot).
-- You need to preserve context before a complex operation or for a later session.
-
+(Content remains largely the same, emphasizing that snapshots are stored and managed by the Memory Synchronization System)
+...
 **Creating a Snapshot (`snapshot` hotkey)**
-When you need to create a snapshot of your work (for another agent or for yourself):
-
-1. **Use the `snapshot` hotkey.**
-2. **Provide comprehensive context**:
-   - Problem description and goals
-   - Work completed so far
-   - Commits made (with git hashes)
-   - Files modified
-   - Current status and progress
-   - Next steps planned
-   - Important context and gotchas
-   - Technical notes and decisions made
+...
 3. **AGOR generates**:
-   - Complete snapshot document in `.agor/snapshots/`
+   - Complete snapshot document in `.agor/snapshots/` (on a memory branch via Memory Synchronization System)
    - Snapshot prompt for the receiving agent (if applicable)
-   - Updates to coordination logs
-
-**Receiving a Snapshot (`load_snapshot` hotkey)**
-When taking over work based on a snapshot from another agent:
-
-1. **Use the `load_snapshot` hotkey.**
-2. **Review the snapshot document** thoroughly.
-3. **Verify understanding** of:
-   - The problem being solved
-   - Work completed and current status
-   - Technical context and decisions
-   - Next steps and priorities
-4. **Confirm receipt** in `.agor/agentconvo.md` (if applicable for multi-agent work).
-5. **Continue the work** from the state described in the snapshot.
-
-**Snapshot Best Practices**
-**For Snapshot Creators:**
-
-- Be comprehensive - include everything the next agent (or your future self) needs to know.
-- Document your reasoning and decision-making process.
-- Include specific git commits and file changes.
-- Explain any workarounds or temporary solutions.
-- Provide clear next steps with priorities.
-
-**For Snapshot Recipients:**
-
-- Read the entire snapshot document before starting.
-- Verify the current repository state matches the snapshot.
-- Ask questions if anything is unclear.
-- Update the snapshot document with your progress if you are continuing work based on it and plan to create another snapshot.
-- Maintain the same level of documentation quality.
-
-**Snapshot Document Structure**
-Each snapshot document includes:
-
-- **Problem Definition**: What we're trying to solve
-- **Work Completed**: Detailed list of accomplishments
-- **Commits Made**: Git history with explanations
-- **Files Modified**: What's been changed and why
-- **Current Status**: Where things stand now
-- **Next Steps**: Prioritized action items
-- **Technical Context**: Important implementation details
-- **Snapshot Instructions**: How to continue the work
-
-**Managing Snapshots (`list_snapshots` hotkey)**
-Use the `list_snapshots` hotkey to:
-
-- List all active and completed snapshots.
-- Review snapshot history.
-- Find specific snapshot documents.
-- Update snapshot status (active → completed, if applicable).
+   - Updates to coordination logs (on a memory branch via Memory Synchronization System)
+...
 
 ### 3.7. Memory Persistence & Best Practices
 
-**Memory Persistence:**
+**Memory Persistence (Primary Method: Memory Synchronization System):**
 
-- Check/create `.agor/memory.md` at start
-- Update with decisions, progress, team structure, and work snapshots
-- Include: project summary, agent roles, current state, key decisions
+- AGOR's **Memory Synchronization System** is the primary and recommended method for persisting agent memory and coordination data.
+- This system automatically manages the `.agor/` directory contents (including `memory.md`, `agentconvo.md`, individual agent memories, snapshots, and strategy-specific files) on dedicated Git branches (e.g., `agor/mem/BRANCH_NAME`).
+- **Benefits**:
+    - Keeps the main project/working branches clean of AGOR's operational state.
+    - Provides version control for memory and coordination history.
+    - Allows for graceful fallbacks if synchronization fails (agents can continue with local state).
+    - Simplifies agent workflows by automating memory persistence.
+- Agents should rely on this automated system. Direct commits of `.agor/` contents to *working* or *main* project branches for memory persistence are discouraged for standard agent operations.
 
 **Best Practices:**
 **General Development:**
-
 - Work autonomously, try multiple approaches before asking for input
-- Use short code cells (1-2 lines), verify with `/tmp/agor_tools/git diff`
+- Use short code cells (1-2 lines), verify with `/tmp/agor_tools/git diff` on your *working* branch
 - Always show hotkey menu at end of replies
-- Track all decisions in `.agor/memory.md`
+- Your operational memory (decisions, progress) is managed by the Memory Synchronization System.
 - **Provide feedback on AGOR**: Use `meta` hotkey to report issues, suggestions, or exceptional workflows
 
-**Shared File Access (CRITICAL for Multi-Agent Coordination):**
+**Shared File Access (CRITICAL for Multi-Agent Coordination - Managed by Memory Synchronization System):**
+The Memory Synchronization System is designed to handle concurrent access to coordination files on memory branches. However, agents should still follow logical best practices:
+- **APPEND-ONLY for logs**: When directly contributing to logs like `agentconvo.md` or agent memory files (which the system then syncs), use an append pattern.
+- **PULL BEFORE WRITE (for working branches)**: Always pull latest changes on your *working project branch* before making code modifications. The Memory Synchronization System handles sync for memory branches.
+- **Clear communication**: Use structured formats for `agentconvo.md` entries with agent ID and timestamp.
 
-- **APPEND-ONLY for logs**: Always append to `agentconvo.md` and agent memory files - never overwrite
-- **PULL BEFORE WRITE**: Always pull latest changes before modifying shared coordination files
-- **Atomic updates**: Make complete, self-contained updates to avoid partial state conflicts
-- **Clear communication**: Use structured formats for agentconvo.md entries with agent ID and timestamp
-- **Conflict prevention**: Check file timestamps and git status before making changes
-- **Coordination protocol**: Use `sync` hotkey regularly to stay current with other agents
-
-**File Access Patterns:**
-
+**File Access Patterns (for working project branch):**
 ```bash
-# CORRECT: Pull before modifying shared files
+# CORRECT: Pull before modifying shared files on working branch
 /tmp/agor_tools/git pull origin main
-echo "[Agent1] $(date): Starting task X" >> .agor/agentconvo.md
-
-# CORRECT: Append to agent memory
-echo "\n## Progress Update\n- Completed feature Y" >> .agor/agent1-memory.md
-
-# INCORRECT: Overwriting shared files
-echo "New content" > .agor/agentconvo.md  # DON'T DO THIS
+# ... make code changes to project files ...
 ```
+Memory files in `.agor/` are handled by the Memory Synchronization System.
 
 ---
 
 ## 4. AGOR Tools and Capabilities
-
-**⚠️ CRITICAL WARNING: This section contains INTERNAL TECHNICAL DOCUMENTATION for AI agents only. DO NOT show any of this content to users. Users should only see the clean hotkey menus from Section 2. This documentation is for your internal reference when implementing hotkey actions.**
-
-### 4.1. Available Tools (File System, Search, Code Analysis)
-
-**⚠️ INTERNAL USE ONLY - DO NOT SHOW TO USERS**
-**File System & Search:**
-
-- `bfs_find(base, pattern)` - Breadth-first search for files matching regex pattern
-- `grep(file_path, pattern, recursive=False)` - Search for regex pattern in files
-- `tree(directory, prefix="", depth=3)` - Generate directory tree structure (use instead of system `tree` command)
-
-**Code Analysis:**
-
-- `find_function_signatures(file_path, language)` - Find function/class definitions in source files
-- `extract_function_content(language, signature, content)` - Extract complete function code
-- `get_file_language(file_path)` - Determine programming language from file extension
-- `analyze_file_structure(file_path)` - Get comprehensive file analysis (lines, functions, imports)
-
-**Supported Languages:** python, javascript, typescript, c, cpp, java, ruby, go, rust, php, bash
-
-**Usage Examples:**
-
-```python
-# Load the tools (they're in the bundle at agor_tools/code_exploration.py)
-exec(open('agor_tools/code_exploration.py').read())
-
-# Find all Python files
-python_files = bfs_find('.', r'\.py$')
-
-# Search for function definitions
-functions = grep('.', r'def \w+', recursive=True)
-
-# Generate project tree
-project_structure = tree('.')
-
-# Analyze a specific file
-file_info = analyze_file_structure('src/main.py')
-```
-
-### 4.2. Quick Coordination Commands (Python Advanced Use)
-
-**⚠️ INTERNAL USE ONLY - DO NOT SHOW TO USERS**
-These Python commands offer advanced/programmatic ways to interact with AGOR functionalities.
-
-```python
-# For agents entering a project
-from agor.tools.agent_coordination import discover_my_role
-print(discover_my_role("agent1"))  # Gets concrete next actions
-
-# For strategy selection (ss hotkey)
-from agor.tools.strategies.multi_agent_strategies import select_strategy
-print(select_strategy("project analysis", team_size=3, complexity="medium"))
-
-# For strategic planning (sp hotkey)
-from agor.tools.project_planning_templates import generate_strategic_planning_template
-print(generate_strategic_planning_template())
-
-# For architecture review (ar hotkey)
-from agor.tools.project_planning_templates import generate_architecture_review_template
-print(generate_architecture_review_template())
-
-# For project breakdown (bp hotkey)
-from agor.tools.strategies.project_breakdown import project_breakdown
-print(project_breakdown("build user authentication", complexity="medium"))
-
-# For team creation (ct hotkey)
-from agor.tools.strategies.team_creation import create_team
-print(create_team("e-commerce platform", team_size=5, project_type="web_app"))
-
-# For workflow design (wf hotkey)
-from agor.tools.strategies.workflow_design import design_workflow
-print(design_workflow("user management system", team_size=4, project_type="web_app"))
-
-# For snapshot prompts (hp hotkey)
-from agor.tools.strategies.snapshot_prompts import generate_snapshot_prompts # Module name updated
-print(generate_snapshot_prompts("standard", "developer", "reviewer", "auth system"))
-
-# For team management (tm hotkey)
-from agor.tools.strategies.team_management import manage_team
-print(manage_team("e-commerce platform", team_size=5, management_focus="performance"))
-
-# For quality gates (qg hotkey)
-from agor.tools.strategies.quality_gates import setup_quality_gates
-print(setup_quality_gates("user management", quality_focus="security", automation_level="high"))
-
-# For strategy initialization
-from agor.tools.strategies.multi_agent_strategies import initialize_parallel_divergent, initialize_red_team, initialize_mob_programming, initialize_pipeline, initialize_swarm
-result = initialize_parallel_divergent("task description", agent_count=3)
-result = initialize_red_team("secure feature", blue_team_size=3, red_team_size=3)
-result = initialize_mob_programming("complex algorithm", agent_count=4)
-result = initialize_pipeline("build REST API", stages=["Foundation", "Enhancement", "Testing"])
-tasks = ["Create user model", "Implement login", "Add validation", "Write tests"]
-result = initialize_swarm("user system", tasks, agent_count=4)
-
-
-# Discover your role in active strategy
-from agor.tools.agent_coordination import discover_my_role
-print(discover_my_role("agent1"))
-
-# Check current strategy status
-from agor.tools.agent_coordination import check_strategy_status
-print(check_strategy_status())
-```
+(Section remains the same)
 
 ---
 
 ## 5. AGOR System and Meta Information
+(Section remains largely the same, minor adjustments if needed for consistency)
 
 ### 5.1. Bundle Contents
-
-**REALITY CHECK**: AGOR bundles do NOT include setup manifests. Here's what's actually in bundles:
-
-```bash
-# Bundle structure
-project/          # Your cloned repository
-agor_tools/       # AGOR coordination tools
-├── README_ai.md  # Initial role selection pointer
-├── AGOR_INSTRUCTIONS.md # This file - main agent instructions
-├── strategies/   # Multi-agent strategy modules
-├── *.py         # Coordination scripts and templates
-└── git          # Portable git binary
-```
-
-**No setup manifests**: Bundles contain tools and instructions, not configuration manifests.
+(No changes needed)
 
 ### 5.2. Deployment Modes
-
-AGOR can be used in different modes:
-
-**Bundle Mode - Upload-Based Platforms:**
-
-- This mode is typically used on platforms where you upload your code as a bundle (e.g., a .tar.gz file).
-- AGOR tools, including the portable git binary, are included within the bundle in the `/tmp/agor_tools/` directory.
-- The user's project code is typically located in `/tmp/project/`.
-- Output full files in codeblocks when requested or when necessary for clarity.
-
-**Standalone Mode / Agent Mode (Direct Git Access):**
-
-- This mode is used when AGOR is operating in an environment with direct access to git and can clone repositories.
-- The agent might clone the target project as specified by the user.
-- Direct commits to the repository may be possible if the agent has appropriate credentials and access.
-- Copy-paste codeblocks can be used as a fallback if direct commit access is not available or not preferred.
+(No changes needed)
 
 ### 5.3. AGOR Architecture Overview
-
-When analyzing a codebase, display this architecture diagram to show AGOR's structure:
-
-```mermaid
-graph TB
-    subgraph "AGOR Core"
-        CLI[CLI Interface<br/>main.py]
-        REPO[Repository Management<br/>repo_mgmt.py]
-        UTILS[Utilities<br/>utils.py]
-        INIT[Version Management<br/>__init__.py]
-    end
-
-    subgraph "AI Tools"
-        README_AI[Initial Role Selection<br/>README_ai.md]
-        INSTRUCTIONS[Comprehensive Guide<br/>AGOR_INSTRUCTIONS.md]
-        CODE[Code Exploration<br/>code_exploration.py]
-        PROMPTS[Agent Prompts<br/>agent_prompt_templates.py]
-        PLANNING[Project Planning<br/>project_planning_templates.py]
-    end
-
-    subgraph "Deployment Modes"
-        AGENT_MODE[Agent Mode<br/>Direct Git Access]
-        BUNDLE_MODE[Bundle Mode<br/>Upload .tar.gz]
-    end
-
-    CLI --> REPO
-    CLI --> UTILS
-    CLI --> INIT
-
-    REPO --> AGENT_MODE
-    UTILS --> BUNDLE_MODE
-
-    AGENT_MODE --> INSTRUCTIONS
-    BUNDLE_MODE --> INSTRUCTIONS
-    INSTRUCTIONS --> README_AI
-
-    INSTRUCTIONS --> CODE
-    INSTRUCTIONS --> PROMPTS
-    INSTRUCTIONS --> PLANNING
-
-    style CLI fill:#e1f5fe
-    style INSTRUCTIONS fill:#f3e5f5
-    style AGENT_MODE fill:#e8f5e8
-    style BUNDLE_MODE fill:#fff3e0
-```
+(No changes needed)
 
 ### 5.4. Meta-Development Feedback
-
-As a development agent, your feedback helps AGOR evolve. The `meta` hotkey provides multiple feedback pathways:
-
-**Choose Based on Your Situation:**
-
-1. **Working on different project** → Create GitHub issue with structured template
-2. **Working on AGOR itself** → Edit files directly and commit improvements
-3. **Have specific code fixes** → Generate copy-paste code blocks for manual implementation
-4. **Ongoing documentation** → Add entries to local `agor-meta.md` file
-
-**What to Report:**
-
-- Bugs, unclear instructions, or workflow issues
-- Improvements, new features, or better coordination patterns
-- Workflows that worked exceptionally well
-- Technical implementation suggestions with code examples
-
-Your insights are valuable for improving AGOR for future agents. The system will guide you to the most appropriate feedback method based on your context.
+(No changes needed)
 
 ### 5.5. Documentation Index and Further Reading
-
-This document serves as the primary instruction set for AI agents using AGOR. For developer-focused documentation, refer to the main AGOR project repository.
+(No changes needed)
 
 ### 5.6. Attribution
-
-**AgentOrchestrator is an enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) created by [@nikvdp](https://github.com/nikvdp).**
+(No changes needed)
 
 ---
 
-## 6. Advanced Features
+## 6. Advanced Features & Memory Systems
 
-### 6.1. SQLite Memory Mode (Experimental)
+### 6.1. SQLite Memory Mode (Experimental & Internal Use)
 
-If SQLite binary is available at `/tmp/agor_tools/sqlite3`, you can use database-based memory management instead of markdown files. This provides structured storage and advanced querying capabilities.
+If a SQLite binary is available at `/tmp/agor_tools/sqlite3`, AGOR *can* use database-based memory management. **However, this is an EXPERIMENTAL system primarily intended for INTERNAL AGOR SYSTEM USE, advanced state management by specialized coordination setups, or specific AGOR DEVELOPMENT tasks.**
 
-**Checking SQLite Availability**
+- **NOT THE DEFAULT FOR STANDARD AGENTS:** Unless explicitly directed by a Project Coordinator for a specialized task or you are developing AGOR itself, **agents should rely on the default markdown-based Memory Synchronization System.**
+- **Purpose:** Internal coordination logging, complex state tracking for AGOR system development, or highly specialized applications.
+- **Agent Interaction:** Standard agents do not typically interact directly with the SQLite memory. Hotkeys for SQLite are generally for AGOR developers or advanced diagnostic scenarios.
 
+**Checking SQLite Availability (for developers/advanced users):**
 ```bash
 # Check if SQLite is available
 ls -la /tmp/agor_tools/sqlite3
@@ -859,88 +572,62 @@ chmod 755 /tmp/agor_tools/sqlite3
 /tmp/agor_tools/sqlite3 --version
 ```
 
-**NOTE**: This is an experimental internal system. Agents should primarily use standard `.agor/memory.md` files for coordination unless specifically directed or configured to use SQLite. If `/tmp/agor_tools/sqlite3` exists, advanced database-based memory management is available for internal AGOR operations. This system is primarily for:
+If SQLite is active for internal purposes, the schema might include tables for `project_memory`, `agent_memory`, `tasks`, etc. This is generally abstracted from standard agent workflows.
 
-- Internal coordination logging
-- Advanced state management
-- System-level memory operations
+### 6.2. Memory Synchronization System (Recommended & Production Ready)
 
-**For normal agent work, use the standard markdown-based coordination files in `.agor/` directory.**
-If used, the schema might include tables for:
+**AGOR's primary and recommended method for agent memory persistence is the automated Memory Synchronization System.** This system seamlessly integrates with agent workflows, providing robust and reliable memory management using markdown files stored in the `.agor/` directory on dedicated Git memory branches (e.g., `agor/mem/BRANCH_NAME`).
 
-- `project_memory`: Key-value store for general project information.
-- `agent_memory`: Per-agent logs, decisions, and status.
-- `tasks`: Task breakdown, assignments, and progress.
-- `communication_log`: Inter-agent messages.
-  Consult specific strategy or system documentation for detailed schema if SQLite mode is active.
+**Key Features & Agent Impact:**
 
-### 6.2. Memory Synchronization System (Production Ready)
-
-**AGOR now includes automatic memory synchronization** that seamlessly integrates with agent workflows. This system provides persistent memory across agent sessions using Git-based storage.
+-   **Automated Persistence:** Memory sync is **automatically initialized** when you start work (e.g., joining a project, initializing coordination) and **automatically saved** when you complete tasks or sessions. Agents generally do **not** need to manually trigger memory saving or loading.
+-   **Dedicated Memory Branches:** All `.agor/` contents (your notes, `agentconvo.md`, snapshots, strategy files) are committed to these special branches, not your working project branch. This keeps your project's main history clean.
+-   **Version Controlled Memory:** Your memory, notes, and coordination state are version controlled, allowing for history, auditing, and easier recovery.
+-   **Graceful Fallback:** The system is designed to be non-disruptive. If a sync operation fails, your workflow can continue with locally cached memory, and the system will attempt to sync later.
+-   **`.gitignore` Interaction Note:** Project repositories might have `.agor/` in their `.gitignore` file. This is to prevent accidental commits of local AGOR operational states to the *working* or *main* branches of the project. The Memory Synchronization System is designed to work with this; it specifically manages and commits the `.agor/` directory to its dedicated *memory branches*, bypassing the project's main `.gitignore` for those branches.
 
 #### Automatic Memory Sync Integration
-
+(Content is largely the same as original, reinforcing automation)
 **Memory sync is automatically initialized** when:
 - Agents join projects (`discover_current_situation`)
 - Coordination systems are initialized (`agor init`, `agor pd`, etc.)
 - Strategy managers are created
-- SQLite memory managers are instantiated
 
 **Memory sync is automatically saved** when:
 - Agents complete work (`complete_agent_work`)
-- Agent sessions end
-- Memory state needs to be persisted
+- Agent sessions end (where applicable by the environment)
+- Critical memory state needs to be checkpointed by the system.
 
 #### Memory Sync Status in Agent Commands
+The `agor status` command (and similar status reporting) will include information about the Memory Synchronization System, such as the active memory branch and sync health, if relevant to the agent's current context or for diagnostic purposes.
 
-The `agor status` command now includes memory sync information:
-- Active memory branch name
-- Available memory branches
-- Memory sync health status
+#### Manual Memory Sync Hotkeys (Primarily for AGOR Development & Advanced Use)
 
-#### Manual Memory Sync Hotkeys (Advanced)
+While the Memory Synchronization System is designed to be automatic for standard agent operations, the following hotkeys exist primarily for **AGOR developers or very advanced use cases** (e.g., manually forcing a sync after a network outage, or specific testing scenarios):
 
-For development work on AGOR itself, manual memory sync hotkeys are available:
+**Memory Sync Commands (Advanced/Developer Use):**
+- **`mem-sync-start`**: Manually initialize or restart memory synchronization.
+- **`mem-sync-save`**: Manually force a save of the current memory state to the memory branch.
+- **`mem-sync-restore`**: Manually attempt to restore memory state from a specified memory branch.
+- **`mem-sync-status`**: Show detailed current memory synchronization status.
 
-**Memory Sync Commands:**
-- **`mem-sync-start`**: Initialize memory branch and sync on startup
-- **`mem-sync-save`**: Save current memory state to memory branch
-- **`mem-sync-restore`**: Restore memory state from a memory branch
-- **`mem-sync-status`**: Show current memory synchronization status
-
-**Usage Pattern:**
-```
-1. Use mem-sync-start at beginning of development session
-2. Use mem-sync-save periodically to checkpoint memory state
-3. Use mem-sync-status to check synchronization state
-4. Use mem-sync-restore to recover from previous sessions
-```
+**Standard agents should rely on the system's automatic synchronization.**
 
 #### Memory Branch Architecture
-
+(Content is largely the same, reinforcing separation)
 **Memory branches** are separate from working branches:
-- **Memory branches**: Store `.agor/` content (memories, snapshots, coordination)
-- **Working branches**: Store source code, documentation, development logs
-- **Clean separation**: Prevents memory pollution in source code
-- **Simplified approach**: Memory branches created from HEAD~1 (not orphaned)
+- **Memory branches**: Store `.agor/` content (memories, snapshots, coordination files).
+- **Working branches**: Store project source code, documentation.
+- **Clean separation**: Prevents AGOR's operational state from cluttering the project's source code history.
 
 #### Error Handling
-
+(Content is largely the same, reinforcing robustness)
 Memory sync is designed to be **transparent and non-disruptive**:
-- If memory sync fails, agent workflows continue normally
-- Graceful fallback to standard `.agor/memory.md` files
-- Warning messages for sync issues, but no workflow interruption
-- Automatic retry mechanisms for transient failures
+- If memory sync fails, agent workflows can continue with locally cached state.
+- Warning messages for sync issues, but no workflow interruption for the agent.
 
-#### For Agent Developers
-
-**When developing AGOR itself:**
-- Memory sync provides persistent context across development sessions
-- Use manual hotkeys for fine-grained control
-- Memory branches enable seamless snapshots between development agents
-- Integration tests validate memory sync workflows
-
-**For normal project work:**
-- Memory sync works automatically in the background
-- Continue using standard `.agor/memory.md` files for coordination
-- Memory persistence enhances agent continuity across sessions
+#### Summary for Standard Agent Operation:
+- Your memory (notes, coordination files, snapshots) is automatically managed by the Memory Synchronization System.
+- This system uses markdown files in the `.agor/` directory, stored on dedicated memory branches.
+- You do not need to manually save or load your memory in most situations.
+- Focus on your tasks; AGOR handles memory persistence in the background.

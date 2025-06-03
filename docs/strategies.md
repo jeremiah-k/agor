@@ -64,7 +64,7 @@ COORDINATION:
 
 ### How It Works
 
-1. **Sequential handoffs** between specialized agents
+1. **Sequential snapshots** between specialized agents
 2. **Clear interfaces** and deliverables at each stage
 3. **Quality gates** before work moves to next agent
 4. **Feedback loops** for continuous improvement
@@ -294,13 +294,13 @@ Each strategy creates specific coordination files:
 - **`.agor/agentconvo.md`** - Cross-agent communication
 - **`.agor/agent{N}-memory.md`** - Individual agent notes
 
-### Handoff Procedures
+### Snapshot Procedures
 
-Use AGOR's handoff prompts for smooth transitions:
+Use AGOR's snapshot prompts for smooth transitions:
 
 ```bash
-hp  # Generate handoff prompts
-da  # Detailed analysis for handoff
+hp  # Generate snapshot prompts
+da  # Detailed analysis for snapshot
 ```
 
 ## 📊 Measuring Success

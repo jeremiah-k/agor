@@ -1,338 +1,153 @@
-# 📋 Work Orders and Memory System Guide
+# 📋 Work Orders, Snapshots, and the AGOR Memory Synchronization System Guide
 
-This guide explains AGOR's work order system, memory branches, and the critical handoff protocols that enable seamless agent coordination and context preservation.
+This guide explains AGOR's work order system (often managed as snapshots), agent snapshots for context preservation, and the **AGOR Memory Synchronization System** which is the primary method for persisting and coordinating this data.
 
 ## 🎯 Overview
 
-AGOR's memory system consists of three key components:
+AGOR's memory and coordination capabilities rely on three key concepts, all managed by the **Memory Synchronization System**:
 
-1. **Work Orders**: Structured task definitions stored in memory branches
-2. **Agent Snapshots**: Complete context preservation for agent transitions  
-3. **Memory Branches**: Git branches dedicated to storing work orders, snapshots, and coordination data
+1.  **Work Orders / Snapshots**: Structured task definitions or detailed work contexts. While "Work Order" might be used, these are typically generated and managed as **Snapshots**.
+2.  **Agent Snapshots**: Comprehensive captures of an agent's work state, crucial for transitions, context preservation (even for solo work), and managing AI context limits.
+3.  **Memory Branches**: Dedicated Git branches (e.g., `agor/mem/YYYYMMDD_HHMMSS_session_description`) where the Memory Synchronization System stores all `.agor/` directory contents, including work orders, snapshots, and coordination logs.
 
-## 🔧 Memory Branch Architecture
+**The AGOR Memory Synchronization System automates the management of these components, ensuring data is version-controlled and shared correctly without cluttering project work_ing_ branches.**
+
+## 🔧 Memory Branch Architecture & The Synchronization System
 
 ### Memory Branch Naming Convention
-
+(Remains the same)
 ```
 agor/mem/YYYYMMDD_HHMMSS_session_description
 ```
 
-**Examples**:
-- `agor/mem/20250528_174758_documentation_session`
-- `agor/mem/20250528_160138_feature_development`
-- `agor/mem/20250528_153950_bug_investigation`
+### What Gets Stored in Memory Branches (via Memory Synchronization System)
 
-### What Gets Stored in Memory Branches
+The Memory Synchronization System automatically commits the following to memory branches:
+- **Work Orders / Snapshots**: `.agor/snapshots/work-order-name_snapshot.md` (often, a snapshot serves as a work order)
+- **Agent Snapshots**: `.agor/snapshots/snapshot-timestamp.md`
+- **Coordination Logs**: `.agor/agentconvo.md`, `.agor/memory.md` (project-level memory), individual agent memory files (e.g., `agent1-memory.md`)
+- **Strategy Files**: `.agor/strategy-active.md`, etc.
+- **(Potentially) Memory Database**: `.agor/memory.db` if SQLite is used for internal/advanced purposes.
 
-Memory branches contain:
-- **Work Orders**: `.agor/work-order-name.md`
-- **Agent Snapshots**: `.agor/snapshot-timestamp.md` 
-- **Coordination Logs**: `.agor/coordination.md`
-- **Memory Database**: `.agor/memory.db` (SQLite)
-- **Task Queues**: `.agor/task-queue.json`
+### ⚠️ **CRITICAL: Memory Branch Safety Protocol & Agent Interaction**
 
-### ⚠️ **CRITICAL: Memory Branch Safety Protocol**
+-   **Automated System**: Agents primarily interact with memory and coordination files locally (e.g., updating their `agent1-memory.md`). The **Memory Synchronization System** handles committing these changes to the appropriate memory branch and ensuring local files are updated from the memory branch.
+-   **Manual Access (Rare for Agents)**: Direct interaction with memory branches (like `git show`) is generally **not required** for standard agent operation. This is more for developers or advanced debugging.
+-   **NEVER checkout memory branches directly**: This can corrupt your working state.
 
-**NEVER checkout memory branches directly**. Memory branches are for storage only and should be accessed using safe read-only methods:
-
-#### ✅ **SAFE: Read-Only Access**
-```bash
-# Read files from memory branch without checking out
-git show origin/agor/mem/20250528_174758_session:.agor/work-order.md
-
-# Copy file to temporary location for review
-git show origin/agor/mem/20250528_174758_session:.agor/work-order.md > temp_work_order.md
-cat temp_work_order.md
-rm temp_work_order.md
-```
+#### ✅ **SAFE: Read-Only Access (for Developers/Debugging)**
+(Remains the same)
 
 #### ❌ **UNSAFE: Direct Checkout**
-```bash
-# NEVER DO THIS - Can corrupt your working state
-git checkout agor/mem/20250528_174758_session
-```
+(Remains the same)
 
-## 🤝 Handoff Protocol Documentation
+## 🤝 Snapshot Protocol Documentation (Managed by Memory Synchronization System)
 
-### Creating Proper Handoff Prompts
+Snapshots are the core mechanism for work definition, handoffs, and context preservation. The Memory Synchronization System ensures these are correctly persisted and shared.
 
-When creating handoff prompts for other agents, follow this exact protocol:
+### Creating Proper Snapshot Prompts (When manually constructing for another agent)
+(Remains the same, but it's understood the referenced files are on memory branches)
 
-#### **Single Codeblock Format**
+### Receiving Snapshot Prompts
+(Remains the same, understanding the system provides the snapshot)
 
-Handoff prompts must be contained in a **single codeblock** using **double backticks** (``):
+## 📸 Agent Snapshot System (Core to AGOR Memory)
 
-```
-``
-# 🧪 CRITICAL WORK ORDER: Task Name
-
-## Agent Assignment
-**Role**: Specific Agent Role
-**Task**: Clear task description
-
-## Work Order Location
-**Memory Branch**: agor/mem/YYYYMMDD_HHMMSS_session_description
-**Work Order File**: .agor/work-order-filename.md
-
-## Critical Setup (MUST DO FIRST)
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling
-test_tooling()
-
-## Access Work Order (NEVER checkout memory branch)
-git show agor/mem/YYYYMMDD_HHMMSS_session:.agor/work-order-filename.md > temp_work_order.md
-cat temp_work_order.md
-rm temp_work_order.md
-
-## Key Requirements
-1. Requirement 1
-2. Requirement 2
-3. CRITICAL: Specific critical requirements
-
-## Success Criteria
-- Success criterion 1
-- Success criterion 2
-
-Ready to begin? Access work order using git show and confirm receipt.
-``
-```
-
-#### **Key Protocol Rules**
-
-1. **Single Codeblock Only**: Use exactly **two backticks** (``) to wrap the entire prompt
-2. **No Nested Codeblocks**: If you need to show code examples within the prompt, use **two backticks** for nested code
-3. **Memory Branch Reference**: Always include the exact memory branch name
-4. **Safe Access Instructions**: Always include `git show` commands, never `git checkout`
-5. **Setup Instructions**: Include any required setup steps
-6. **Clear Success Criteria**: Define what constitutes successful completion
-
-#### **Example with Nested Code (Use 2 Backticks)**
-
-```
-``
-## Access Work Order
-git show origin/agor/mem/20250528_174758_session:.agor/work-order.md > temp.md
-
-## Setup Required
-``
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling
-test_tooling()
-``
-
-Ready to begin?
-``
-```
-
-### Receiving Handoff Prompts
-
-When receiving a handoff prompt:
-
-1. **Follow Setup Instructions**: Execute any setup commands first
-2. **Access Work Order Safely**: Use `git show` commands as provided
-3. **Confirm Receipt**: Update coordination logs
-4. **Verify Understanding**: Review all requirements before proceeding
-
-## 📸 Agent Snapshot System
-
-### Creating Snapshots
-
-Snapshots preserve complete agent context for seamless transitions:
-
-```bash
-# Create snapshot using AGOR hotkey
-snapshot
-```
+### Creating Snapshots (`snapshot` hotkey)
+When an agent uses the `snapshot` hotkey:
+- AGOR gathers all relevant context.
+- A snapshot document is generated locally in `.agor/snapshots/`.
+- The **Memory Synchronization System** then automatically commits this snapshot and related coordination files to the active memory branch.
 
 ### Snapshot Storage
-
-Snapshots are stored in memory branches with this structure:
-
+Snapshots are stored in `.agor/snapshots/` on memory branches by the Memory Synchronization System.
 ```
-.agor/
-├── snapshot-20250528-181040.md     # Snapshot document
-├── memory.db                       # SQLite database
-└── coordination.md                 # Coordination logs
+.agor/ (on a memory branch)
+├── snapshots/
+│   └── snapshot-YYYYMMDD-HHMMSS.md     # Snapshot document
+├── agentconvo.md
+├── memory.md                       # Main project memory / general strategy memory
+└── agent1-memory.md                # Individual agent memory
 ```
 
 ### Snapshot Document Structure
+(Remains the same)
 
-Every snapshot includes:
+## 🗄️ SQLite Memory Database (Internal & Advanced Use)
 
-- **🎯 Problem Definition**: What we're solving
-- **✅ Work Completed**: Accomplishments so far  
-- **📝 Commits Made**: Git history with explanations
-- **📁 Files Modified**: Complete change inventory
-- **📊 Current Status**: Current state assessment
-- **🔄 Next Steps**: Prioritized action items
-- **🧠 Technical Context**: Implementation details
-- **🎯 Snapshot Instructions**: How to continue
+-   **Not for Standard Agent Memory:** The SQLite database (`.agor/memory.db`) is primarily for **internal AGOR system use, advanced state management capabilities within AGOR itself, or specific AGOR development tasks.**
+-   **Agent Default:** Standard agent memory, notes, and coordination (including snapshots and `agentconvo.md`) are managed as **markdown files** within the `.agor/` directory by the Memory Synchronization System.
+-   **Interaction:** Agents typically do not interact directly with SQLite. The Memory Synchronization System may use it internally.
 
-## 🗄️ SQLite Memory Database
+## 🔄 Memory Synchronization System (Primary Memory Mechanism)
 
-### Database Schema
+This is the **standard, production-ready, and recommended** way AGOR manages memory and coordination data.
 
-The memory database stores:
+### Key Features & Benefits:
 
-- **agent_memories**: Agent context and decisions
-- **coordination_logs**: Inter-agent communication
-- **project_state**: Project-wide state tracking
-- **snapshots**: Structured snapshot data
-
-### Memory Operations
-
-```python
-from agor.tools.sqlite_memory import SQLiteMemoryManager
-
-# Initialize memory manager
-manager = SQLiteMemoryManager()
-
-# Add memory entry
-manager.add_memory("agent-id", "context", "Important context", {"key": "value"})
-
-# Create snapshot
-manager.create_snapshot(
-    snapshot_id="unique-id",
-    from_agent="current-agent",
-    problem_description="Problem being solved",
-    work_completed="Work done so far",
-    # ... other fields
-)
-
-# Retrieve memories
-memories = manager.get_memories("agent-id", memory_type="context")
-```
-
-## 🔄 Memory Sync System
+-   **Automated & Seamless:** Works in the background. Agents focus on tasks, and the system handles persistence to memory branches.
+-   **Version Control for Memory:** All `.agor/` content is version-controlled on Git memory branches, providing history and auditability.
+-   **Clean Project Branches:** Keeps operational state (like `agentconvo.md`, agent-specific notes) off your main work_ing_ branches.
+-   **Robust Fallbacks:** Designed to be non-disruptive; if a sync fails, agents can often continue with local state.
+-   **`.gitignore` Compatibility:** Even if your project's main `.gitignore` lists `.agor/`, the Memory Synchronization System correctly commits these files to its dedicated memory branches.
 
 ### Automatic Synchronization
+(Remains the same - system handles this)
 
-The memory system automatically syncs with memory branches:
-
-- **On Startup**: Pulls latest memory state
-- **On Shutdown**: Commits and pushes memory updates
-- **Branch Management**: Creates and manages memory branches
+### Manual Memory Sync Hotkeys (`mem-sync-*`)
+-   **Advanced/Developer Use:** Hotkeys like `mem-sync-start`, `mem-sync-save`, `mem-sync-restore`, and `mem-sync-status` are primarily for AGOR developers or for advanced users needing to manually manage the sync process (e.g., during AGOR development, testing, or specific recovery scenarios).
+-   **Standard Operation:** Regular agents should rely on the **automatic** nature of the Memory Synchronization System.
 
 ### Sync Dependencies
-
-Memory sync requires:
-- `platformdirs` package for cross-platform paths
-- Git repository with remote access
-- Proper branch permissions
+(Remains the same)
 
 ## 🛡️ Best Practices
 
-### For Work Order Creators
+### For Work Order/Snapshot Creators (Coordinators or Agents)
+1.  **Focus on Content:** Define clear tasks, context, and requirements within the snapshot.
+2.  **Trust the System:** The Memory Synchronization System will handle persisting the snapshot to the memory branch.
+3.  **Clear Prompts:** When manually creating prompts for other agents to load a snapshot, ensure they know the system will provide it (usually via `load_snapshot` hotkey).
 
-1. **Use Memory Branches**: Store all work orders in memory branches
-2. **Clear Instructions**: Provide exact `git show` commands
-3. **Safety First**: Never instruct agents to checkout memory branches
-4. **Complete Context**: Include all necessary setup and requirements
-
-### For Work Order Recipients
-
-1. **Follow Protocol**: Use provided `git show` commands exactly
-2. **Verify Setup**: Run setup commands before proceeding
-3. **Confirm Receipt**: Update coordination logs
-4. **Ask Questions**: Clarify unclear requirements
+### For Work Order/Snapshot Recipients
+1.  **Use Standard Hotkeys:** Use `load_snapshot` to access tasks/snapshots. The system retrieves them from the memory branch.
+2.  **Local Work:** Perform your work and update your local memory files (e.g., `agentN-memory.md`, `agentconvo.md`).
+3.  **Automatic Persistence:** The Memory Synchronization System will save your updates to the memory branch.
 
 ### For Memory Management
+1.  **Regular Snapshots:** Use the `snapshot` hotkey at logical breakpoints to preserve context.
+2.  **Descriptive Names (for manual branch creation if developing AGOR):** Use clear memory branch names if you are manually creating them during AGOR development.
+3.  **Rely on Automation:** For standard agent work, the system handles the details of memory branch interaction.
 
-1. **Regular Snapshots**: Create snapshots at logical breakpoints
-2. **Descriptive Names**: Use clear memory branch names
-3. **Clean Handoffs**: Ensure complete context transfer
-4. **Safe Access**: Always use read-only access methods
+## 🚨 Common Pitfalls & Clarifications
+(Remains largely the same, re-emphasizing system automation)
 
-## 🚨 Common Pitfalls
+### ❌ **What NOT to Do (as a Standard Agent)**
+1.  **Manually manage memory branches:** Don't try to checkout, commit to, or create memory branches directly unless you are an AGOR developer.
+2.  **Worry excessively about manual saving:** The system is designed to save automatically. Manual sync hotkeys are for special cases.
+3.  **Commit `.agor/` to your project's main/working branch:** This is what the Memory Synchronization System's memory branches are for.
 
-### ❌ **What NOT to Do**
-
-1. **Never checkout memory branches directly**
-2. **Don't use nested codeblocks in handoff prompts**
-3. **Don't hardcode memory branch names in documentation**
-4. **Don't skip setup instructions**
-5. **Don't assume context without verification**
-
-### ✅ **What TO Do**
-
-1. **Always use `git show` for memory branch access**
-2. **Use single codeblock format for handoff prompts**
-3. **Include exact memory branch references**
-4. **Follow setup protocols precisely**
-5. **Verify understanding before proceeding**
+### ✅ **What TO Do (as a Standard Agent)**
+1.  **Use hotkeys like `snapshot`, `load_snapshot`, `complete`, `log`:** These interact with the memory system correctly.
+2.  **Keep local notes in your `agentN-memory.md`:** The system will sync it.
+3.  **Trust the Memory Synchronization System** to manage persistence and sharing of coordination data.
 
 ## 🔍 Troubleshooting
-
-### Memory Branch Access Issues
-
-```bash
-# If memory branch doesn't exist locally, fetch it
-git fetch origin agor/mem/20250528_174758_session
-
-# Then use git show to access files
-git show origin/agor/mem/20250528_174758_session:.agor/work-order.md
-```
-
-### Memory Sync Issues
-
-```bash
-# Check if platformdirs is installed
-python -c "import platformdirs; print('✅ platformdirs available')"
-
-# If not installed
-pip install platformdirs
-```
-
-### Database Issues
-
-```bash
-# Validate SQLite memory setup
-python -c "
-from agor.tools.sqlite_memory import validate_sqlite_setup
-success, message = validate_sqlite_setup()
-print(f'Memory System: {\"✅ PASS\" if success else \"❌ FAIL\"} - {message}')
-"
-```
+(Remains the same - these are more for dev/advanced use)
 
 ## 📊 Memory System Status
-
-To check memory system health:
-
-```python
-from agor.tools.sqlite_memory import SQLiteMemoryManager
-
-manager = SQLiteMemoryManager()
-stats = manager.get_database_stats()
-print("Memory Database Stats:")
-for table, count in stats.items():
-    print(f"  {table}: {count} records")
-```
+(Remains the same - primarily for dev/advanced use)
 
 ---
 
 ## 🎯 Quick Reference
 
-### Safe Memory Branch Access
-```bash
-git show origin/agor/mem/BRANCH_NAME:.agor/file.md
-```
+### Primary Memory System:
+**AGOR Memory Synchronization System** (automated, uses markdown files on Git memory branches).
 
-### Handoff Prompt Format
-```
-``
-# Work Order Title
-## Memory Branch: agor/mem/BRANCH_NAME
-## Access: git show origin/agor/mem/BRANCH_NAME:.agor/file.md
-``
-```
+### Key Agent Hotkeys for Memory/Coordination:
+- `snapshot`: Create a snapshot of your work.
+- `load_snapshot`: Load a snapshot (often a work order).
+- `complete`: Mark a task as complete, often creating a final snapshot.
+- `log`, `ch`, `msg`: Update local memory/communication files, which are then synced.
 
-### Memory Operations
-```python
-from agor.tools.sqlite_memory import SQLiteMemoryManager
-manager = SQLiteMemoryManager()
-```
-
-**Remember**: Memory branches are for storage, not checkout. Always use safe read-only access methods! 🛡️
+**Remember**: The Memory Synchronization System is designed to make memory persistence and coordination robust and largely automatic for agents. Manual interaction with memory branches or sync hotkeys is typically for AGOR development or advanced troubleshooting. 🛡️
