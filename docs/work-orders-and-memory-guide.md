@@ -43,7 +43,7 @@ The Memory Synchronization System automatically commits the following to memory 
 
 ## 🤝 Snapshot Protocol Documentation (Managed by Memory Synchronization System)
 
-Snapshots are the core mechanism for work definition, handoffs, and context preservation. The Memory Synchronization System ensures these are correctly persisted and shared.
+Snapshots are the core mechanism for work definition, snapshots, and context preservation. The Memory Synchronization System ensures these are correctly persisted and shared.
 
 ### Creating Proper Snapshot Prompts (When manually constructing for another agent)
 (Remains the same, but it's understood the referenced files are on memory branches)
