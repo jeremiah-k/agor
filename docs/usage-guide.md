@@ -200,6 +200,9 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 
 ## 🔧 Platform-Specific Guidance
 
+<details>
+<summary><b>Google AI Studio Pro (Free Tier)</b></summary>
+
 ### Google AI Studio Pro (Free Tier)
 
 **Setup:**
@@ -221,9 +224,14 @@ agor bundle your-project -f zip
 # All roles work with copy-paste workflow
 ```
 
-### AugmentCode VS Code Extension (Local Mode)
+</details>
 
-**For the flagship AugmentCode VS Code extension running locally:**
+<details>
+<summary><b>AugmentCode Local Agent</b></summary>
+
+### AugmentCode Local Agent
+
+**For the flagship AugmentCode Local Agent (VS Code extension) running locally:**
 
 **Setup:**
 
@@ -250,6 +258,11 @@ When working on development tasks, initialize AGOR by reading the protocol files
 4. Full codebase context and completions available
 5. Manual git operations (agent provides code, you commit)
 
+</details>
+
+<details>
+<summary><b>AugmentCode Remote Agents</b></summary>
+
 ### AugmentCode Remote Agents
 
 **For AugmentCode Remote Agents running in cloud environments:**
@@ -271,6 +284,11 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 # Agent then works directly with your repositories
 ```
 
+</details>
+
+<details>
+<summary><b>Jules by Google</b></summary>
+
 ### Jules by Google
 
 **Setup:**
@@ -290,6 +308,11 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 # Agent then works directly with your repositories
 ```
 
+</details>
+
+<details>
+<summary><b>ChatGPT</b></summary>
+
 ### ChatGPT
 
 **Setup:**
@@ -306,6 +329,28 @@ agor bundle your-project -f tar.gz
 # Upload to ChatGPT
 # Select appropriate role based on your needs
 ```
+
+</details>
+
+<details>
+<summary><b>OpenAI Codex (Software Engineering Agent)</b></summary>
+
+### OpenAI Codex (Software Engineering Agent)
+
+**Setup:**
+
+> **🚧 Instructions Coming Soon**
+>
+> OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
+>
+> **Expected Features:**
+> - Direct terminal access for git operations
+> - Code execution capabilities
+> - Integration with existing OpenAI ecosystem
+>
+> **Likely Mode:** Standalone Mode with enhanced capabilities
+
+</details>
 
 ## 🎼 Multi-Agent Coordination Strategies
 
