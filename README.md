@@ -35,9 +35,9 @@ agor bundle /path/to/local/project
 </details>
 
 <details>
-<summary><b>Standalone Mode (Direct Git Access)</b></summary>
+<summary><b>Augment Code Remote Agents</b></summary>
 
-**For AI agents with git access (Augment Code Remote, Jules by Google, etc.) - Agent should execute:**
+**For Augment Code Remote Agents with git access - Agent should execute:**
 
 ```bash
 # Clone AGOR to temporary location
@@ -60,8 +60,7 @@ test_tooling()
 print(f'Session started at: {get_timestamp()}')
 "
 
-# Review development guide
-cat docs/agor-development-guide.md
+# Review agent startup guide
 cat docs/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
@@ -70,42 +69,71 @@ cat docs/agent-start-here.md
 </details>
 
 <details>
-<summary><b>Augment Code Local Integration</b></summary>
+<summary><b>Augment Code VS Code Extension</b></summary>
 
-**For local Augment Code agents working directly in your project:**
+**For the Augment Code VS Code extension with local workspace integration:**
+
+#### Setup Steps:
 
 ```bash
 # 1. Clone AGOR to your development environment
 git clone https://github.com/jeremiah-k/agor.git ~/agor
-
-# 2. Add AGOR as a source in Augment Code extension
-# In Augment: Settings → Sources → Add Source → ~/agor
-
-# 3. Use this initialization prompt in Augment:
 ```
 
-**Initialization Prompt for Augment:**
+#### 2. Add AGOR as Workspace Context:
+1. Open VS Code with Augment extension installed
+2. Click the folder icon in the Augment sidebar panel
+3. Click **+ Add more...** at the bottom of Source Folders
+4. Select the `~/agor` directory and click **Add Source Folder**
+
+#### 3. Configure User Guidelines:
+1. In Augment Chat, click the **Context menu** or use **@-mention**
+2. Select **User Guidelines**
+3. Add this guideline:
+
+```
+When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Solo Developer, Project Coordinator, or Agent Worker) and follow the appropriate workflows and hotkeys for efficient development.
+```
+
+#### 4. Optional - Add Workspace Guidelines:
+Create `.augment-guidelines` file in your project root:
+
+```
+- Use AGOR framework for development coordination when available in workspace sources
+- Follow AGOR role-based workflows for structured development
+- Utilize AGOR hotkeys and snapshot system for context management
+- Reference AGOR documentation for best practices and coordination protocols
+```
+
+**Benefits:**
+- Direct access to AGOR tools and documentation through workspace context
+- Persistent guidelines ensure consistent AGOR usage
+- No file upload limits or token efficiency concerns
+- Seamless integration with existing VS Code workflow
+
+</details>
+
+<details>
+<summary><b>Jules by Google</b></summary>
+
+**For Jules by Google (requires direct URL access to files):**
+
+Use this initialization prompt with Jules:
 
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
 Please read these key files to understand the system:
-- ~/agor/src/agor/tools/README_ai.md (role selection)
-- ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
-- ~/agor/docs/agor-development-guide.md (development context)
+- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
+- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
+- https://github.com/jeremiah-k/agor/blob/main/docs/agent-start-here.md (startup guide)
 
 After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
 
-**Benefits:**
-
-- Direct access to AGOR tools and documentation
-- No file upload limits
-- Real-time collaboration capabilities
-- Full git integration
-- Token-efficient initialization
+**Note:** Jules cannot clone repositories that weren't selected during environment creation, so direct URL access to documentation is required.
 
 </details>
 
@@ -127,7 +155,7 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
-**For agents with repository access** (Augment Code Remote Agents, Jules by Google, etc.)
+**For agents with repository access** (AugmentCode Remote Agents, Jules by Google, etc.)
 
 - **Direct commits**: Agents can make commits directly if they have commit access
 - **Fallback method**: Copy-paste codeblocks if no commit access
@@ -241,10 +269,10 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 </details>
 
 <details>
-<summary><b>Standalone Mode Platforms</b></summary>
+<summary><b>Remote Agent Platforms</b></summary>
 
-- **Augment Code Remote Agents** (direct git access)
-- **Jules by Google** (direct git access)
+- **Augment Code Remote Agents** (cloud-based agents with direct git access)
+- **Jules by Google** (direct URL access to files, limited git capabilities)
 - **Any AI agent with git and shell access**
 
 </details>
@@ -252,7 +280,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 <details>
 <summary><b>Local Integration Platforms</b></summary>
 
-- **Augment Code Local** (clone AGOR as source)
+- **Augment Code VS Code Extension** (flagship local extension with workspace context)
 - **Any local AI assistant** with file system access
 - **Development environments** with AI integration
 

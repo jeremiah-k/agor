@@ -39,7 +39,6 @@ I'm working with the AGOR (AgentOrchestrator) framework for multi-agent developm
 Please read these key files to understand the system:
 - ~/agor/src/agor/tools/README_ai.md (role selection)
 - ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
-- ~/agor/docs/agor-development-guide.md (development context)
 
 After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
 
@@ -68,7 +67,6 @@ I'm using AGOR to coordinate a multi-agent development project.
 Please read:
 - ~/agor/src/agor/tools/README_ai.md (select Role B: Project Coordinator)
 - ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (focus on Project Coordinator sections)
-- ~/agor/docs/agor-development-guide.md (coordination protocols)
 
 Initialize as Project Coordinator and help me plan the development strategy and agent coordination.
 

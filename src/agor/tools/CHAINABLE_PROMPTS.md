@@ -14,7 +14,6 @@ I'm working with the AGOR (AgentOrchestrator) framework for multi-agent developm
 Please read these key files to understand the system:
 - README_ai.md (role selection)
 - AGOR_INSTRUCTIONS.md (comprehensive guide)
-- agor-development-guide.md (development context)
 
 After reading these files, help me initialize AGOR for this project and select the appropriate role based on my needs.
 
@@ -38,7 +37,7 @@ Initialize as Solo Developer and help me with codebase analysis and development 
 ```
 I'm planning a multi-agent development project using AGOR coordination.
 
-Please read README_ai.md and select Role B: Project Coordinator, then read the Project Coordinator sections of AGOR_INSTRUCTIONS.md and agor-development-guide.md.
+Please read README_ai.md and select Role B: Project Coordinator, then read the Project Coordinator sections of AGOR_INSTRUCTIONS.md.
 
 Initialize as Project Coordinator and help me design the development strategy.
 
@@ -76,7 +75,7 @@ Initialize AGOR and help me plan the feature development with clear milestones a
 ```
 I need to coordinate a large-scale refactoring project using AGOR's multi-agent strategies.
 
-Please read README_ai.md (select Project Coordinator), AGOR_INSTRUCTIONS.md (focus on strategy selection and team coordination), and agor-development-guide.md.
+Please read README_ai.md (select Project Coordinator), AGOR_INSTRUCTIONS.md (focus on strategy selection and team coordination).
 
 Initialize as Project Coordinator and help me design a refactoring strategy with agent coordination.
 
@@ -114,7 +113,7 @@ Help me load the snapshot context and continue the work seamlessly.
 ```
 I need to set up team coordination for a multi-agent development project.
 
-Please read README_ai.md (select Project Coordinator), AGOR_INSTRUCTIONS.md (focus on team management and coordination), and agor-development-guide.md (coordination protocols).
+Please read README_ai.md (select Project Coordinator), AGOR_INSTRUCTIONS.md (focus on team management and coordination).
 
 Initialize team coordination and help me establish the development workflow.
 
@@ -140,7 +139,7 @@ Initialize as Solo Developer and help me create thorough documentation for the c
 ```
 I need to establish quality assurance processes using AGOR's quality gates system.
 
-Please read README_ai.md (select Project Coordinator), AGOR_INSTRUCTIONS.md (focus on quality gates: `qg`), and agor-development-guide.md.
+Please read README_ai.md (select Project Coordinator), AGOR_INSTRUCTIONS.md (focus on quality gates: `qg`).
 
 Initialize quality assurance planning and help me establish validation procedures.
 
