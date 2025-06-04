@@ -2,7 +2,7 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.22.15
+  version: 1.24.0
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
@@ -24,19 +24,20 @@ lint:
         - src/agor/tools/README_ai.md # Code blocks without language are intentional
         - .agor/**/*.md # Generated files may have formatting issues
         - docs/strategies.md # Multiple headings with same content are intentional for strategy docs
-        - docs/handoffs.md # Emphasis used as headings is intentional for formatting
 
   enabled:
+    - actionlint@1.7.7
+    - bandit@1.8.3
     - black@25.1.0
-    - checkov@3.2.435
+    - checkov@3.2.436
     - git-diff-check
     - isort@6.0.1
     - markdownlint@0.45.0
     - osv-scanner@2.0.2
     - prettier@3.5.3
-    - ruff@0.11.11
+    - ruff@0.11.12
     - taplo@0.9.3
-    - trufflehog@3.88.34
+    - trufflehog@3.88.35
     - yamllint@1.37.1
 actions:
   disabled:

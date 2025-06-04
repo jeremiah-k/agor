@@ -25,6 +25,7 @@ git branch
 ```
 
 **Branch Naming Convention:**
+
 - `feature/add-documentation`
 - `feature/fix-memory-system`
 - `feature/update-protocols`

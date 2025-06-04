@@ -578,56 +578,68 @@ def check_strategy_status() -> str:
     def _init_agent_memory_sync(self) -> None:
         """Initialize memory sync for agent workflows."""
         try:
-            # Import and initialize SQLiteMemoryManager for memory sync
-            from .sqlite_memory import SQLiteMemoryManager
+            # Import and initialize MemorySyncManager for memory sync
+            from ..memory_sync import MemorySyncManager
 
             # Initialize memory manager if .agor directory exists
             if self.agor_dir.exists():
-                memory_db_path = str(self.agor_dir / "memory.db")
-                memory_manager = SQLiteMemoryManager(memory_db_path)
+                memory_manager = MemorySyncManager(self.project_root)
 
-                # Memory sync is automatically initialized in SQLiteMemoryManager.__init__
-                # This provides feedback about the initialization
-                if hasattr(memory_manager, 'memory_sync_manager') and memory_manager.memory_sync_manager:
-                    active_branch = memory_manager.active_memory_branch_name
+                # Check if memory sync is available
+                if memory_manager:
+                    active_branch = memory_manager.get_active_memory_branch()
                     if active_branch:
                         print(f"🧠 Agent memory sync active on branch: {active_branch}")
                     else:
                         print("🧠 Agent memory sync initialized")
                 else:
-                    print("⚠️ Agent memory sync not available - continuing without memory persistence")
+                    print(
+                        "⚠️ Agent memory sync not available - continuing without memory persistence"
+                    )
             else:
-                print("📝 No .agor directory found - memory sync will be initialized when coordination starts")
+                print(
+                    "📝 No .agor directory found - memory sync will be initialized when coordination starts"
+                )
         except Exception as e:
             print(f"⚠️ Agent memory sync initialization warning: {e}")
             # Don't fail agent discovery if memory sync has issues
 
-    def complete_agent_work(self, agent_id: str, completion_message: str = "Agent work completed") -> bool:
+    def complete_agent_work(
+        self, agent_id: str, completion_message: str = "Agent work completed"
+    ) -> bool:
         """Complete agent work with automatic memory sync."""
         try:
-            # Import and use SQLiteMemoryManager for completion sync
-            from .sqlite_memory import SQLiteMemoryManager
+            # Import and use MemorySyncManager for completion sync
+            from ..memory_sync import MemorySyncManager
 
             if self.agor_dir.exists():
-                memory_db_path = str(self.agor_dir / "memory.db")
-                memory_manager = SQLiteMemoryManager(memory_db_path)
+                memory_manager = MemorySyncManager(self.project_root)
 
                 # Perform completion sync if memory sync is available
-                if hasattr(memory_manager, 'memory_sync_manager') and memory_manager.memory_sync_manager:
+                if memory_manager:
                     print(f"💾 Saving {agent_id} memory state...")
 
-                    # Use shutdown_and_sync to save memory state
-                    sync_success = memory_manager.shutdown_and_sync(
-                        commit_message=f"{agent_id}: {completion_message}",
-                        restore_original_branch_override=None  # Stay on memory branch
-                    )
+                    # Use auto_sync_on_shutdown to save memory state
+                    active_branch = memory_manager.get_active_memory_branch()
+                    if active_branch:
+                        sync_success = memory_manager.auto_sync_on_shutdown(
+                            target_branch_name=active_branch,
+                            commit_message=f"{agent_id}: {completion_message}",
+                            push_changes=True,
+                            restore_original_branch=None,  # Stay on memory branch
+                        )
 
-                    if sync_success:
-                        print(f"✅ {agent_id} memory state saved successfully")
-                        return True
+                        if sync_success:
+                            print(f"✅ {agent_id} memory state saved successfully")
+                            return True
+                        else:
+                            print(
+                                f"⚠️ {agent_id} memory sync failed - work completed but memory not saved"
+                            )
+                            return False
                     else:
-                        print(f"⚠️ {agent_id} memory sync failed - work completed but memory not saved")
-                        return False
+                        print(f"📝 {agent_id} work completed (no active memory branch)")
+                        return True
                 else:
                     print(f"📝 {agent_id} work completed (no memory sync available)")
                     return True

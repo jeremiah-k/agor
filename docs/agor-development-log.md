@@ -2,6 +2,8 @@
 
 **Technical development history for developers and AI agents**
 
+> **Note**: This log contains historical references to experimental SQLite memory features that were removed in v0.3.5. AGOR now uses the Memory Synchronization System with git branches as the primary memory management approach.
+
 ## Purpose
 
 This log documents the technical evolution of AGOR, focusing on architectural decisions, implementation patterns, and lessons learned. It's designed to help developers and AI agents understand:
@@ -27,11 +29,98 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 16. 2025-01-27 | v0.3.5 | Production-Ready Release - SQLite Removal & Mandatory Snapshot System
+
+**Technical Focus**: Major architectural cleanup removing experimental SQLite memory system and implementing mandatory snapshot system for reliable context preservation.
+
+**Implementation Details**:
+
+- **SQLite System Removal**: Completely removed experimental SQLite memory system (3,500+ lines of code)
+  - Deleted `sqlite_memory.py`, `sqlite_hotkeys.py`, `memory_migration.py`
+  - Removed all SQLite CLI options, settings, and test files
+  - Updated all documentation to reference Memory Synchronization System only
+- **Mandatory Snapshot System**: Implemented comprehensive snapshot requirements for all agents
+  - Created `SNAPSHOT_SYSTEM_GUIDE.md` with mandatory end-of-session requirements
+  - Added snapshot templates and quality checklists
+  - Updated all initialization guides with snapshot awareness
+- **Platform-Specific Deployment**: Added distinct deployment methods for different platforms
+  - Augment Code VS Code Extension integration with workspace context
+  - Augment Code Remote Agents support with direct git access
+  - Jules by Google integration with URL-based documentation access
+  - Organized deployment instructions with dropdown format
+- **Token-Efficient Prompts**: Created chainable initialization prompts for cost-conscious users
+  - 15+ specialized prompts for different development scenarios
+  - Chainable format ending with instruction comment
+  - Combined initialization with task instructions to reduce token consumption
+- **Unified Memory Architecture**: Streamlined to single Memory Synchronization System
+  - Updated `strategy.py` and `agent_coordination.py` to use MemorySyncManager directly
+  - Simplified settings with `.agor/memory.md` default
+  - Consistent documentation across all files
+
+**Rationale**:
+
+- SQLite system was experimental, complex, and created user confusion with dual memory approaches
+- Snapshot system addresses critical need for context preservation in multi-agent coordination
+- Platform-specific guidance improves user experience across different AI environments
+- Token efficiency important for subscription-based AI services with usage limits
+- Single memory approach reduces complexity and focuses on proven git-based persistence
+
+**Impact**:
+
+- **Simplified Architecture**: Single, reliable memory system eliminates confusion
+- **Enhanced Reliability**: Production-ready features only, no experimental components
+- **Better Coordination**: Mandatory snapshots prevent lost context and coordination failures
+- **Improved Accessibility**: Clear deployment paths for different platforms and use cases
+- **Cost Optimization**: Token-efficient prompts reduce API costs for budget-conscious users
+- **Cleaner Codebase**: 3,500+ lines of experimental code removed, improved maintainability
+
+**Lessons Learned**:
+
+- Experimental features should be clearly separated from production systems
+- Context preservation is critical for multi-agent coordination success
+- Platform-specific guidance significantly improves user onboarding experience
+- Token efficiency is important consideration for AI service integration
+- Single, well-tested approach is better than multiple experimental options
+- Mandatory requirements (like snapshots) need clear templates and enforcement
+
+**Next Steps**:
+
+- Monitor snapshot system adoption and effectiveness in real agent workflows
+- Gather feedback on platform-specific deployment experiences
+- Optimize token efficiency based on usage patterns
+- Consider additional context preservation features based on snapshot usage
+- Evaluate memory synchronization performance in production environments
+
+**Files Modified**:
+
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md` (new) - Essential snapshot guide
+- `src/agor/tools/AUGMENT_INITIALIZATION.md` (new) - VS Code extension integration
+- `src/agor/tools/CHAINABLE_PROMPTS.md` (new) - Token-efficient prompts
+- `src/agor/strategy.py` - Updated to use MemorySyncManager directly
+- `src/agor/tools/agent_coordination.py` - Updated memory sync integration
+- `src/agor/main.py` - Removed SQLite CLI options
+- `src/agor/settings.py` - Updated memory file defaults
+- `README.md` - Platform-specific deployment sections
+- `docs/index.md` - Enhanced categorization and snapshot guide reference
+- Multiple documentation files - Removed SQLite references, added snapshot requirements
+
+**Release Success Criteria - ALL MET**:
+
+- ✅ SQLite memory system completely removed from codebase
+- ✅ Mandatory snapshot system implemented with comprehensive guidance
+- ✅ Platform-specific deployment methods documented and organized
+- ✅ Token-efficient chainable prompts created for all major use cases
+- ✅ Single Memory Synchronization System unified across all components
+- ✅ All documentation updated for consistency and clarity
+
+---
+
 ### 15. 2025-05-28 | v0.3.4-dev | Memory System Integration Phase 3 - Production Integration COMPLETE
 
 **Technical Focus**: Complete production integration of memory sync system with agent workflows, making memory persistence automatic and transparent.
 
 **Implementation Details**:
+
 - **Agent Initialization Integration**: Enhanced `StrategyManager.init_coordination()` and `AgentCoordinationHelper.discover_current_situation()` to automatically initialize memory sync
 - **Agent Completion Integration**: Added `complete_agent_work()` method with automatic memory state saving
 - **Status Integration**: Enhanced `agor status` command to display memory sync status, active branches, and health information
@@ -41,6 +130,7 @@ Each entry includes:
 - **Development Guide**: Enhanced commit/push protocol documentation with emphasis on frequent saves
 
 **Rationale**:
+
 - Memory sync needed to be seamless and automatic for production agent use
 - Agents should not need to manually manage memory sync operations
 - Integration should be transparent - if memory sync fails, workflows continue normally
@@ -48,6 +138,7 @@ Each entry includes:
 - Documentation ensures agents understand memory capabilities without being overwhelmed
 
 **Impact**:
+
 - **Production Ready**: Memory sync now seamlessly integrated into all agent workflows
 - **Automatic Operation**: Agents get memory persistence without manual intervention
 - **Transparent Integration**: Memory sync works in background, doesn't disrupt existing workflows
@@ -56,6 +147,7 @@ Each entry includes:
 - **Enhanced Agent Experience**: Agents can now persist context across sessions automatically
 
 **Lessons Learned**:
+
 - Production integration requires careful balance between automation and transparency
 - Error handling is crucial - memory sync should enhance, not hinder, agent workflows
 - Comprehensive testing validates integration points that might be missed in unit tests
@@ -63,12 +155,14 @@ Each entry includes:
 - Frequent commit/push protocol is essential for agent development environments
 
 **Next Steps**:
+
 - Monitor memory sync performance in production agent workflows
 - Gather feedback from agents using the memory sync system
 - Optimize memory sync operations for better performance
 - Consider additional memory sync features based on usage patterns
 
 **Files Modified**:
+
 - `src/agor/strategy.py` - Added memory sync initialization and status display
 - `src/agor/tools/agent_coordination.py` - Added automatic memory sync for agent workflows
 - `tests/test_memory_sync_integration.py` - Comprehensive integration test suite
@@ -76,6 +170,7 @@ Each entry includes:
 - `docs/agor-development-guide.md` - Enhanced commit/push protocol guidance
 
 **Phase 3 Success Criteria - ALL MET**:
+
 - ✅ Memory sync seamlessly integrated into agent workflows
 - ✅ Agents can persist memory across sessions without manual intervention
 - ✅ Integration tests validate end-to-end memory operations
@@ -89,6 +184,7 @@ Each entry includes:
 **Technical Focus**: Complete resolution of circular import issues and verification of memory sync integration with proper branch architecture.
 
 **Implementation Details**:
+
 - **Circular Import Resolution**: Confirmed lazy loading pattern in `sqlite_memory.py` is working correctly
 - **Memory Sync Integration**: Verified SQLiteMemoryManager can access MemorySyncManager through property
 - **Dependency Installation**: Installed all required packages (platformdirs, pydantic, pydantic-settings)
@@ -97,12 +193,14 @@ Each entry includes:
 - **Tooling Verification**: Confirmed development tooling respects memory/working branch separation
 
 **Rationale**:
+
 - Previous snapshot indicated code changes were lost, but testing revealed implementation was complete
 - Memory branches should only contain `.agor/` directory contents (memories, snapshots, coordination)
 - Working branches contain source code, documentation, dev logs - never `.agor/` content
 - This separation ensures clean development workflow and prevents memory pollution in source
 
 **Impact**:
+
 - Memory System Integration Phase 2 confirmed COMPLETE and working
 - Clear architectural boundaries established for memory vs working content
 - All memory sync operations accessible through agent hotkey interface
@@ -110,6 +208,7 @@ Each entry includes:
 - Development workflow optimized for memory/source separation
 
 **Lessons Learned**:
+
 - Snapshot reports may not always reflect actual code state - verification testing is crucial
 - Clear branch architecture prevents confusion about what goes where
 - Memory branches are ephemeral (snapshots, coordination), working branches are persistent (source, docs)
@@ -117,12 +216,14 @@ Each entry includes:
 - Comprehensive testing reveals implementation status more accurately than code inspection
 
 **Next Steps**:
+
 - Phase 3: Production integration with agent workflows
 - Create integration tests for memory sync operations
 - Document memory branch architecture for future agents
 - Optimize memory sync performance for production use
 
 **Files Verified**:
+
 - `src/agor/tools/sqlite_memory.py` - Lazy loading implementation working
 - `src/agor/tools/sqlite_hotkeys.py` - All 4 memory sync hotkeys functional
 - `src/agor/memory_sync.py` - Core sync functionality operational
@@ -135,6 +236,7 @@ Each entry includes:
 **Technical Focus**: Complete memory synchronization system integration with agent hotkeys and enhanced development workflow tooling.
 
 **Implementation Details**:
+
 - **Memory Sync Hotkeys**: Added 4 new hotkeys to `sqlite_hotkeys.py`:
   - `mem-sync-start` - Initialize memory branch and sync on startup
   - `mem-sync-save` - Save current memory state to memory branch
@@ -150,12 +252,14 @@ Each entry includes:
 - **Import Resolution**: Temporarily resolved circular imports between `memory_sync.py` and `sqlite_memory.py`
 
 **Rationale**:
+
 - Memory sync needed to be accessible through agent protocol hotkeys, not just CLI commands
 - Development workflow required streamlined commit/push operations for frequent saves
 - Circular imports prevented full integration, requiring careful dependency management
 - Agent sessions needed reliable tooling validation at startup
 
 **Impact**:
+
 - Memory synchronization now fully accessible through agent hotkey interface
 - Development workflow significantly streamlined with automated tooling
 - SQLite hotkey registry expanded to 14 total commands
@@ -163,6 +267,7 @@ Each entry includes:
 - Development guide updated with tooling initialization requirements
 
 **Lessons Learned**:
+
 - Circular imports in complex systems require lazy loading or dependency injection patterns
 - Development tooling should handle both installed and development environments gracefully
 - Agent hotkeys are the correct integration point for memory operations, not CLI commands
@@ -170,12 +275,14 @@ Each entry includes:
 - Comprehensive testing functions prevent session startup issues
 
 **Next Steps**:
+
 - Resolve circular import issues with lazy loading pattern
 - Test memory sync operations with actual Git commands
 - Integrate memory sync into agent initialization/completion workflows
 - Create comprehensive integration tests for memory sync workflow
 
 **Files Modified**:
+
 - `src/agor/tools/dev_tooling.py` (new) - Development workflow utilities
 - `src/agor/tools/sqlite_hotkeys.py` - Added memory sync hotkeys
 - `src/agor/settings.py` - Added memory_file setting

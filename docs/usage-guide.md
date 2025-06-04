@@ -207,12 +207,12 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 - Use **Bundled Mode** with `.zip` format
 - **Any role works** - choose based on your workflow needs
 - Enable Function Calling in your project settings
-- Use `--sqlite` flag for enhanced memory features
+- Memory synchronization works automatically
 
 **Workflow:**
 
 ```bash
-agor bundle your-project -f zip --sqlite
+agor bundle your-project -f zip
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
 # - SOLO DEVELOPER: For code analysis and implementation
@@ -221,7 +221,57 @@ agor bundle your-project -f zip --sqlite
 # All roles work with copy-paste workflow
 ```
 
-### Augment Code Remote Agents / Jules by Google
+### AugmentCode VS Code Extension (Local Mode)
+
+**For the flagship AugmentCode VS Code extension running locally:**
+
+**Setup:**
+
+- Clone AGOR repository to your local machine
+- Add the AGOR directory to your "Sources" in the AugmentCode extension settings
+- Add AGOR initialization instructions to your "User Guidelines" in AugmentCode
+- Optionally add to "Augment Memories" if the agent needs reminders to use AGOR
+
+**User Guidelines to Add:**
+
+```
+When working on development tasks, initialize AGOR by reading the protocol files:
+- Read src/agor/tools/AGOR_INSTRUCTIONS.md for complete operational guide
+- Read src/agor/tools/README_ai.md for role selection
+- Select appropriate role based on task requirements
+- Follow AGOR coordination protocols for multi-agent workflows
+```
+
+**Workflow:**
+
+1. Agent reads AGOR protocol from your local Sources
+2. Agent selects appropriate role for the task
+3. Agent works within your local VS Code environment
+4. Full codebase context and completions available
+5. Manual git operations (agent provides code, you commit)
+
+### AugmentCode Remote Agents
+
+**For AugmentCode Remote Agents running in cloud environments:**
+
+**Setup:**
+
+- Use **Standalone Mode** with direct git access
+- **Any role works** - choose based on your workflow needs
+- Full multi-agent capabilities available
+- Real-time collaboration possible
+- Direct commits if agent has commit access, copy-paste fallback otherwise
+
+**Workflow:**
+
+```bash
+# Agent executes:
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
+# Agent then works directly with your repositories
+```
+
+### Jules by Google
 
 **Setup:**
 
@@ -308,7 +358,7 @@ agor bundle your-project -f tar.gz
 1. **Try Standalone Mode** with git-capable agents
 2. **Experiment with different roles** based on your needs
 3. **Initialize multi-agent strategies** (`ss`, `pd`, `pl`)
-4. **Use advanced features**: SQLite memory, custom strategies
+4. **Use advanced features**: Memory synchronization, custom strategies
 
 ### For Teams
 

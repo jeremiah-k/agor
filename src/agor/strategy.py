@@ -13,7 +13,7 @@ from typing import Dict, List, Optional
 
 import yaml
 
-from .tools.sqlite_memory import SQLiteMemoryManager
+from .memory_sync import MemorySyncManager
 
 
 class StrategyManager:
@@ -24,7 +24,7 @@ class StrategyManager:
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
         self.state_dir = self.agor_dir / "state"
-        self.memory_manager = SQLiteMemoryManager(str(self.agor_dir / "memory.db"))
+        self.memory_manager = MemorySyncManager(self.project_root)
 
     def init_coordination(self, task: str, agents: int = 3) -> None:
         """Initialize .agor/ directory and coordination files."""
@@ -588,16 +588,18 @@ You are working **independently** with {agents-1} other agents on the same probl
     def _init_memory_sync_for_agents(self) -> None:
         """Initialize memory sync for agent workflows."""
         try:
-            # Memory sync is already initialized via SQLiteMemoryManager
+            # Memory sync is already initialized via MemorySyncManager
             # This method provides explicit feedback about memory sync status
-            if hasattr(self.memory_manager, 'memory_sync_manager') and self.memory_manager.memory_sync_manager:
-                active_branch = self.memory_manager.active_memory_branch_name
+            if self.memory_manager:
+                active_branch = self.memory_manager.get_active_memory_branch()
                 if active_branch:
                     print(f"🧠 Memory sync active on branch: {active_branch}")
                 else:
                     print("🧠 Memory sync initialized (no active branch yet)")
             else:
-                print("⚠️ Memory sync not available - continuing without memory persistence")
+                print(
+                    "⚠️ Memory sync not available - continuing without memory persistence"
+                )
         except Exception as e:
             print(f"⚠️ Memory sync initialization warning: {e}")
             # Don't fail coordination setup if memory sync has issues
@@ -605,8 +607,11 @@ You are working **independently** with {agents-1} other agents on the same probl
     def _show_memory_sync_status(self) -> None:
         """Show current memory sync status."""
         try:
-            if hasattr(self.memory_manager, 'memory_sync_manager') and self.memory_manager.memory_sync_manager:
-                active_branch = self.memory_manager.active_memory_branch_name
+            if (
+                hasattr(self.memory_manager, "memory_sync_manager")
+                and self.memory_manager.memory_sync_manager
+            ):
+                active_branch = self.memory_manager.get_active_memory_branch()
                 if active_branch:
                     print(f"🧠 Memory Sync: Active on branch '{active_branch}'")
 
@@ -616,8 +621,12 @@ You are working **independently** with {agents-1} other agents on the same probl
                     remote_branches = memory_sync.list_memory_branches(remote=True)
 
                     if local_branches or remote_branches:
-                        all_branches = sorted(list(set(local_branches + remote_branches)), reverse=True)
-                        print(f"   Available memory branches: {', '.join(all_branches[:3])}{'...' if len(all_branches) > 3 else ''}")
+                        all_branches = sorted(
+                            list(set(local_branches + remote_branches)), reverse=True
+                        )
+                        print(
+                            f"   Available memory branches: {', '.join(all_branches[:3])}{'...' if len(all_branches) > 3 else ''}"
+                        )
                 else:
                     print("🧠 Memory Sync: Initialized (no active branch)")
             else:

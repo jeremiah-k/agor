@@ -8,20 +8,20 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 
 ### ✅ **FULLY IMPLEMENTED**
 
-| Hotkey     | Function            | Implementation       | Status     |
-| ---------- | ------------------- | -------------------- | ---------- |
-| `a`        | Analyze codebase    | code_exploration.py  | ✅ Working |
-| `f`        | Show full files     | code_exploration.py  | ✅ Working |
-| `co`       | Changes only        | code_exploration.py  | ✅ Working |
-| `tree`     | Directory structure | code_exploration.py  | ✅ Working |
-| `grep`     | Search files        | code_exploration.py  | ✅ Working |
-| `snapshot` | Create snapshot     | snapshot_templates.py | ✅ Working |
-| `receive`  | Receive snapshot    | snapshot_templates.py | ✅ Working |
-| `snapshots`| List snapshots      | snapshot_templates.py | ✅ Working |
-| `meta`     | AGOR feedback       | agor-meta.md         | ✅ Working |
-| `init`     | Initialize role     | README_ai.md         | ✅ Working |
-| `status`   | Check status        | README_ai.md         | ✅ Working |
-| `sync`     | Pull changes        | README_ai.md         | ✅ Working |
+| Hotkey      | Function            | Implementation        | Status     |
+| ----------- | ------------------- | --------------------- | ---------- |
+| `a`         | Analyze codebase    | code_exploration.py   | ✅ Working |
+| `f`         | Show full files     | code_exploration.py   | ✅ Working |
+| `co`        | Changes only        | code_exploration.py   | ✅ Working |
+| `tree`      | Directory structure | code_exploration.py   | ✅ Working |
+| `grep`      | Search files        | code_exploration.py   | ✅ Working |
+| `snapshot`  | Create snapshot     | snapshot_templates.py | ✅ Working |
+| `receive`   | Receive snapshot    | snapshot_templates.py | ✅ Working |
+| `snapshots` | List snapshots      | snapshot_templates.py | ✅ Working |
+| `meta`      | AGOR feedback       | agor-meta.md          | ✅ Working |
+| `init`      | Initialize role     | README_ai.md          | ✅ Working |
+| `status`    | Check status        | README_ai.md          | ✅ Working |
+| `sync`      | Pull changes        | README_ai.md          | ✅ Working |
 
 ### 🟡 **PARTIALLY IMPLEMENTED** (Templates exist, execution protocols missing)
 
@@ -48,16 +48,12 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 | `rt`   | Red Team           | ✅ strategies.md + templates | ❌ Missing               | Need execution protocol                |
 | `mb`   | Mob Programming    | ✅ strategies.md + templates | ❌ Missing               | Need execution protocol                |
 
-### 🔧 **SQLite Memory Commands** (Experimental)
+### 🔧 **Memory Commands**
 
 | Hotkey       | Function          | Implementation   | Status     |
 | ------------ | ----------------- | ---------------- | ---------- |
-| `mem-add`    | Add memory        | sqlite_memory.py | ✅ Working |
-| `mem-search` | Search memory     | sqlite_memory.py | ✅ Working |
-| `db-stats`   | Database stats    | sqlite_memory.py | ✅ Working |
-| `coord-log`  | Log coordination  | sqlite_memory.py | ✅ Working |
-| `state-set`  | Set project state | sqlite_memory.py | ✅ Working |
-| `state-get`  | Get project state | sqlite_memory.py | ✅ Working |
+| `mem-add`    | Add memory        | memory_sync.py   | ✅ Working |
+| `mem-search` | Search memory     | memory_sync.py   | ✅ Working |
 
 ## 🔍 **Documentation Conflicts & Duplicates**
 
@@ -214,7 +210,7 @@ def generate_error_optimization_template():
 1. **Core Analysis Tools** - All code exploration hotkeys work perfectly
 2. **Snapshot System** - Complete implementation with templates and protocols
 3. **Basic Strategies** - PD, Pipeline, Swarm have full implementation
-4. **SQLite Memory** - Experimental features work as documented
+4. **Memory Synchronization** - Git branch-based memory system works reliably
 5. **Bundle Mode** - Complete documentation and implementation
 6. **Agent Discovery** - New coordination protocols work well
 

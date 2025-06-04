@@ -21,7 +21,7 @@ AGOR's state management system provides structured coordination for multi-agent 
 │   ├── agent1-instructions.md
 │   ├── agent2-instructions.md
 │   └── agent3-instructions.md
-├── memory.db                       # SQLite memory storage
+
 ├── agentconvo.md                   # Agent communication log
 └── memory.md                       # Project memory
 ```
@@ -155,13 +155,13 @@ agor ss --complexity complex --team-size 4
 
 ## Integration with Existing Tools
 
-### SQLite Memory System
+### Memory Synchronization System
 
-The state management integrates with AGOR's existing SQLite memory system:
+The state management integrates with AGOR's memory synchronization system:
 
-- State changes are logged to the database
-- Agent memories are stored in SQLite
-- Coordination events are tracked
+- State changes are logged to memory files
+- Agent memories are stored in markdown files
+- Coordination events are tracked in git branches
 
 ### Git Integration
 

@@ -2,7 +2,7 @@
 
 **Multi-Agent Development Coordination Platform**
 
-*Documentation review and analysis completed - 2025-01-29*
+_Documentation review and analysis completed - 2025-01-29_
 
 Transform AI assistants into sophisticated development coordinators. Plan complex projects, design specialized agent teams, and orchestrate coordinated development workflows.
 
@@ -12,7 +12,8 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 ## 🚀 Quick Start
 
-### Bundle Mode (Upload to AI Platform)
+<details>
+<summary><b>Bundle Mode (Upload to AI Platform)</b></summary>
 
 **For Google AI Studio, ChatGPT, and other upload-based platforms:**
 
@@ -27,13 +28,16 @@ agor bundle /path/to/local/project
 # Upload bundle to your AI platform and follow embedded instructions
 ```
 
-**Bundle Options**: Use `-f zip` for Google AI Studio, `--sqlite` for memory features, `--branch` for specific branches
+**Bundle Options**: Use `-f zip` for Google AI Studio, `--branch` for specific branches
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
-### Agent Mode (Direct Git Access)
+</details>
 
-**For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
+<details>
+<summary><b>Augment Code Remote Agents</b></summary>
+
+**For Augment Code Remote Agents with git access - Agent should execute:**
 
 ```bash
 # Clone AGOR to temporary location
@@ -56,12 +60,86 @@ test_tooling()
 print(f'Session started at: {get_timestamp()}')
 "
 
-# Review development guide
-cat docs/agor-development-guide.md
+# Review agent startup guide
 cat docs/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
 ```
+
+</details>
+
+<details>
+<summary><b>Augment Code VS Code Extension</b></summary>
+
+**For the Augment Code VS Code extension with local workspace integration:**
+
+#### Setup Steps:
+
+```bash
+# 1. Clone AGOR to your development environment
+git clone https://github.com/jeremiah-k/agor.git ~/agor
+```
+
+#### 2. Add AGOR as Workspace Context:
+
+1. Open VS Code with Augment extension installed
+2. Click the folder icon in the Augment sidebar panel
+3. Click **+ Add more...** at the bottom of Source Folders
+4. Select the `~/agor` directory and click **Add Source Folder**
+
+#### 3. Configure User Guidelines:
+
+1. In Augment Chat, click the **Context menu** or use **@-mention**
+2. Select **User Guidelines**
+3. Add this guideline:
+
+```
+When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Solo Developer, Project Coordinator, or Agent Worker) and follow the appropriate workflows and hotkeys for efficient development.
+```
+
+#### 4. Optional - Add Workspace Guidelines:
+
+Create `.augment-guidelines` file in your project root:
+
+```
+- Use AGOR framework for development coordination when available in workspace sources
+- Follow AGOR role-based workflows for structured development
+- Utilize AGOR hotkeys and snapshot system for context management
+- Reference AGOR documentation for best practices and coordination protocols
+```
+
+**Benefits:**
+
+- Direct access to AGOR tools and documentation through workspace context
+- Persistent guidelines ensure consistent AGOR usage
+- No file upload limits or token efficiency concerns
+- Seamless integration with existing VS Code workflow
+
+</details>
+
+<details>
+<summary><b>Jules by Google</b></summary>
+
+**For Jules by Google (requires direct URL access to files):**
+
+Use this initialization prompt with Jules:
+
+```
+I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+Please read these key files to understand the system:
+- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
+- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
+- https://github.com/jeremiah-k/agor/blob/main/docs/agent-start-here.md (startup guide)
+
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
+
+# <--- Add your detailed step-by-step instructions below --->
+```
+
+**Note:** Jules cannot clone repositories that weren't selected during environment creation, so direct URL access to documentation is required.
+
+</details>
 
 AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
 
@@ -81,7 +159,7 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 
 ### 🚀 Standalone Mode (Direct Git Access)
 
-**For agents with repository access** (Augment Code Remote Agents, Jules by Google, etc.)
+**For agents with repository access** (AugmentCode Remote Agents, Jules by Google, etc.)
 
 - **Direct commits**: Agents can make commits directly if they have commit access
 - **Fallback method**: Copy-paste codeblocks if no commit access
@@ -124,7 +202,8 @@ AGOR defines distinct roles to structure AI-driven development tasks. Each role 
 
 - **Git integration** with portable binary (works in any environment)
 - **Codebase analysis** with language-specific exploration
-- **Memory persistence** with markdown files or SQLite database (experimental)
+- **Memory persistence** with markdown files and git branch synchronization
+- **Mandatory snapshot system** for context preservation and agent transitions
 - **Quality gates** and validation checkpoints
 - **Structured Snapshot Protocols** (for multi-agent coordination and solo context management)
 
@@ -162,7 +241,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 
 - `mem-add`: add memory
 - `mem-search`: search memories
-- `db-stats`: database stats (SQLite mode)
+
 
 **Editing & Version Control**:
 
@@ -179,23 +258,44 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 
 ## 🏢 Platform Support
 
-**✅ Bundled Mode Platforms**
+<details>
+<summary><b>Bundle Mode Platforms</b></summary>
 
 - **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - _Free tier available_
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
 - **Other upload-based platforms** (use appropriate format)
 
-**✅ Standalone Mode Platforms**
-
-- **Augment Code Remote Agents** (direct git access)
-- **Jules by Google** (direct git access)
-- **Any AI agent with git and shell access**
-
-**Bundle Formats**
+**Bundle Formats:**
 
 - `.zip` - Optimized for Google AI Studio
 - `.tar.gz` - Standard format for ChatGPT and other platforms
 - `.tar.bz2` - High compression option
+
+</details>
+
+<details>
+<summary><b>Remote Agent Platforms</b></summary>
+
+- **Augment Code Remote Agents** (cloud-based agents with direct git access)
+- **Jules by Google** (direct URL access to files, limited git capabilities)
+- **Any AI agent with git and shell access**
+
+</details>
+
+<details>
+<summary><b>Local Integration Platforms</b></summary>
+
+- **Augment Code VS Code Extension** (flagship local extension with workspace context)
+- **Any local AI assistant** with file system access
+- **Development environments** with AI integration
+
+**Requirements:**
+
+- Ability to read local files
+- Git access (optional but recommended)
+- Python 3.10+ for advanced features
+
+</details>
 
 ## 🏗️ Use Cases
 
@@ -218,7 +318,7 @@ agor git-config --show                      # Show current configuration
 
 # Custom bundle options
 agor bundle repo --branch feature-branch   # Specific branch
-agor bundle repo --sqlite                   # With SQLite memory
+
 agor bundle repo -f zip                     # Google AI Studio format
 ```
 

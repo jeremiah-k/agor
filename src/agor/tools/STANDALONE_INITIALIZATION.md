@@ -18,6 +18,16 @@ You should have already selected your role from README_ai.md:
 
 ### Essential Setup (All Roles)
 
+**🚨 CRITICAL: Read the Snapshot System Guide**
+
+Before starting any work, familiarize yourself with AGOR's snapshot system:
+
+- **Read**: `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- **Understand**: You MUST provide a snapshot in a single codeblock before ending your session
+- **Prepare**: Know how to create comprehensive snapshots for context preservation
+
+### Core Setup
+
 1. **Initial Documentation Review**:
 
    First, read these essential files to understand the current state:
@@ -211,6 +221,55 @@ In standalone mode, coordination happens through:
 - **Real-time git operations**: Push/pull coordination state
 - **Direct repository access**: All agents work on the same live repository
 
+## 📸 End-of-Session Requirements
+
+**🚨 MANDATORY: Before ending your session, you MUST:**
+
+1. **Create a comprehensive snapshot** using the `snapshot` hotkey or manual template
+2. **Provide the snapshot in a single codeblock** for easy copying/processing
+3. **Include all required sections**:
+   - Problem definition and current status
+   - Work completed and commits made
+   - Files modified and next steps
+   - Technical context and continuation instructions
+
+### Snapshot Template (Copy and Fill):
+```markdown
+# 📸 Agent Snapshot Document
+
+**Generated**: [Current timestamp]
+**From Agent Role**: [Your role]
+**Snapshot Reason**: End of session
+**AGOR Version**: 0.3.5
+
+## 🎯 Problem Definition
+[What you were working on]
+
+## 📊 Current Status
+**Overall Progress**: [Percentage or description]
+
+## ✅ Work Completed
+- [List completed tasks]
+
+## 📝 Commits Made
+- `hash: message`
+
+## 📁 Files Modified
+- `file.py` - [changes made]
+
+## 🔄 Next Steps
+1. [Next task]
+2. [Follow-up items]
+
+## 🧠 Technical Context
+[Key decisions, gotchas, testing status]
+
+## 🎯 Continuation Instructions
+[How to continue this work]
+```
+
+**Failure to provide a snapshot will result in lost context and coordination failures.**
+
 ---
 
-**Remember**: Standalone mode provides more power but requires more responsibility. Use git operations carefully and coordinate with other agents through version control.
+**Remember**: Standalone mode provides more power but requires more responsibility. Use git operations carefully, coordinate with other agents through version control, and ALWAYS provide a snapshot before ending your session.
