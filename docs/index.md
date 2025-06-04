@@ -15,6 +15,11 @@
 - **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
 
+### "I need Augment Code integration"
+
+- **[src/agor/tools/AUGMENT_INITIALIZATION.md](../src/agor/tools/AUGMENT_INITIALIZATION.md)** - Local Augment setup and integration
+- **[src/agor/tools/CHAINABLE_PROMPTS.md](../src/agor/tools/CHAINABLE_PROMPTS.md)** - Token-efficient initialization prompts
+
 ### "I need to check protocol updates or compatibility"
 
 - **[docs/protocol-changelog.md](protocol-changelog.md)** - Protocol version history and compatibility guide
@@ -124,6 +129,8 @@
 | **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
 | **[strategy_protocols.py](../src/agor/tools/strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
 | **[agent_coordination.py](../src/agor/tools/agent_coordination.py)**                 | Agent coordination  | Role discovery, status checking              | ~400  |
+| **[AUGMENT_INITIALIZATION.md](../src/agor/tools/AUGMENT_INITIALIZATION.md)**         | Augment integration | Local setup, initialization prompts         | ~150  |
+| **[CHAINABLE_PROMPTS.md](../src/agor/tools/CHAINABLE_PROMPTS.md)**                   | Token efficiency    | Chainable initialization prompts             | ~200  |
 
 ## 🔍 Search by Concept
 

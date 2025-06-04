@@ -31,9 +31,9 @@ agor bundle /path/to/local/project
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
-### Agent Mode (Direct Git Access)
+### Standalone Mode (Direct Git Access)
 
-**For AI agents with git access (Augment Code, Jules by Google, etc.) - Agent should execute:**
+**For AI agents with git access (Augment Code Remote, Jules by Google, etc.) - Agent should execute:**
 
 ```bash
 # Clone AGOR to temporary location
@@ -62,6 +62,41 @@ cat docs/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
 ```
+
+### Augment Code Local Integration
+
+**For local Augment Code agents working directly in your project:**
+
+```bash
+# 1. Clone AGOR to your development environment
+git clone https://github.com/jeremiah-k/agor.git ~/agor
+
+# 2. Add AGOR as a source in Augment Code extension
+# In Augment: Settings → Sources → Add Source → ~/agor
+
+# 3. Use this initialization prompt in Augment:
+```
+
+**Initialization Prompt for Augment:**
+```
+I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+Please read these key files to understand the system:
+- ~/agor/src/agor/tools/README_ai.md (role selection)
+- ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
+- ~/agor/docs/agor-development-guide.md (development context)
+
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
+
+# <--- Add your detailed step-by-step instructions below --->
+```
+
+**Benefits:**
+- Direct access to AGOR tools and documentation
+- No file upload limits
+- Real-time collaboration capabilities
+- Full git integration
+- Token-efficient initialization
 
 AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
 
@@ -179,23 +214,33 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 
 ## 🏢 Platform Support
 
-**✅ Bundled Mode Platforms**
+### 📦 Bundle Mode Platforms
 
 - **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - _Free tier available_
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
 - **Other upload-based platforms** (use appropriate format)
 
-**✅ Standalone Mode Platforms**
+**Bundle Formats:**
+- `.zip` - Optimized for Google AI Studio
+- `.tar.gz` - Standard format for ChatGPT and other platforms
+- `.tar.bz2` - High compression option
+
+### 🤖 Standalone Mode Platforms
 
 - **Augment Code Remote Agents** (direct git access)
 - **Jules by Google** (direct git access)
 - **Any AI agent with git and shell access**
 
-**Bundle Formats**
+### 🔗 Local Integration Platforms
 
-- `.zip` - Optimized for Google AI Studio
-- `.tar.gz` - Standard format for ChatGPT and other platforms
-- `.tar.bz2` - High compression option
+- **Augment Code Local** (clone AGOR as source)
+- **Any local AI assistant** with file system access
+- **Development environments** with AI integration
+
+**Requirements:**
+- Ability to read local files
+- Git access (optional but recommended)
+- Python 3.10+ for advanced features
 
 ## 🏗️ Use Cases
 
