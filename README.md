@@ -173,7 +173,7 @@ AGOR facilitates AI-driven development through a distinct set of interactions. W
 ### For AI Agents
 **[🤖 Agent Entry Point](src/agor/tools/README_ai.md)** - Role selection and initialization (start here)
 **[📋 Comprehensive Instructions](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Complete operational guide
-**[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
+**[📋 Documentation Index](src/agor/tools/index.md)** - Token-efficient lookup for AI models
 **[🛠️ AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
 **[💬 Agent Meta Feedback](src/agor/tools/agor-meta.md)** - Help improve AGOR through feedback
 

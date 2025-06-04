@@ -444,7 +444,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 ## 📚 Additional Resources
 
-- **[Documentation Index](index.md)** - Quick reference for all documentation
+- **[Documentation Index](../src/agor/tools/index.md)** - Quick reference for all documentation
 - **[Bundle Mode Guide](bundle-mode.md)** - Platform-specific setup instructions
 - **[Strategy Guide](strategies.md)** - Detailed multi-agent strategy explanations
 - **[Quick Start](quick-start.md)** - Step-by-step getting started guide
