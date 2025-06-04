@@ -32,13 +32,14 @@ def is_augmentcode_local():
 ```python
 def has_augment_workspace_context():
     """Check if AGOR is available in workspace context"""
-    import sys
-    
-    # Check if AGOR tools are directly accessible
+    import os
+
+    # Check if AGOR tools are directly accessible by looking for README_ai.md
     try:
-        from agor.tools import README_ai
-        return True
-    except ImportError:
+        # Check for README_ai.md in the expected directory
+        readme_path = os.path.join('src', 'agor', 'tools', 'README_ai.md')
+        return os.path.exists(readme_path)
+    except Exception:
         return False
 ```
 
@@ -65,7 +66,7 @@ When setting up AGOR with AugmentCode Local Agent:
 2. **Configure User Guidelines**
 
    **Recommended**: Use the comprehensive AGOR User Guidelines from the repository root:
-   **[AGOR_USER_GUIDELINES.md](../../AGOR_USER_GUIDELINES.md)**
+   **[AGOR_USER_GUIDELINES.md](../../../AGOR_USER_GUIDELINES.md)**
 
    This provides complete AGOR integration with proper protocols, snapshot requirements, and coordination workflows.
 
@@ -106,14 +107,14 @@ When an agent detects AugmentCode Local Agent environment:
 ```python
 def initialize_agor_environment():
     """Initialize AGOR based on detected environment"""
-    
+
     if is_augmentcode_local():
         # AugmentCode Local Agent environment
         return {
             'mode': 'local_integration',
             'memory_system': 'augment_memories',
-            'guidelines_access': True,
-            'workspace_context': True,
+            'guidelines_access': has_user_guidelines_access(),
+            'workspace_context': has_augment_workspace_context(),
             'setup_required': False
         }
     else:
@@ -121,8 +122,8 @@ def initialize_agor_environment():
         return {
             'mode': 'standard',
             'memory_system': 'agor_memory_sync',
-            'guidelines_access': False,
-            'workspace_context': False,
+            'guidelines_access': has_user_guidelines_access(),
+            'workspace_context': has_augment_workspace_context(),
             'setup_required': True
         }
 ```

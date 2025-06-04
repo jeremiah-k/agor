@@ -10,9 +10,9 @@
 
 - **[agent-start-here.md](agent-start-here.md)** - **START HERE** - Agent entry point with immediate guidance
 - **[session-startup-checklist.md](session-startup-checklist.md)** - **ESSENTIAL** - Checklist for every agent session
-- **[docs/usage-guide.md](../../docs/usage-guide.md)** - **COMPREHENSIVE GUIDE** - Complete overview of modes, roles, and workflows
-- **[docs/quick-start.md](../../docs/quick-start.md)** - 5-minute setup guide with platform selection
-- **[docs/bundle-mode.md](../../docs/bundle-mode.md)** - Complete Bundle Mode guide for all platforms
+- **[docs/usage-guide.md](../../../docs/usage-guide.md)** - **COMPREHENSIVE GUIDE** - Complete overview of modes, roles, and workflows
+- **[docs/quick-start.md](../../../docs/quick-start.md)** - 5-minute setup guide with platform selection
+- **[docs/bundle-mode.md](../../../docs/bundle-mode.md)** - Complete Bundle Mode guide for all platforms
 - **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
 
 ### "I need Augment Code integration"
@@ -22,7 +22,7 @@
 
 ### "I need to check protocol updates or compatibility"
 
-- **[docs/protocol-changelog.md](../../docs/protocol-changelog.md)** - Protocol version history and compatibility guide
+- **[docs/protocol-changelog.md](../../../docs/protocol-changelog.md)** - Protocol version history and compatibility guide
   - Current: Protocol v0.4.0 with snapshot system and standalone mode
   - Breaking changes, new capabilities, and migration notes
   - Reference commits and specific line numbers for changes
@@ -36,7 +36,7 @@
 
 ### "I need multi-agent coordination strategies"
 
-- **[docs/strategies.md](../../docs/strategies.md)** - 5 coordination strategies with decision matrix
+- **[docs/strategies.md](../../../docs/strategies.md)** - 5 coordination strategies with decision matrix
   - Parallel Divergent: Independent exploration → synthesis
   - Pipeline: Sequential snapshots with specialization
   - Swarm: Dynamic task assignment
@@ -58,7 +58,7 @@
 ### "I need to create or use a work snapshot"
 
 - **[SNAPSHOT_SYSTEM_GUIDE.md](SNAPSHOT_SYSTEM_GUIDE.md)** - Essential guide for all agents (MANDATORY reading)
-- **[docs/snapshots.md](../../docs/snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
+- **[docs/snapshots.md](../../../docs/snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
 - **[snapshot_templates.py](snapshot_templates.py)** - Snapshot generation code
   - Functions: generate_snapshot_document(), get_git_context(), get_agor_version()
   - Captures: problem, progress, commits, files, next steps, git state, AGOR version
@@ -97,16 +97,16 @@
 
 | File                                                       | Purpose                                    | Key Sections                                    | Lines |
 | ---------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- | ----- |
-| **[../../docs/README.md](../../docs/README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
+| **[../../../docs/README.md](../../../docs/README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
 | **[agent-start-here.md](agent-start-here.md)**             | **Agent entry point**                      | **Immediate guidance, discovery commands**      | ~100  |
-| **[../../docs/quick-start.md](../../docs/quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
-| **[../../docs/bundle-mode.md](../../docs/bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
-| **[../../docs/google-ai-studio.md](../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
-| **[../../docs/standalone-mode.md](../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
-| **[../../docs/strategies.md](../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
-| **[../../docs/snapshots.md](../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
+| **[../../../docs/quick-start.md](../../../docs/quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
+| **[../../../docs/bundle-mode.md](../../../docs/bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
+| **[../../../docs/google-ai-studio.md](../../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
+| **[../../../docs/standalone-mode.md](../../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
+| **[../../../docs/strategies.md](../../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
+| **[../../../docs/snapshots.md](../../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
 | **[coordination-example.md](coordination-example.md)**     | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
-| **[../../docs/agor-development-guide.md](../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
+| **[../../../docs/agor-development-guide.md](../../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 
@@ -148,10 +148,10 @@
 
 ### Platform-Specific Information
 
-- **Bundle Mode**: [docs/bundle-mode.md](../../docs/bundle-mode.md) - All platforms, models, formats
+- **Bundle Mode**: [docs/bundle-mode.md](../../../docs/bundle-mode.md) - All platforms, models, formats
 - **Google AI Studio**: Gemini 2.5 Pro, Function Calling, .zip format
 - **ChatGPT**: GPT-4o, subscription required, .tar.gz format
-- **Standalone Mode**: [docs/standalone-mode.md](../../docs/standalone-mode.md) - Direct git access workflows
+- **Standalone Mode**: [docs/standalone-mode.md](../../../docs/standalone-mode.md) - Direct git access workflows
 
 ### Coordination Protocols
 
@@ -170,8 +170,8 @@
 
 ```
 Need hotkey? → README_ai.md Lines 120-220
-Need strategy? → ../../docs/strategies.md decision matrix
-Need snapshot? → ../../docs/snapshots.md or snapshot_templates.py
+Need strategy? → ../../../docs/strategies.md decision matrix
+Need snapshot? → ../../../docs/snapshots.md or snapshot_templates.py
 ```
 
 ### For Implementation Details
@@ -187,10 +187,10 @@ Agent coordination? → agent_coordination.py + README_ai.md Lines 318-322
 ### For Setup and Troubleshooting
 
 ```
-First time? → ../../docs/quick-start.md
-Bundle Mode? → ../../docs/bundle-mode.md
-Standalone Mode? → ../../docs/standalone-mode.md
-Platform-specific? → ../../docs/bundle-mode.md platform sections
+First time? → ../../../docs/quick-start.md
+Bundle Mode? → ../../../docs/bundle-mode.md
+Standalone Mode? → ../../../docs/standalone-mode.md
+Platform-specific? → ../../../docs/bundle-mode.md platform sections
 ```
 
 ## 📊 Documentation Status
