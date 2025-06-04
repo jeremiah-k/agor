@@ -18,7 +18,7 @@ AGOR's memory and coordination capabilities rely on three key concepts, all mana
 
 (Remains the same)
 
-```
+```text
 agor/mem/YYYYMMDD_HHMMSS_session_description
 ```
 

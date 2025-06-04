@@ -591,7 +591,7 @@ You are working **independently** with {agents-1} other agents on the same probl
             # Memory sync is already initialized via MemorySyncManager
             # This method provides explicit feedback about memory sync status
             if self.memory_manager:
-                active_branch = self.memory_manager.active_memory_branch_name
+                active_branch = self.memory_manager.get_active_memory_branch()
                 if active_branch:
                     print(f"🧠 Memory sync active on branch: {active_branch}")
                 else:
@@ -611,7 +611,7 @@ You are working **independently** with {agents-1} other agents on the same probl
                 hasattr(self.memory_manager, "memory_sync_manager")
                 and self.memory_manager.memory_sync_manager
             ):
-                active_branch = self.memory_manager.active_memory_branch_name
+                active_branch = self.memory_manager.get_active_memory_branch()
                 if active_branch:
                     print(f"🧠 Memory Sync: Active on branch '{active_branch}'")
 

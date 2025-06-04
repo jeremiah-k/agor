@@ -9,6 +9,7 @@ import datetime
 import subprocess
 from pathlib import Path
 from typing import Dict, List
+from importlib.metadata import PackageNotFoundError, version
 
 
 def get_git_context() -> Dict[str, str]:
@@ -69,8 +70,6 @@ def get_agor_version() -> str:
     """Get AGOR version from package or git tag."""
     try:
         # Try to get version from package using importlib.metadata
-        from importlib.metadata import PackageNotFoundError, version
-
         return version("agor")
     except (PackageNotFoundError, Exception):
         try:
