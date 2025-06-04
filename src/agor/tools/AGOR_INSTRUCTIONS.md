@@ -572,30 +572,7 @@ Memory files in `.agor/` are handled by the Memory Synchronization System.
 
 ## 6. Advanced Features & Memory Systems
 
-### 6.1. SQLite Memory Mode (Experimental & Internal Use)
-
-If a SQLite binary is available at `/tmp/agor_tools/sqlite3`, AGOR _can_ use database-based memory management. **However, this is an EXPERIMENTAL system primarily intended for INTERNAL AGOR SYSTEM USE, advanced state management by specialized coordination setups, or specific AGOR DEVELOPMENT tasks.**
-
-- **NOT THE DEFAULT FOR STANDARD AGENTS:** Unless explicitly directed by a Project Coordinator for a specialized task or you are developing AGOR itself, **agents should rely on the default markdown-based Memory Synchronization System.**
-- **Purpose:** Internal coordination logging, complex state tracking for AGOR system development, or highly specialized applications.
-- **Agent Interaction:** Standard agents do not typically interact directly with the SQLite memory. Hotkeys for SQLite are generally for AGOR developers or advanced diagnostic scenarios.
-
-**Checking SQLite Availability (for developers/advanced users):**
-
-```bash
-# Check if SQLite is available
-ls -la /tmp/agor_tools/sqlite3
-
-# If available, make it executable
-chmod 755 /tmp/agor_tools/sqlite3
-
-# Test SQLite functionality
-/tmp/agor_tools/sqlite3 --version
-```
-
-If SQLite is active for internal purposes, the schema might include tables for `project_memory`, `agent_memory`, `tasks`, etc. This is generally abstracted from standard agent workflows.
-
-### 6.2. Memory Synchronization System (Recommended & Production Ready)
+### 6.1. Memory Synchronization System (Production Ready)
 
 **AGOR's primary and recommended method for agent memory persistence is the automated Memory Synchronization System.** This system seamlessly integrates with agent workflows, providing robust and reliable memory management using markdown files stored in the `.agor/` directory on dedicated Git memory branches (e.g., `agor/mem/BRANCH_NAME`).
 

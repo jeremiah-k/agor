@@ -30,7 +30,7 @@ The Memory Synchronization System automatically commits the following to memory 
 - **Agent Snapshots**: `.agor/snapshots/snapshot-timestamp.md`
 - **Coordination Logs**: `.agor/agentconvo.md`, `.agor/memory.md` (project-level memory), individual agent memory files (e.g., `agent1-memory.md`)
 - **Strategy Files**: `.agor/strategy-active.md`, etc.
-- **(Potentially) Memory Database**: `.agor/memory.db` if SQLite is used for internal/advanced purposes.
+
 
 ### ⚠️ **CRITICAL: Memory Branch Safety Protocol & Agent Interaction**
 
@@ -84,12 +84,6 @@ Snapshots are stored in `.agor/snapshots/` on memory branches by the Memory Sync
 ### Snapshot Document Structure
 
 (Remains the same)
-
-## 🗄️ SQLite Memory Database (Internal & Advanced Use)
-
-- **Not for Standard Agent Memory:** The SQLite database (`.agor/memory.db`) is primarily for **internal AGOR system use, advanced state management capabilities within AGOR itself, or specific AGOR development tasks.**
-- **Agent Default:** Standard agent memory, notes, and coordination (including snapshots and `agentconvo.md`) are managed as **markdown files** within the `.agor/` directory by the Memory Synchronization System.
-- **Interaction:** Agents typically do not interact directly with SQLite. The Memory Synchronization System may use it internally.
 
 ## 🔄 Memory Synchronization System (Primary Memory Mechanism)
 

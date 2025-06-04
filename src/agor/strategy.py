@@ -13,7 +13,7 @@ from typing import Dict, List, Optional
 
 import yaml
 
-from .tools.sqlite_memory import SQLiteMemoryManager
+from .memory_sync import MemorySyncManager
 
 
 class StrategyManager:
@@ -24,7 +24,7 @@ class StrategyManager:
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
         self.state_dir = self.agor_dir / "state"
-        self.memory_manager = SQLiteMemoryManager(str(self.agor_dir / "memory.db"))
+        self.memory_manager = MemorySyncManager(self.project_root)
 
     def init_coordination(self, task: str, agents: int = 3) -> None:
         """Initialize .agor/ directory and coordination files."""
@@ -588,12 +588,9 @@ You are working **independently** with {agents-1} other agents on the same probl
     def _init_memory_sync_for_agents(self) -> None:
         """Initialize memory sync for agent workflows."""
         try:
-            # Memory sync is already initialized via SQLiteMemoryManager
+            # Memory sync is already initialized via MemorySyncManager
             # This method provides explicit feedback about memory sync status
-            if (
-                hasattr(self.memory_manager, "memory_sync_manager")
-                and self.memory_manager.memory_sync_manager
-            ):
+            if self.memory_manager:
                 active_branch = self.memory_manager.active_memory_branch_name
                 if active_branch:
                     print(f"🧠 Memory sync active on branch: {active_branch}")

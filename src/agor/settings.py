@@ -34,14 +34,7 @@ class AgorSettings(BaseSettings):
         default="af17911884c5afcf5be1c2438483e8d65a82c6a80ed8a354b8d4f6e0b964978f",
         description="SHA256 hash for git binary verification",
     )
-    sqlite_binary_url: str = Field(
-        default="https://github.com/nikvdp/1bin/releases/download/v0.0.40/sqlite3",
-        description="URL to download portable sqlite3 binary",
-    )
-    sqlite_binary_sha256: str = Field(
-        default="",  # TODO: Add actual hash when available
-        description="SHA256 hash for sqlite3 binary verification",
-    )
+
 
     # Bundle creation
     compression_format: str = Field(
@@ -54,15 +47,12 @@ class AgorSettings(BaseSettings):
         default=False,
         description="Whether to bundle only main/master branch by default",
     )
-    include_sqlite: bool = Field(
-        default=False,
-        description="Include SQLite binary for database-based memory management (experimental)",
-    )
+
 
     # Memory management
     memory_file: str = Field(
-        default=".agor/memory.db",
-        description="Path to memory database file relative to project root",
+        default=".agor/memory.md",
+        description="Path to memory file relative to project root",
     )
 
     # User interface

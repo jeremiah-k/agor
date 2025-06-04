@@ -29,8 +29,7 @@ agor bundle /path/to/your/project -m
 # Bundle main/master + specific branches
 agor bundle /path/to/your/project -b feature1,feature2
 
-# Bundle with SQLite memory support (experimental)
-agor bundle /path/to/your/project --sqlite
+
 ```
 
 ### Step 3: Upload to AI Platform
@@ -143,67 +142,43 @@ agor bundle ~/my-project
 # 5. ChatGPT becomes AgentOrchestrator and analyzes your project
 ```
 
-## 🗄️ SQLite Memory Mode (Experimental)
+## 🧠 Memory Synchronization System
 
-AGOR can include a portable SQLite binary for database-based memory management instead of markdown files. This provides structured storage and advanced querying capabilities.
+AGOR uses an automated Memory Synchronization System that manages memory persistence using git branches. This provides reliable, version-controlled memory management without requiring any additional setup.
 
-### Enabling SQLite Mode
+### How It Works
 
-```bash
-# Bundle with SQLite support
-agor bundle /path/to/your/project --sqlite
+**Automatic Memory Management**:
 
-# Or combine with other options
-agor bundle /path/to/your/project -f zip --sqlite
-```
+- Agent memories stored in markdown files (`.agor/memory.md`, `agent-N-memory.md`)
+- Automatic synchronization to dedicated git branches (`agor/mem/TIMESTAMP`)
+- Cross-agent coordination logs in `.agor/agentconvo.md`
+- Project state management in `.agor/memory.md`
 
-### SQLite Features
+**Standard Hotkeys**:
 
-**Structured Memory Storage**:
+- `mem-add`, `mem-search` - Memory operations with markdown files
+- `snapshot` - Create work snapshots
+- `load_snapshot` - Load previous snapshots
 
-- Agent memories with types (context, decision, learning, handoff)
-- Cross-agent coordination logs
-- Project state management
-- Advanced handoff tracking with relational data
+### Key Benefits
 
-**Database Schema**:
+**Production Ready**:
 
-- `agent_memories` - Individual agent memory entries
-- `coordination_logs` - Cross-agent communication
-- `project_state` - Key-value project state storage
-- `handoffs` - Structured handoff records
+- **No Setup Required**: Works automatically with any git repository
+- **Version Controlled**: All memory changes are tracked in git history
+- **Human Readable**: Memory files are markdown for easy inspection
+- **Cross-Platform**: Works on any system with git support
+- **Reliable**: Battle-tested git infrastructure ensures data persistence
 
-**Memory Commands Available**:
+### When Memory Sync Is Used
 
-- `mem-add`, `mem-get`, `mem-search` - Memory management
-- `coord-log`, `state-set`, `state-get` - Coordination and state
-- `handoff-create`, `handoff-status` - Database handoffs
-- `db-stats` - Database statistics
+**Always Active**:
 
-### Important Notes
-
-⚠️ **Experimental Feature**: SQLite memory mode is experimental and not fully tested.
-
-- **Database Location**: `.agor/memory.db` in your project
-- **Fallback**: Falls back to markdown files if SQLite is unavailable
-- **Compatibility**: All operations are backwards compatible with file-based mode
-- **Binary Source**: SQLite binary from [1bin project](https://github.com/nikvdp/1bin)
-
-### When to Use SQLite Mode
-
-**Use SQLite Mode When**:
-
-- Working with multiple agents that need shared memory
-- Requiring structured queries across agent memories
-- Managing complex coordination workflows
-- Needing persistent state across sessions
-
-**Stick with Markdown When**:
-
-- Working solo or with simple coordination
-- Preferring human-readable memory files
-- Avoiding experimental features
-- Working in environments where SQLite might not be available
+- Solo development with context preservation
+- Multi-agent coordination workflows
+- Project state management across sessions
+- Snapshot-based work handoffs
 
 ---
 

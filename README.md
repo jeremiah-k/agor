@@ -28,7 +28,7 @@ agor bundle /path/to/local/project
 # Upload bundle to your AI platform and follow embedded instructions
 ```
 
-**Bundle Options**: Use `-f zip` for Google AI Studio, `--sqlite` for memory features, `--branch` for specific branches
+**Bundle Options**: Use `-f zip` for Google AI Studio, `--branch` for specific branches
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
@@ -202,7 +202,7 @@ AGOR defines distinct roles to structure AI-driven development tasks. Each role 
 
 - **Git integration** with portable binary (works in any environment)
 - **Codebase analysis** with language-specific exploration
-- **Memory persistence** with markdown files or SQLite database (experimental)
+- **Memory persistence** with markdown files and git branch synchronization
 - **Quality gates** and validation checkpoints
 - **Structured Snapshot Protocols** (for multi-agent coordination and solo context management)
 
@@ -240,7 +240,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 
 - `mem-add`: add memory
 - `mem-search`: search memories
-- `db-stats`: database stats (SQLite mode)
+
 
 **Editing & Version Control**:
 
@@ -317,7 +317,7 @@ agor git-config --show                      # Show current configuration
 
 # Custom bundle options
 agor bundle repo --branch feature-branch   # Specific branch
-agor bundle repo --sqlite                   # With SQLite memory
+
 agor bundle repo -f zip                     # Google AI Studio format
 ```
 

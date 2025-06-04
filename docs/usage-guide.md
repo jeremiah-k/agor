@@ -207,12 +207,12 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 - Use **Bundled Mode** with `.zip` format
 - **Any role works** - choose based on your workflow needs
 - Enable Function Calling in your project settings
-- Use `--sqlite` flag for enhanced memory features
+- Memory synchronization works automatically
 
 **Workflow:**
 
 ```bash
-agor bundle your-project -f zip --sqlite
+agor bundle your-project -f zip
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
 # - SOLO DEVELOPER: For code analysis and implementation
@@ -358,7 +358,7 @@ agor bundle your-project -f tar.gz
 1. **Try Standalone Mode** with git-capable agents
 2. **Experiment with different roles** based on your needs
 3. **Initialize multi-agent strategies** (`ss`, `pd`, `pl`)
-4. **Use advanced features**: SQLite memory, custom strategies
+4. **Use advanced features**: Memory synchronization, custom strategies
 
 ### For Teams
 

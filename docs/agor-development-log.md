@@ -2,6 +2,8 @@
 
 **Technical development history for developers and AI agents**
 
+> **Note**: This log contains historical references to experimental SQLite memory features that were removed in v0.3.5. AGOR now uses the Memory Synchronization System with git branches as the primary memory management approach.
+
 ## Purpose
 
 This log documents the technical evolution of AGOR, focusing on architectural decisions, implementation patterns, and lessons learned. It's designed to help developers and AI agents understand:

@@ -147,11 +147,11 @@ create_snapshot("Memory Integration", "Completed hotkey implementation")
 
 (No changes needed)
 
-#### 3. SQLite Memory System (Primarily for Internal/Advanced Use)
+#### 3. Memory Synchronization System (Production Ready)
 
-- **Status**: Experimental system.
-- **Purpose**: Advanced coordination logging and state management, primarily for internal AGOR system needs or specialized development tasks.
-- **Agent Interface**: **Not the default for standard agent memory.** Standard agents use the markdown-based Memory Synchronization System. SQLite hotkeys (`mem-add`, `mem-search`, etc. related to direct DB interaction) are generally not for standard agent use unless explicitly directed by a coordinator for a specific advanced setup. The main agent memory (e.g., `.agor/memory.md`, `agentN-memory.md`) is markdown-based and managed by the automated Memory Synchronization System.
+- **Status**: Production-ready system.
+- **Purpose**: Automated memory persistence using git branches for reliable state management.
+- **Agent Interface**: Standard agents use the markdown-based Memory Synchronization System. Memory hotkeys (`mem-add`, `mem-search`) work with markdown files that are automatically synced to dedicated git branches. The main agent memory (e.g., `.agor/memory.md`, `agentN-memory.md`) is markdown-based and managed by the automated Memory Synchronization System.
 
 ### ✅ Completed Audit Items
 
@@ -252,7 +252,7 @@ AGOR's core functionality includes initializing and managing coordination strate
 
 ### Avoid Committing Local State to the AGOR Repository (Main/Working Branches)
 
-The AGOR project's root `.gitignore` file is configured to ignore common operational state files and directories that might be generated during testing (e.g., `/.agor/state/`, `/.agor/memory.db`). This is crucial to prevent committing local test states into the main AGOR codebase's working branches.
+The AGOR project's root `.gitignore` file is configured to ignore common operational state files and directories that might be generated during testing (e.g., `/.agor/state/`, `/.agor/memory.md`). This is crucial to prevent committing local test states into the main AGOR codebase's working branches.
 
 ### Best Practice: Use a Separate Sample Project for Testing AGOR's Effect on Projects
 

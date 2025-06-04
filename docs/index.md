@@ -68,11 +68,10 @@
 - **[src/agor/tools/code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)** - Tool documentation
   - Functions: bfs_find(), grep(), tree(), find_function_signatures(), extract_function_content()
 
-### "I need database-based memory management"
+### "I need memory management"
 
-- **[src/agor/tools/sqlite_memory.py](../src/agor/tools/sqlite_memory.py)** - SQLite memory system (experimental)
-- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 590-662 - SQLite mode documentation
-- **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** Lines 142-198 - SQLite bundling
+- **[src/agor/memory_sync.py](../src/agor/memory_sync.py)** - Memory synchronization system
+- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 590-662 - Memory system documentation
 
 ### "I need hotkey commands reference"
 
@@ -124,7 +123,7 @@
 | **[code_exploration.py](../src/agor/tools/code_exploration.py)**                     | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
 | **[code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)**           | Tool documentation  | Function reference, examples                 | 179   |
 | **[snapshot_templates.py](../src/agor/tools/snapshot_templates.py)**                 | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
-| **[sqlite_memory.py](../src/agor/tools/sqlite_memory.py)**                           | SQLite memory (exp) | SQLiteMemoryManager, database operations     | ~400  |
+
 | **[agent_prompt_templates.py](../src/agor/tools/agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
 | **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
 | **[strategy_protocols.py](../src/agor/tools/strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
@@ -157,7 +156,7 @@
 
 - **Communication**: .agor/agentconvo.md format and usage
 - **Memory**: .agor/memory.md and agent-specific files
-- **SQLite Memory**: .agor/memory.db database-based storage (experimental)
+- **Memory Synchronization**: .agor/memory.md with git branch synchronization
 - **Snapshots**: Capturing work state with git context (also for solo context preservation)
 - **Strategies**: 5 multi-agent patterns with implementation details
 - **Strategy Implementation**: Concrete execution protocols (strategy_protocols.py)
