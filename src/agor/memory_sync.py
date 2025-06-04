@@ -15,10 +15,10 @@ class MemorySyncManager:
 
     def __init__(self, repo_path: Optional[pathlib.Path] = None):
         """
-        Initializes the MemorySyncManager.
-
+        Initializes a MemorySyncManager for synchronizing a memory file within a git repository.
+        
         Args:
-            repo_path: The path to the git repository. If None, defaults to the current working directory.
+            repo_path: Optional path to the git repository. Defaults to the current working directory if not provided.
         """
         self.repo_path = repo_path if repo_path else pathlib.Path().resolve()
         self.git_binary = git_manager.get_git_binary()
@@ -26,16 +26,17 @@ class MemorySyncManager:
 
     def _run_git_command(self, command: List[str]) -> str:
         """
-        Runs a git command and returns its output.
-
+        Executes a git command in the repository and returns its standard output.
+        
         Args:
-            command: A list of strings representing the git command and its arguments.
-
+            command: The git command and arguments to execute.
+        
         Returns:
-            The stdout of the git command.
-
+            The standard output from the executed git command.
+        
         Raises:
             RuntimeError: If the git command fails.
+            FileNotFoundError: If the git binary is not found.
         """
         try:
             process = subprocess.run(
@@ -79,16 +80,15 @@ class MemorySyncManager:
 
     def _create_memory_branch(self, branch_name: str) -> bool:
         """
-        Creates a new memory branch using simplified approach (HEAD~1).
-
-        Creates branch from HEAD~1 to ensure it's unmergeable with working branches
-        but avoids complex orphan branch conflicts.
-
+        Creates a new memory branch from one commit behind HEAD and adds an initial commit.
+        
+        The branch is created from `HEAD~1` to prevent merge conflicts with active working branches. An initial commit is made by adding a `.agor` directory to the branch.
+        
         Args:
-            branch_name: The name for the new memory branch.
-
+            branch_name: Name of the memory branch to create.
+        
         Returns:
-            True if the branch was created successfully, False otherwise.
+            True if the branch was created and initialized successfully, False otherwise.
         """
         try:
             # Create branch from 1 commit behind HEAD (simplified approach)
@@ -135,13 +135,13 @@ class MemorySyncManager:
 
     def list_memory_branches(self, remote: bool = False) -> List[str]:
         """
-        Lists local or remote memory branches.
-
+        Returns a list of memory branch names, either local or remote.
+        
         Args:
-            remote: If True, lists remote branches, otherwise lists local branches.
-
+            remote: If True, lists remote memory branches; otherwise, lists local memory branches.
+        
         Returns:
-            A list of memory branch names.
+            A list of unique memory branch names matching the memory branch prefix. Returns an empty list if the operation fails.
         """
         command: List[str]
         if remote:
@@ -182,14 +182,15 @@ class MemorySyncManager:
 
     def _add_and_commit_memory_file(self, commit_message: str) -> bool:
         """
-        Adds and commits the memory file to the current branch.
-
+        Adds and commits the memory file to the current branch with the specified commit message.
+        
+        If there are no changes to commit, the operation is treated as successful.
+        
         Args:
             commit_message: The commit message to use.
-
+        
         Returns:
-            True if the file was added and committed successfully (or if there were no changes),
-            False otherwise.
+            True if the memory file was committed successfully or if there were no changes to commit; False otherwise.
         """
         try:
             # Add the memory file
@@ -229,11 +230,9 @@ class MemorySyncManager:
 
     def get_active_memory_branch(self) -> Optional[str]:
         """
-        Gets the current active memory branch, if any.
-
-        Returns:
-            The name of the active memory branch if the current branch is a memory branch,
-            otherwise None.
+        Returns the current branch name if it is a memory branch, otherwise None.
+        
+        A memory branch is identified by the configured memory branch prefix.
         """
         current_branch = self._get_current_branch()
         if current_branch and current_branch.startswith(self.MEMORY_BRANCH_PREFIX):
@@ -244,14 +243,14 @@ class MemorySyncManager:
         self, branch_name: str, force: bool = False
     ) -> bool:
         """
-        Pushes the specified local branch to the remote 'origin'.
-
+        Pushes a local branch to the remote repository 'origin'.
+        
         Args:
-            branch_name: The name of the local branch to push.
-            force: If True, uses '--force' with the push command.
-
+            branch_name: Name of the local branch to push.
+            force: Whether to force push the branch.
+        
         Returns:
-            True if the push was successful, False otherwise.
+            True if the branch was pushed successfully, False otherwise.
         """
         command = ["push", "origin", branch_name]
         if force:
@@ -273,14 +272,13 @@ class MemorySyncManager:
 
     def _pull_and_rebase_memory_branch(self, branch_name: str) -> bool:
         """
-        Pulls updates from the remote for the given branch and rebases the
-        local branch onto the fetched version.
-
+        Pulls and rebases the specified memory branch from the remote repository.
+        
         Args:
-            branch_name: The name of the memory branch to pull and rebase.
-
+            branch_name: Name of the memory branch to update.
+        
         Returns:
-            True if the pull and rebase was successful, False otherwise.
+            True if the pull and rebase operation succeeds, False otherwise.
         """
         command = ["pull", "--rebase", "origin", branch_name]
         try:
@@ -302,20 +300,17 @@ class MemorySyncManager:
         self, branch_name: str, switch_if_exists: bool = True, attempt_pull: bool = True
     ) -> bool:
         """
-        Ensures a specific memory branch exists, by checking locally, then remotely,
-        or creating it new. Optionally switches to it and pulls updates.
-
+        Ensures that the specified memory branch exists locally or remotely, creating it if necessary.
+        
+        If the branch exists locally, optionally pulls updates and switches to it. If it exists only on the remote, checks it out and optionally pulls updates. If the branch does not exist, creates a new memory branch and checks it out.
+        
         Args:
             branch_name: The name of the memory branch to ensure exists.
-            switch_if_exists: If True and the branch exists (locally or pulled from remote),
-                              switch to it. If a new branch is created, it's typically
-                              checked out automatically by _create_memory_branch.
-            attempt_pull: If True and the branch exists locally or is checked out from remote,
-                          attempt to pull and rebase updates from origin.
-
+            switch_if_exists: Whether to switch to the branch if it already exists.
+            attempt_pull: Whether to pull and rebase updates if the branch exists.
+        
         Returns:
-            True if the branch exists (or was created) and is ready for use (potentially switched to),
-            False otherwise.
+            True if the branch exists or was created and is ready for use; False otherwise.
         """
         local_branches = self.list_memory_branches(remote=False)
         if branch_name in local_branches:
@@ -404,12 +399,12 @@ class MemorySyncManager:
 
     def delete_local_branch(self, branch_name: str, force: bool = False) -> bool:
         """
-        Deletes a local git branch.
-
+        Deletes a local git branch unless it is the current active branch.
+        
         Args:
-            branch_name: The name of the local branch to delete.
-            force: If True, uses '-D' (force delete) instead of '-d'.
-
+            branch_name: Name of the local branch to delete.
+            force: If True, forces deletion even if the branch is not fully merged.
+        
         Returns:
             True if the branch was deleted successfully, False otherwise.
         """
@@ -445,15 +440,13 @@ class MemorySyncManager:
 
     def delete_remote_branch(self, branch_name: str) -> bool:
         """
-        Deletes a remote git branch on 'origin'.
-
+        Deletes a remote branch from the 'origin' repository.
+        
         Args:
-            branch_name: The name of the remote branch to delete.
-                         This should be the plain branch name, e.g., "memory/sync/mybranch",
-                         not "origin/memory/sync/mybranch".
-
+            branch_name: The name of the branch to delete on the remote repository.
+        
         Returns:
-            True if the remote branch was deleted successfully, False otherwise.
+            True if the branch was deleted successfully from the remote, False otherwise.
         """
         command = ["push", "origin", "--delete", branch_name]
         try:
@@ -472,27 +465,34 @@ class MemorySyncManager:
             return False
 
     def _resolve_conflicts_if_any(self) -> None:
-        """Handles any merge conflicts that may arise."""
+        """
+        Placeholder for future implementation of merge conflict resolution during synchronization.
+        """
         pass
 
     def _cleanup_local_memory_branch(
         self, branch_name: str, original_branch: Optional[str]
     ) -> None:
-        """Cleans up the local memory branch after synchronization."""
+        """
+        Placeholder for cleaning up a local memory branch after synchronization.
+        
+        This method is intended to handle any necessary cleanup of the specified local
+        memory branch, such as deletion or resetting, after synchronization is complete.
+        Currently unimplemented.
+        """
         pass
 
     def auto_sync_on_startup(self, preferred_branch_name: Optional[str] = None) -> bool:
         """
-        Automatically determines and switches to the appropriate memory branch on startup.
-        It can use a preferred branch, find the latest existing one, or create a new one.
-        It also ensures the branch is pulled and the memory file's presence is checked.
-
+        Determines and switches to the appropriate memory branch on startup, ensuring it is up to date and the memory file is present.
+        
+        If a preferred branch name is provided, it is used (with the required prefix if missing). Otherwise, the most recent existing memory branch is selected, or a new one is generated if none exist. The method ensures the branch exists locally (creating or pulling as needed), switches to it, and checks for the presence of the memory file, issuing a warning if it is missing.
+        
         Args:
-            preferred_branch_name: If provided, this specific memory branch will be used.
-
+            preferred_branch_name: Optional name of the memory branch to use on startup.
+        
         Returns:
-            True if a memory branch was successfully determined, ensured, and switched to.
-            False if any critical step in preparing the memory branch fails.
+            True if the memory branch was successfully prepared and switched to; False if any critical step fails.
         """
         target_branch_name: str
         original_branch = self._get_current_branch()
@@ -589,19 +589,16 @@ class MemorySyncManager:
         restore_original_branch: Optional[str] = None,
     ) -> bool:
         """
-        Saves the current memory state to the specified memory branch,
-        optionally pushes to remote, and restores the original branch.
-
+        Commits the memory file to the specified memory branch during shutdown, optionally pushes changes to the remote repository, and restores the original branch if specified.
+        
         Args:
-            target_branch_name: The memory branch to save changes to.
-            commit_message: The commit message for saving the memory.
-            push_changes: If True, attempts to push the changes to the remote.
-            restore_original_branch: If provided, switches back to this branch after operations.
-
+            target_branch_name: The memory branch to which the memory file will be committed.
+            commit_message: The commit message used for saving the memory file.
+            push_changes: If True, pushes the committed changes to the remote repository.
+            restore_original_branch: If provided, switches back to this branch after committing and pushing.
+        
         Returns:
-            True if memory was successfully committed locally.
-            False if critical operations like switching to the memory branch,
-            committing, or restoring the original branch (if specified) failed.
+            True if the memory file was successfully committed and any requested branch switches succeeded; False if critical operations such as switching branches or committing failed.
         """
         current_active_branch = self._get_current_branch()
 

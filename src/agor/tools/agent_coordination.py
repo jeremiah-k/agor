@@ -534,7 +534,11 @@ cat .agor/{role_info.get('agent_id', 'agentX')}-memory.md
 
 
 def check_strategy_status() -> str:
-    """Check current strategy status and recent activity."""
+    """
+    Returns a formatted summary of the current AGOR strategy status, including strategy type, task, phase, and recent agent activity.
+    
+    If no AGOR coordination or active strategy is found, returns an appropriate message. Otherwise, provides recent communication and files to check for further details.
+    """
 
     helper = AgentCoordinationHelper()
 
@@ -576,7 +580,11 @@ def check_strategy_status() -> str:
 """
 
     def _init_agent_memory_sync(self) -> None:
-        """Initialize memory sync for agent workflows."""
+        """
+        Initializes the agent memory synchronization system if the coordination directory exists.
+        
+        Attempts to set up memory sync using the MemorySyncManager. Prints status messages indicating whether memory sync is active, initialized, unavailable, or pending coordination setup. Exceptions during initialization are caught and logged without interrupting agent workflows.
+        """
         try:
             # Import and initialize MemorySyncManager for memory sync
             from ..memory_sync import MemorySyncManager
@@ -607,7 +615,11 @@ def check_strategy_status() -> str:
     def complete_agent_work(
         self, agent_id: str, completion_message: str = "Agent work completed"
     ) -> bool:
-        """Complete agent work with automatic memory sync."""
+        """
+        Finalizes agent work and attempts to synchronize the agent's memory state.
+        
+        If memory synchronization is available and an active memory branch exists, saves the agent's memory state with the provided completion message and pushes changes. Returns True if the sync succeeds or if memory sync is unavailable; returns False if an error occurs or the sync fails.
+        """
         try:
             # Import and use MemorySyncManager for completion sync
             from ..memory_sync import MemorySyncManager

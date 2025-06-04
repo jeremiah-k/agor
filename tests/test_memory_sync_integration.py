@@ -33,13 +33,25 @@ class TestMemorySyncIntegration:
 
     @pytest.fixture
     def agent_helper(self, temp_project):
-        """Create an AgentCoordinationHelper instance for testing."""
+        """
+        Creates an AgentCoordinationHelper instance using the temporary project directory.
+        
+        Args:
+            temp_project: Path to the temporary project directory used for test isolation.
+        
+        Returns:
+            An AgentCoordinationHelper configured for the specified project root.
+        """
         return AgentCoordinationHelper(project_root=temp_project)
 
     def test_strategy_initialization_includes_memory_sync(
         self, strategy_manager, temp_project
     ):
-        """Test that strategy initialization includes memory sync setup."""
+        """
+        Verifies that initializing a strategy coordination sets up memory synchronization.
+        
+        Ensures that the `.agor` directory is created and that the strategy manager's memory manager is initialized with memory sync capabilities.
+        """
         # Initialize coordination
         strategy_manager.init_coordination("test task", 3)
 
@@ -51,7 +63,11 @@ class TestMemorySyncIntegration:
         assert strategy_manager.memory_manager is not None
 
     def test_agent_discovery_initializes_memory_sync(self, agent_helper, temp_project):
-        """Test that agent discovery initializes memory sync."""
+        """
+        Verifies that agent discovery initializes the memory sync manager.
+        
+        This test ensures that when an agent's current situation is discovered, the MemorySyncManager is instantiated, indicating that memory synchronization is set up as part of the discovery process.
+        """
         # Create .agor directory first
         agor_dir = temp_project / ".agor"
         agor_dir.mkdir()
@@ -69,7 +85,13 @@ class TestMemorySyncIntegration:
             mock_memory.assert_called_once()
 
     def test_agent_completion_saves_memory_state(self, agent_helper, temp_project):
-        """Test that agent completion saves memory state."""
+        """
+        Verifies that completing agent work triggers saving the memory state via memory sync.
+        
+        This test ensures that when an agent completes its work, the memory sync manager's
+        `auto_sync_on_shutdown` method is called with the correct parameters, and the completion
+        operation reports success.
+        """
         # Create .agor directory
         agor_dir = temp_project / ".agor"
         agor_dir.mkdir()
@@ -98,7 +120,11 @@ class TestMemorySyncIntegration:
     def test_strategy_status_shows_memory_sync_info(
         self, strategy_manager, temp_project, capsys
     ):
-        """Test that strategy status includes memory sync information."""
+        """
+        Verifies that the strategy status output includes memory sync information, such as the active memory branch name.
+        
+        Initializes strategy coordination, mocks memory sync attributes, invokes the status display, and asserts that memory sync details appear in the output.
+        """
         # Initialize coordination to create .agor directory
         strategy_manager.init_coordination("test task", 3)
 
@@ -122,7 +148,11 @@ class TestMemorySyncIntegration:
                 assert "test-branch" in captured.out
 
     def test_memory_sync_graceful_failure(self, agent_helper, temp_project):
-        """Test that memory sync failures don't break agent workflows."""
+        """
+        Verifies that agent workflows remain functional even if memory sync fails during completion.
+        
+        This test simulates a failure in the memory synchronization process when completing agent work and asserts that the workflow does not break, but the completion result indicates failure.
+        """
         # Create .agor directory
         agor_dir = temp_project / ".agor"
         agor_dir.mkdir()
@@ -141,7 +171,11 @@ class TestMemorySyncIntegration:
             assert not success
 
     def test_memory_sync_without_agor_directory(self, agent_helper, temp_project):
-        """Test memory sync behavior when .agor directory doesn't exist."""
+        """
+        Tests that agent completion succeeds even if the `.agor` directory does not exist.
+        
+        Verifies that the memory sync process does not require the presence of the `.agor` directory for successful agent work completion.
+        """
         # Don't create .agor directory
 
         # Agent completion should still work without .agor directory
@@ -153,7 +187,11 @@ class TestMemorySyncIntegration:
     def test_memory_sync_initialization_error_handling(
         self, agent_helper, temp_project, capsys
     ):
-        """Test error handling during memory sync initialization."""
+        """
+        Tests that agent discovery gracefully handles exceptions during memory sync initialization.
+        
+        Ensures that if an error occurs while initializing memory sync, agent discovery still returns a result and outputs a warning message.
+        """
         # Create .agor directory
         agor_dir = temp_project / ".agor"
         agor_dir.mkdir()
@@ -176,7 +214,9 @@ class TestMemorySyncIntegration:
     def test_parallel_divergent_strategy_with_memory_sync(
         self, strategy_manager, temp_project
     ):
-        """Test that parallel divergent strategy works with memory sync."""
+        """
+        Verifies that initializing a parallel divergent strategy creates the `.agor` directory and sets up the memory manager with memory sync enabled.
+        """
         # Set up parallel divergent strategy
         strategy_manager.setup_parallel_divergent("test parallel task", 3)
 
@@ -187,7 +227,11 @@ class TestMemorySyncIntegration:
         assert strategy_manager.memory_manager is not None
 
     def test_memory_sync_with_multiple_agents(self, temp_project):
-        """Test memory sync coordination with multiple agents."""
+        """
+        Verifies that multiple agents can coordinate memory synchronization independently.
+        
+        Creates two agent helpers sharing the same project, mocks memory sync operations, and asserts that both agents can complete their work successfully while each triggers a memory sync.
+        """
         # Create multiple agent helpers
         agent1 = AgentCoordinationHelper(project_root=temp_project)
         agent2 = AgentCoordinationHelper(project_root=temp_project)

@@ -20,14 +20,22 @@ class StrategyManager:
     """Manages multi-agent development strategies and coordination state."""
 
     def __init__(self, project_root: Optional[Path] = None):
-        """Initialize strategy manager."""
+        """
+        Initializes the StrategyManager with the specified project root directory.
+        
+        Sets up paths for the `.agor` and `.agor/state` directories and initializes the memory synchronization manager for coordinating agent memory.
+        """
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
         self.state_dir = self.agor_dir / "state"
         self.memory_manager = MemorySyncManager(self.project_root)
 
     def init_coordination(self, task: str, agents: int = 3) -> None:
-        """Initialize .agor/ directory and coordination files."""
+        """
+        Initializes the AGOR coordination system for a specified task and number of agents.
+        
+        Creates the `.agor/` directory structure, sets up essential coordination files, and initializes memory synchronization to support multi-agent workflows for the given task.
+        """
         print("🎼 Initializing AGOR coordination system...")
 
         # Create directory structure
@@ -586,7 +594,11 @@ You are working **independently** with {agents-1} other agents on the same probl
         return strategies
 
     def _init_memory_sync_for_agents(self) -> None:
-        """Initialize memory sync for agent workflows."""
+        """
+        Initializes memory synchronization for agent workflows and displays the current memory sync status.
+        
+        If memory sync is available, prints the active memory branch or indicates initialization. If unavailable or an error occurs, prints a warning but does not interrupt coordination setup.
+        """
         try:
             # Memory sync is already initialized via MemorySyncManager
             # This method provides explicit feedback about memory sync status
@@ -605,7 +617,11 @@ You are working **independently** with {agents-1} other agents on the same probl
             # Don't fail coordination setup if memory sync has issues
 
     def _show_memory_sync_status(self) -> None:
-        """Show current memory sync status."""
+        """
+        Displays the current status of memory synchronization, including the active memory branch and available local and remote memory branches.
+        
+        Prints a warning if memory sync is unavailable or if an error occurs.
+        """
         try:
             if (
                 hasattr(self.memory_manager, "memory_sync_manager")

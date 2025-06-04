@@ -213,16 +213,23 @@ def bundle(
 
 ):
     """
-    [CLI] Bundle a git repository into an archive for AI assistant upload.
-
-    Creates a compressed archive containing your project plus AGOR's multi-agent
-    coordination tools. Supports ZIP (default), TAR.GZ, and TAR.BZ2 formats.
-
-    Examples:
-        agor bundle my-project                    # Bundle all branches as ZIP
-        agor bundle user/repo --format gz        # GitHub repo as TAR.GZ
-        agor bundle . -m --quiet                 # Main branch only, minimal output
-        agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
+    Bundles a git repository and AGOR tools into a compressed archive for AI assistant use.
+    
+    Creates an archive containing the specified git repository and AGOR's multi-agent coordination tools, supporting ZIP (default), TAR.GZ, and TAR.BZ2 formats. Allows selection of branches to include, preservation of git history, and interactive or batch operation. The resulting archive includes a statically compiled git binary for portability and is saved to a user-specified or default location. Provides an AI assistant prompt for initializing AGOR with the bundle.
+    
+    Args:
+        src_repo: Path or URL of the git repository to bundle. Supports local paths and GitHub shorthand.
+        format: Compression format for the archive ('zip', 'gz', or 'bz2'). Defaults to configuration or ZIP.
+        preserve_history: If True, includes full git history; otherwise, performs a shallow clone.
+        main_only: If True, bundles only the main/master branch.
+        all_branches: Legacy flag to bundle all branches (default behavior).
+        branches: List of additional branches to include in the bundle.
+        interactive: If False, disables interactive prompts for batch mode.
+        assume_yes: If True, automatically answers 'yes' to all prompts.
+        quiet: If True, minimizes output to essential information.
+    
+    Returns:
+        None. The archive is created and saved to the chosen location, and relevant instructions are printed or copied to the clipboard.
     """
     # Apply configuration defaults with CLI overrides
     compression_format = format or config.get(

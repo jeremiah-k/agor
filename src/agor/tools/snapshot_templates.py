@@ -66,7 +66,11 @@ def get_git_context() -> Dict[str, str]:
 
 
 def get_agor_version() -> str:
-    """Get AGOR version from package or git tag."""
+    """
+    Retrieves the current AGOR version from the installed package or the latest git tag.
+    
+    If the package version is unavailable, attempts to obtain the version from the most recent git tag. Returns "development" if neither source provides a version.
+    """
     try:
         # Try to get version from package using importlib.metadata
         from importlib.metadata import PackageNotFoundError, version

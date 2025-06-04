@@ -19,6 +19,15 @@ except ImportError:
 
     class FallbackGitManager:
         def get_git_binary(self):
+            """
+            Finds the path to the Git executable in the system PATH.
+            
+            Raises:
+                RuntimeError: If the Git binary is not found.
+            
+            Returns:
+                The absolute path to the Git executable.
+            """
             import shutil
 
             git_path = shutil.which("git")
@@ -39,13 +48,13 @@ class DevTooling:
 
     def _run_git_command(self, command: list[str]) -> tuple[bool, str]:
         """
-        Run a git command and return success status and output.
-
+        Executes a Git command in the repository and returns the success status and output.
+        
         Args:
-            command: Git command arguments
-
+            command: List of Git command arguments to execute.
+        
         Returns:
-            Tuple of (success, output)
+            A tuple containing a boolean indicating success and the command's output or error message.
         """
         try:
             result = subprocess.run(
@@ -62,19 +71,34 @@ class DevTooling:
             return False, f"Error: {str(e)}"
 
     def get_current_timestamp(self) -> str:
-        """Get current UTC timestamp in AGOR format."""
+        """
+        Returns the current UTC time formatted as "YYYY-MM-DD HH:MM UTC".
+        """
         return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
     def get_timestamp_for_files(self) -> str:
-        """Get timestamp suitable for filenames (no spaces or colons)."""
+        """
+        Returns the current UTC timestamp formatted for use in filenames.
+        
+        The format is "YYYY-MM-DD_HHMM", omitting spaces and colons to ensure compatibility with most filesystems.
+        """
         return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
 
     def get_precise_timestamp(self) -> str:
-        """Get precise timestamp with seconds for detailed logging."""
+        """
+        Returns the current UTC timestamp with second-level precision.
+        
+        The timestamp is formatted as "YYYY-MM-DD HH:MM:SS UTC".
+        """
         return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
     def get_ntp_timestamp(self) -> str:
-        """Get accurate timestamp from NTP server, fallback to local time."""
+        """
+        Retrieves the current UTC timestamp from an NTP server, falling back to local time if unavailable.
+        
+        Returns:
+            A string representing the current UTC time in "YYYY-MM-DD HH:MM UTC" format.
+        """
         try:
             import json
             import urllib.request
@@ -93,14 +117,14 @@ class DevTooling:
 
     def quick_commit_push(self, message: str, emoji: str = "🔧") -> bool:
         """
-        Commit and push in one operation with timestamp.
-
+        Stages all changes, commits with a timestamped message, and pushes to the remote repository.
+        
         Args:
-            message: Commit message
-            emoji: Emoji prefix for commit
-
+            message: The commit message to use.
+            emoji: An optional emoji prefix for the commit message.
+        
         Returns:
-            True if successful, False otherwise
+            True if the commit and push were successful or if there were no changes to commit; False otherwise.
         """
         timestamp = self.get_current_timestamp()
         full_message = f"{emoji} {message}\n\nTimestamp: {timestamp}"
@@ -135,15 +159,17 @@ class DevTooling:
         self, content: str, memory_type: str, agent_id: str = "dev"
     ) -> bool:
         """
-        Create memory file and commit to memory branch without switching.
-
+        Creates a memory log file with the provided content and attempts to commit it to a dedicated memory branch without switching branches.
+        
+        If the cross-branch commit fails, falls back to a regular commit and push on the current branch. Returns True if the operation succeeds, otherwise False.
+        
         Args:
-            content: Memory content to store
-            memory_type: Type of memory (context, decision, learning, etc.)
-            agent_id: Agent identifier
-
+            content: The memory content to store in the log file.
+            memory_type: The type of memory being logged (e.g., context, decision, learning).
+            agent_id: Identifier for the agent associated with the memory (default is "dev").
+        
         Returns:
-            True if successful, False otherwise
+            True if the memory was successfully committed, False otherwise.
         """
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         memory_branch = f"agor/mem/{timestamp}"
@@ -184,17 +210,17 @@ class DevTooling:
         self, file_path: str, branch_name: str, commit_message: str
     ) -> bool:
         """
-        Attempt to commit file to memory branch without switching branches.
-
-        This uses advanced Git operations to commit to a different branch.
-
+        Commits a file to a specified memory branch without switching branches.
+        
+        Uses advanced Git commands to add the file and create a commit on the target branch, creating the branch if it does not exist. Returns True if the operation succeeds, otherwise False.
+        
         Args:
-            file_path: Path to file to commit
-            branch_name: Target memory branch
-            commit_message: Commit message
-
+            file_path: Path to the file to commit.
+            branch_name: Name of the target memory branch.
+            commit_message: Commit message for the new commit.
+        
         Returns:
-            True if successful, False otherwise
+            True if the file was successfully committed to the memory branch, False otherwise.
         """
         try:
             # Check if memory branch exists
@@ -300,14 +326,16 @@ class DevTooling:
 
     def create_development_snapshot(self, title: str, context: str) -> bool:
         """
-        Create a comprehensive development snapshot.
-
+        Creates a markdown snapshot of the current development state, including metadata, context, and instructions for continuation.
+        
+        The snapshot file is saved under `.agor/snapshots/` with a timestamped filename, then committed and pushed to the repository.
+        
         Args:
-            title: Snapshot title
-            context: Development context and progress
-
+            title: The title for the snapshot, used in the file name and document header.
+            context: A description of the current development context and progress.
+        
         Returns:
-            True if successful, False otherwise
+            True if the snapshot was successfully created, committed, and pushed; False otherwise.
         """
         timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H%M")
         snapshot_file = (
@@ -365,7 +393,11 @@ If you're picking up this work:
         return self.quick_commit_push(f"📸 Create development snapshot: {title}", "📸")
 
     def test_tooling(self) -> bool:
-        """Test all development tooling functions to ensure they work properly."""
+        """
+        Runs diagnostic tests on all development tooling functions to verify their correct operation.
+        
+        Prints the results of timestamp generation, Git binary detection, Git command execution, and repository status checks. Returns True if all tests pass successfully; otherwise, returns False.
+        """
         print("🧪 Testing AGOR Development Tooling...")
 
         # Test timestamp functions
@@ -416,41 +448,92 @@ dev_tools = DevTooling()
 
 # Convenience functions
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push with timestamp."""
+    """
+    Stages all changes, commits with a timestamped message, and pushes to the remote repository.
+    
+    Args:
+        message: Commit message to include.
+        emoji: Optional emoji prefix for the commit message.
+    
+    Returns:
+        True if the commit and push succeed, False otherwise.
+    """
     return dev_tools.quick_commit_push(message, emoji)
 
 
 def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
-    """Auto-commit memory to memory branch."""
+    """
+    Commits memory content to a dedicated memory branch or the current branch if necessary.
+    
+    Attempts to create or update a memory log file for the specified agent and memory type, committing it to a timestamped memory branch. Falls back to a regular commit and push on the current branch if cross-branch commit fails.
+    
+    Args:
+        content: The memory content to be logged.
+        memory_type: The type or category of memory being stored.
+        agent_id: Identifier for the agent associated with the memory (default is "dev").
+    
+    Returns:
+        True if the memory was successfully committed and pushed; False otherwise.
+    """
     return dev_tools.auto_commit_memory(content, memory_type, agent_id)
 
 
 def create_snapshot(title: str, context: str) -> bool:
-    """Create development snapshot."""
+    """
+    Creates a development snapshot file with the given title and context.
+    
+    The snapshot is saved as a timestamped markdown file under `.agor/snapshots/`, containing metadata and instructions for continuation agents. The file is committed and pushed to the repository.
+    
+    Args:
+        title: Title for the snapshot file.
+        context: Development context or notes to include in the snapshot.
+    
+    Returns:
+        True if the snapshot was successfully created, committed, and pushed; False otherwise.
+    """
     return dev_tools.create_development_snapshot(title, context)
 
 
 def test_tooling() -> bool:
-    """Test all development tooling functions."""
+    """
+    Runs diagnostic tests on all development tooling functions and reports their status.
+    
+    Returns:
+        True if all tests pass successfully; otherwise, False.
+    """
     return dev_tools.test_tooling()
 
 
 # Timestamp utilities
 def get_timestamp() -> str:
-    """Get current UTC timestamp."""
+    """
+    Returns the current UTC timestamp formatted as "YYYY-MM-DD HH:MM UTC".
+    """
     return dev_tools.get_current_timestamp()
 
 
 def get_file_timestamp() -> str:
-    """Get timestamp suitable for filenames."""
+    """
+    Returns a UTC timestamp formatted for use in filenames.
+    
+    The format is "YYYY-MM-DD_HHMM", ensuring compatibility with most file systems.
+    """
     return dev_tools.get_timestamp_for_files()
 
 
 def get_precise_timestamp() -> str:
-    """Get precise timestamp with seconds."""
+    """
+    Returns the current UTC timestamp including seconds in the format "YYYY-MM-DD HH:MM:SS UTC".
+    """
     return dev_tools.get_precise_timestamp()
 
 
 def get_ntp_timestamp() -> str:
-    """Get accurate timestamp from NTP server."""
+    """
+    Retrieves the current UTC timestamp from an NTP server.
+    
+    Returns:
+        A string representing the current UTC time in "YYYY-MM-DD HH:MM UTC" format.
+        Falls back to the local system time if the NTP server is unavailable.
+    """
     return dev_tools.get_ntp_timestamp()
