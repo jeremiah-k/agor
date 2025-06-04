@@ -35,7 +35,7 @@ Before starting any work, familiarize yourself with AGOR's snapshot system:
    ```bash
    # Read the development guide and AI readme
    cat docs/agor-development-guide.md
-   cat docs/agent-start-here.md
+   cat src/agor/tools/agent-start-here.md
    cat src/agor/tools/README_ai.md
    ```
 

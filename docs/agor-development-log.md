@@ -101,7 +101,7 @@ Each entry includes:
 - `src/agor/main.py` - Removed SQLite CLI options
 - `src/agor/settings.py` - Updated memory file defaults
 - `README.md` - Platform-specific deployment sections
-- `docs/index.md` - Enhanced categorization and snapshot guide reference
+- `src/agor/tools/index.md` - Enhanced categorization and snapshot guide reference
 - Multiple documentation files - Removed SQLite references, added snapshot requirements
 
 **Release Success Criteria - ALL MET**:

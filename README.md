@@ -61,7 +61,7 @@ print(f'Session started at: {get_timestamp()}')
 "
 
 # Review agent startup guide
-cat docs/agent-start-here.md
+cat src/agor/tools/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
 ```
@@ -130,7 +130,7 @@ I'm working with the AGOR (AgentOrchestrator) framework for multi-agent developm
 Please read these key files to understand the system:
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
-- https://github.com/jeremiah-k/agor/blob/main/docs/agent-start-here.md (startup guide)
+- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
 
 After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
 

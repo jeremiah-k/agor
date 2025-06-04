@@ -57,7 +57,7 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 - Lines 255-400: Improved coordination protocols
 - Lines 500+: New snapshot integration procedures
 
-**Agent Start Guide** (`docs/agent-start-here.md`)
+**Agent Start Guide** (`src/agor/tools/agent-start-here.md`)
 
 - Streamlined discovery workflow
 - Better hotkey organization
