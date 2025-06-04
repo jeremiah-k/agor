@@ -68,11 +68,11 @@ def get_git_context() -> Dict[str, str]:
 def get_agor_version() -> str:
     """Get AGOR version from package or git tag."""
     try:
-        # Try to get version from package
-        import pkg_resources
+        # Try to get version from package using importlib.metadata
+        from importlib.metadata import PackageNotFoundError, version
 
-        return pkg_resources.get_distribution("agor").version
-    except Exception:
+        return version("agor")
+    except (PackageNotFoundError, Exception):
         try:
             # Try to get version from git tag
             version = subprocess.check_output(
