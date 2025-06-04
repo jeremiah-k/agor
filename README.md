@@ -81,12 +81,14 @@ git clone https://github.com/jeremiah-k/agor.git ~/agor
 ```
 
 #### 2. Add AGOR as Workspace Context:
+
 1. Open VS Code with Augment extension installed
 2. Click the folder icon in the Augment sidebar panel
 3. Click **+ Add more...** at the bottom of Source Folders
 4. Select the `~/agor` directory and click **Add Source Folder**
 
 #### 3. Configure User Guidelines:
+
 1. In Augment Chat, click the **Context menu** or use **@-mention**
 2. Select **User Guidelines**
 3. Add this guideline:
@@ -96,6 +98,7 @@ When working on development projects, utilize the AGOR (AgentOrchestrator) frame
 ```
 
 #### 4. Optional - Add Workspace Guidelines:
+
 Create `.augment-guidelines` file in your project root:
 
 ```
@@ -106,6 +109,7 @@ Create `.augment-guidelines` file in your project root:
 ```
 
 **Benefits:**
+
 - Direct access to AGOR tools and documentation through workspace context
 - Persistent guidelines ensure consistent AGOR usage
 - No file upload limits or token efficiency concerns

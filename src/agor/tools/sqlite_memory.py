@@ -149,7 +149,7 @@ class SQLiteMemoryManager:
                 self._memory_sync_manager_cached = MemorySyncManager(
                     repo_path=repo_root_path
                 )
-                print("✅ MemorySyncManager initialized successfully"y", file=sys.stdout)
+                print("✅ MemorySyncManager initialized successfully", file=sys.stdout)
             except ImportError as e:
                 print(f"⚠️ MemorySyncManager not available: {e}", file=sys.stderr)
                 self._memory_sync_manager_cached = None
