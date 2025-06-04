@@ -171,6 +171,7 @@ Initialize architecture review and help me assess the current system design.
 ### Customization Examples
 
 **Example 1: Feature Development**
+
 ```
 [Use Feature Development Planning prompt above]
 
@@ -184,6 +185,7 @@ Initialize architecture review and help me assess the current system design.
 ```
 
 **Example 2: Code Review**
+
 ```
 [Use Code Review and Analysis prompt above]
 
@@ -206,4 +208,4 @@ Initialize architecture review and help me assess the current system design.
 
 ---
 
-*These prompts are designed to work with any AGOR deployment method (Bundle, Standalone, or Local Integration) and can be adapted for your specific development environment.*
+_These prompts are designed to work with any AGOR deployment method (Bundle, Standalone, or Local Integration) and can be adapted for your specific development environment._

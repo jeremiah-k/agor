@@ -9,7 +9,7 @@ more sophisticated memory patterns than simple markdown files.
 import json
 import os
 import sqlite3
-import sys # For printing errors/info
+import sys  # For printing errors/info
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -128,7 +128,7 @@ class SQLiteMemoryManager:
 
     def _get_memory_sync_manager(self):
         """Lazy loading for MemorySyncManager to avoid circular imports."""
-        if not hasattr(self, '_memory_sync_manager_cached'):
+        if not hasattr(self, "_memory_sync_manager_cached"):
             try:
                 from agor.memory_sync import MemorySyncManager
 
@@ -146,13 +146,17 @@ class SQLiteMemoryManager:
                 else:
                     repo_root_path = Path(".")
 
-                self._memory_sync_manager_cached = MemorySyncManager(repo_path=repo_root_path)
-                print(f"✅ MemorySyncManager initialized successfully", file=sys.stdout)
+                self._memory_sync_manager_cached = MemorySyncManager(
+                    repo_path=repo_root_path
+                )
+                print("✅ MemorySyncManager initialized successfully"y", file=sys.stdout)
             except ImportError as e:
                 print(f"⚠️ MemorySyncManager not available: {e}", file=sys.stderr)
                 self._memory_sync_manager_cached = None
             except Exception as e:
-                print(f"❌ Failed to initialize MemorySyncManager: {e}", file=sys.stderr)
+                print(
+                    f"❌ Failed to initialize MemorySyncManager: {e}", file=sys.stderr
+                )
                 self._memory_sync_manager_cached = None
 
         return self._memory_sync_manager_cached
@@ -162,18 +166,34 @@ class SQLiteMemoryManager:
         try:
             memory_sync_manager = self._get_memory_sync_manager()
             if memory_sync_manager:
-                self.original_branch_before_sync = memory_sync_manager._get_current_branch()
+                self.original_branch_before_sync = (
+                    memory_sync_manager._get_current_branch()
+                )
                 startup_success = memory_sync_manager.auto_sync_on_startup()
 
                 if startup_success:
-                    self.active_memory_branch_name = memory_sync_manager.get_active_memory_branch()
-                    print(f"SQLiteMemoryManager: Successfully synced with memory branch '{self.active_memory_branch_name}'.", file=sys.stdout)
+                    self.active_memory_branch_name = (
+                        memory_sync_manager.get_active_memory_branch()
+                    )
+                    print(
+                        f"SQLiteMemoryManager: Successfully synced with memory branch '{self.active_memory_branch_name}'.",
+                        file=sys.stdout,
+                    )
                 else:
-                    print(f"SQLiteMemoryManager: Warning - Failed to sync with memory branch on startup.", file=sys.stderr)
+                    print(
+                        "SQLiteMemoryManager: Warning - Failed to sync with memory branch on startup.",
+                        file=sys.stderr,
+                    )
             else:
-                print(f"SQLiteMemoryManager: Memory sync not available - continuing without sync.", file=sys.stdout)
+                print(
+                    "SQLiteMemoryManager: Memory sync not available - continuing without sync.",
+                    file=sys.stdout,
+                )
         except Exception as e:
-            print(f"SQLiteMemoryManager: Error during memory sync initialization: {e}", file=sys.stderr)
+            print(
+                f"SQLiteMemoryManager: Error during memory sync initialization: {e}",
+                file=sys.stderr,
+            )
 
     @property
     def memory_sync_manager(self):
@@ -397,7 +417,7 @@ class SQLiteMemoryManager:
 
     def create_snapshot(
         self,
-        snapshot_id: str, # formerly handoff_id
+        snapshot_id: str,  # formerly handoff_id
         from_agent: str,
         problem_description: str,
         work_completed: str,
@@ -568,14 +588,18 @@ class SQLiteMemoryManager:
                 "agent_memories",
                 "coordination_logs",
                 "project_state",
-                "snapshots", # formerly handoffs
+                "snapshots",  # formerly handoffs
             ]:
                 cursor = conn.execute(f"SELECT COUNT(*) FROM {table}")
                 stats[table] = cursor.fetchone()[0]
 
             return stats
 
-    def shutdown_and_sync(self, commit_message: Optional[str] = None, restore_original_branch_override: Optional[str] = None) -> bool:
+    def shutdown_and_sync(
+        self,
+        commit_message: Optional[str] = None,
+        restore_original_branch_override: Optional[str] = None,
+    ) -> bool:
         """
         Shuts down the memory manager, syncing the memory.db file with the remote repository.
 
@@ -589,28 +613,44 @@ class SQLiteMemoryManager:
         try:
             memory_sync_manager = self.memory_sync_manager
             if not memory_sync_manager:
-                print("SQLiteMemoryManager: Memory sync not available. Cannot perform shutdown sync.", file=sys.stderr)
+                print(
+                    "SQLiteMemoryManager: Memory sync not available. Cannot perform shutdown sync.",
+                    file=sys.stderr,
+                )
                 return False
 
             if not self.active_memory_branch_name:
-                print("SQLiteMemoryManager: No active memory branch set. Cannot perform shutdown sync.", file=sys.stderr)
+                print(
+                    "SQLiteMemoryManager: No active memory branch set. Cannot perform shutdown sync.",
+                    file=sys.stderr,
+                )
                 return False
 
-            default_commit_msg = f"Automated memory sync to branch {self.active_memory_branch_name}."
-            final_commit_message = commit_message if commit_message else default_commit_msg
+            default_commit_msg = (
+                f"Automated memory sync to branch {self.active_memory_branch_name}."
+            )
+            final_commit_message = (
+                commit_message if commit_message else default_commit_msg
+            )
 
-            branch_to_restore = restore_original_branch_override if restore_original_branch_override else self.original_branch_before_sync
+            branch_to_restore = (
+                restore_original_branch_override
+                if restore_original_branch_override
+                else self.original_branch_before_sync
+            )
 
             sync_result = memory_sync_manager.auto_sync_on_shutdown(
                 target_branch_name=self.active_memory_branch_name,
                 commit_message=final_commit_message,
                 push_changes=True,
-                restore_original_branch=branch_to_restore
+                restore_original_branch=branch_to_restore,
             )
 
             return sync_result
         except Exception as e:
-            print(f"SQLiteMemoryManager: Error during shutdown sync: {e}", file=sys.stderr)
+            print(
+                f"SQLiteMemoryManager: Error during shutdown sync: {e}", file=sys.stderr
+            )
             return False
 
 

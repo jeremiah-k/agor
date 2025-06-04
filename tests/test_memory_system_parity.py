@@ -220,7 +220,9 @@ class TestMemorySystemParity:
         assert "feature/authentication" in snapshot_content
 
         # Test snapshot status updates
-        self.sqlite_manager.update_snapshot_status("2024-01-27_auth-snapshot", "received")
+        self.sqlite_manager.update_snapshot_status(
+            "2024-01-27_auth-snapshot", "received"
+        )
         updated_snapshot = self.sqlite_manager.get_snapshot("2024-01-27_auth-snapshot")
         assert updated_snapshot["status"] == "received"
 

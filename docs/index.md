@@ -129,7 +129,7 @@
 | **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
 | **[strategy_protocols.py](../src/agor/tools/strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
 | **[agent_coordination.py](../src/agor/tools/agent_coordination.py)**                 | Agent coordination  | Role discovery, status checking              | ~400  |
-| **[AUGMENT_INITIALIZATION.md](../src/agor/tools/AUGMENT_INITIALIZATION.md)**         | Augment integration | Local setup, initialization prompts         | ~150  |
+| **[AUGMENT_INITIALIZATION.md](../src/agor/tools/AUGMENT_INITIALIZATION.md)**         | Augment integration | Local setup, initialization prompts          | ~150  |
 | **[CHAINABLE_PROMPTS.md](../src/agor/tools/CHAINABLE_PROMPTS.md)**                   | Token efficiency    | Chainable initialization prompts             | ~200  |
 
 ## 🔍 Search by Concept

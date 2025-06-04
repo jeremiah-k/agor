@@ -62,7 +62,7 @@ class AgorSettings(BaseSettings):
     # Memory management
     memory_file: str = Field(
         default=".agor/memory.db",
-        description="Path to memory database file relative to project root"
+        description="Path to memory database file relative to project root",
     )
 
     # User interface

@@ -8,20 +8,20 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 
 ### ✅ **FULLY IMPLEMENTED**
 
-| Hotkey     | Function            | Implementation       | Status     |
-| ---------- | ------------------- | -------------------- | ---------- |
-| `a`        | Analyze codebase    | code_exploration.py  | ✅ Working |
-| `f`        | Show full files     | code_exploration.py  | ✅ Working |
-| `co`       | Changes only        | code_exploration.py  | ✅ Working |
-| `tree`     | Directory structure | code_exploration.py  | ✅ Working |
-| `grep`     | Search files        | code_exploration.py  | ✅ Working |
-| `snapshot` | Create snapshot     | snapshot_templates.py | ✅ Working |
-| `receive`  | Receive snapshot    | snapshot_templates.py | ✅ Working |
-| `snapshots`| List snapshots      | snapshot_templates.py | ✅ Working |
-| `meta`     | AGOR feedback       | agor-meta.md         | ✅ Working |
-| `init`     | Initialize role     | README_ai.md         | ✅ Working |
-| `status`   | Check status        | README_ai.md         | ✅ Working |
-| `sync`     | Pull changes        | README_ai.md         | ✅ Working |
+| Hotkey      | Function            | Implementation        | Status     |
+| ----------- | ------------------- | --------------------- | ---------- |
+| `a`         | Analyze codebase    | code_exploration.py   | ✅ Working |
+| `f`         | Show full files     | code_exploration.py   | ✅ Working |
+| `co`        | Changes only        | code_exploration.py   | ✅ Working |
+| `tree`      | Directory structure | code_exploration.py   | ✅ Working |
+| `grep`      | Search files        | code_exploration.py   | ✅ Working |
+| `snapshot`  | Create snapshot     | snapshot_templates.py | ✅ Working |
+| `receive`   | Receive snapshot    | snapshot_templates.py | ✅ Working |
+| `snapshots` | List snapshots      | snapshot_templates.py | ✅ Working |
+| `meta`      | AGOR feedback       | agor-meta.md          | ✅ Working |
+| `init`      | Initialize role     | README_ai.md          | ✅ Working |
+| `status`    | Check status        | README_ai.md          | ✅ Working |
+| `sync`      | Pull changes        | README_ai.md          | ✅ Working |
 
 ### 🟡 **PARTIALLY IMPLEMENTED** (Templates exist, execution protocols missing)
 

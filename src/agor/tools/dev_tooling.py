@@ -6,7 +6,6 @@ to streamline development workflow and memory management.
 """
 
 import subprocess
-import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -21,6 +20,7 @@ except ImportError:
     class FallbackGitManager:
         def get_git_binary(self):
             import shutil
+
             git_path = shutil.which("git")
             if not git_path:
                 raise RuntimeError("Git not found in PATH")
@@ -53,7 +53,7 @@ class DevTooling:
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
             return True, result.stdout.strip()
         except subprocess.CalledProcessError as e:
@@ -63,28 +63,30 @@ class DevTooling:
 
     def get_current_timestamp(self) -> str:
         """Get current UTC timestamp in AGOR format."""
-        return datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
     def get_timestamp_for_files(self) -> str:
         """Get timestamp suitable for filenames (no spaces or colons)."""
-        return datetime.utcnow().strftime('%Y-%m-%d_%H%M')
+        return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
 
     def get_precise_timestamp(self) -> str:
         """Get precise timestamp with seconds for detailed logging."""
-        return datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
     def get_ntp_timestamp(self) -> str:
         """Get accurate timestamp from NTP server, fallback to local time."""
         try:
-            import urllib.request
             import json
+            import urllib.request
 
-            with urllib.request.urlopen('http://worldtimeapi.org/api/timezone/UTC', timeout=5) as response:
+            with urllib.request.urlopen(
+                "http://worldtimeapi.org/api/timezone/UTC", timeout=5
+            ) as response:
                 data = json.loads(response.read().decode())
                 # Parse ISO format and convert to our format
-                iso_time = data['datetime'][:19]  # Remove timezone info
+                iso_time = data["datetime"][:19]  # Remove timezone info
                 dt = datetime.fromisoformat(iso_time)
-                return dt.strftime('%Y-%m-%d %H:%M UTC')
+                return dt.strftime("%Y-%m-%d %H:%M UTC")
         except Exception:
             # Fallback to local time if NTP fails
             return self.get_current_timestamp()
@@ -129,7 +131,9 @@ class DevTooling:
         print(f"✅ Successfully committed and pushed at {timestamp}")
         return True
 
-    def auto_commit_memory(self, content: str, memory_type: str, agent_id: str = "dev") -> bool:
+    def auto_commit_memory(
+        self, content: str, memory_type: str, agent_id: str = "dev"
+    ) -> bool:
         """
         Create memory file and commit to memory branch without switching.
 
@@ -141,7 +145,7 @@ class DevTooling:
         Returns:
             True if successful, False otherwise
         """
-        timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         memory_branch = f"agor/mem/{timestamp}"
         memory_file = f".agor/{agent_id}-memory.md"
 
@@ -164,15 +168,21 @@ class DevTooling:
         memory_path.write_text(memory_content)
 
         # Try cross-branch commit (advanced Git operations)
-        if self._commit_to_memory_branch(memory_file, memory_branch, f"Add {memory_type} memory for {agent_id}"):
+        if self._commit_to_memory_branch(
+            memory_file, memory_branch, f"Add {memory_type} memory for {agent_id}"
+        ):
             print(f"✅ Memory committed to branch {memory_branch}")
             return True
         else:
             # Fallback: regular commit to current branch
             print("⚠️  Cross-branch commit failed, using regular commit")
-            return self.quick_commit_push(f"Add {memory_type} memory for {agent_id}", "💾")
+            return self.quick_commit_push(
+                f"Add {memory_type} memory for {agent_id}", "💾"
+            )
 
-    def _commit_to_memory_branch(self, file_path: str, branch_name: str, commit_message: str) -> bool:
+    def _commit_to_memory_branch(
+        self, file_path: str, branch_name: str, commit_message: str
+    ) -> bool:
         """
         Attempt to commit file to memory branch without switching branches.
 
@@ -192,7 +202,9 @@ class DevTooling:
             if not success:
                 # Create orphan memory branch
                 print(f"📝 Creating new memory branch: {branch_name}")
-                success, _ = self._run_git_command(["checkout", "--orphan", branch_name])
+                success, _ = self._run_git_command(
+                    ["checkout", "--orphan", branch_name]
+                )
                 if not success:
                     return False
 
@@ -201,7 +213,14 @@ class DevTooling:
                 if not success:
                     return False
 
-                success, _ = self._run_git_command(["commit", "--allow-empty", "-m", f"Initial commit for {branch_name}"])
+                success, _ = self._run_git_command(
+                    [
+                        "commit",
+                        "--allow-empty",
+                        "-m",
+                        f"Initial commit for {branch_name}",
+                    ]
+                )
                 if not success:
                     return False
 
@@ -222,14 +241,23 @@ class DevTooling:
                 return False
 
             # 3. Get current tree of memory branch
-            success, tree_hash = self._run_git_command(["rev-parse", f"{branch_name}^{{tree}}"])
+            success, tree_hash = self._run_git_command(
+                ["rev-parse", f"{branch_name}^{{tree}}"]
+            )
             if not success:
                 return False
 
             # 4. Update index with new file
-            success, _ = self._run_git_command([
-                "update-index", "--add", "--cacheinfo", "100644", blob_hash.strip(), file_path
-            ])
+            success, _ = self._run_git_command(
+                [
+                    "update-index",
+                    "--add",
+                    "--cacheinfo",
+                    "100644",
+                    blob_hash.strip(),
+                    file_path,
+                ]
+            )
             if not success:
                 return False
 
@@ -239,16 +267,23 @@ class DevTooling:
                 return False
 
             # 6. Create commit object
-            success, new_commit = self._run_git_command([
-                "commit-tree", new_tree.strip(), "-p", branch_name, "-m", commit_message
-            ])
+            success, new_commit = self._run_git_command(
+                [
+                    "commit-tree",
+                    new_tree.strip(),
+                    "-p",
+                    branch_name,
+                    "-m",
+                    commit_message,
+                ]
+            )
             if not success:
                 return False
 
             # 7. Update branch reference
-            success, _ = self._run_git_command([
-                "update-ref", f"refs/heads/{branch_name}", new_commit.strip()
-            ])
+            success, _ = self._run_git_command(
+                ["update-ref", f"refs/heads/{branch_name}", new_commit.strip()]
+            )
             if not success:
                 return False
 
@@ -274,15 +309,19 @@ class DevTooling:
         Returns:
             True if successful, False otherwise
         """
-        timestamp = datetime.utcnow().strftime('%Y-%m-%d_%H%M')
-        snapshot_file = f".agor/snapshots/{timestamp}_{title.lower().replace(' ', '-')}_snapshot.md"
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H%M")
+        snapshot_file = (
+            f".agor/snapshots/{timestamp}_{title.lower().replace(' ', '-')}_snapshot.md"
+        )
 
         # Get current git info
         success, current_branch = self._run_git_command(["branch", "--show-current"])
         if not success:
             current_branch = "unknown"
 
-        success, current_commit = self._run_git_command(["rev-parse", "--short", "HEAD"])
+        success, current_commit = self._run_git_command(
+            ["rev-parse", "--short", "HEAD"]
+        )
         if not success:
             current_commit = "unknown"
 
@@ -361,7 +400,9 @@ If you're picking up this work:
         success, status = self._run_git_command(["status", "--porcelain"])
         if success:
             if status.strip():
-                print(f"📝 Working directory has changes: {len(status.splitlines())} files")
+                print(
+                    f"📝 Working directory has changes: {len(status.splitlines())} files"
+                )
             else:
                 print("✅ Working directory clean")
 
@@ -372,35 +413,43 @@ If you're picking up this work:
 # Global instance for easy access
 dev_tools = DevTooling()
 
+
 # Convenience functions
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """Quick commit and push with timestamp."""
     return dev_tools.quick_commit_push(message, emoji)
 
+
 def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
     """Auto-commit memory to memory branch."""
     return dev_tools.auto_commit_memory(content, memory_type, agent_id)
+
 
 def create_snapshot(title: str, context: str) -> bool:
     """Create development snapshot."""
     return dev_tools.create_development_snapshot(title, context)
 
+
 def test_tooling() -> bool:
     """Test all development tooling functions."""
     return dev_tools.test_tooling()
+
 
 # Timestamp utilities
 def get_timestamp() -> str:
     """Get current UTC timestamp."""
     return dev_tools.get_current_timestamp()
 
+
 def get_file_timestamp() -> str:
     """Get timestamp suitable for filenames."""
     return dev_tools.get_timestamp_for_files()
 
+
 def get_precise_timestamp() -> str:
     """Get precise timestamp with seconds."""
     return dev_tools.get_precise_timestamp()
+
 
 def get_ntp_timestamp() -> str:
     """Get accurate timestamp from NTP server."""

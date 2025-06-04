@@ -86,8 +86,10 @@ class MemoryMigrationManager:
                     if handoff_data:
                         # Map handoff_id to snapshot_id for new schema
                         snapshot_data = handoff_data.copy()
-                        if 'handoff_id' in snapshot_data:
-                            snapshot_data['snapshot_id'] = snapshot_data.pop('handoff_id')
+                        if "handoff_id" in snapshot_data:
+                            snapshot_data["snapshot_id"] = snapshot_data.pop(
+                                "handoff_id"
+                            )
                         self.sqlite_manager.create_snapshot(**snapshot_data)
                         stats["snapshots"] += 1
 

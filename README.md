@@ -2,7 +2,7 @@
 
 **Multi-Agent Development Coordination Platform**
 
-*Documentation review and analysis completed - 2025-01-29*
+_Documentation review and analysis completed - 2025-01-29_
 
 Transform AI assistants into sophisticated development coordinators. Plan complex projects, design specialized agent teams, and orchestrate coordinated development workflows.
 
@@ -85,6 +85,7 @@ git clone https://github.com/jeremiah-k/agor.git ~/agor
 ```
 
 **Initialization Prompt for Augment:**
+
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
@@ -99,6 +100,7 @@ After reading these files, help me initialize AGOR for this project and select t
 ```
 
 **Benefits:**
+
 - Direct access to AGOR tools and documentation
 - No file upload limits
 - Real-time collaboration capabilities
@@ -231,6 +233,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 - **Other upload-based platforms** (use appropriate format)
 
 **Bundle Formats:**
+
 - `.zip` - Optimized for Google AI Studio
 - `.tar.gz` - Standard format for ChatGPT and other platforms
 - `.tar.bz2` - High compression option
@@ -254,6 +257,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 - **Development environments** with AI integration
 
 **Requirements:**
+
 - Ability to read local files
 - Git access (optional but recommended)
 - Python 3.10+ for advanced features

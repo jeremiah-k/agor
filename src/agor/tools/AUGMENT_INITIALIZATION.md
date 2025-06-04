@@ -24,6 +24,7 @@ git clone https://github.com/jeremiah-k/agor.git ~/agor
 ### 3. Verify Integration
 
 Ensure Augment can access these key files:
+
 - `~/agor/src/agor/tools/README_ai.md`
 - `~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md`
 - `~/agor/docs/agor-development-guide.md`
@@ -146,4 +147,4 @@ After initialization:
 
 ---
 
-*This integration method is optimized for local development environments where Augment Code has direct file system access.*
+_This integration method is optimized for local development environments where Augment Code has direct file system access._

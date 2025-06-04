@@ -590,14 +590,19 @@ You are working **independently** with {agents-1} other agents on the same probl
         try:
             # Memory sync is already initialized via SQLiteMemoryManager
             # This method provides explicit feedback about memory sync status
-            if hasattr(self.memory_manager, 'memory_sync_manager') and self.memory_manager.memory_sync_manager:
+            if (
+                hasattr(self.memory_manager, "memory_sync_manager")
+                and self.memory_manager.memory_sync_manager
+            ):
                 active_branch = self.memory_manager.active_memory_branch_name
                 if active_branch:
                     print(f"🧠 Memory sync active on branch: {active_branch}")
                 else:
                     print("🧠 Memory sync initialized (no active branch yet)")
             else:
-                print("⚠️ Memory sync not available - continuing without memory persistence")
+                print(
+                    "⚠️ Memory sync not available - continuing without memory persistence"
+                )
         except Exception as e:
             print(f"⚠️ Memory sync initialization warning: {e}")
             # Don't fail coordination setup if memory sync has issues
@@ -605,7 +610,10 @@ You are working **independently** with {agents-1} other agents on the same probl
     def _show_memory_sync_status(self) -> None:
         """Show current memory sync status."""
         try:
-            if hasattr(self.memory_manager, 'memory_sync_manager') and self.memory_manager.memory_sync_manager:
+            if (
+                hasattr(self.memory_manager, "memory_sync_manager")
+                and self.memory_manager.memory_sync_manager
+            ):
                 active_branch = self.memory_manager.active_memory_branch_name
                 if active_branch:
                     print(f"🧠 Memory Sync: Active on branch '{active_branch}'")
@@ -616,8 +624,12 @@ You are working **independently** with {agents-1} other agents on the same probl
                     remote_branches = memory_sync.list_memory_branches(remote=True)
 
                     if local_branches or remote_branches:
-                        all_branches = sorted(list(set(local_branches + remote_branches)), reverse=True)
-                        print(f"   Available memory branches: {', '.join(all_branches[:3])}{'...' if len(all_branches) > 3 else ''}")
+                        all_branches = sorted(
+                            list(set(local_branches + remote_branches)), reverse=True
+                        )
+                        print(
+                            f"   Available memory branches: {', '.join(all_branches[:3])}{'...' if len(all_branches) > 3 else ''}"
+                        )
                 else:
                     print("🧠 Memory Sync: Initialized (no active branch)")
             else:

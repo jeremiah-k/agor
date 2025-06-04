@@ -393,9 +393,7 @@ def snapshot_create_hotkey() -> str:
             agor_version=agor_version,
         )
 
-        return (
-            f"✅ Snapshot '{snapshot_id}' created successfully (DB ID: {snapshot_db_id})"
-        )
+        return f"✅ Snapshot '{snapshot_id}' created successfully (DB ID: {snapshot_db_id})"
 
     except Exception as e:
         return f"❌ Error creating snapshot: {e}"
@@ -605,7 +603,9 @@ def mem_sync_save_hotkey() -> str:
 
         # Get commit message from user
         default_message = f"Save memory state at {get_precise_timestamp()}"
-        commit_message = input(f"Commit message (default: '{default_message}'): ").strip()
+        commit_message = input(
+            f"Commit message (default: '{default_message}'): "
+        ).strip()
         commit_message = commit_message if commit_message else default_message
 
         print(f"\n💾 Saving memory state to branch: {active_branch}")
@@ -615,7 +615,7 @@ def mem_sync_save_hotkey() -> str:
             active_branch,
             commit_message,
             push_changes=True,
-            restore_original_branch=None  # Stay on memory branch
+            restore_original_branch=None,  # Stay on memory branch
         )
 
         if success:
@@ -689,9 +689,7 @@ def mem_sync_restore_hotkey() -> str:
 
         # Ensure branch exists and switch to it
         success = manager.ensure_memory_branch_exists(
-            target_branch,
-            switch_if_exists=True,
-            attempt_pull=True
+            target_branch, switch_if_exists=True, attempt_pull=True
         )
 
         if success:
@@ -756,14 +754,20 @@ def mem_sync_status_hotkey() -> str:
 
         if not local_branches and not remote_branches:
             output.append("\n❌ No memory branches found")
-            output.append("💡 Use 'mem-sync-start' to initialize memory synchronization")
+            output.append(
+                "💡 Use 'mem-sync-start' to initialize memory synchronization"
+            )
 
         # Memory file status
         memory_file_path = manager.repo_path / manager.memory_file_relative_path
         if memory_file_path.exists():
-            output.append(f"\n💾 Memory file: {manager.memory_file_relative_path} (exists)")
+            output.append(
+                f"\n💾 Memory file: {manager.memory_file_relative_path} (exists)"
+            )
         else:
-            output.append(f"\n⚠️  Memory file: {manager.memory_file_relative_path} (not found)")
+            output.append(
+                f"\n⚠️  Memory file: {manager.memory_file_relative_path} (not found)"
+            )
 
         return "\n".join(output)
 
