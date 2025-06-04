@@ -58,7 +58,7 @@ print(f'Session started at: {get_timestamp()}')
 
 # Review development guide
 cat docs/agor-development-guide.md
-cat docs/agent-start-here.md
+cat src/agor/tools/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
 ```
@@ -200,6 +200,9 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 
 ## 🔧 Platform-Specific Guidance
 
+<details>
+<summary><b>Google AI Studio Pro (Free Tier)</b></summary>
+
 ### Google AI Studio Pro (Free Tier)
 
 **Setup:**
@@ -221,9 +224,14 @@ agor bundle your-project -f zip
 # All roles work with copy-paste workflow
 ```
 
-### AugmentCode VS Code Extension (Local Mode)
+</details>
 
-**For the flagship AugmentCode VS Code extension running locally:**
+<details>
+<summary><b>AugmentCode Local Agent</b></summary>
+
+### AugmentCode Local Agent
+
+**For the flagship AugmentCode Local Agent (VS Code extension) running locally:**
 
 **Setup:**
 
@@ -234,12 +242,36 @@ agor bundle your-project -f zip
 
 **User Guidelines to Add:**
 
+Replace your current User Guidelines completely with the comprehensive AGOR guidelines from:
+**[AGOR_USER_GUIDELINES.md](../AGOR_USER_GUIDELINES.md)**
+
+This provides complete AGOR integration including:
+- Proper role selection and initialization protocols
+- Mandatory snapshot requirements with correct dates and locations
+- Multi-agent coordination strategies and workflows
+- Technical requirements and quality standards
+- Critical reminders for session management
+
+**Quick Copy-Paste Version:**
 ```
-When working on development tasks, initialize AGOR by reading the protocol files:
-- Read src/agor/tools/AGOR_INSTRUCTIONS.md for complete operational guide
-- Read src/agor/tools/README_ai.md for role selection
-- Select appropriate role based on task requirements
-- Follow AGOR coordination protocols for multi-agent workflows
+# AGOR (AgentOrchestrator) User Guidelines for AugmentCode Local Agent
+
+When working on development tasks, you are operating within the AGOR framework. Your responsibilities:
+
+1. **Read AGOR Documentation**: Always start by reading from workspace sources:
+   - src/agor/tools/README_ai.md (role selection)
+   - src/agor/tools/AGOR_INSTRUCTIONS.md (complete guide)
+   - src/agor/tools/agent-start-here.md (startup guide)
+
+2. **Select Role**: Choose SOLO DEVELOPER, PROJECT COORDINATOR, or AGENT WORKER based on task
+
+3. **Follow Protocols**: Use AGOR hotkeys (a, f, edit, commit, snapshot, status, sp, bp)
+
+4. **Create Snapshots**: MANDATORY before ending sessions - use correct date, save to .agor/snapshots/, single codeblock format
+
+5. **Coordinate**: Use .agor/ directory, agentconvo.md, and memory sync for multi-agent work
+
+CRITICAL: Never end sessions without snapshots. Always check date with 'date' command. Follow AGOR protocols precisely.
 ```
 
 **Workflow:**
@@ -249,6 +281,11 @@ When working on development tasks, initialize AGOR by reading the protocol files
 3. Agent works within your local VS Code environment
 4. Full codebase context and completions available
 5. Manual git operations (agent provides code, you commit)
+
+</details>
+
+<details>
+<summary><b>AugmentCode Remote Agents</b></summary>
 
 ### AugmentCode Remote Agents
 
@@ -271,6 +308,11 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 # Agent then works directly with your repositories
 ```
 
+</details>
+
+<details>
+<summary><b>Jules by Google</b></summary>
+
 ### Jules by Google
 
 **Setup:**
@@ -290,6 +332,11 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 # Agent then works directly with your repositories
 ```
 
+</details>
+
+<details>
+<summary><b>ChatGPT</b></summary>
+
 ### ChatGPT
 
 **Setup:**
@@ -306,6 +353,28 @@ agor bundle your-project -f tar.gz
 # Upload to ChatGPT
 # Select appropriate role based on your needs
 ```
+
+</details>
+
+<details>
+<summary><b>OpenAI Codex (Software Engineering Agent)</b></summary>
+
+### OpenAI Codex (Software Engineering Agent)
+
+**Setup:**
+
+> **🚧 Instructions Coming Soon**
+>
+> OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
+>
+> **Expected Features:**
+> - Direct terminal access for git operations
+> - Code execution capabilities
+> - Integration with existing OpenAI ecosystem
+>
+> **Likely Mode:** Standalone Mode with enhanced capabilities
+
+</details>
 
 ## 🎼 Multi-Agent Coordination Strategies
 
@@ -399,7 +468,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 ## 📚 Additional Resources
 
-- **[Documentation Index](index.md)** - Quick reference for all documentation
+- **[Documentation Index](../src/agor/tools/index.md)** - Quick reference for all documentation
 - **[Bundle Mode Guide](bundle-mode.md)** - Platform-specific setup instructions
 - **[Strategy Guide](strategies.md)** - Detailed multi-agent strategy explanations
 - **[Quick Start](quick-start.md)** - Step-by-step getting started guide

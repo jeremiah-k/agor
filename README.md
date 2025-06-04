@@ -13,9 +13,9 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 ## 🚀 Quick Start
 
 <details>
-<summary><b>Bundle Mode (Upload to AI Platform)</b></summary>
+<summary><b>Bundle Mode - Google AI Studio, ChatGPT (without Codex)</b></summary>
 
-**For Google AI Studio, ChatGPT, and other upload-based platforms:**
+**For Google AI Studio, ChatGPT (classic interface), and other upload-based platforms:**
 
 ```bash
 # Install AGOR locally
@@ -61,7 +61,7 @@ print(f'Session started at: {get_timestamp()}')
 "
 
 # Review agent startup guide
-cat docs/agent-start-here.md
+cat src/agor/tools/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
 ```
@@ -69,9 +69,9 @@ cat docs/agent-start-here.md
 </details>
 
 <details>
-<summary><b>Augment Code VS Code Extension</b></summary>
+<summary><b>AugmentCode Local Agent</b></summary>
 
-**For the Augment Code VS Code extension with local workspace integration:**
+**For the AugmentCode Local Agent (VS Code extension) with local workspace integration:**
 
 #### Setup Steps:
 
@@ -130,7 +130,7 @@ I'm working with the AGOR (AgentOrchestrator) framework for multi-agent developm
 Please read these key files to understand the system:
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
-- https://github.com/jeremiah-k/agor/blob/main/docs/agent-start-here.md (startup guide)
+- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
 
 After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
 
@@ -141,17 +141,43 @@ After reading these files, help me initialize AGOR for this project and select t
 
 </details>
 
-AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
+<details>
+<summary><b>OpenAI Codex (Software Engineering Agent)</b></summary>
+
+**For OpenAI Codex - the new software engineering agent:**
+
+> **🚧 Instructions Coming Soon**
+>
+> OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
+>
+> **Expected Features:**
+> - Direct terminal access for git operations
+> - Code execution capabilities
+> - Integration with existing OpenAI ecosystem
+>
+> **Likely Mode:** Standalone Mode with enhanced capabilities
+
+</details>
+
+AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)**.
 
 ## 📚 Documentation
 
+### For Users
 **[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
-**[📋 Documentation Index](docs/index.md)** - Token-efficient lookup for AI models
-**[Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
-**[AGOR_INSTRUCTIONS.md](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Comprehensive AI Operational Guide
-**[README_ai.md](src/agor/tools/README_ai.md)** - Initial AI Bootstrap (Role Selection)
-**[AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself (includes Core Context section)
-**[src/agor/tools/agor-meta.md](src/agor/tools/agor-meta.md)** - Feedback system
+**[🚀 Quick Start Guide](docs/quick-start.md)** - Step-by-step getting started instructions
+**[📦 Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
+**[🔄 Multi-Agent Strategies](docs/strategies.md)** - Coordination strategies and when to use them
+**[📸 Snapshot System](docs/snapshots.md)** - Context preservation and agent transitions
+
+### For AI Agents
+**[🤖 Agent Entry Point](src/agor/tools/README_ai.md)** - Role selection and initialization (start here)
+**[📋 User Guidelines for AugmentCode Local](AGOR_USER_GUIDELINES.md)** - Complete guidelines for local agent integration
+**[🚀 Platform Initialization Prompts](src/agor/tools/PLATFORM_INITIALIZATION_PROMPTS.md)** - Copy-paste prompts for each platform
+**[📋 Comprehensive Instructions](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Complete operational guide
+**[📋 Documentation Index](src/agor/tools/index.md)** - Token-efficient lookup for AI models
+**[🛠️ AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
+**[💬 Agent Meta Feedback](src/agor/tools/agor-meta.md)** - Help improve AGOR through feedback
 
 ## 🔄 Operational Modes
 
@@ -285,7 +311,7 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 <details>
 <summary><b>Local Integration Platforms</b></summary>
 
-- **Augment Code VS Code Extension** (flagship local extension with workspace context)
+- **AugmentCode Local Agent** (flagship local extension with workspace context)
 - **Any local AI assistant** with file system access
 - **Development environments** with AI integration
 
