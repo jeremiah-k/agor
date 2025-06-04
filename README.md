@@ -12,7 +12,8 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 ## 🚀 Quick Start
 
-### Bundle Mode (Upload to AI Platform)
+<details>
+<summary><b>Bundle Mode (Upload to AI Platform)</b></summary>
 
 **For Google AI Studio, ChatGPT, and other upload-based platforms:**
 
@@ -31,7 +32,10 @@ agor bundle /path/to/local/project
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
 
-### Standalone Mode (Direct Git Access)
+</details>
+
+<details>
+<summary><b>Standalone Mode (Direct Git Access)</b></summary>
 
 **For AI agents with git access (Augment Code Remote, Jules by Google, etc.) - Agent should execute:**
 
@@ -63,7 +67,10 @@ cat docs/agent-start-here.md
 # Now return to your project's directory with AGOR initialized
 ```
 
-### Augment Code Local Integration
+</details>
+
+<details>
+<summary><b>Augment Code Local Integration</b></summary>
 
 **For local Augment Code agents working directly in your project:**
 
@@ -97,6 +104,8 @@ After reading these files, help me initialize AGOR for this project and select t
 - Real-time collaboration capabilities
 - Full git integration
 - Token-efficient initialization
+
+</details>
 
 AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)** and the **[Full Documentation](docs/index.md)**.
 
@@ -214,7 +223,8 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 
 ## 🏢 Platform Support
 
-### 📦 Bundle Mode Platforms
+<details>
+<summary><b>Bundle Mode Platforms</b></summary>
 
 - **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - _Free tier available_
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
@@ -225,13 +235,19 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 - `.tar.gz` - Standard format for ChatGPT and other platforms
 - `.tar.bz2` - High compression option
 
-### 🤖 Standalone Mode Platforms
+</details>
+
+<details>
+<summary><b>Standalone Mode Platforms</b></summary>
 
 - **Augment Code Remote Agents** (direct git access)
 - **Jules by Google** (direct git access)
 - **Any AI agent with git and shell access**
 
-### 🔗 Local Integration Platforms
+</details>
+
+<details>
+<summary><b>Local Integration Platforms</b></summary>
 
 - **Augment Code Local** (clone AGOR as source)
 - **Any local AI assistant** with file system access
@@ -241,6 +257,8 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 - Ability to read local files
 - Git access (optional but recommended)
 - Python 3.10+ for advanced features
+
+</details>
 
 ## 🏗️ Use Cases
 
