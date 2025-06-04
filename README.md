@@ -203,6 +203,7 @@ AGOR defines distinct roles to structure AI-driven development tasks. Each role 
 - **Git integration** with portable binary (works in any environment)
 - **Codebase analysis** with language-specific exploration
 - **Memory persistence** with markdown files and git branch synchronization
+- **Mandatory snapshot system** for context preservation and agent transitions
 - **Quality gates** and validation checkpoints
 - **Structured Snapshot Protocols** (for multi-agent coordination and solo context management)
 

@@ -4,6 +4,10 @@
 
 These prompts are designed to maximize token efficiency by combining AGOR initialization with specific task instructions. Each prompt ends with the chainable comment, allowing you to add your detailed instructions without requiring a separate initialization step.
 
+## 🚨 CRITICAL: Snapshot System Requirement
+
+**ALL agents using these prompts MUST provide a comprehensive snapshot in a single codeblock before ending their session.** This is mandatory for context preservation and coordination. Read `SNAPSHOT_SYSTEM_GUIDE.md` for complete instructions.
+
 ## 🎯 General Purpose Prompts
 
 ### Universal AGOR Initialization
@@ -25,9 +29,11 @@ After reading these files, help me initialize AGOR for this project and select t
 ```
 I need help with solo development work using AGOR's structured approach.
 
-Please read README_ai.md and select Role A: Solo Developer, then read the Solo Developer sections of AGOR_INSTRUCTIONS.md.
+Please read README_ai.md and select Role A: Solo Developer, then read the Solo Developer sections of AGOR_INSTRUCTIONS.md and SNAPSHOT_SYSTEM_GUIDE.md.
 
 Initialize as Solo Developer and help me with codebase analysis and development tasks.
+
+IMPORTANT: You MUST provide a comprehensive snapshot in a single codeblock before ending this session.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -37,9 +43,11 @@ Initialize as Solo Developer and help me with codebase analysis and development 
 ```
 I'm planning a multi-agent development project using AGOR coordination.
 
-Please read README_ai.md and select Role B: Project Coordinator, then read the Project Coordinator sections of AGOR_INSTRUCTIONS.md.
+Please read README_ai.md and select Role B: Project Coordinator, then read the Project Coordinator sections of AGOR_INSTRUCTIONS.md and SNAPSHOT_SYSTEM_GUIDE.md.
 
 Initialize as Project Coordinator and help me design the development strategy.
+
+IMPORTANT: You MUST provide a comprehensive snapshot in a single codeblock before ending this session.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```

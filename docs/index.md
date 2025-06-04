@@ -57,6 +57,7 @@
 
 ### "I need to create or use a work snapshot"
 
+- **[src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md](../src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md)** - Essential guide for all agents (MANDATORY reading)
 - **[docs/snapshots.md](snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
 - **[src/agor/tools/snapshot_templates.py](../src/agor/tools/snapshot_templates.py)** - Snapshot generation code
   - Functions: generate_snapshot_document(), get_git_context(), get_agor_version()

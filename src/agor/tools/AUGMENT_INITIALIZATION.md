@@ -125,13 +125,64 @@ Initialize as Solo Developer and help me analyze the codebase and plan developme
 - **Persistent context**: AGOR's memory system works seamlessly
 - **Development tools**: Access to AGOR's development utilities
 
+## 📸 Snapshot System Requirements
+
+**🚨 CRITICAL: Before ending any session, you MUST provide a snapshot**
+
+### Essential Reading:
+- **Read**: `~/agor/src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- **Understand**: Snapshot system is mandatory for context preservation
+- **Prepare**: Know how to create comprehensive snapshots
+
+### End-of-Session Snapshot (REQUIRED):
+Every work session must end with a snapshot in a single codeblock containing:
+- Problem definition and current status
+- Work completed and commits made
+- Files modified and next steps
+- Technical context and continuation instructions
+
+Use this template:
+```markdown
+# 📸 Agent Snapshot Document
+
+**Generated**: [timestamp]
+**From Agent Role**: [your role]
+**Snapshot Reason**: End of session
+**AGOR Version**: 0.3.5
+
+## 🎯 Problem Definition
+[What you were working on]
+
+## 📊 Current Status
+[Progress and completion status]
+
+## ✅ Work Completed
+- [List of completed tasks]
+
+## 📝 Commits Made
+- `hash: commit message`
+
+## 📁 Files Modified
+- `file.py` - [changes made]
+
+## 🔄 Next Steps
+1. [Next immediate task]
+2. [Follow-up items]
+
+## 🧠 Technical Context
+[Key decisions, gotchas, testing status]
+
+## 🎯 Continuation Instructions
+[How to continue this work]
+```
+
 ## 📚 Next Steps
 
 After initialization:
 
 1. **Follow role-specific workflows** from AGOR_INSTRUCTIONS.md
 2. **Use AGOR hotkeys** for structured development tasks
-3. **Leverage snapshot system** for context management
+3. **Leverage snapshot system** for context management (MANDATORY)
 4. **Utilize memory synchronization** for persistent state
 5. **Provide feedback** using the `meta` hotkey
 
