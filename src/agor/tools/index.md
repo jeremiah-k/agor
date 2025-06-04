@@ -8,35 +8,35 @@
 
 ### "I need to get started with AGOR"
 
-- **[docs/agent-start-here.md](agent-start-here.md)** - **START HERE** - Agent entry point with immediate guidance
-- **[docs/session-startup-checklist.md](session-startup-checklist.md)** - **ESSENTIAL** - Checklist for every agent session
-- **[docs/usage-guide.md](usage-guide.md)** - **COMPREHENSIVE GUIDE** - Complete overview of modes, roles, and workflows
-- **[docs/quick-start.md](quick-start.md)** - 5-minute setup guide with platform selection
-- **[docs/bundle-mode.md](bundle-mode.md)** - Complete Bundle Mode guide for all platforms
-- **[src/agor/tools/BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
+- **[agent-start-here.md](agent-start-here.md)** - **START HERE** - Agent entry point with immediate guidance
+- **[session-startup-checklist.md](session-startup-checklist.md)** - **ESSENTIAL** - Checklist for every agent session
+- **[docs/usage-guide.md](../../docs/usage-guide.md)** - **COMPREHENSIVE GUIDE** - Complete overview of modes, roles, and workflows
+- **[docs/quick-start.md](../../docs/quick-start.md)** - 5-minute setup guide with platform selection
+- **[docs/bundle-mode.md](../../docs/bundle-mode.md)** - Complete Bundle Mode guide for all platforms
+- **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** - Bundle Mode setup for upload platforms
 
 ### "I need Augment Code integration"
 
-- **[src/agor/tools/AUGMENT_INITIALIZATION.md](../src/agor/tools/AUGMENT_INITIALIZATION.md)** - Local Augment setup and integration
-- **[src/agor/tools/CHAINABLE_PROMPTS.md](../src/agor/tools/CHAINABLE_PROMPTS.md)** - Token-efficient initialization prompts
+- **[AUGMENT_INITIALIZATION.md](AUGMENT_INITIALIZATION.md)** - Local Augment setup and integration
+- **[CHAINABLE_PROMPTS.md](CHAINABLE_PROMPTS.md)** - Token-efficient initialization prompts
 
 ### "I need to check protocol updates or compatibility"
 
-- **[docs/protocol-changelog.md](protocol-changelog.md)** - Protocol version history and compatibility guide
+- **[docs/protocol-changelog.md](../../docs/protocol-changelog.md)** - Protocol version history and compatibility guide
   - Current: Protocol v0.4.0 with snapshot system and standalone mode
   - Breaking changes, new capabilities, and migration notes
   - Reference commits and specific line numbers for changes
 
 ### "I need to understand roles and initialization"
 
-- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** - Complete AI protocol (563 lines)
+- **[README_ai.md](README_ai.md)** - Complete AI protocol (563 lines)
   - Lines 18-40: Role selection (SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER)
   - Lines 120-220: Role-specific hotkey menus
   - Lines 450-550: Snapshot procedures and meta-development
 
 ### "I need multi-agent coordination strategies"
 
-- **[docs/strategies.md](strategies.md)** - 5 coordination strategies with decision matrix
+- **[docs/strategies.md](../../docs/strategies.md)** - 5 coordination strategies with decision matrix
   - Parallel Divergent: Independent exploration → synthesis
   - Pipeline: Sequential snapshots with specialization
   - Swarm: Dynamic task assignment
@@ -45,51 +45,51 @@
 
 ### "I need to implement/execute a strategy"
 
-- **[src/agor/tools/strategy_protocols.py](../src/agor/tools/strategy_protocols.py)** - Concrete strategy implementation
+- **[strategy_protocols.py](strategy_protocols.py)** - Concrete strategy implementation
   - Functions: initialize_parallel_divergent(), initialize_pipeline(), initialize_swarm()
   - Creates: .agor/strategy-active.md, agent memory files, task queues
   - Provides: Step-by-step execution protocols, automatic phase transitions
-- **[src/agor/tools/agent_coordination.py](../src/agor/tools/agent_coordination.py)** - Agent role discovery
+- **[agent_coordination.py](agent_coordination.py)** - Agent role discovery
   - Functions: discover_my_role(), check_strategy_status()
   - Provides: Concrete next actions, role assignment, current status
-- **[docs/coordination-example.md](coordination-example.md)** - Complete implementation example
+- **[coordination-example.md](coordination-example.md)** - Complete implementation example
   - Shows: Before/after coordination, concrete usage, file structure
 
 ### "I need to create or use a work snapshot"
 
-- **[src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md](../src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md)** - Essential guide for all agents (MANDATORY reading)
-- **[docs/snapshots.md](snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
-- **[src/agor/tools/snapshot_templates.py](../src/agor/tools/snapshot_templates.py)** - Snapshot generation code
+- **[SNAPSHOT_SYSTEM_GUIDE.md](SNAPSHOT_SYSTEM_GUIDE.md)** - Essential guide for all agents (MANDATORY reading)
+- **[docs/snapshots.md](../../docs/snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
+- **[snapshot_templates.py](snapshot_templates.py)** - Snapshot generation code
   - Functions: generate_snapshot_document(), get_git_context(), get_agor_version()
   - Captures: problem, progress, commits, files, next steps, git state, AGOR version
 
 ### "I need to analyze code or explore the codebase"
 
-- **[src/agor/tools/code_exploration.py](../src/agor/tools/code_exploration.py)** - Analysis tools implementation
-- **[src/agor/tools/code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)** - Tool documentation
+- **[code_exploration.py](code_exploration.py)** - Analysis tools implementation
+- **[code_exploration_docs.md](code_exploration_docs.md)** - Tool documentation
   - Functions: bfs_find(), grep(), tree(), find_function_signatures(), extract_function_content()
 
 ### "I need memory management"
 
-- **[src/agor/memory_sync.py](../src/agor/memory_sync.py)** - Memory synchronization system
-- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 590-662 - Memory system documentation
+- **[../memory_sync.py](../memory_sync.py)** - Memory synchronization system
+- **[README_ai.md](README_ai.md)** Lines 590-662 - Memory system documentation
 
 ### "I need hotkey commands reference"
 
-- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 120-220 - Role-specific menus
+- **[README_ai.md](README_ai.md)** Lines 120-220 - Role-specific menus
   - PROJECT COORDINATOR: sp, bp, ar, ss, pd, pl, sw, rt, mb, ct, tm, hp
   - ANALYST/SOLO DEV: a, f, co, da, bfs, grep, tree, edit, commit, diff
   - AGENT WORKER: status, sync, ch, log, msg, report, task, complete, snapshot
 
 ### "I need to provide feedback on AGOR"
 
-- **[src/agor/tools/agor-meta.md](../src/agor/tools/agor-meta.md)** - Feedback system and templates
-- **[src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md)** Lines 450-485 - Meta-development procedures
+- **[agor-meta.md](agor-meta.md)** - Feedback system and templates
+- **[README_ai.md](README_ai.md)** Lines 450-485 - Meta-development procedures
 
 ### "I need prompt templates for coordination"
 
-- **[src/agor/tools/agent_prompt_templates.py](../src/agor/tools/agent_prompt_templates.py)** - Agent role prompts
-- **[src/agor/tools/project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** - Planning frameworks
+- **[agent_prompt_templates.py](agent_prompt_templates.py)** - Agent role prompts
+- **[project_planning_templates.py](project_planning_templates.py)** - Planning frameworks
 
 ## 📁 Complete File Inventory
 
@@ -97,48 +97,48 @@
 
 | File                                                       | Purpose                                    | Key Sections                                    | Lines |
 | ---------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- | ----- |
-| **[README.md](README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
+| **[../../docs/README.md](../../docs/README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
 | **[agent-start-here.md](agent-start-here.md)**             | **Agent entry point**                      | **Immediate guidance, discovery commands**      | ~100  |
-| **[quick-start.md](quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
-| **[bundle-mode.md](bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
-| **[google-ai-studio.md](google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
-| **[standalone-mode.md](standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
-| **[strategies.md](strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
-| **[snapshots.md](snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
+| **[../../docs/quick-start.md](../../docs/quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
+| **[../../docs/bundle-mode.md](../../docs/bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
+| **[../../docs/google-ai-studio.md](../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
+| **[../../docs/standalone-mode.md](../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
+| **[../../docs/strategies.md](../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
+| **[../../docs/snapshots.md](../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
 | **[coordination-example.md](coordination-example.md)**     | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
-| **[agor-development-guide.md](agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
+| **[../../docs/agor-development-guide.md](../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 
 | File                                                                   | Purpose              | Key Sections                         | Lines |
 | ---------------------------------------------------------------------- | -------------------- | ------------------------------------ | ----- |
-| **[README_ai.md](../src/agor/tools/README_ai.md)**                     | Complete AI protocol | Role selection, hotkeys, procedures  | 563   |
-| **[AGOR_INSTRUCTIONS.md](../src/agor/tools/AGOR_INSTRUCTIONS.md)**     | Agent Mode setup     | Git clone workflow, initialization   | ~180  |
-| **[BUNDLE_INSTRUCTIONS.md](../src/agor/tools/BUNDLE_INSTRUCTIONS.md)** | Bundle Mode setup    | Upload workflow, platform comparison | ~150  |
-| **[agor-meta.md](../src/agor/tools/agor-meta.md)**                     | Feedback system      | Feedback pathways, templates         | ~200  |
+| **[README_ai.md](README_ai.md)**                     | Complete AI protocol | Role selection, hotkeys, procedures  | 563   |
+| **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)**     | Agent Mode setup     | Git clone workflow, initialization   | ~180  |
+| **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** | Bundle Mode setup    | Upload workflow, platform comparison | ~150  |
+| **[agor-meta.md](agor-meta.md)**                     | Feedback system      | Feedback pathways, templates         | ~200  |
 
 ### Technical Tools (src/agor/tools/)
 
 | File                                                                                 | Purpose             | Key Functions                                | Lines |
 | ------------------------------------------------------------------------------------ | ------------------- | -------------------------------------------- | ----- |
-| **[code_exploration.py](../src/agor/tools/code_exploration.py)**                     | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
-| **[code_exploration_docs.md](../src/agor/tools/code_exploration_docs.md)**           | Tool documentation  | Function reference, examples                 | 179   |
-| **[snapshot_templates.py](../src/agor/tools/snapshot_templates.py)**                 | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
+| **[code_exploration.py](code_exploration.py)**                     | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
+| **[code_exploration_docs.md](code_exploration_docs.md)**           | Tool documentation  | Function reference, examples                 | 179   |
+| **[snapshot_templates.py](snapshot_templates.py)**                 | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
 
-| **[agent_prompt_templates.py](../src/agor/tools/agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
-| **[project_planning_templates.py](../src/agor/tools/project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
-| **[strategy_protocols.py](../src/agor/tools/strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
-| **[agent_coordination.py](../src/agor/tools/agent_coordination.py)**                 | Agent coordination  | Role discovery, status checking              | ~400  |
-| **[AUGMENT_INITIALIZATION.md](../src/agor/tools/AUGMENT_INITIALIZATION.md)**         | Augment integration | Local setup, initialization prompts          | ~150  |
-| **[CHAINABLE_PROMPTS.md](../src/agor/tools/CHAINABLE_PROMPTS.md)**                   | Token efficiency    | Chainable initialization prompts             | ~200  |
+| **[agent_prompt_templates.py](agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
+| **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
+| **[strategy_protocols.py](strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
+| **[agent_coordination.py](agent_coordination.py)**                 | Agent coordination  | Role discovery, status checking              | ~400  |
+| **[AUGMENT_INITIALIZATION.md](AUGMENT_INITIALIZATION.md)**         | Augment integration | Local setup, initialization prompts          | ~150  |
+| **[CHAINABLE_PROMPTS.md](CHAINABLE_PROMPTS.md)**                   | Token efficiency    | Chainable initialization prompts             | ~200  |
 
 ## 🔍 Search by Concept
 
 ### Git Operations
 
-- **Real git binary usage**: [src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md) Lines 5-14
-- **Git context capture**: [src/agor/tools/snapshot_templates.py](../src/agor/tools/snapshot_templates.py) get_git_context()
-- **Repository analysis**: [src/agor/tools/README_ai.md](../src/agor/tools/README_ai.md) Lines 103-120
+- **Real git binary usage**: [README_ai.md](README_ai.md) Lines 5-14
+- **Git context capture**: [snapshot_templates.py](snapshot_templates.py) get_git_context()
+- **Repository analysis**: [README_ai.md](README_ai.md) Lines 103-120
 
 ### Role-Based Workflows
 
@@ -148,10 +148,10 @@
 
 ### Platform-Specific Information
 
-- **Bundle Mode**: [docs/bundle-mode.md](bundle-mode.md) - All platforms, models, formats
+- **Bundle Mode**: [docs/bundle-mode.md](../../docs/bundle-mode.md) - All platforms, models, formats
 - **Google AI Studio**: Gemini 2.5 Pro, Function Calling, .zip format
 - **ChatGPT**: GPT-4o, subscription required, .tar.gz format
-- **Standalone Mode**: [docs/standalone-mode.md](standalone-mode.md) - Direct git access workflows
+- **Standalone Mode**: [docs/standalone-mode.md](../../docs/standalone-mode.md) - Direct git access workflows
 
 ### Coordination Protocols
 
@@ -170,8 +170,8 @@
 
 ```
 Need hotkey? → README_ai.md Lines 120-220
-Need strategy? → strategies.md decision matrix
-Need snapshot? → snapshots.md or snapshot_templates.py
+Need strategy? → ../../docs/strategies.md decision matrix
+Need snapshot? → ../../docs/snapshots.md or snapshot_templates.py
 ```
 
 ### For Implementation Details
@@ -187,10 +187,10 @@ Agent coordination? → agent_coordination.py + README_ai.md Lines 318-322
 ### For Setup and Troubleshooting
 
 ```
-First time? → quick-start.md
-Bundle Mode? → bundle-mode.md
-Standalone Mode? → docs/standalone-mode.md
-Platform-specific? → bundle-mode.md platform sections
+First time? → ../../docs/quick-start.md
+Bundle Mode? → ../../docs/bundle-mode.md
+Standalone Mode? → ../../docs/standalone-mode.md
+Platform-specific? → ../../docs/bundle-mode.md platform sections
 ```
 
 ## 📊 Documentation Status

@@ -4,7 +4,7 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 
 ## 🤖 For AI Models: Start Here
 
-**[📋 Documentation Index](index.md)** - Token-efficient lookup designed for AI models. Find what you need without exploration overhead.
+**[📋 Documentation Index](../src/agor/tools/index.md)** - Token-efficient lookup designed for AI models. Find what you need without exploration overhead.
 
 ## 🗺️ Documentation Map
 
@@ -14,7 +14,7 @@ Welcome to the comprehensive documentation for AgentOrchestrator (AGOR) - the pl
 - **[Bundle Mode Guide](bundle-mode.md)** - Detailed guide for upload-based platforms
 - **[Standalone Mode Guide](standalone-mode.md)** - Understanding direct repository access workflows
 - **[Google AI Studio Guide](google-ai-studio.md)** - Platform setup and best practices
-- **[Documentation Index](index.md)** - Token-efficient lookup for AI models
+- **[Documentation Index](../src/agor/tools/index.md)** - Token-efficient lookup for AI models
 
 ### Core Concepts
 
@@ -48,7 +48,7 @@ For a detailed explanation of this command architecture, please see the **[AGOR 
 
 ## 🚀 Quick Navigation
 
-**🤖 AI Agent entering project?** → **[START HERE](agent-start-here.md)** - Immediate guidance and discovery
+**🤖 AI Agent entering project?** → **[START HERE](../src/agor/tools/agent-start-here.md)** - Immediate guidance and discovery
 **New to AGOR?** → Start with [Quick Start Guide](quick-start.md)
 **Want to get started quickly?** → Check out [Google AI Studio Guide](google-ai-studio.md)
 **Need comprehensive AI operational instructions?** → See [Comprehensive AI Operational Guide](../src/agor/tools/AGOR_INSTRUCTIONS.md)
