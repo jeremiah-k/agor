@@ -63,11 +63,13 @@ When setting up AGOR with AugmentCode Local Agent:
    - Ensure `src/agor/tools/` is accessible
 
 2. **Configure User Guidelines**
-   ```
-   When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Solo Developer, Project Coordinator, or Agent Worker) and follow the appropriate workflows and hotkeys for efficient development.
 
-   CRITICAL: Always create snapshots in single codeblocks before ending sessions, use correct dates (check with 'date' command), and save snapshots to .agor/snapshots/ directory, not the root directory. Follow the AGOR protocols precisely as documented in README_ai.md and SNAPSHOT_SYSTEM_GUIDE.md.
-   ```
+   **Recommended**: Use the comprehensive AGOR User Guidelines from the repository root:
+   **[AGOR_USER_GUIDELINES.md](../../AGOR_USER_GUIDELINES.md)**
+
+   This provides complete AGOR integration with proper protocols, snapshot requirements, and coordination workflows.
+
+   **Quick Setup**: Copy the entire content of AGOR_USER_GUIDELINES.md into your AugmentCode User Guidelines for full AGOR functionality.
 
 3. **Optional Workspace Guidelines**
    Create `.augment-guidelines` in project root:

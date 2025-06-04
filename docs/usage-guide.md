@@ -242,12 +242,36 @@ agor bundle your-project -f zip
 
 **User Guidelines to Add:**
 
+Replace your current User Guidelines completely with the comprehensive AGOR guidelines from:
+**[AGOR_USER_GUIDELINES.md](../AGOR_USER_GUIDELINES.md)**
+
+This provides complete AGOR integration including:
+- Proper role selection and initialization protocols
+- Mandatory snapshot requirements with correct dates and locations
+- Multi-agent coordination strategies and workflows
+- Technical requirements and quality standards
+- Critical reminders for session management
+
+**Quick Copy-Paste Version:**
 ```
-When working on development tasks, initialize AGOR by reading the protocol files:
-- Read src/agor/tools/AGOR_INSTRUCTIONS.md for complete operational guide
-- Read src/agor/tools/README_ai.md for role selection
-- Select appropriate role based on task requirements
-- Follow AGOR coordination protocols for multi-agent workflows
+# AGOR (AgentOrchestrator) User Guidelines for AugmentCode Local Agent
+
+When working on development tasks, you are operating within the AGOR framework. Your responsibilities:
+
+1. **Read AGOR Documentation**: Always start by reading from workspace sources:
+   - src/agor/tools/README_ai.md (role selection)
+   - src/agor/tools/AGOR_INSTRUCTIONS.md (complete guide)
+   - src/agor/tools/agent-start-here.md (startup guide)
+
+2. **Select Role**: Choose SOLO DEVELOPER, PROJECT COORDINATOR, or AGENT WORKER based on task
+
+3. **Follow Protocols**: Use AGOR hotkeys (a, f, edit, commit, snapshot, status, sp, bp)
+
+4. **Create Snapshots**: MANDATORY before ending sessions - use correct date, save to .agor/snapshots/, single codeblock format
+
+5. **Coordinate**: Use .agor/ directory, agentconvo.md, and memory sync for multi-agent work
+
+CRITICAL: Never end sessions without snapshots. Always check date with 'date' command. Follow AGOR protocols precisely.
 ```
 
 **Workflow:**
