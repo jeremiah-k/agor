@@ -438,38 +438,63 @@ def generate_completion_report(
     git_context = get_git_context()
     agor_version = get_agor_version()
 
-    return f"""# 🏁 Task Completion Report
+    return f"""# 📦 AGOR Snapshot: Task Completion Report
 
-**Generated**: {timestamp}
-**From Agent Role**: {agent_role}
-**To Coordinator**: {coordinator_id}
-**AGOR Version**: {agor_version}
-**Task Status**: {final_status}
+## Snapshot ID
+{timestamp.replace(' ', 'T').replace(':', '')}-task-completion
 
-## 🎯 Original Task
+## Author
+{agent_role}
 
+## Strategy
+[Strategy from coordination system]
+
+## Assigned To
+{coordinator_id}
+
+## Memory Branch
+agor/mem/{timestamp.replace(' ', 'T').replace(':', '')[:13]}
+
+## Context
+Task completion report for: {original_task}
+
+## Task Status
+{final_status}
+
+📘 **If you're unfamiliar with task completion reports, read the following before proceeding:**
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- `src/agor/tools/AGOR_INSTRUCTIONS.md`
+- `src/agor/tools/README_ai.md`
+- `src/agor/tools/agent-start-here.md`
+
+📎 **If coordination files are missing or incomplete, you may need to:**
+- Confirm you're in a valid Git repo with AGOR coordination
+- Use `src/agor/memory_sync.py` to sync coordination state
+- Check `.agor/agentconvo.md` for recent agent communication
+
+## Original Task
 {original_task}
 
-## ✅ Work Completed
-
+## Work Completed
 {chr(10).join(f"- {item}" for item in work_completed)}
 
-## 📝 Commits Made
+## Files Modified
+{chr(10).join(f"- `{file}` - [Description of changes]" for file in files_modified)}
 
+## Commits Made
 {chr(10).join(f"- `{commit}`" for commit in commits_made)}
 
-## 📊 Results Summary
-
+## Results Summary
 {results_summary}
 
-## 📁 Files Modified
+## Issues Encountered
+{issues_encountered}
 
-{chr(10).join(f"- `{file}`" for file in files_modified)}
+## Recommendations
+{recommendations}
 
-## 🔧 Technical Context
-
-### Git Repository State
-**Branch**: `{git_context['branch']}`
+## Technical Context
+**Git Branch**: `{git_context['branch']}`
 **Current Commit**: `{git_context['current_commit']}`
 **Repository Status**: {'Clean' if not git_context['status'] else 'Has uncommitted changes'}
 
@@ -478,21 +503,8 @@ def generate_completion_report(
 {git_context['recent_commits']}
 ```
 
-## ⚠️ Issues Encountered
-
-{issues_encountered}
-
-## 💡 Recommendations
-
-{recommendations}
-
-## 🔄 Next Steps for Coordinator
-
-1. **Review Results**: Examine all completed work and commits
-2. **Verify Quality**: Test functionality and review code changes
-3. **Integration**: Merge changes if satisfactory
-4. **Documentation**: Update project documentation if needed
-5. **Assignment**: Assign next tasks or close this work stream
+## Coordination Notes
+Please review this completion report and update `.agor/agentconvo.md` with your feedback. Use `ch` to create a checkpoint when review is complete, and assign next tasks or close this work stream as appropriate.
 
 ## 📝 Coordinator Instructions
 
@@ -575,66 +587,66 @@ def generate_progress_report_snapshot(
     git_context = get_git_context()
     agor_version = get_agor_version()
 
-    return f"""# 📊 Progress Report Snapshot
+    return f"""# � AGOR Snapshot: Progress Report
 
-**Generated**: {timestamp}
-**From Agent Role**: {agent_role}
-**Snapshot Type**: Progress Report
-**AGOR Version**: {agor_version}
+## Snapshot ID
+{timestamp.replace(' ', 'T').replace(':', '')}-progress-report
 
-## 📚 MANDATORY: Documentation Reading Requirement
+## Author
+{agent_role}
 
-**CRITICAL**: Before proceeding with any work, the receiving agent MUST read these core AGOR documentation files:
+## Strategy
+[Strategy from coordination system]
 
-### Required Reading (In Order):
-1. **`src/agor/tools/README_ai.md`** - Role selection and initialization protocol
-2. **`src/agor/tools/AGOR_INSTRUCTIONS.md`** - Comprehensive operational instructions and hotkey menus
-3. **`src/agor/tools/agent-start-here.md`** - Quick entry point for ongoing projects
+## Assigned To
+Project Coordinator
 
-### Verification Checklist:
-- [ ] Read README_ai.md completely - understand role selection and initialization
-- [ ] Read AGOR_INSTRUCTIONS.md completely - understand hotkeys, protocols, and workflows
-- [ ] Read agent-start-here.md completely - understand project entry procedures
-- [ ] Understand current AGOR version: {agor_version}
-- [ ] Understand snapshot system and coordination protocols
-- [ ] Ready to follow AGOR protocols consistently
+## Memory Branch
+agor/mem/{timestamp.replace(' ', 'T').replace(':', '')[:13]}
 
-**No work should begin until all documentation is read and understood.**
+## Context
+Progress report for: {current_task}
+
+📘 **If you're unfamiliar with progress reports, read the following before proceeding:**
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- `src/agor/tools/AGOR_INSTRUCTIONS.md`
+- `src/agor/tools/README_ai.md`
+- `src/agor/tools/agent-start-here.md`
+
+📎 **If coordination files are missing or incomplete, you may need to:**
+- Confirm you're in a valid Git repo with AGOR coordination
+- Use `src/agor/memory_sync.py` to sync coordination state
+- Check `.agor/agentconvo.md` for recent agent communication
 
 ## 🎯 Current Task
 
 {current_task}
 
-## 📈 Progress Status
-
+## Progress Status
 **Overall Progress**: {progress_percentage}
 **Estimated Completion**: {estimated_completion_time}
 **Current Status**: In Progress
 
-## ✅ Work Completed
-
+## Work Completed
 {chr(10).join(f"- {item}" for item in work_completed)}
 
-## 🚧 Current Blockers
-
+## Current Blockers
 {chr(10).join(f"- {blocker}" for blocker in current_blockers) if current_blockers else "- None"}
 
-## 🔄 Next Immediate Steps
-
+## Next Immediate Steps
 {chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_immediate_steps))}
 
-## 📝 Recent Commits
+## Files Modified
+{chr(10).join(f"- `{file}` - [Description of changes]" for file in files_modified)}
 
+## Recent Commits
 {chr(10).join(f"- `{commit}`" for commit in commits_made)}
 
-## 📁 Files Modified
+## Additional Notes
+{additional_notes}
 
-{chr(10).join(f"- `{file}`" for file in files_modified)}
-
-## 🔧 Technical Context
-
-### Git Repository State
-**Branch**: `{git_context['branch']}`
+## Technical Context
+**Git Branch**: `{git_context['branch']}`
 **Current Commit**: `{git_context['current_commit']}`
 **Repository Status**: {'Clean' if not git_context['status'] else 'Has uncommitted changes'}
 
@@ -643,33 +655,8 @@ def generate_progress_report_snapshot(
 {git_context['recent_commits']}
 ```
 
-## 💡 Additional Notes
-
-{additional_notes}
-
-## 🎯 Coordinator Instructions
-
-### 1. Review Progress
-- [ ] Examine completed work items
-- [ ] Review recent commits and changes
-- [ ] Assess progress against timeline
-- [ ] Identify any support needed
-
-### 2. Address Blockers
-- [ ] Review current blockers
-- [ ] Provide guidance or resources
-- [ ] Reassign tasks if needed
-- [ ] Update project timeline if necessary
-
-### 3. Communication Protocol
-Update `.agor/agentconvo.md` with progress acknowledgment:
-```
-[COORDINATOR-ID] [{timestamp}] - PROGRESS REVIEWED: {current_task[:50]}... - Status: {progress_percentage}
-```
-
----
-
-**Progress Report**: This snapshot provides current status for coordination and planning purposes.
+## Coordination Notes
+Please review this progress report and update `.agor/agentconvo.md` with your feedback. Use `ch` to create a checkpoint when review is complete, and provide guidance on next steps or address any blockers identified.
 """
 
 
