@@ -7,9 +7,9 @@ with complete context, including problem definition, progress made, commits, and
 
 import datetime
 import subprocess
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Dict, List
-from importlib.metadata import PackageNotFoundError, version
 
 
 def get_git_context() -> Dict[str, str]:
@@ -1018,9 +1018,7 @@ snapshots) list all snapshot documents
 """
 
 
-def save_progress_report_snapshot(
-    report_content: str, task_summary: str
-) -> Path:
+def save_progress_report_snapshot(report_content: str, task_summary: str) -> Path:
     """Save progress report snapshot for status updates."""
 
     snapshot_dir = create_snapshot_directory()
@@ -1039,9 +1037,7 @@ def save_progress_report_snapshot(
     return report_file
 
 
-def save_work_order_snapshot(
-    order_content: str, task_summary: str
-) -> Path:
+def save_work_order_snapshot(order_content: str, task_summary: str) -> Path:
     """Save work order snapshot for task assignment."""
 
     snapshot_dir = create_snapshot_directory()
@@ -1060,9 +1056,7 @@ def save_work_order_snapshot(
     return order_file
 
 
-def save_pr_description_snapshot(
-    pr_content: str, pr_title: str
-) -> Path:
+def save_pr_description_snapshot(pr_content: str, pr_title: str) -> Path:
     """Save PR description snapshot for user to copy when creating pull request."""
 
     snapshot_dir = create_snapshot_directory()

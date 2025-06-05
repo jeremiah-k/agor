@@ -1,6 +1,6 @@
 # AGOR (AgentOrchestrator) User Guidelines for AugmentCode Local Agent
 
-*These guidelines enable the AugmentCode Local Agent to effectively utilize the AGOR multi-agent development coordination platform. The agent should read AGOR documentation from workspace sources and follow structured development protocols.*
+_These guidelines enable the AugmentCode Local Agent to effectively utilize the AGOR multi-agent development coordination platform. The agent should read AGOR documentation from workspace sources and follow structured development protocols._
 
 ## 🎯 Core AGOR Principles
 
@@ -15,6 +15,7 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 ## 🚀 Initialization Protocol
 
 ### Step 1: Read AGOR Documentation
+
 ```
 MANDATORY: Read these files from workspace sources before starting any development work:
 - src/agor/tools/README_ai.md (role selection and initialization)
@@ -24,28 +25,34 @@ MANDATORY: Read these files from workspace sources before starting any developme
 ```
 
 ### Step 2: Role Selection
+
 Choose your AGOR role based on the task:
 
 **🔍 SOLO DEVELOPER** - For:
+
 - Codebase analysis and exploration
 - Feature implementation and debugging
 - Technical documentation and code explanation
 - Direct development work
 
 **📋 PROJECT COORDINATOR** - For:
+
 - Strategic planning and architecture design
 - Multi-agent workflow coordination
 - Project breakdown and task assignment
 - Team management and strategy selection
 
 **🤖 AGENT WORKER** - For:
+
 - Executing specific assigned tasks
 - Following coordinator instructions
 - Participating in multi-agent workflows
 - Task completion and reporting
 
 ### Step 3: Environment Detection
+
 You are operating in **AugmentCode Local Agent** environment with:
+
 - Direct workspace access to AGOR documentation
 - Full file system access without upload limitations
 - Persistent User Guidelines across sessions
@@ -54,6 +61,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 ## 🛠️ AGOR Workflow Protocols
 
 ### Core Hotkeys (Use These Frequently)
+
 - `a` - Comprehensive codebase analysis
 - `f` - Display complete files with formatting
 - `edit` - Modify files with targeted changes
@@ -64,6 +72,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 - `bp` - Break down project into tasks
 
 ### Snapshot Requirements (CRITICAL)
+
 **EVERY session MUST end with a snapshot in a single codeblock:**
 
 1. **Check Current Date**: Use `date` command to get correct date
@@ -73,6 +82,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 5. **Complete Context**: Include all work, commits, and next steps
 
 ### Memory and Coordination
+
 - Use `.agor/` directory for coordination files (managed by AGOR Memory Sync)
 - Update `agentconvo.md` for multi-agent communication
 - Maintain agent memory files for session continuity
@@ -81,6 +91,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 ## 🎼 Multi-Agent Coordination
 
 ### When Working with Multiple Agents
+
 1. **Initialize Coordination**: Use `init` hotkey to set up .agor/ structure
 2. **Select Strategy**: Use `ss` to analyze and recommend coordination strategy
 3. **Communicate**: Update agentconvo.md with status and findings
@@ -88,8 +99,9 @@ You are operating in **AugmentCode Local Agent** environment with:
 5. **Create Snapshots**: For seamless agent transitions
 
 ### Available Strategies
+
 - **Parallel Divergent** (`pd`) - Independent exploration → synthesis
-- **Pipeline** (`pl`) - Sequential snapshots with specialization  
+- **Pipeline** (`pl`) - Sequential snapshots with specialization
 - **Swarm** (`sw`) - Dynamic task assignment from queue
 - **Red Team** (`rt`) - Adversarial build/break cycles
 - **Mob Programming** (`mb`) - Collaborative coding
@@ -97,18 +109,21 @@ You are operating in **AugmentCode Local Agent** environment with:
 ## 🔧 Technical Requirements
 
 ### Git Operations
+
 - Use real git commands (not simulated)
 - Commit frequently with descriptive messages
 - Push changes regularly for backup and collaboration
 - Follow pattern: `git add . && git commit -m "message" && git push`
 
 ### File Management
+
 - Keep files under 500 lines when creating new projects
 - Use modular, testable code structure
 - No hard-coded environment variables
 - Maintain clean separation of concerns
 
 ### Code Quality
+
 - Write comprehensive tests using TDD approach
 - Document code with clear comments and docstrings
 - Follow security best practices
@@ -117,14 +132,16 @@ You are operating in **AugmentCode Local Agent** environment with:
 ## 📚 Documentation Access
 
 ### Quick Reference Paths
+
 - **Role Selection**: src/agor/tools/README_ai.md
-- **Complete Guide**: src/agor/tools/AGOR_INSTRUCTIONS.md  
+- **Complete Guide**: src/agor/tools/AGOR_INSTRUCTIONS.md
 - **Documentation Index**: src/agor/tools/index.md
 - **Snapshot Guide**: src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md
 - **Strategy Guide**: docs/strategies.md
 - **Development Guide**: docs/agor-development-guide.md (when working on AGOR itself)
 
 ### Platform-Specific Information
+
 - **Bundle Mode**: docs/bundle-mode.md
 - **Standalone Mode**: docs/standalone-mode.md
 - **Usage Guide**: docs/usage-guide.md
@@ -143,6 +160,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 ## 🎯 Success Criteria
 
 You are successfully using AGOR when you:
+
 - ✅ Read AGOR documentation before starting work
 - ✅ Select and announce your role clearly
 - ✅ Use AGOR hotkeys and workflows consistently

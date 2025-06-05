@@ -474,22 +474,22 @@ class AgentChecklist:
             "git_setup": "Configure git and create feature branch",
             "frequent_commits": "Commit and push frequently",
             "create_snapshot": "Create snapshot before session end",
-            "update_coordination": "Update coordination files"
+            "update_coordination": "Update coordination files",
         }
 
         role_items = {
             "solo_developer": {
                 "analyze_codebase": "Perform codebase analysis",
-                "test_changes": "Test all changes"
+                "test_changes": "Test all changes",
             },
             "project_coordinator": {
                 "select_strategy": "Select development strategy",
-                "coordinate_team": "Set up team coordination"
+                "coordinate_team": "Set up team coordination",
             },
             "agent_worker": {
                 "receive_task": "Receive task from coordinator",
-                "report_completion": "Report task completion"
-            }
+                "report_completion": "Report task completion",
+            },
         }
 
         base_items.update(role_items.get(self.agent_role, {}))
@@ -517,18 +517,24 @@ class AgentChecklist:
             import subprocess
 
             # Check git config
-            result = subprocess.run(["git", "config", "user.name"], capture_output=True, text=True)
+            result = subprocess.run(
+                ["git", "config", "user.name"], capture_output=True, text=True
+            )
             if not result.stdout.strip():
                 print("⚠️  Git user.name not configured")
                 return False
 
-            result = subprocess.run(["git", "config", "user.email"], capture_output=True, text=True)
+            result = subprocess.run(
+                ["git", "config", "user.email"], capture_output=True, text=True
+            )
             if not result.stdout.strip():
                 print("⚠️  Git user.email not configured")
                 return False
 
             # Check if on feature branch
-            result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+            result = subprocess.run(
+                ["git", "branch", "--show-current"], capture_output=True, text=True
+            )
             current_branch = result.stdout.strip()
 
             if current_branch in ["main", "master"]:
@@ -545,11 +551,15 @@ class AgentChecklist:
         """Check if commits are frequent enough."""
         try:
             import subprocess
+
             result = subprocess.run(
                 ["git", "log", "--oneline", "-5", "--since=1 hour ago"],
-                capture_output=True, text=True
+                capture_output=True,
+                text=True,
             )
-            commits = len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+            commits = (
+                len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
+            )
             if commits < 2:
                 print("💡 Reminder: Consider committing more frequently")
             else:
@@ -561,7 +571,9 @@ class AgentChecklist:
         """Get checklist status."""
         total = len(self.mandatory_items)
         completed = len(self.completed_items)
-        incomplete = [item for item in self.mandatory_items if item not in self.completed_items]
+        incomplete = [
+            item for item in self.mandatory_items if item not in self.completed_items
+        ]
 
         return {
             "completion_percentage": (completed / total) * 100 if total > 0 else 0,
@@ -569,7 +581,7 @@ class AgentChecklist:
             "total": total,
             "incomplete": incomplete,
             "snapshot_created": self.snapshot_created,
-            "can_end_session": len(incomplete) == 0 and self.snapshot_created
+            "can_end_session": len(incomplete) == 0 and self.snapshot_created,
         }
 
     def enforce_session_end(self) -> bool:
@@ -593,23 +605,29 @@ class AgentChecklist:
 # Global agent checklist instance
 _agent_checklist = None
 
+
 def init_agent_checklist(role: str = "solo_developer") -> AgentChecklist:
     """Initialize agent checklist for session."""
     global _agent_checklist
     _agent_checklist = AgentChecklist(role)
-    print(f"📋 Internal checklist created for {role} with {len(_agent_checklist.mandatory_items)} items")
+    print(
+        f"📋 Internal checklist created for {role} with {len(_agent_checklist.mandatory_items)} items"
+    )
     return _agent_checklist
+
 
 def mark_checklist_complete(item_id: str):
     """Mark checklist item as complete."""
     if _agent_checklist:
         _agent_checklist.mark_complete(item_id)
 
+
 def get_checklist_status() -> dict:
     """Get current checklist status."""
     if _agent_checklist:
         return _agent_checklist.get_status()
     return {"status": "no_checklist"}
+
 
 def enforce_session_end() -> bool:
     """Enforce session end procedures."""
@@ -619,9 +637,14 @@ def enforce_session_end() -> bool:
 
 
 # New hotkey processing functions
-def process_progress_report_hotkey(task_description: str = "", progress: str = "50%") -> str:
+def process_progress_report_hotkey(
+    task_description: str = "", progress: str = "50%"
+) -> str:
     """Process progress-report hotkey and create progress report snapshot."""
-    from agor.tools.snapshot_templates import generate_progress_report_snapshot, save_progress_report_snapshot
+    from agor.tools.snapshot_templates import (
+        generate_progress_report_snapshot,
+        save_progress_report_snapshot,
+    )
 
     # Get user input for progress report details
     if not task_description:
@@ -664,7 +687,7 @@ def process_progress_report_hotkey(task_description: str = "", progress: str = "
         files_modified=["Files from git status"],
         agent_role="Solo Developer",
         estimated_completion_time=input("⏱️ Estimated completion time: ") or "Unknown",
-        additional_notes=input("💡 Additional notes: ") or "None"
+        additional_notes=input("💡 Additional notes: ") or "None",
     )
 
     snapshot_file = save_progress_report_snapshot(report_content, task_description)
@@ -678,7 +701,10 @@ def process_progress_report_hotkey(task_description: str = "", progress: str = "
 
 def process_work_order_hotkey(task_description: str = "") -> str:
     """Process work-order hotkey and create work order snapshot."""
-    from agor.tools.snapshot_templates import generate_work_order_snapshot, save_work_order_snapshot
+    from agor.tools.snapshot_templates import (
+        generate_work_order_snapshot,
+        save_work_order_snapshot,
+    )
 
     # Get user input for work order details
     if not task_description:
@@ -714,13 +740,15 @@ def process_work_order_hotkey(task_description: str = "") -> str:
         task_requirements=requirements,
         acceptance_criteria=acceptance_criteria,
         files_to_modify=files_to_modify,
-        reference_materials=[input("📚 Reference materials: ") or "See project documentation"],
+        reference_materials=[
+            input("📚 Reference materials: ") or "See project documentation"
+        ],
         coordinator_id=input("👤 Coordinator ID: ") or "Project Coordinator",
         assigned_agent_role=input("🤖 Assigned agent role: ") or "Agent Worker",
         priority_level=input("⚡ Priority level (High/Medium/Low): ") or "Medium",
         estimated_effort=input("⏱️ Estimated effort: ") or "Unknown",
         deadline=input("📅 Deadline: ") or "None specified",
-        context_notes=input("🧠 Context notes: ") or "None"
+        context_notes=input("🧠 Context notes: ") or "None",
     )
 
     snapshot_file = save_work_order_snapshot(order_content, task_description)
@@ -734,7 +762,10 @@ def process_work_order_hotkey(task_description: str = "") -> str:
 
 def process_create_pr_hotkey(pr_title: str = "") -> str:
     """Process create-pr hotkey and generate PR description for user to copy."""
-    from agor.tools.snapshot_templates import generate_pr_description_snapshot, save_pr_description_snapshot
+    from agor.tools.snapshot_templates import (
+        generate_pr_description_snapshot,
+        save_pr_description_snapshot,
+    )
 
     # Get user input for PR description details
     if not pr_title:
@@ -769,12 +800,18 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
     # Get git information using proper git manager
     try:
         git_binary = git_manager.get_git_binary()
-        commits = subprocess.check_output(
-            [git_binary, "log", "--oneline", "-10"], text=True
-        ).strip().split('\n')
-        files_changed = subprocess.check_output(
-            [git_binary, "diff", "--name-only", "main"], text=True
-        ).strip().split('\n')
+        commits = (
+            subprocess.check_output([git_binary, "log", "--oneline", "-10"], text=True)
+            .strip()
+            .split("\n")
+        )
+        files_changed = (
+            subprocess.check_output(
+                [git_binary, "diff", "--name-only", "main"], text=True
+            )
+            .strip()
+            .split("\n")
+        )
     except Exception as err:
         commits = [f"Git error: {err}"]
         files_changed = ["<unknown>"]
@@ -782,10 +819,10 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
     target_branch = input("🎯 Target branch (default: main): ") or "main"
 
     reviewers_input = input("👥 Requested reviewers (comma-separated): ")
-    reviewers_requested = reviewers_input.split(',') if reviewers_input.strip() else []
+    reviewers_requested = reviewers_input.split(",") if reviewers_input.strip() else []
 
     issues_input = input("🔗 Related issues (comma-separated): ")
-    related_issues = issues_input.split(',') if issues_input.strip() else []
+    related_issues = issues_input.split(",") if issues_input.strip() else []
 
     # Generate and save PR description snapshot
     pr_content = generate_pr_description_snapshot(
@@ -799,12 +836,14 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
         agent_role="Solo Developer",
         target_branch=target_branch,
         reviewers_requested=reviewers_requested,
-        related_issues=related_issues
+        related_issues=related_issues,
     )
 
     snapshot_file = save_pr_description_snapshot(pr_content, pr_title)
     print(f"🔀 PR description snapshot created: {snapshot_file}")
-    print("📋 User can copy the PR description from the snapshot to create the actual pull request")
+    print(
+        "📋 User can copy the PR description from the snapshot to create the actual pull request"
+    )
 
     # Mark checklist item complete
     mark_checklist_complete("create_snapshot")

@@ -31,7 +31,6 @@ The Memory Synchronization System automatically commits the following to memory 
 - **Coordination Logs**: `.agor/agentconvo.md`, `.agor/memory.md` (project-level memory), individual agent memory files (e.g., `agent1-memory.md`)
 - **Strategy Files**: `.agor/strategy-active.md`, etc.
 
-
 ### ⚠️ **CRITICAL: Memory Branch Safety Protocol & Agent Interaction**
 
 - **Automated System**: Agents primarily interact with memory and coordination files locally (e.g., updating their `agent1-memory.md`). The **Memory Synchronization System** handles committing these changes to the appropriate memory branch and ensuring local files are updated from the memory branch.

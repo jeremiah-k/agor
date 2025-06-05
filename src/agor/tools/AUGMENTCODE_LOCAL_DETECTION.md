@@ -5,6 +5,7 @@
 When running in the AugmentCode Local Agent environment (VS Code extension), agents have access to special capabilities:
 
 ### Available Features
+
 - **Augment Memories**: Persistent memory system across sessions
 - **User Guidelines**: User-defined guidelines for consistent behavior
 - **Workspace Context**: Direct access to project files and AGOR documentation
@@ -13,6 +14,7 @@ When running in the AugmentCode Local Agent environment (VS Code extension), age
 ### Detection Methods
 
 #### Method 1: Environment Variables
+
 ```python
 import os
 
@@ -24,11 +26,12 @@ def is_augmentcode_local():
         'AUGMENT_LOCAL_MODE',
         'VSCODE_AUGMENT_EXTENSION'
     ]
-    
+
     return any(os.getenv(var) for var in augment_indicators)
 ```
 
 #### Method 2: Workspace Context
+
 ```python
 def has_augment_workspace_context():
     """Check if AGOR is available in workspace context"""
@@ -44,6 +47,7 @@ def has_augment_workspace_context():
 ```
 
 #### Method 3: User Guidelines Access
+
 ```python
 def has_user_guidelines_access():
     """Check if User Guidelines are accessible"""
@@ -59,6 +63,7 @@ def has_user_guidelines_access():
 When setting up AGOR with AugmentCode Local Agent:
 
 1. **Add AGOR to Workspace Sources**
+
    - Clone AGOR repository locally
    - Add AGOR directory to AugmentCode workspace sources
    - Ensure `src/agor/tools/` is accessible
@@ -86,11 +91,13 @@ When setting up AGOR with AugmentCode Local Agent:
 When an agent detects AugmentCode Local Agent environment:
 
 1. **Enhanced Initialization**
+
    - Access User Guidelines for project-specific preferences
    - Leverage Augment Memories for session continuity
    - Use workspace context for immediate AGOR access
 
 2. **Modified Workflow**
+
    - No need to clone AGOR repository (already in workspace)
    - Direct access to all AGOR documentation
    - Enhanced memory persistence through Augment system
@@ -138,12 +145,14 @@ Based on environment detection, provide different initialization instructions:
 ## Future Enhancements
 
 ### Planned Features
+
 - Automatic AGOR activation when AugmentCode Local Agent is detected
 - Integration with AugmentCode memory system
 - Seamless handoff between AugmentCode and AGOR coordination
 - Enhanced workspace-aware file operations
 
 ### API Integration
+
 - Direct integration with AugmentCode User Guidelines API
 - Augment Memories synchronization with AGOR memory system
 - Workspace context optimization for AGOR tools

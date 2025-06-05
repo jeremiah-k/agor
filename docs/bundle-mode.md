@@ -169,8 +169,6 @@ agor bundle /path/to/your/project -f zip
 - Optimized file structure
 - Recommended for Google AI Studio
 
-
-
 ### Branch-Specific Bundling
 
 ```bash

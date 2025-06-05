@@ -5,6 +5,7 @@
 ## 🎯 What is the Snapshot System?
 
 The snapshot system is AGOR's core mechanism for:
+
 - **Context preservation** - Maintaining work state across sessions
 - **Agent transitions** - Seamless handoffs between agents
 - **Progress tracking** - Comprehensive documentation of work completed
@@ -15,6 +16,7 @@ The snapshot system is AGOR's core mechanism for:
 **EVERY agent session MUST end with a snapshot in a single codeblock.**
 
 ### When to Create Snapshots:
+
 - **End of work session** (REQUIRED)
 - **Before major changes** (recommended)
 - **When handing off to another agent** (required)
@@ -22,6 +24,7 @@ The snapshot system is AGOR's core mechanism for:
 - **At natural stopping points** (recommended)
 
 ### Snapshot Format (Single Codeblock):
+
 ```markdown
 # 📸 Agent Snapshot Document
 
@@ -31,54 +34,66 @@ The snapshot system is AGOR's core mechanism for:
 **AGOR Version**: 0.3.5
 
 ## 🔧 Environment Context
+
 **Git Branch**: `feature/authentication`
 **Current Commit**: `abc12345...`
 **Repository Status**: Clean/Has uncommitted changes
 
 ## 🎯 Problem Definition
+
 [Clear description of what you were working on]
 
 ## 📊 Current Status
+
 **Overall Progress**: [Percentage or description]
 **Estimated Completion**: [Time estimate or "Unknown"]
 
 ## ✅ Work Completed
+
 - [List of completed tasks]
 - [Features implemented]
 - [Bugs fixed]
 
 ## 📝 Commits Made
+
 - `commit-hash: commit message`
 - `commit-hash: commit message`
 
 ## 📁 Files Modified
+
 - `path/to/file.py` - [What was changed]
 - `path/to/another.js` - [What was changed]
 
 ## 🔄 Next Steps
+
 1. [Immediate next task]
 2. [Follow-up tasks]
 3. [Long-term considerations]
 
 ## 🧠 Technical Context
+
 **Key Decisions Made**: [Important architectural or implementation decisions]
 **Gotchas/Warnings**: [Things the next agent should know]
 **Dependencies**: [External dependencies or blockers]
 **Testing Status**: [What's tested, what needs testing]
 
 ## 🎯 Continuation Instructions
+
 [Specific guidance for the next agent or future session]
 ```
 
 ## 🛠️ How to Create Snapshots
 
 ### Method 1: Use AGOR Hotkey (Recommended)
+
 ```
 snapshot
 ```
+
 This will prompt you for all necessary information and generate the snapshot automatically.
 
 ### Method 2: Manual Creation (If hotkey unavailable)
+
 1. **Gather context** - Review your work, commits, and current state
 2. **Fill out template** - Use the format above
 3. **Save to .agor/snapshots/** - Use timestamp naming: `YYYY-MM-DD_HHMMSS_summary_snapshot.md`
@@ -87,6 +102,7 @@ This will prompt you for all necessary information and generate the snapshot aut
 ## 📋 Snapshot Quality Checklist
 
 ### Essential Information (MUST HAVE):
+
 - [ ] Clear problem definition
 - [ ] Current status and progress
 - [ ] All work completed this session
@@ -96,6 +112,7 @@ This will prompt you for all necessary information and generate the snapshot aut
 - [ ] Git repository state
 
 ### Technical Context (SHOULD HAVE):
+
 - [ ] Key decisions and rationale
 - [ ] Warnings or gotchas
 - [ ] Testing status
@@ -103,6 +120,7 @@ This will prompt you for all necessary information and generate the snapshot aut
 - [ ] Security implications
 
 ### Continuation Guidance (MUST HAVE):
+
 - [ ] How to continue the work
 - [ ] What to review first
 - [ ] Environment setup needs
@@ -111,12 +129,14 @@ This will prompt you for all necessary information and generate the snapshot aut
 ## 🔄 Loading Snapshots
 
 ### When Starting Work:
+
 1. **Check for snapshots** - Look in `.agor/snapshots/` directory
 2. **Load latest relevant snapshot** - Use `load_snapshot` hotkey or read manually
 3. **Verify repository state** - Ensure git branch and commit match snapshot
 4. **Confirm understanding** - Update `.agor/agentconvo.md` with receipt confirmation
 
 ### Snapshot Loading Hotkey:
+
 ```
 load_snapshot
 ```
@@ -124,6 +144,7 @@ load_snapshot
 ## 📁 Snapshot Storage
 
 Snapshots are stored in:
+
 ```
 .agor/
 ├── snapshots/
@@ -137,12 +158,14 @@ Snapshots are stored in:
 ## 🎯 Best Practices
 
 ### For Snapshot Creators:
+
 - **Be comprehensive** - Include all relevant context
 - **Be specific** - Exact file paths, commit hashes, error messages
 - **Be forward-thinking** - What would you want to know if you were continuing this work?
 - **Test your instructions** - Could someone else follow your next steps?
 
 ### For Snapshot Receivers:
+
 - **Read completely** - Don't skip sections
 - **Verify state** - Ensure your environment matches the snapshot
 - **Ask questions** - Use coordination channels if anything is unclear

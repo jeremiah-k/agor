@@ -234,6 +234,7 @@ In standalone mode, coordination happens through:
    - Technical context and continuation instructions
 
 ### Snapshot Template (Copy and Fill):
+
 ```markdown
 # 📸 Agent Snapshot Document
 
@@ -243,28 +244,36 @@ In standalone mode, coordination happens through:
 **AGOR Version**: 0.3.5
 
 ## 🎯 Problem Definition
+
 [What you were working on]
 
 ## 📊 Current Status
+
 **Overall Progress**: [Percentage or description]
 
 ## ✅ Work Completed
+
 - [List completed tasks]
 
 ## 📝 Commits Made
+
 - `hash: message`
 
 ## 📁 Files Modified
+
 - `file.py` - [changes made]
 
 ## 🔄 Next Steps
+
 1. [Next task]
 2. [Follow-up items]
 
 ## 🧠 Technical Context
+
 [Key decisions, gotchas, testing status]
 
 ## 🎯 Continuation Instructions
+
 [How to continue this work]
 ```
 

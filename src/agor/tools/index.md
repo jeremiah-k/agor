@@ -95,23 +95,23 @@
 
 ### Core Documentation (docs/)
 
-| File                                                       | Purpose                                    | Key Sections                                    | Lines |
-| ---------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- | ----- |
+| File                                                                                   | Purpose                                    | Key Sections                                    | Lines |
+| -------------------------------------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- | ----- |
 | **[../../../docs/README.md](../../../docs/README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
-| **[agent-start-here.md](agent-start-here.md)**             | **Agent entry point**                      | **Immediate guidance, discovery commands**      | ~100  |
+| **[agent-start-here.md](agent-start-here.md)**                                         | **Agent entry point**                      | **Immediate guidance, discovery commands**      | ~100  |
 | **[../../../docs/quick-start.md](../../../docs/quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
 | **[../../../docs/bundle-mode.md](../../../docs/bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
 | **[../../../docs/google-ai-studio.md](../../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
 | **[../../../docs/standalone-mode.md](../../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
 | **[../../../docs/strategies.md](../../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
 | **[../../../docs/snapshots.md](../../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
-| **[coordination-example.md](coordination-example.md)**     | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
+| **[coordination-example.md](coordination-example.md)**                                 | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
 | **[../../../docs/agor-development-guide.md](../../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 
-| File                                                                   | Purpose              | Key Sections                         | Lines |
-| ---------------------------------------------------------------------- | -------------------- | ------------------------------------ | ----- |
+| File                                                 | Purpose              | Key Sections                         | Lines |
+| ---------------------------------------------------- | -------------------- | ------------------------------------ | ----- |
 | **[README_ai.md](README_ai.md)**                     | Complete AI protocol | Role selection, hotkeys, procedures  | 563   |
 | **[AGOR_INSTRUCTIONS.md](AGOR_INSTRUCTIONS.md)**     | Agent Mode setup     | Git clone workflow, initialization   | ~180  |
 | **[BUNDLE_INSTRUCTIONS.md](BUNDLE_INSTRUCTIONS.md)** | Bundle Mode setup    | Upload workflow, platform comparison | ~150  |
@@ -119,18 +119,18 @@
 
 ### Technical Tools (src/agor/tools/)
 
-| File                                                                                 | Purpose             | Key Functions                                | Lines |
-| ------------------------------------------------------------------------------------ | ------------------- | -------------------------------------------- | ----- |
-| **[code_exploration.py](code_exploration.py)**                     | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
-| **[code_exploration_docs.md](code_exploration_docs.md)**           | Tool documentation  | Function reference, examples                 | 179   |
-| **[snapshot_templates.py](snapshot_templates.py)**                 | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
+| File                                                     | Purpose             | Key Functions                                | Lines |
+| -------------------------------------------------------- | ------------------- | -------------------------------------------- | ----- |
+| **[code_exploration.py](code_exploration.py)**           | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
+| **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation  | Function reference, examples                 | 179   |
+| **[snapshot_templates.py](snapshot_templates.py)**       | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
 
-| **[agent_prompt_templates.py](agent_prompt_templates.py)**         | Role prompts        | Specialized agent prompts                    | ~200  |
-| **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates                           | ~300  |
-| **[strategy_protocols.py](strategy_protocols.py)**                 | Strategy execution  | Concrete implementation protocols            | ~600  |
-| **[agent_coordination.py](agent_coordination.py)**                 | Agent coordination  | Role discovery, status checking              | ~400  |
-| **[AUGMENT_INITIALIZATION.md](AUGMENT_INITIALIZATION.md)**         | Augment integration | Local setup, initialization prompts          | ~150  |
-| **[CHAINABLE_PROMPTS.md](CHAINABLE_PROMPTS.md)**                   | Token efficiency    | Chainable initialization prompts             | ~200  |
+| **[agent_prompt_templates.py](agent_prompt_templates.py)** | Role prompts | Specialized agent prompts | ~200 |
+| **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates | ~300 |
+| **[strategy_protocols.py](strategy_protocols.py)** | Strategy execution | Concrete implementation protocols | ~600 |
+| **[agent_coordination.py](agent_coordination.py)** | Agent coordination | Role discovery, status checking | ~400 |
+| **[AUGMENT_INITIALIZATION.md](AUGMENT_INITIALIZATION.md)** | Augment integration | Local setup, initialization prompts | ~150 |
+| **[CHAINABLE_PROMPTS.md](CHAINABLE_PROMPTS.md)** | Token efficiency | Chainable initialization prompts | ~200 |
 
 ## 🔍 Search by Concept
 

@@ -35,7 +35,6 @@ class AgorSettings(BaseSettings):
         description="SHA256 hash for git binary verification",
     )
 
-
     # Bundle creation
     compression_format: str = Field(
         default="zip", description="Default compression format for bundles"
@@ -47,7 +46,6 @@ class AgorSettings(BaseSettings):
         default=False,
         description="Whether to bundle only main/master branch by default",
     )
-
 
     # Memory management
     memory_file: str = Field(

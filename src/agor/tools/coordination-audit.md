@@ -50,10 +50,10 @@ This audit checks every hotkey, template, and coordination feature to ensure eve
 
 ### 🔧 **Memory Commands**
 
-| Hotkey       | Function          | Implementation   | Status     |
-| ------------ | ----------------- | ---------------- | ---------- |
-| `mem-add`    | Add memory        | memory_sync.py   | ✅ Working |
-| `mem-search` | Search memory     | memory_sync.py   | ✅ Working |
+| Hotkey       | Function      | Implementation | Status     |
+| ------------ | ------------- | -------------- | ---------- |
+| `mem-add`    | Add memory    | memory_sync.py | ✅ Working |
+| `mem-search` | Search memory | memory_sync.py | ✅ Working |
 
 ## 🔍 **Documentation Conflicts & Duplicates**
 

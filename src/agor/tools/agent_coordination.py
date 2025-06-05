@@ -654,7 +654,7 @@ def check_strategy_status() -> str:
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
     """Process hotkey and update internal checklist."""
-    from agor.tools.dev_tooling import mark_checklist_complete, get_checklist_status
+    from agor.tools.dev_tooling import get_checklist_status, mark_checklist_complete
 
     # Map hotkeys to checklist items
     hotkey_mapping = {
@@ -672,7 +672,7 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
         "sync": "update_coordination",
         "sp": "select_strategy",
         "bp": "select_strategy",
-        "ss": "select_strategy"
+        "ss": "select_strategy",
     }
 
     result = {"hotkey": hotkey, "checklist_updated": False}
@@ -697,8 +697,17 @@ def detect_session_end(user_input: str) -> bool:
     from agor.tools.dev_tooling import enforce_session_end
 
     end_indicators = [
-        "thanks", "goodbye", "done", "finished", "complete", "end session",
-        "that's all", "wrap up", "closing", "final", "submit"
+        "thanks",
+        "goodbye",
+        "done",
+        "finished",
+        "complete",
+        "end session",
+        "that's all",
+        "wrap up",
+        "closing",
+        "final",
+        "submit",
     ]
 
     if any(indicator in user_input.lower() for indicator in end_indicators):

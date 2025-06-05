@@ -246,6 +246,7 @@ Replace your current User Guidelines completely with the comprehensive AGOR guid
 **[AGOR_USER_GUIDELINES.md](../AGOR_USER_GUIDELINES.md)**
 
 This provides complete AGOR integration including:
+
 - Proper role selection and initialization protocols
 - Mandatory snapshot requirements with correct dates and locations
 - Multi-agent coordination strategies and workflows
@@ -253,6 +254,7 @@ This provides complete AGOR integration including:
 - Critical reminders for session management
 
 **Quick Copy-Paste Version:**
+
 ```
 # AGOR (AgentOrchestrator) User Guidelines for AugmentCode Local Agent
 
@@ -368,6 +370,7 @@ agor bundle your-project -f tar.gz
 > OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
 >
 > **Expected Features:**
+>
 > - Direct terminal access for git operations
 > - Code execution capabilities
 > - Integration with existing OpenAI ecosystem
