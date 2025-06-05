@@ -243,7 +243,7 @@ agor bundle your-project -f zip
 **User Guidelines to Add:**
 
 Replace your current User Guidelines completely with the comprehensive AGOR guidelines from:
-**[AGOR_USER_GUIDELINES.md](../AGOR_USER_GUIDELINES.md)**
+**[augment_user_guidelines.md](augment_user_guidelines.md)**
 
 This provides complete AGOR integration including:
 
