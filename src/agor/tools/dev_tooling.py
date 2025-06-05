@@ -40,9 +40,7 @@ class DevTooling:
         self.git_binary = git_manager.get_git_binary()
 
     def _run_git_command(
-        self,
-        command: list[str],
-        env: Optional[dict[str, str]] = None
+        self, command: list[str], env: Optional[dict[str, str]] = None
     ) -> tuple[bool, str]:
         """
         Run a git command and return success status and output.
@@ -212,9 +210,13 @@ class DevTooling:
         """
         try:
             # SAFETY CHECK: Never switch branches in memory operations
-            success, current_branch = self._run_git_command(["branch", "--show-current"])
+            success, current_branch = self._run_git_command(
+                ["branch", "--show-current"]
+            )
             if not success:
-                print("⚠️  Cannot determine current branch - aborting memory commit for safety")
+                print(
+                    "⚠️  Cannot determine current branch - aborting memory commit for safety"
+                )
                 return False
 
             original_branch = current_branch.strip()
@@ -227,14 +229,18 @@ class DevTooling:
                 return False
 
             # Step 1: Create blob object for the file
-            success, blob_hash = self._run_git_command(["hash-object", "-w", str(full_file_path)])
+            success, blob_hash = self._run_git_command(
+                ["hash-object", "-w", str(full_file_path)]
+            )
             if not success:
                 print("❌ Failed to create blob object")
                 return False
             blob_hash = blob_hash.strip()
 
             # Step 2: Check if memory branch exists
-            success, _ = self._run_git_command(["rev-parse", "--verify", f"refs/heads/{branch_name}"])
+            success, _ = self._run_git_command(
+                ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
+            )
             branch_exists = success
 
             if not branch_exists:
@@ -245,11 +251,15 @@ class DevTooling:
                 # Create a temporary empty file for cross-platform compatibility
                 temp_empty_file = None
                 try:
-                    temp_fd, temp_empty_path = tempfile.mkstemp(prefix="agor_empty_", suffix=".tmp")
+                    temp_fd, temp_empty_path = tempfile.mkstemp(
+                        prefix="agor_empty_", suffix=".tmp"
+                    )
                     os.close(temp_fd)  # Close immediately, we just need an empty file
                     temp_empty_file = Path(temp_empty_path)
 
-                    success, empty_tree = self._run_git_command(["hash-object", "-t", "tree", str(temp_empty_file)])
+                    success, empty_tree = self._run_git_command(
+                        ["hash-object", "-t", "tree", str(temp_empty_file)]
+                    )
                     if not success:
                         # Alternative method for empty tree
                         success, empty_tree = self._run_git_command(["write-tree"])
@@ -266,18 +276,23 @@ class DevTooling:
                 empty_tree = empty_tree.strip()
 
                 # Create initial commit
-                success, initial_commit = self._run_git_command([
-                    "commit-tree", empty_tree, "-m", f"Initial commit for memory branch {branch_name}"
-                ])
+                success, initial_commit = self._run_git_command(
+                    [
+                        "commit-tree",
+                        empty_tree,
+                        "-m",
+                        f"Initial commit for memory branch {branch_name}",
+                    ]
+                )
                 if not success:
                     print("❌ Failed to create initial commit")
                     return False
                 initial_commit = initial_commit.strip()
 
                 # Create branch reference
-                success, _ = self._run_git_command([
-                    "update-ref", f"refs/heads/{branch_name}", initial_commit
-                ])
+                success, _ = self._run_git_command(
+                    ["update-ref", f"refs/heads/{branch_name}", initial_commit]
+                )
                 if not success:
                     print("❌ Failed to create branch reference")
                     return False
@@ -285,7 +300,9 @@ class DevTooling:
                 print(f"✅ Created memory branch {branch_name}")
 
             # Step 3: Get current commit of memory branch
-            success, parent_commit = self._run_git_command(["rev-parse", f"refs/heads/{branch_name}"])
+            success, parent_commit = self._run_git_command(
+                ["rev-parse", f"refs/heads/{branch_name}"]
+            )
             if not success:
                 print("❌ Failed to get parent commit")
                 return False
@@ -299,31 +316,40 @@ class DevTooling:
                 temp_fd, temp_index_path = tempfile.mkstemp(
                     prefix="agor_memory_index_",
                     suffix=".tmp",
-                    dir=self.repo_path / ".git"
+                    dir=self.repo_path / ".git",
                 )
                 os.close(temp_fd)  # Close file descriptor, we only need the path
                 temp_index = Path(temp_index_path)
 
                 # Read current tree into temporary index
-                success, _ = self._run_git_command([
-                    "read-tree", f"{branch_name}^{{tree}}"
-                ], env={"GIT_INDEX_FILE": str(temp_index)})
+                success, _ = self._run_git_command(
+                    ["read-tree", f"{branch_name}^{{tree}}"],
+                    env={"GIT_INDEX_FILE": str(temp_index)},
+                )
                 if not success:
                     print("❌ Failed to read current tree")
                     return False
 
                 # Add our file to the temporary index
-                success, _ = self._run_git_command([
-                    "update-index", "--add", "--cacheinfo", "100644", blob_hash, file_path
-                ], env={"GIT_INDEX_FILE": str(temp_index)})
+                success, _ = self._run_git_command(
+                    [
+                        "update-index",
+                        "--add",
+                        "--cacheinfo",
+                        "100644",
+                        blob_hash,
+                        file_path,
+                    ],
+                    env={"GIT_INDEX_FILE": str(temp_index)},
+                )
                 if not success:
                     print("❌ Failed to update index")
                     return False
 
                 # Write tree from temporary index
-                success, new_tree = self._run_git_command([
-                    "write-tree"
-                ], env={"GIT_INDEX_FILE": str(temp_index)})
+                success, new_tree = self._run_git_command(
+                    ["write-tree"], env={"GIT_INDEX_FILE": str(temp_index)}
+                )
                 if not success:
                     print("❌ Failed to write tree")
                     return False
@@ -338,18 +364,18 @@ class DevTooling:
                         print(f"⚠️  Failed to cleanup temporary index: {e}")
 
             # Step 5: Create commit object
-            success, new_commit = self._run_git_command([
-                "commit-tree", new_tree, "-p", parent_commit, "-m", commit_message
-            ])
+            success, new_commit = self._run_git_command(
+                ["commit-tree", new_tree, "-p", parent_commit, "-m", commit_message]
+            )
             if not success:
                 print("❌ Failed to create commit")
                 return False
             new_commit = new_commit.strip()
 
             # Step 6: Update branch reference
-            success, _ = self._run_git_command([
-                "update-ref", f"refs/heads/{branch_name}", new_commit
-            ])
+            success, _ = self._run_git_command(
+                ["update-ref", f"refs/heads/{branch_name}", new_commit]
+            )
             if not success:
                 print("❌ Failed to update branch reference")
                 return False
@@ -357,16 +383,22 @@ class DevTooling:
             # Step 7: Push memory branch (optional, don't fail if this doesn't work)
             success, _ = self._run_git_command(["push", "origin", branch_name])
             if not success:
-                print(f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)")
+                print(
+                    f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)"
+                )
 
-            print(f"✅ Successfully committed {file_path} to memory branch {branch_name}")
+            print(
+                f"✅ Successfully committed {file_path} to memory branch {branch_name}"
+            )
             return True
 
         except Exception as e:
             print(f"❌ Memory branch commit failed: {e}")
             return False
 
-    def _read_from_memory_branch(self, file_path: str, branch_name: str) -> Optional[str]:
+    def _read_from_memory_branch(
+        self, file_path: str, branch_name: str
+    ) -> Optional[str]:
         """
         SAFE memory branch read - NEVER switches branches.
 
@@ -381,21 +413,29 @@ class DevTooling:
         """
         try:
             # SAFETY CHECK: Verify we're not switching branches
-            success, current_branch = self._run_git_command(["branch", "--show-current"])
+            success, current_branch = self._run_git_command(
+                ["branch", "--show-current"]
+            )
             if not success:
-                print("⚠️  Cannot determine current branch - aborting memory read for safety")
+                print(
+                    "⚠️  Cannot determine current branch - aborting memory read for safety"
+                )
                 return None
 
             original_branch = current_branch.strip()
 
             # Check if memory branch exists
-            success, _ = self._run_git_command(["rev-parse", "--verify", f"refs/heads/{branch_name}"])
+            success, _ = self._run_git_command(
+                ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
+            )
             if not success:
                 print(f"⚠️  Memory branch {branch_name} does not exist")
                 return None
 
             # Read file from memory branch using git show
-            success, content = self._run_git_command(["show", f"{branch_name}:{file_path}"])
+            success, content = self._run_git_command(
+                ["show", f"{branch_name}:{file_path}"]
+            )
             if not success:
                 print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
                 return None
@@ -403,7 +443,9 @@ class DevTooling:
             # Verify we're still on the original branch
             success, check_branch = self._run_git_command(["branch", "--show-current"])
             if success and check_branch.strip() != original_branch:
-                print(f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}")
+                print(
+                    f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
+                )
                 return None
 
             print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
@@ -445,14 +487,14 @@ class DevTooling:
                     return []
 
                 memory_branches = []
-                for line in branches_output.split('\n'):
+                for line in branches_output.split("\n"):
                     line = line.strip()
-                    if line.startswith('*'):
+                    if line.startswith("*"):
                         line = line[1:].strip()
-                    if line.startswith('remotes/origin/'):
-                        line = line.replace('remotes/origin/', '')
+                    if line.startswith("remotes/origin/"):
+                        line = line.replace("remotes/origin/", "")
 
-                    if line.startswith('agor/mem/'):
+                    if line.startswith("agor/mem/"):
                         memory_branches.append(line)
 
                 return memory_branches
@@ -589,10 +631,10 @@ If you're picking up this work:
             Content with escaped codeblocks safe for single codeblock usage
         """
         # Replace triple backticks with double backticks to prevent codeblock nesting issues
-        escaped_content = content.replace('```', '``')
+        escaped_content = content.replace("```", "``")
 
         # Also handle any quadruple backticks that might exist (from previous escaping)
-        escaped_content = escaped_content.replace('````', '```')
+        escaped_content = escaped_content.replace("````", "```")
 
         return escaped_content
 
@@ -1086,7 +1128,9 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 
     # Try to commit to memory branch using new safe system
     if dev_tools._commit_to_memory_branch(
-        ".agor/agentconvo.md", memory_branch, f"Update agentconvo.md: {agent_id} - {message}"
+        ".agor/agentconvo.md",
+        memory_branch,
+        f"Update agentconvo.md: {agent_id} - {message}",
     ):
         print(f"✅ Agentconvo logged to memory branch {memory_branch}")
         return True
@@ -1098,7 +1142,9 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
         )
 
 
-def update_agent_memory(agent_id: str, memory_type: str, content: str, memory_branch: str = None) -> bool:
+def update_agent_memory(
+    agent_id: str, memory_type: str, content: str, memory_branch: str = None
+) -> bool:
     """
     SAFE agent memory update with memory branch support - never switches branches.
 

@@ -110,11 +110,17 @@ class AgentCoordinationHelper:
 
         # Strategy type detection mapping
         strategy_patterns = {
-            "Parallel Divergent Strategy": ("parallel_divergent", self._parse_parallel_divergent_strategy),
+            "Parallel Divergent Strategy": (
+                "parallel_divergent",
+                self._parse_parallel_divergent_strategy,
+            ),
             "Pipeline Strategy": ("pipeline", self._parse_pipeline_strategy),
             "Swarm Strategy": ("swarm", self._parse_swarm_strategy),
             "Red Team Strategy": ("red_team", self._parse_red_team_strategy),
-            "Mob Programming Strategy": ("mob_programming", self._parse_mob_programming_strategy),
+            "Mob Programming Strategy": (
+                "mob_programming",
+                self._parse_mob_programming_strategy,
+            ),
         }
 
         for pattern, (_, parser) in strategy_patterns.items():

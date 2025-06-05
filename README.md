@@ -214,6 +214,7 @@ You are successfully using AGOR when you:
 **For the AugmentCode Local Agent (VS Code extension) with local workspace integration:**
 
 #### Prerequisites:
+
 - VS Code with AugmentCode extension installed
 - Git access for cloning repositories
 - Basic familiarity with VS Code workspace management
@@ -232,7 +233,7 @@ git clone https://github.com/jeremiah-k/agor.git ~/agor
 3. Click **+ Add more...** at the bottom of Source Folders
 4. Select the `~/agor` directory and click **Add Source Folder**
 
-*This gives the agent direct access to all AGOR documentation and tools*
+_This gives the agent direct access to all AGOR documentation and tools_
 
 #### Step 3: Configure User Guidelines
 
@@ -240,11 +241,12 @@ git clone https://github.com/jeremiah-k/agor.git ~/agor
 2. Select **User Guidelines**
 3. Copy and paste the complete User Guidelines from the dropdown section above
 
-*This ensures the agent follows AGOR protocols and creates mandatory snapshots*
+_This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 
 #### Step 4: Agent Initialization Requirements
 
 **CRITICAL**: The agent must read these files before starting any work:
+
 - `src/agor/tools/README_ai.md` (role selection and initialization)
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
 - `src/agor/tools/agent-start-here.md` (quick startup guide)
