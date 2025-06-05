@@ -58,7 +58,6 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 ## 🚀 Initialization Protocol
 
 ### Step 1: Read AGOR Documentation
-```
 
 MANDATORY: Read these files from workspace sources before starting any development work:
 
@@ -66,8 +65,6 @@ MANDATORY: Read these files from workspace sources before starting any developme
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
-
-```
 
 ### Step 2: Role Selection
 Choose your AGOR role based on the task:
