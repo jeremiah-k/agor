@@ -120,8 +120,9 @@ doc) generate docs comment) add comments explain) code explanation
 sp) strategic plan bp) break down project
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
-load_snapshot) receive snapshot from another agent
-list_snapshots) list all snapshot documents
+progress-report) create progress report snapshot for status updates
+create-pr) generate PR description for current work
+receive-snapshot) receive snapshot from another agent
 **💾 Memory Sync (Advanced/Dev Use):**
 mem-sync-start) start memory sync mem-sync-save) save memory state
 mem-sync-restore) restore memory mem-sync-status) show sync status
@@ -169,8 +170,10 @@ wf) workflow design ✅ qg) quality gates ✅ eo) execution order init) initiali
 a ) analyze codebase da) detailed snapshot
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
-load_snapshot) receive snapshot from another agent
-list_snapshots) list all snapshot documents
+work-order) create work order snapshot for task assignment
+progress-report) create progress report snapshot for status updates
+create-pr) generate PR description for current work
+receive-snapshot) receive snapshot from another agent
 **💾 Memory Sync (Advanced/Dev Use):**
 mem-sync-start) start memory sync mem-sync-save) save memory state
 mem-sync-restore) restore memory mem-sync-status) show sync status
@@ -215,8 +218,9 @@ task) receive task complete) mark complete snapshot) prepare snapshot
 a ) analyze codebase f ) full files co) changes only
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
-load_snapshot) receive snapshot from another agent
-list_snapshots) list all snapshot documents
+progress-report) create progress report snapshot for status updates
+create-pr) generate PR description for current work
+receive-snapshot) receive snapshot from another agent
 **💾 Memory Sync (Advanced/Dev Use):**
 mem-sync-start) start memory sync mem-sync-save) save memory state
 mem-sync-restore) restore memory mem-sync-status) show sync status
@@ -312,7 +316,11 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 - **`task`**: Receive and acknowledge task assignment from coordinator (often as a work snapshot). Usage: task will be provided by coordinator
 - **`complete`**: Mark current task as complete and update all coordination files (Memory Synchronization System will persist this). Usage: provide completion summary
-- **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status (Memory Synchronization System will persist this).
+- **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status (Memory Synchronization System will persist this)
+- **`progress-report`**: Create progress report snapshot for status updates to coordinators or team members
+- **`work-order`**: Create work order snapshot for task assignment (Project Coordinator role)
+- **`create-pr`**: Generate PR description for current work with comprehensive context (user will create the actual PR)
+- **`receive-snapshot`**: Receive and acknowledge snapshot from another agent or coordinator
 
 **Meta-Development:**
 
@@ -346,7 +354,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 **📤 Work Assignment (Coordinator → Agent via Snapshot)**
 
 1. **Creating Work Snapshots**: Coordinator uses `snapshot` hotkey to generate a snapshot detailing the work. The Memory Synchronization System persists this to a memory branch.
-2. **Agent Receipt**: Agent uses `load_snapshot` hotkey to accept the work snapshot. The system retrieves it from the appropriate memory branch.
+2. **Agent Receipt**: Agent uses `receive-snapshot` hotkey to accept the work snapshot. The system retrieves it from the appropriate memory branch.
 3. **Communication**: Update `.agor/agentconvo.md` (on the memory branch via the sync system) to confirm snapshot receipt.
 4. **Work Execution**: Follow next steps outlined in the work snapshot.
 
