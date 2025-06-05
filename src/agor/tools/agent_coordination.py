@@ -653,7 +653,18 @@ def check_strategy_status() -> str:
 
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
-    """Process hotkey and update internal checklist."""
+    """
+    Processes a given hotkey to update the agent's internal checklist and reports progress.
+    
+    If the hotkey corresponds to a recognized checklist item, marks that item as complete and prints confirmation. Also prints the current session progress percentage if available.
+    
+    Args:
+        hotkey: The hotkey string representing an agent action.
+        context: Optional context string (currently unused).
+    
+    Returns:
+        A dictionary with the hotkey and a boolean indicating if the checklist was updated.
+    """
     from agor.tools.dev_tooling import mark_checklist_complete, get_checklist_status
 
     # Map hotkeys to checklist items

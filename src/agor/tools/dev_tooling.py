@@ -512,7 +512,11 @@ class AgentChecklist:
             self.snapshot_created = True
 
     def _verify_git_setup(self):
-        """Verify git configuration."""
+        """
+        Checks whether git user configuration and branch setup meet project requirements.
+        
+        Verifies that `user.name` and `user.email` are configured in git, and ensures the current branch is not `main` or `master`. Prints warnings for any issues and returns True if all checks pass, otherwise False.
+        """
         try:
             import subprocess
 
@@ -542,7 +546,9 @@ class AgentChecklist:
             return False
 
     def _check_commit_frequency(self):
-        """Check if commits are frequent enough."""
+        """
+        Checks whether at least two commits have been made in the last hour and prints a reminder if commit frequency is low.
+        """
         try:
             import subprocess
             result = subprocess.run(
@@ -612,7 +618,12 @@ def get_checklist_status() -> dict:
     return {"status": "no_checklist"}
 
 def enforce_session_end() -> bool:
-    """Enforce session end procedures."""
+    """
+    Enforces end-of-session procedures using the current agent checklist.
+    
+    Returns:
+        True if all checklist requirements are met and the session can end; otherwise, False.
+    """
     if _agent_checklist:
         return _agent_checklist.enforce_session_end()
     return True
@@ -620,7 +631,14 @@ def enforce_session_end() -> bool:
 
 # New hotkey processing functions
 def process_progress_report_hotkey(task_description: str = "", progress: str = "50%") -> str:
-    """Process progress-report hotkey and create progress report snapshot."""
+    """
+    Interactively collects progress report details and creates a progress report snapshot.
+    
+    Prompts the user for task description, progress percentage, completed work items, blockers, next steps, estimated completion time, and additional notes. Generates and saves a progress report snapshot using the provided information, marks the relevant checklist item as complete, and returns the path to the created snapshot file.
+    
+    Returns:
+        The file path of the generated progress report snapshot.
+    """
     from agor.tools.snapshot_templates import generate_progress_report_snapshot, save_progress_report_snapshot
 
     # Get user input for progress report details
@@ -677,7 +695,17 @@ def process_progress_report_hotkey(task_description: str = "", progress: str = "
 
 
 def process_work_order_hotkey(task_description: str = "") -> str:
-    """Process work-order hotkey and create work order snapshot."""
+    """
+    Interactively collects work order details and creates a work order snapshot file.
+    
+    Prompts the user for task description, requirements, acceptance criteria, files to modify, reference materials, coordinator ID, assigned agent role, priority, estimated effort, deadline, and context notes. Generates and saves a work order snapshot, marks the relevant checklist item as complete, and returns the path to the created snapshot file.
+    
+    Args:
+        task_description: Optional initial task description to prefill the prompt.
+    
+    Returns:
+        The file path of the created work order snapshot.
+    """
     from agor.tools.snapshot_templates import generate_work_order_snapshot, save_work_order_snapshot
 
     # Get user input for work order details
@@ -733,7 +761,11 @@ def process_work_order_hotkey(task_description: str = "") -> str:
 
 
 def process_create_pr_hotkey(pr_title: str = "") -> str:
-    """Process create-pr hotkey and generate PR description for user to copy."""
+    """
+    Interactively collects pull request details, generates a PR description snapshot, and marks the related checklist item complete.
+    
+    Prompts the user for PR title, description, completed work, testing, breaking changes, target branch, reviewers, and related issues. Retrieves recent commits and changed files using git, generates and saves a PR description snapshot, and returns the snapshot file path.
+    """
     from agor.tools.snapshot_templates import generate_pr_description_snapshot, save_pr_description_snapshot
 
     # Get user input for PR description details

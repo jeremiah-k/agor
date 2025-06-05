@@ -96,7 +96,26 @@ def generate_snapshot_document(
     snapshot_reason: str,  # Renamed parameter
     estimated_completion: str = "Unknown",
 ) -> str:
-    """Generate a comprehensive snapshot document for agent transitions or context saving."""
+    """
+    Generates a comprehensive markdown snapshot document capturing the current state of work for agent transitions or context saving.
+    
+    The document includes a mandatory documentation reading checklist, environment and git context, problem definition, current status, completed work, commits, files modified, next steps, context notes, and detailed technical context. It also provides step-by-step instructions for the receiving agent to verify environment, load context, confirm understanding, continue work, and follow communication protocols.
+    
+    Args:
+        problem_description: Description of the problem or task being addressed.
+        work_completed: List of completed work items.
+        commits_made: List of commit messages or hashes relevant to the snapshot.
+        current_status: Summary of the current progress or state.
+        next_steps: Ordered list of next actions to be taken.
+        files_modified: List of files changed during the work.
+        context_notes: Additional notes or context for the receiving agent.
+        agent_role: The role of the agent creating the snapshot.
+        snapshot_reason: The reason for creating the snapshot (e.g., handoff, checkpoint).
+        estimated_completion: Estimated time or percentage to completion (default "Unknown").
+    
+    Returns:
+        A formatted markdown string representing the full snapshot document.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -539,7 +558,11 @@ Update `.agor/agentconvo.md` with completion acknowledgment:
 def save_completion_report(
     report_content: str, task_summary: str, coordinator_id: str
 ) -> Path:
-    """Save completion report document (a type of snapshot) for coordinator review."""
+    """
+    Saves a completion report snapshot for coordinator review.
+    
+    Creates a timestamped markdown file containing the completion report in the `.agor/snapshots` directory, updates the snapshot index to mark it as completed, and returns the path to the saved file.
+    """
 
     snapshot_dir = create_snapshot_directory()  # Use new directory function
 
@@ -569,7 +592,14 @@ def generate_progress_report_snapshot(
     estimated_completion_time: str = "Unknown",
     additional_notes: str = "None",
 ) -> str:
-    """Generate a progress report snapshot for status updates to coordinators or team."""
+    """
+    Generates a structured progress report snapshot in markdown format for providing status updates to coordinators or team members.
+    
+    The snapshot includes the current task, progress percentage, completed work, blockers, next steps, recent commits, files modified, agent role, estimated completion time, technical git context, additional notes, and coordinator instructions. It enforces a mandatory documentation reading requirement and provides a verification checklist to ensure protocol compliance.
+    
+    Returns:
+        A markdown-formatted string representing the progress report snapshot.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -686,7 +716,14 @@ def generate_work_order_snapshot(
     deadline: str = "None specified",
     context_notes: str = "None",
 ) -> str:
-    """Generate a work order snapshot for task assignment to agents."""
+    """
+    Generates a structured work order snapshot document for assigning tasks to agents.
+    
+    The snapshot includes task description, requirements, acceptance criteria, files to modify, reference materials, coordinator and agent roles, priority, estimated effort, deadline, technical and context notes, and detailed instructions for both agent and coordinator. It enforces a mandatory documentation reading requirement and provides a verification checklist to ensure protocol compliance.
+    
+    Returns:
+        A formatted markdown string representing the complete work order snapshot.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -831,7 +868,10 @@ def generate_pr_description_snapshot(
     reviewers_requested: List[str] = None,
     related_issues: List[str] = None,
 ) -> str:
-    """Generate a PR description snapshot for user to copy when creating pull request."""
+    """
+    Generates a detailed pull request (PR) description snapshot for users to copy when creating a PR.
+    
+    The snapshot includes a mandatory documentation reading checklist, PR title and description, lists of work completed, commits included, files changed, testing completed, breaking changes, related issues, and requested reviewers. It also provides technical context about the git repository, a commit history, step-by-step PR creation instructions, a PR description template, post-PR actions, review process guidelines, and quality gates. This ensures all required information and protocols are followed for submitting and reviewing a PR.
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -1021,7 +1061,18 @@ snapshots) list all snapshot documents
 def save_progress_report_snapshot(
     report_content: str, task_summary: str
 ) -> Path:
-    """Save progress report snapshot for status updates."""
+    """
+    Saves a progress report snapshot document to the snapshots directory.
+    
+    The snapshot is saved with a timestamped filename based on the provided task summary and marked as active in the snapshot index.
+    
+    Args:
+        report_content: The markdown content of the progress report snapshot.
+        task_summary: A brief summary of the task for filename generation.
+    
+    Returns:
+        The path to the saved progress report snapshot file.
+    """
 
     snapshot_dir = create_snapshot_directory()
 
@@ -1042,7 +1093,18 @@ def save_progress_report_snapshot(
 def save_work_order_snapshot(
     order_content: str, task_summary: str
 ) -> Path:
-    """Save work order snapshot for task assignment."""
+    """
+    Saves a work order snapshot document for task assignment to the snapshots directory.
+    
+    The snapshot is saved with a timestamped filename based on the task summary, and the snapshot index is updated to mark it as active.
+    
+    Args:
+        order_content: The markdown content of the work order snapshot.
+        task_summary: A brief summary of the assigned task, used for filename generation.
+    
+    Returns:
+        The path to the saved work order snapshot file.
+    """
 
     snapshot_dir = create_snapshot_directory()
 
@@ -1063,7 +1125,18 @@ def save_work_order_snapshot(
 def save_pr_description_snapshot(
     pr_content: str, pr_title: str
 ) -> Path:
-    """Save PR description snapshot for user to copy when creating pull request."""
+    """
+    Saves a pull request description snapshot to the `.agor/snapshots` directory.
+    
+    The snapshot is saved with a timestamped filename based on the PR title, and the snapshot index is updated to mark it as active.
+    
+    Args:
+        pr_content: The content of the PR description snapshot.
+        pr_title: The title of the pull request, used for filename generation.
+    
+    Returns:
+        The path to the saved PR description snapshot file.
+    """
 
     snapshot_dir = create_snapshot_directory()
 
