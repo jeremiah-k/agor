@@ -212,16 +212,9 @@ def bundle(
     ),
 ):
     """
-    [CLI] Bundle a git repository into an archive for AI assistant upload.
-
-    Creates a compressed archive containing your project plus AGOR's multi-agent
-    coordination tools. Supports ZIP (default), TAR.GZ, and TAR.BZ2 formats.
-
-    Examples:
-        agor bundle my-project                    # Bundle all branches as ZIP
-        agor bundle user/repo --format gz        # GitHub repo as TAR.GZ
-        agor bundle . -m --quiet                 # Main branch only, minimal output
-        agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
+    Bundles a git repository and AGOR tools into a compressed archive for AI assistant upload.
+    
+    Creates an archive containing the specified repository, AGOR's multi-agent coordination tools, and a statically compiled git binary. Supports ZIP, TAR.GZ, and TAR.BZ2 formats, with options to preserve git history, select branches, and control output verbosity and interactivity. The resulting archive is saved to a user-specified or default location and includes an AI assistant prompt for initializing AGOR.
     """
     # Apply configuration defaults with CLI overrides
     compression_format = format or config.get(

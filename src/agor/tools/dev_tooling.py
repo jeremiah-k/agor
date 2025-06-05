@@ -468,7 +468,12 @@ class AgentChecklist:
         self.snapshot_created = False
 
     def _get_mandatory_items(self) -> dict:
-        """Get mandatory checklist items based on role."""
+        """
+        Returns the set of mandatory checklist items for the current agent role.
+        
+        The checklist includes base items required for all roles, with additional items
+        added based on whether the agent is a solo developer, project coordinator, or agent worker.
+        """
         base_items = {
             "read_docs": "Read AGOR documentation",
             "git_setup": "Configure git and create feature branch",
@@ -512,7 +517,12 @@ class AgentChecklist:
             self.snapshot_created = True
 
     def _verify_git_setup(self):
-        """Verify git configuration."""
+        """
+        Checks that git user.name and user.email are configured and verifies the current branch is not 'main' or 'master'.
+        
+        Returns:
+            True if git is properly configured and on a non-main branch; False otherwise.
+        """
         try:
             import subprocess
 
@@ -548,7 +558,11 @@ class AgentChecklist:
             return False
 
     def _check_commit_frequency(self):
-        """Check if commits are frequent enough."""
+        """
+        Checks if at least two commits have been made in the last hour and prints a reminder if not.
+        
+        Prints a message indicating whether commit frequency is sufficient or suggests more frequent commits. If the check fails, prints a warning.
+        """
         try:
             import subprocess
 
@@ -568,7 +582,12 @@ class AgentChecklist:
             print(f"⚠️  Commit frequency check failed: {e}")
 
     def get_status(self) -> dict:
-        """Get checklist status."""
+        """
+        Returns the current status of the checklist, including completion metrics, incomplete items, snapshot creation state, and session end eligibility.
+        
+        Returns:
+            A dictionary with completion percentage, counts of completed and total items, a list of incomplete items, snapshot creation status, and whether the session can end.
+        """
         total = len(self.mandatory_items)
         completed = len(self.completed_items)
         incomplete = [
@@ -585,7 +604,11 @@ class AgentChecklist:
         }
 
     def enforce_session_end(self) -> bool:
-        """Enforce mandatory procedures before session end."""
+        """
+        Checks if all mandatory checklist items are complete and enforces session end requirements.
+        
+        Prints incomplete items and snapshot status if requirements are not met. Returns True if the session can end, otherwise False.
+        """
         status = self.get_status()
 
         if not status["can_end_session"]:
@@ -607,7 +630,15 @@ _agent_checklist = None
 
 
 def init_agent_checklist(role: str = "solo_developer") -> AgentChecklist:
-    """Initialize agent checklist for session."""
+    """
+    Initializes a new internal agent checklist for the current session based on the specified role.
+    
+    Args:
+        role: The agent role for which to create the checklist (e.g., "solo_developer").
+    
+    Returns:
+        An AgentChecklist instance configured for the given role.
+    """
     global _agent_checklist
     _agent_checklist = AgentChecklist(role)
     print(
@@ -617,20 +648,34 @@ def init_agent_checklist(role: str = "solo_developer") -> AgentChecklist:
 
 
 def mark_checklist_complete(item_id: str):
-    """Mark checklist item as complete."""
+    """
+    Marks a checklist item as complete in the current agent checklist.
+    
+    Args:
+        item_id: The identifier of the checklist item to mark as complete.
+    """
     if _agent_checklist:
         _agent_checklist.mark_complete(item_id)
 
 
 def get_checklist_status() -> dict:
-    """Get current checklist status."""
+    """
+    Returns the current status of the global agent checklist.
+    
+    If no checklist is initialized, returns a dictionary indicating no checklist is present.
+    """
     if _agent_checklist:
         return _agent_checklist.get_status()
     return {"status": "no_checklist"}
 
 
 def enforce_session_end() -> bool:
-    """Enforce session end procedures."""
+    """
+    Enforces end-of-session procedures using the current agent checklist.
+    
+    Returns:
+        True if all checklist requirements are met and the session can end; otherwise, False.
+    """
     if _agent_checklist:
         return _agent_checklist.enforce_session_end()
     return True
@@ -640,7 +685,11 @@ def enforce_session_end() -> bool:
 def process_progress_report_hotkey(
     task_description: str = "", progress: str = "50%"
 ) -> str:
-    """Process progress-report hotkey and create progress report snapshot."""
+    """
+    Prompts the user for progress report details and creates a progress report snapshot.
+    
+    Collects information about the current task, progress percentage, completed work, blockers, next steps, estimated completion time, and additional notes via user input. Generates and saves a progress report snapshot file, marks the corresponding checklist item as complete, and returns the file path of the created snapshot.
+    """
     from agor.tools.snapshot_templates import (
         generate_progress_report_snapshot,
         save_progress_report_snapshot,
@@ -700,7 +749,14 @@ def process_progress_report_hotkey(
 
 
 def process_work_order_hotkey(task_description: str = "") -> str:
-    """Process work-order hotkey and create work order snapshot."""
+    """
+    Prompts the user for work order details and creates a work order snapshot file.
+    
+    Collects task description, requirements, acceptance criteria, files to modify, and additional metadata from user input. Generates and saves a work order snapshot, marks the corresponding checklist item as complete, and returns the path to the created snapshot file.
+    
+    Returns:
+        The file path of the created work order snapshot.
+    """
     from agor.tools.snapshot_templates import (
         generate_work_order_snapshot,
         save_work_order_snapshot,
@@ -761,7 +817,15 @@ def process_work_order_hotkey(task_description: str = "") -> str:
 
 
 def process_create_pr_hotkey(pr_title: str = "") -> str:
-    """Process create-pr hotkey and generate PR description for user to copy."""
+    """
+    Handles the create-PR hotkey by collecting pull request details from the user, retrieving recent commits and changed files, generating a PR description snapshot, and marking the relevant checklist item as complete.
+    
+    Args:
+        pr_title: Optional PR title. If not provided, prompts the user for input.
+    
+    Returns:
+        The file path to the generated PR description snapshot.
+    """
     from agor.tools.snapshot_templates import (
         generate_pr_description_snapshot,
         save_pr_description_snapshot,

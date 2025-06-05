@@ -187,7 +187,9 @@ class TestMemorySyncIntegration:
         assert strategy_manager.memory_manager is not None
 
     def test_memory_sync_with_multiple_agents(self, temp_project):
-        """Test memory sync coordination with multiple agents."""
+        """
+        Tests that multiple agents can coordinate memory sync independently and successfully complete their work, verifying that memory sync operations are invoked for each agent.
+        """
         # Create multiple agent helpers
         agent1 = AgentCoordinationHelper(project_root=temp_project)
         agent2 = AgentCoordinationHelper(project_root=temp_project)

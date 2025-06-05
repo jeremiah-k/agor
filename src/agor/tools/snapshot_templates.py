@@ -13,7 +13,12 @@ from typing import Dict, List
 
 
 def get_git_context() -> Dict[str, str]:
-    """Get current git context including branch, status, and recent commits."""
+    """
+    Retrieves the current git repository context, including branch name, commit hash, status, recent commits, and lists of uncommitted and staged changes.
+    
+    Returns:
+        A dictionary containing the current branch, commit hash, status, recent commits, uncommitted changes, and staged changes. If git commands fail, returns default values indicating unavailable information.
+    """
     try:
         # Get current branch
         branch = subprocess.check_output(
@@ -1019,7 +1024,18 @@ snapshots) list all snapshot documents
 
 
 def save_progress_report_snapshot(report_content: str, task_summary: str) -> Path:
-    """Save progress report snapshot for status updates."""
+    """
+    Saves a progress report snapshot document to the snapshots directory.
+    
+    The snapshot is saved with a timestamped filename and marked as active in the snapshot index.
+    
+    Args:
+        report_content: The content of the progress report snapshot.
+        task_summary: A brief summary of the task for filename generation.
+    
+    Returns:
+        The path to the saved progress report snapshot file.
+    """
 
     snapshot_dir = create_snapshot_directory()
 
@@ -1038,7 +1054,18 @@ def save_progress_report_snapshot(report_content: str, task_summary: str) -> Pat
 
 
 def save_work_order_snapshot(order_content: str, task_summary: str) -> Path:
-    """Save work order snapshot for task assignment."""
+    """
+    Saves a work order snapshot document to the snapshots directory.
+    
+    Creates a timestamped markdown file containing the provided work order content and updates the snapshot index to mark the snapshot as active.
+    
+    Args:
+        order_content: The content of the work order snapshot.
+        task_summary: A brief summary of the assigned task, used for filename generation.
+    
+    Returns:
+        The path to the saved work order snapshot file.
+    """
 
     snapshot_dir = create_snapshot_directory()
 
@@ -1057,7 +1084,18 @@ def save_work_order_snapshot(order_content: str, task_summary: str) -> Path:
 
 
 def save_pr_description_snapshot(pr_content: str, pr_title: str) -> Path:
-    """Save PR description snapshot for user to copy when creating pull request."""
+    """
+    Saves a pull request (PR) description snapshot to the `.agor/snapshots` directory.
+    
+    The snapshot is saved with a timestamped filename based on the PR title, and the snapshot index is updated to mark it as active.
+    
+    Args:
+        pr_content: The content of the PR description snapshot.
+        pr_title: The title of the pull request.
+    
+    Returns:
+        The path to the saved PR description snapshot file.
+    """
 
     snapshot_dir = create_snapshot_directory()
 

@@ -653,7 +653,16 @@ def check_strategy_status() -> str:
 
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
-    """Process hotkey and update internal checklist."""
+    """
+    Processes a given hotkey to update the agent's internal checklist and reports progress.
+    
+    Args:
+        hotkey: The hotkey string representing an agent action.
+        context: Optional context string (currently unused).
+    
+    Returns:
+        A dictionary indicating the hotkey processed and whether the checklist was updated.
+    """
     from agor.tools.dev_tooling import get_checklist_status, mark_checklist_complete
 
     # Map hotkeys to checklist items
@@ -693,7 +702,15 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
 
 
 def detect_session_end(user_input: str) -> bool:
-    """Detect if user is indicating session end and enforce procedures."""
+    """
+    Checks if the user input indicates the end of a session and enforces session termination if detected.
+    
+    Args:
+        user_input: The user's input string to analyze.
+    
+    Returns:
+        False if a session end indicator is found and session end is enforced; True otherwise.
+    """
     from agor.tools.dev_tooling import enforce_session_end
 
     end_indicators = [
