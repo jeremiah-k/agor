@@ -587,7 +587,7 @@ def generate_progress_report_snapshot(
     git_context = get_git_context()
     agor_version = get_agor_version()
 
-    return f"""# � AGOR Snapshot: Progress Report
+    return f"""# 📈 AGOR Snapshot: Progress Report
 
 ## Snapshot ID
 {timestamp.replace(' ', 'T').replace(':', '')}-progress-report
@@ -772,7 +772,7 @@ def generate_pr_description_snapshot(
     reviewers_requested = reviewers_requested or []
     related_issues = related_issues or []
 
-    return f"""# � AGOR Snapshot: PR Description
+    return f"""# 🔀 AGOR Snapshot: PR Description
 
 ## Snapshot ID
 {timestamp.replace(' ', 'T').replace(':', '')}-pr-description
@@ -795,7 +795,7 @@ PR description for: {pr_title}
 ## Target Branch
 {target_branch}
 
-� **If you're unfamiliar with PR descriptions, read the following before proceeding:**
+📘 **If you're unfamiliar with PR descriptions, read the following before proceeding:**
 - `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
 - `src/agor/tools/AGOR_INSTRUCTIONS.md`
 - `src/agor/tools/README_ai.md`

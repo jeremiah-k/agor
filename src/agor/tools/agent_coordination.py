@@ -113,8 +113,8 @@ class AgentCoordinationHelper:
             "Parallel Divergent Strategy": ("parallel_divergent", self._parse_parallel_divergent_strategy),
             "Pipeline Strategy": ("pipeline", self._parse_pipeline_strategy),
             "Swarm Strategy": ("swarm", self._parse_swarm_strategy),
-            "Red Team Strategy": ("red_team", lambda c: {"type": "red_team", "phase": "active"}),
-            "Mob Programming Strategy": ("mob_programming", lambda c: {"type": "mob_programming", "phase": "active"}),
+            "Red Team Strategy": ("red_team", self._parse_red_team_strategy),
+            "Mob Programming Strategy": ("mob_programming", self._parse_mob_programming_strategy),
         }
 
         for pattern, (_, parser) in strategy_patterns.items():
@@ -305,6 +305,30 @@ class AgentCoordinationHelper:
                 status_counts[status] += 1
 
         return status_counts
+
+    def _parse_red_team_strategy(self, content: str) -> Dict:
+        """
+        Parse Red Team strategy details.
+
+        Args:
+            content: Strategy file content
+
+        Returns:
+            Dictionary containing strategy details
+        """
+        return {"type": "red_team", "phase": "active"}
+
+    def _parse_mob_programming_strategy(self, content: str) -> Dict:
+        """
+        Parse Mob Programming strategy details.
+
+        Args:
+            content: Strategy file content
+
+        Returns:
+            Dictionary containing strategy details
+        """
+        return {"type": "mob_programming", "phase": "active"}
 
     def _determine_agent_role(
         self, strategy_info: Dict, agent_id: Optional[str]

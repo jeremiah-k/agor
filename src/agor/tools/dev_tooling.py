@@ -241,14 +241,28 @@ class DevTooling:
                 # Create new memory branch without switching
                 print(f"📝 Creating new memory branch: {branch_name}")
 
-                # Create empty tree
-                success, empty_tree = self._run_git_command(["hash-object", "-t", "tree", "/dev/null"])
-                if not success:
-                    # Alternative method for empty tree
-                    success, empty_tree = self._run_git_command(["write-tree"])
+                # Create empty tree using cross-platform method
+                # Create a temporary empty file for cross-platform compatibility
+                temp_empty_file = None
+                try:
+                    temp_fd, temp_empty_path = tempfile.mkstemp(prefix="agor_empty_", suffix=".tmp")
+                    os.close(temp_fd)  # Close immediately, we just need an empty file
+                    temp_empty_file = Path(temp_empty_path)
+
+                    success, empty_tree = self._run_git_command(["hash-object", "-t", "tree", str(temp_empty_file)])
                     if not success:
-                        print("❌ Failed to create empty tree")
-                        return False
+                        # Alternative method for empty tree
+                        success, empty_tree = self._run_git_command(["write-tree"])
+                        if not success:
+                            print("❌ Failed to create empty tree")
+                            return False
+                finally:
+                    # Clean up temporary file
+                    if temp_empty_file and temp_empty_file.exists():
+                        try:
+                            temp_empty_file.unlink()
+                        except Exception as e:
+                            print(f"⚠️  Failed to cleanup temporary empty file: {e}")
                 empty_tree = empty_tree.strip()
 
                 # Create initial commit
@@ -403,31 +417,47 @@ class DevTooling:
         """
         List all memory branches without switching branches.
 
+        Uses the existing memory_sync.py implementation to avoid code duplication.
+
         Returns:
             List of memory branch names
         """
         try:
-            # Get all branches
-            success, branches_output = self._run_git_command(["branch", "-a"])
-            if not success:
-                return []
+            from agor.memory_sync import MemorySync
 
-            memory_branches = []
-            for line in branches_output.split('\n'):
-                line = line.strip()
-                if line.startswith('*'):
-                    line = line[1:].strip()
-                if line.startswith('remotes/origin/'):
-                    line = line.replace('remotes/origin/', '')
+            # Create MemorySync instance with current repo path
+            memory_sync = MemorySync(repo_path=str(self.repo_path))
 
-                if line.startswith('agor/mem/'):
-                    memory_branches.append(line)
+            # Get both local and remote memory branches
+            local_branches = memory_sync.list_memory_branches(remote=False)
+            remote_branches = memory_sync.list_memory_branches(remote=True)
 
-            return memory_branches
+            # Combine and deduplicate
+            all_branches = list(set(local_branches + remote_branches))
+            return sorted(all_branches)
 
         except Exception as e:
             print(f"❌ Failed to list memory branches: {e}")
-            return []
+            # Fallback to simple implementation if memory_sync fails
+            try:
+                success, branches_output = self._run_git_command(["branch", "-a"])
+                if not success:
+                    return []
+
+                memory_branches = []
+                for line in branches_output.split('\n'):
+                    line = line.strip()
+                    if line.startswith('*'):
+                        line = line[1:].strip()
+                    if line.startswith('remotes/origin/'):
+                        line = line.replace('remotes/origin/', '')
+
+                    if line.startswith('agor/mem/'):
+                        memory_branches.append(line)
+
+                return memory_branches
+            except Exception:
+                return []
 
     def create_development_snapshot(self, title: str, context: str) -> bool:
         """
