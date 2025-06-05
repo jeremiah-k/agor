@@ -213,27 +213,44 @@ You are successfully using AGOR when you:
 
 **For the AugmentCode Local Agent (VS Code extension) with local workspace integration:**
 
-#### Setup Steps:
+#### Prerequisites:
+- VS Code with AugmentCode extension installed
+- Git access for cloning repositories
+- Basic familiarity with VS Code workspace management
+
+#### Step 1: Clone AGOR Repository
 
 ```bash
-# 1. Clone AGOR to your development environment
+# Clone AGOR to your development environment
 git clone https://github.com/jeremiah-k/agor.git ~/agor
 ```
 
-#### 2. Add AGOR as Workspace Context:
+#### Step 2: Add AGOR as Workspace Context
 
 1. Open VS Code with Augment extension installed
 2. Click the folder icon in the Augment sidebar panel
 3. Click **+ Add more...** at the bottom of Source Folders
 4. Select the `~/agor` directory and click **Add Source Folder**
 
-#### 3. Configure User Guidelines:
+*This gives the agent direct access to all AGOR documentation and tools*
+
+#### Step 3: Configure User Guidelines
 
 1. In Augment Chat, click the **Context menu** or use **@-mention**
 2. Select **User Guidelines**
-3. Copy and paste the complete User Guidelines from the section above
+3. Copy and paste the complete User Guidelines from the dropdown section above
 
-#### 4. Optional - Add Workspace Guidelines:
+*This ensures the agent follows AGOR protocols and creates mandatory snapshots*
+
+#### Step 4: Agent Initialization Requirements
+
+**CRITICAL**: The agent must read these files before starting any work:
+- `src/agor/tools/README_ai.md` (role selection and initialization)
+- `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
+- `src/agor/tools/agent-start-here.md` (quick startup guide)
+- `src/agor/tools/index.md` (documentation index for efficient lookup)
+
+#### Step 5: Optional - Add Workspace Guidelines
 
 Create `.augment-guidelines` file in your project root:
 
@@ -247,9 +264,10 @@ Create `.augment-guidelines` file in your project root:
 **Benefits:**
 
 - Direct access to AGOR tools and documentation through workspace context
-- Persistent guidelines ensure consistent AGOR usage
+- Persistent guidelines ensure consistent AGOR usage across sessions
 - No file upload limits or token efficiency concerns
 - Seamless integration with existing VS Code workflow
+- Mandatory snapshot system prevents context loss
 
 </details>
 
@@ -349,7 +367,7 @@ AGOR facilitates AI-driven development through a distinct set of interactions. W
 ### For AI Agents
 
 **[🤖 Agent Entry Point](src/agor/tools/README_ai.md)** - Role selection and initialization (start here)
-**[📋 User Guidelines for AugmentCode Local](AGOR_USER_GUIDELINES.md)** - Complete guidelines for local agent integration
+**[📋 User Guidelines for AugmentCode Local](docs/augment_user_guidelines.md)** - Complete guidelines for local agent integration
 **[🚀 Platform Initialization Prompts](src/agor/tools/PLATFORM_INITIALIZATION_PROMPTS.md)** - Copy-paste prompts for each platform
 **[📋 Comprehensive Instructions](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Complete operational guide
 **[📋 Documentation Index](src/agor/tools/index.md)** - Token-efficient lookup for AI models
