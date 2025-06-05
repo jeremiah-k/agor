@@ -66,7 +66,7 @@ If no captured configuration is available, you can:
 - Set manually: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
   **This ensures proper commit attribution for all development work.**
 
-**CRITICAL**: You have a real, executable git binary at `/tmp/agor_tools/git`. DO NOT simulate git commands.
+**Important**: You have a real, executable git binary at `/tmp/agor_tools/git`. DO NOT simulate git commands.
 
 ```bash
 # Make the git binary executable
@@ -105,7 +105,7 @@ Find your selected role below for detailed guidance, including specific initiali
      - Development Setup: Identify build systems, CI/CD, development tools.
   3. Present your detailed analysis results.
 
-  **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
+  **Important**: After completing these initial actions, display the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command. Show only the clean menu, without technical function names or internal documentation.
 
 **SOLO DEVELOPER Menu (Role A):**
 **📊 Analysis & Display:**
@@ -131,7 +131,7 @@ meta) provide feedback on AGOR itself
 **🔄 Session Navigation:**
 ?) quick help menu) refresh options reset) clean restart
 
-**CRITICAL MENU FLOW**: After the user selects any hotkey option:
+**Menu Flow**: After the user selects any hotkey option:
 
 1. Confirm the action: "🔍 [Action name]..."
 2. Execute the action using internal tools
@@ -327,7 +327,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 ### 3.2. Agent Coordination System
 
-**CRITICAL**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**. These are persisted and shared via the **Memory Synchronization System** using markdown files in the `.agor/` directory on dedicated memory branches.
+**Note**: Agent coordination uses **work snapshots** (which can serve as work orders) and **completion reports**. These are persisted and shared via the **Memory Synchronization System** using markdown files in the `.agor/` directory on dedicated memory branches.
 **Purpose**: Structured coordinator-agent communication and work state capture.
 **Location**: `.agor/snapshots/` directory on memory branches.
 **Format**: Structured markdown with git context, progress, and next steps

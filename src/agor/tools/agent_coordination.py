@@ -650,3 +650,54 @@ def check_strategy_status() -> str:
         except Exception as e:
             print(f"⚠️ {agent_id} completion error: {e}")
             return False
+
+
+def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
+    """Process hotkey and update internal checklist."""
+    from agor.tools.dev_tooling import mark_checklist_complete, get_checklist_status
+
+    # Map hotkeys to checklist items
+    hotkey_mapping = {
+        "a": "analyze_codebase",
+        "f": "analyze_codebase",
+        "commit": "frequent_commits",
+        "diff": "frequent_commits",
+        "m": "frequent_commits",
+        "snapshot": "create_snapshot",
+        "status": "update_coordination",
+        "sync": "update_coordination",
+        "sp": "select_strategy",
+        "bp": "select_strategy",
+        "ss": "select_strategy"
+    }
+
+    result = {"hotkey": hotkey, "checklist_updated": False}
+
+    # Update checklist if hotkey maps to an item
+    if hotkey in hotkey_mapping:
+        item_id = hotkey_mapping[hotkey]
+        mark_checklist_complete(item_id)
+        result["checklist_updated"] = True
+        print(f"✅ Checklist updated: {item_id} marked complete")
+
+    # Get current status
+    status = get_checklist_status()
+    if status.get("completion_percentage"):
+        print(f"📊 Session progress: {status['completion_percentage']:.1f}% complete")
+
+    return result
+
+
+def detect_session_end(user_input: str) -> bool:
+    """Detect if user is indicating session end and enforce procedures."""
+    from agor.tools.dev_tooling import enforce_session_end
+
+    end_indicators = [
+        "thanks", "goodbye", "done", "finished", "complete", "end session",
+        "that's all", "wrap up", "closing", "final", "submit"
+    ]
+
+    if any(indicator in user_input.lower() for indicator in end_indicators):
+        return enforce_session_end()
+
+    return True
