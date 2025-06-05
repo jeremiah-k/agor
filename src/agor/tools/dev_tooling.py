@@ -514,33 +514,24 @@ class AgentChecklist:
     def _verify_git_setup(self):
         """Verify git configuration."""
         try:
-            # Check git config using existing dev_tools
-        # Check git config using existing dev_tools
--       user_name = dev_tools._run_git_command(["config", "user.name"])
--       if not user_name.strip():
-+       success, user_name = dev_tools._run_git_command(["config", "user.name"])
-+       if not success or not user_name.strip():
-            print("⚠️  Git user.name not configured")
-            return False
+            import subprocess
 
--       user_email = dev_tools._run_git_command(["config", "user.email"])
--       if not user_email.strip():
-+       success, user_email = dev_tools._run_git_command(["config", "user.email"])
-+       if not success or not user_email.strip():
-            print("⚠️  Git user.email not configured")
-            return False
+            # Check git config
+            result = subprocess.run(["git", "config", "user.name"], capture_output=True, text=True)
+            if not result.stdout.strip():
+                print("⚠️  Git user.name not configured")
+                return False
 
-        # Check if on feature branch
--       current_branch = dev_tools._run_git_command(["branch", "--show-current"])
--       current_branch = current_branch.strip()
-+       success, current_branch = dev_tools._run_git_command(["branch", "--show-current"])
-+       if not success:
-+           print("⚠️  Could not determine current branch")
-+           return False
-+       current_branch = current_branch.strip()
-        if current_branch in ["main", "master"]:
-            print("⚠️  Working on main branch - should create feature branch")
-            return False
+            result = subprocess.run(["git", "config", "user.email"], capture_output=True, text=True)
+            if not result.stdout.strip():
+                print("⚠️  Git user.email not configured")
+                return False
+
+            # Check if on feature branch
+            result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+            current_branch = result.stdout.strip()
+
+            if current_branch in ["main", "master"]:
                 print("⚠️  Working on main branch - should create feature branch")
                 return False
 
@@ -553,12 +544,12 @@ class AgentChecklist:
     def _check_commit_frequency(self):
         """Check if commits are frequent enough."""
         try:
-            # Use existing dev_tools for git operations
-            success, result = dev_tools._run_git_command(["log", "--oneline", "-5", "--since=1 hour ago"])
-            if not success:
-                print("⚠️  Could not check commit history")
-                return
-            commits = len(result.strip().split('\n')) if result.strip() else 0
+            import subprocess
+            result = subprocess.run(
+                ["git", "log", "--oneline", "-5", "--since=1 hour ago"],
+                capture_output=True, text=True
+            )
+            commits = len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
             if commits < 2:
                 print("💡 Reminder: Consider committing more frequently")
             else:
@@ -625,3 +616,184 @@ def enforce_session_end() -> bool:
     if _agent_checklist:
         return _agent_checklist.enforce_session_end()
     return True
+
+
+# New hotkey processing functions
+def process_progress_report_hotkey(task_description: str = "", progress: str = "50%") -> str:
+    """Process progress-report hotkey and create progress report snapshot."""
+    from .snapshot_templates import generate_progress_report_snapshot, save_progress_report_snapshot
+
+    # Get user input for progress report details
+    if not task_description:
+        task_description = input("📊 Enter current task description: ")
+    if progress == "50%":
+        progress = input("📈 Enter progress percentage (e.g., 75%): ")
+
+    work_completed = []
+    print("✅ Enter completed work items (press Enter on empty line to finish):")
+    while True:
+        item = input("  - ")
+        if not item:
+            break
+        work_completed.append(item)
+
+    blockers = []
+    print("🚧 Enter current blockers (press Enter on empty line to finish):")
+    while True:
+        blocker = input("  - ")
+        if not blocker:
+            break
+        blockers.append(blocker)
+
+    next_steps = []
+    print("🔄 Enter next immediate steps (press Enter on empty line to finish):")
+    while True:
+        step = input("  - ")
+        if not step:
+            break
+        next_steps.append(step)
+
+    # Generate and save progress report
+    report_content = generate_progress_report_snapshot(
+        current_task=task_description,
+        progress_percentage=progress,
+        work_completed=work_completed,
+        current_blockers=blockers,
+        next_immediate_steps=next_steps,
+        commits_made=["Recent commits from git log"],
+        files_modified=["Files from git status"],
+        agent_role="Solo Developer",
+        estimated_completion_time=input("⏱️ Estimated completion time: ") or "Unknown",
+        additional_notes=input("💡 Additional notes: ") or "None"
+    )
+
+    snapshot_file = save_progress_report_snapshot(report_content, task_description)
+    print(f"📊 Progress report snapshot created: {snapshot_file}")
+
+    # Mark checklist item complete
+    mark_checklist_complete("create_snapshot")
+
+    return str(snapshot_file)
+
+
+def process_work_order_hotkey(task_description: str = "") -> str:
+    """Process work-order hotkey and create work order snapshot."""
+    from .snapshot_templates import generate_work_order_snapshot, save_work_order_snapshot
+
+    # Get user input for work order details
+    if not task_description:
+        task_description = input("📋 Enter task description: ")
+
+    requirements = []
+    print("📋 Enter task requirements (press Enter on empty line to finish):")
+    while True:
+        req = input("  - ")
+        if not req:
+            break
+        requirements.append(req)
+
+    acceptance_criteria = []
+    print("✅ Enter acceptance criteria (press Enter on empty line to finish):")
+    while True:
+        criteria = input("  - ")
+        if not criteria:
+            break
+        acceptance_criteria.append(criteria)
+
+    files_to_modify = []
+    print("📁 Enter files to modify (press Enter on empty line to finish):")
+    while True:
+        file = input("  - ")
+        if not file:
+            break
+        files_to_modify.append(file)
+
+    # Generate and save work order
+    order_content = generate_work_order_snapshot(
+        task_description=task_description,
+        task_requirements=requirements,
+        acceptance_criteria=acceptance_criteria,
+        files_to_modify=files_to_modify,
+        reference_materials=[input("📚 Reference materials: ") or "See project documentation"],
+        coordinator_id=input("👤 Coordinator ID: ") or "Project Coordinator",
+        assigned_agent_role=input("🤖 Assigned agent role: ") or "Agent Worker",
+        priority_level=input("⚡ Priority level (High/Medium/Low): ") or "Medium",
+        estimated_effort=input("⏱️ Estimated effort: ") or "Unknown",
+        deadline=input("📅 Deadline: ") or "None specified",
+        context_notes=input("🧠 Context notes: ") or "None"
+    )
+
+    snapshot_file = save_work_order_snapshot(order_content, task_description)
+    print(f"📋 Work order snapshot created: {snapshot_file}")
+
+    # Mark checklist item complete
+    mark_checklist_complete("create_snapshot")
+
+    return str(snapshot_file)
+
+
+def process_create_pr_hotkey(pr_title: str = "") -> str:
+    """Process create-pr hotkey and create PR creation snapshot."""
+    from .snapshot_templates import generate_pr_creation_snapshot, save_pr_creation_snapshot
+    import subprocess
+
+    # Get user input for PR details
+    if not pr_title:
+        pr_title = input("🔀 Enter PR title: ")
+
+    pr_description = input("📝 Enter PR description: ")
+
+    work_completed = []
+    print("✅ Enter completed work items (press Enter on empty line to finish):")
+    while True:
+        item = input("  - ")
+        if not item:
+            break
+        work_completed.append(item)
+
+    testing_completed = []
+    print("🧪 Enter testing completed (press Enter on empty line to finish):")
+    while True:
+        test = input("  - ")
+        if not test:
+            break
+        testing_completed.append(test)
+
+    breaking_changes = []
+    print("⚠️ Enter breaking changes (press Enter on empty line to finish):")
+    while True:
+        change = input("  - ")
+        if not change:
+            break
+        breaking_changes.append(change)
+
+    # Get git information
+    try:
+        commits = subprocess.check_output(["git", "log", "--oneline", "-10"], text=True).strip().split('\n')
+        files_changed = subprocess.check_output(["git", "diff", "--name-only", "main"], text=True).strip().split('\n')
+    except:
+        commits = ["Unable to get commit history"]
+        files_changed = ["Unable to get changed files"]
+
+    # Generate and save PR snapshot
+    pr_content = generate_pr_creation_snapshot(
+        pr_title=pr_title,
+        pr_description=pr_description,
+        work_completed=work_completed,
+        commits_included=commits,
+        files_changed=files_changed,
+        testing_completed=testing_completed,
+        breaking_changes=breaking_changes,
+        agent_role="Solo Developer",
+        target_branch=input("🎯 Target branch (default: main): ") or "main",
+        reviewers_requested=[input("👥 Requested reviewers (comma-separated): ").split(',') if input else []],
+        related_issues=[input("🔗 Related issues (comma-separated): ").split(',') if input else []]
+    )
+
+    snapshot_file = save_pr_creation_snapshot(pr_content, pr_title)
+    print(f"🔀 PR creation snapshot created: {snapshot_file}")
+
+    # Mark checklist item complete
+    mark_checklist_complete("create_snapshot")
+
+    return str(snapshot_file)
