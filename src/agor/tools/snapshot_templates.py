@@ -677,7 +677,8 @@ def generate_work_order_snapshot(
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
-    get_agor_version()
+-    get_agor_version()
++    agor_version = get_agor_version()
 
     return f"""# 📦 AGOR Snapshot: Work Order
 
