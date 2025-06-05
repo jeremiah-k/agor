@@ -679,64 +679,65 @@ def generate_work_order_snapshot(
     git_context = get_git_context()
     agor_version = get_agor_version()
 
-    return f"""# 📋 Work Order Snapshot
+    return f"""# 📦 AGOR Snapshot: Work Order
 
-**Generated**: {timestamp}
-**From Coordinator**: {coordinator_id}
-**Assigned To**: {assigned_agent_role}
-**Snapshot Type**: Work Order
-**AGOR Version**: {agor_version}
-**Priority**: {priority_level}
+## Snapshot ID
+{timestamp.replace(' ', 'T').replace(':', '')}-work-order
 
-## 📚 MANDATORY: Documentation Reading Requirement
+## Author
+{coordinator_id}
 
-**CRITICAL**: Before proceeding with any work, the receiving agent MUST read these core AGOR documentation files:
+## Strategy
+[Strategy from coordination system]
 
-### Required Reading (In Order):
-1. **`src/agor/tools/README_ai.md`** - Role selection and initialization protocol
-2. **`src/agor/tools/AGOR_INSTRUCTIONS.md`** - Comprehensive operational instructions and hotkey menus
-3. **`src/agor/tools/agent-start-here.md`** - Quick entry point for ongoing projects
+## Assigned To
+{assigned_agent_role}
 
-### Verification Checklist:
-- [ ] Read README_ai.md completely - understand role selection and initialization
-- [ ] Read AGOR_INSTRUCTIONS.md completely - understand hotkeys, protocols, and workflows
-- [ ] Read agent-start-here.md completely - understand project entry procedures
-- [ ] Understand current AGOR version: {agor_version}
-- [ ] Understand snapshot system and coordination protocols
-- [ ] Ready to follow AGOR protocols consistently
+## Memory Branch
+agor/mem/{timestamp.replace(' ', 'T').replace(':', '')[:13]}
 
-**No work should begin until all documentation is read and understood.**
+## Context
+Work order assignment: {task_description}
 
-## 🎯 Task Description
+## Priority
+{priority_level}
 
+📘 **If you're unfamiliar with work orders, read the following before proceeding:**
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- `src/agor/tools/AGOR_INSTRUCTIONS.md`
+- `src/agor/tools/README_ai.md`
+- `src/agor/tools/agent-start-here.md`
+
+📎 **If coordination files are missing or incomplete, you may need to:**
+- Confirm you're in a valid Git repo with AGOR coordination
+- Use `src/agor/memory_sync.py` to sync coordination state
+- Check `.agor/agentconvo.md` for recent agent communication
+
+## Task Description
 {task_description}
 
-## 📋 Requirements
-
+## Requirements
 {chr(10).join(f"- {req}" for req in task_requirements)}
 
-## ✅ Acceptance Criteria
-
+## Acceptance Criteria
 {chr(10).join(f"- {criteria}" for criteria in acceptance_criteria)}
 
-## 📁 Files to Modify
+## Files to Modify
+{chr(10).join(f"- `{file}` - [Description of changes needed]" for file in files_to_modify)}
 
-{chr(10).join(f"- `{file}`" for file in files_to_modify)}
-
-## 📚 Reference Materials
-
+## Reference Materials
 {chr(10).join(f"- {material}" for material in reference_materials)}
 
-## ⏱️ Timeline & Priority
-
+## Timeline & Priority
 **Priority Level**: {priority_level}
 **Estimated Effort**: {estimated_effort}
 **Deadline**: {deadline}
 
-## 🔧 Technical Context
+## Context & Important Notes
+{context_notes}
 
-### Git Repository State
-**Branch**: `{git_context['branch']}`
+## Technical Context
+**Git Branch**: `{git_context['branch']}`
 **Current Commit**: `{git_context['current_commit']}`
 **Repository Status**: {'Clean' if not git_context['status'] else 'Has uncommitted changes'}
 
@@ -745,78 +746,23 @@ def generate_work_order_snapshot(
 {git_context['recent_commits']}
 ```
 
-## 🧠 Context & Important Notes
-
-{context_notes}
-
-## 🎯 Agent Instructions
-
-### 1. Task Acceptance
-Update `.agor/agentconvo.md` with work order receipt:
-```
-[AGENT-ID] [{timestamp}] - WORK ORDER RECEIVED: {task_description[:50]}... - Priority: {priority_level}
-```
-
-### 2. Work Execution
-- [ ] Review all requirements and acceptance criteria
-- [ ] Examine reference materials thoroughly
-- [ ] Plan implementation approach
-- [ ] Create feature branch if needed
-- [ ] Implement solution incrementally
-- [ ] Test functionality thoroughly
-- [ ] Commit frequently with clear messages
-
-### 3. Progress Reporting
-- [ ] Update progress regularly in `.agor/agentconvo.md`
-- [ ] Create progress report snapshots for major milestones
-- [ ] Communicate blockers immediately
-- [ ] Request clarification when needed
-
-### 4. Task Completion
-- [ ] Verify all acceptance criteria are met
-- [ ] Create completion report snapshot
-- [ ] Update `.agor/agentconvo.md` with completion status
-- [ ] Prepare code for review
-
-### 5. Quality Assurance
-- [ ] Test all functionality
-- [ ] Review code for quality and standards
-- [ ] Update documentation if needed
-- [ ] Ensure no breaking changes
-
-## 🔄 Coordinator Follow-up
-
-### Expected Deliverables
-- [ ] Completed implementation meeting all requirements
-- [ ] Progress report snapshots for major milestones
-- [ ] Completion report snapshot with results summary
-- [ ] Updated documentation if applicable
-- [ ] Clean commit history with descriptive messages
-
-### Communication Protocol
-- [ ] Monitor `.agor/agentconvo.md` for progress updates
-- [ ] Respond to questions and blockers promptly
-- [ ] Review progress report snapshots
-- [ ] Provide feedback and guidance as needed
-
----
-
-**Work Order**: This snapshot contains complete task assignment with all necessary context and requirements.
+## Coordination Notes
+Please acknowledge receipt of this work order by updating `.agor/agentconvo.md` with your acceptance and initial plan. Use `progress-report` hotkey for regular status updates and `complete` hotkey when task is finished. Communicate any blockers or questions immediately through agentconvo.md.
 """
 
 
 def generate_pr_description_snapshot(
     pr_title: str,
     pr_description: str,
-    work_completed: List[str],
-    commits_included: List[str],
-    files_changed: List[str],
-    testing_completed: List[str],
-    breaking_changes: List[str],
+    work_completed: list[str],
+    commits_included: list[str],
+    files_changed: list[str],
+    testing_completed: list[str],
+    breaking_changes: list[str],
     agent_role: str,
     target_branch: str = "main",
-    reviewers_requested: List[str] = None,
-    related_issues: List[str] = None,
+    reviewers_requested: list[str] = None,
+    related_issues: list[str] = None,
 ) -> str:
     """Generate a PR description snapshot for user to copy when creating pull request."""
 
@@ -826,34 +772,41 @@ def generate_pr_description_snapshot(
     reviewers_requested = reviewers_requested or []
     related_issues = related_issues or []
 
-    return f"""# 🔀 Pull Request Description Snapshot
+    return f"""# � AGOR Snapshot: PR Description
 
-**Generated**: {timestamp}
-**From Agent Role**: {agent_role}
-**Snapshot Type**: PR Description
-**AGOR Version**: {agor_version}
-**Target Branch**: {target_branch}
+## Snapshot ID
+{timestamp.replace(' ', 'T').replace(':', '')}-pr-description
 
-## 📚 MANDATORY: Documentation Reading Requirement
+## Author
+{agent_role}
 
-**CRITICAL**: Before proceeding with any work, the receiving agent MUST read these core AGOR documentation files:
+## Strategy
+[Strategy from coordination system]
 
-### Required Reading (In Order):
-1. **`src/agor/tools/README_ai.md`** - Role selection and initialization protocol
-2. **`src/agor/tools/AGOR_INSTRUCTIONS.md`** - Comprehensive operational instructions and hotkey menus
-3. **`src/agor/tools/agent-start-here.md`** - Quick entry point for ongoing projects
+## Assigned To
+User (for PR creation)
 
-### Verification Checklist:
-- [ ] Read README_ai.md completely - understand role selection and initialization
-- [ ] Read AGOR_INSTRUCTIONS.md completely - understand hotkeys, protocols, and workflows
-- [ ] Read agent-start-here.md completely - understand project entry procedures
-- [ ] Understand current AGOR version: {agor_version}
-- [ ] Understand snapshot system and coordination protocols
-- [ ] Ready to follow AGOR protocols consistently
+## Memory Branch
+agor/mem/{timestamp.replace(' ', 'T').replace(':', '')[:13]}
 
-**No work should begin until all documentation is read and understood.**
+## Context
+PR description for: {pr_title}
 
-## 🔀 Pull Request Description (Copy & Paste)
+## Target Branch
+{target_branch}
+
+� **If you're unfamiliar with PR descriptions, read the following before proceeding:**
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- `src/agor/tools/AGOR_INSTRUCTIONS.md`
+- `src/agor/tools/README_ai.md`
+- `src/agor/tools/agent-start-here.md`
+
+📎 **If coordination files are missing or incomplete, you may need to:**
+- Confirm you're in a valid Git repo with AGOR coordination
+- Use `src/agor/memory_sync.py` to sync coordination state
+- Check `.agor/agentconvo.md` for recent agent communication
+
+## Pull Request Description (Copy & Paste)
 
 ### Title
 {pr_title}
@@ -861,37 +814,28 @@ def generate_pr_description_snapshot(
 ### Description
 {pr_description}
 
-## ✅ Work Completed
-
+## Work Completed
 {chr(10).join(f"- {item}" for item in work_completed)}
 
-## 📝 Commits Included
+## Files Changed
+{chr(10).join(f"- `{file}` - [Description of changes]" for file in files_changed)}
 
+## Commits Included
 {chr(10).join(f"- `{commit}`" for commit in commits_included)}
 
-## 📁 Files Changed
-
-{chr(10).join(f"- `{file}`" for file in files_changed)}
-
-## 🧪 Testing Completed
-
+## Testing Completed
 {chr(10).join(f"- {test}" for test in testing_completed)}
 
-## ⚠️ Breaking Changes
-
+## Breaking Changes
 {chr(10).join(f"- {change}" for change in breaking_changes) if breaking_changes else "- None"}
 
-## 🔗 Related Issues
-
+## Related Issues
 {chr(10).join(f"- {issue}" for issue in related_issues) if related_issues else "- None"}
 
-## 👥 Requested Reviewers
-
+## Requested Reviewers
 {chr(10).join(f"- {reviewer}" for reviewer in reviewers_requested) if reviewers_requested else "- None specified"}
 
-## 🔧 Technical Context
-
-### Git Repository State
+## Technical Context
 **Source Branch**: `{git_context['branch']}`
 **Target Branch**: `{target_branch}`
 **Current Commit**: `{git_context['current_commit']}`
@@ -902,93 +846,8 @@ def generate_pr_description_snapshot(
 {git_context['recent_commits']}
 ```
 
-## 🎯 PR Creation Instructions for User
-
-### 1. Pre-PR Checklist
-- [ ] All work is committed and pushed to feature branch
-- [ ] All tests are passing
-- [ ] Code follows project standards
-- [ ] Documentation is updated
-- [ ] No merge conflicts with target branch
-
-### 2. Create Pull Request (User Action Required)
-```bash
-# Ensure branch is up to date (if needed)
-git checkout {git_context['branch']}
-git push origin {git_context['branch']}
-
-# Create PR using GitHub CLI (if available)
-gh pr create --title "{pr_title}" --body "See PR description below" --base {target_branch} --head {git_context['branch']}
-
-# Or create PR manually through GitHub web interface
-```
-
-**Note**: Agent has prepared all work and description. User should create the actual PR using the description provided below.
-
-### 3. PR Description Template
-```markdown
-## Summary
-{pr_description}
-
-## Changes Made
-{chr(10).join(f"- {item}" for item in work_completed)}
-
-## Testing
-{chr(10).join(f"- {test}" for test in testing_completed)}
-
-## Breaking Changes
-{chr(10).join(f"- {change}" for change in breaking_changes) if breaking_changes else "None"}
-
-## Related Issues
-{chr(10).join(f"- {issue}" for issue in related_issues) if related_issues else "None"}
-```
-
-### 4. Post-PR Actions (User Responsibilities)
-- [ ] Link PR to related issues
-- [ ] Request reviews from specified reviewers
-- [ ] Monitor CI/CD pipeline status
-- [ ] Respond to review feedback promptly
-- [ ] Update PR description if needed
-
-## 🔄 Review Process
-
-### For Reviewers
-- [ ] Review code changes thoroughly
-- [ ] Test functionality locally if needed
-- [ ] Check for breaking changes
-- [ ] Verify documentation updates
-- [ ] Approve or request changes
-
-### For Author
-- [ ] Address review feedback
-- [ ] Update code based on suggestions
-- [ ] Respond to review comments
-- [ ] Request re-review after changes
-- [ ] Merge when approved
-
-## 📊 Quality Gates
-
-### Code Quality
-- [ ] Code follows project conventions
-- [ ] No code smells or technical debt
-- [ ] Proper error handling
-- [ ] Adequate test coverage
-
-### Documentation
-- [ ] Code is well-commented
-- [ ] API documentation updated
-- [ ] README updated if needed
-- [ ] Changelog updated
-
-### Testing
-- [ ] All existing tests pass
-- [ ] New tests added for new functionality
-- [ ] Edge cases covered
-- [ ] Performance impact assessed
-
----
-
-**PR Description Ready**: This snapshot contains the complete PR description for the user to copy when creating the pull request.
+## Coordination Notes
+This PR description is ready for the user to copy when creating the pull request. All work has been completed and committed. The user should create the PR using the description above and request reviews from the specified reviewers.
 """
 
 
