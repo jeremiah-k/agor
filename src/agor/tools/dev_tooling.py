@@ -452,7 +452,12 @@ def get_precise_timestamp() -> str:
 
 
 def get_ntp_timestamp() -> str:
-    """Get accurate timestamp from NTP server."""
+    """
+    Retrieves the current UTC timestamp from an NTP server.
+    
+    Returns:
+        A string representing the current UTC time in "YYYY-MM-DD HH:MM UTC" format. Falls back to local UTC time if the NTP server is unavailable.
+    """
     return dev_tools.get_ntp_timestamp()
 
 
@@ -461,6 +466,12 @@ class AgentChecklist:
     """Internal agent checklist for tracking mandatory procedures."""
 
     def __init__(self, agent_role: str = "solo_developer"):
+        """
+        Initializes the AgentChecklist with a session ID, agent role, and mandatory checklist items.
+        
+        Args:
+            agent_role: The role of the agent, determining which checklist items are required. Defaults to "solo_developer".
+        """
         self.agent_role = agent_role
         self.session_id = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         self.mandatory_items = self._get_mandatory_items()
@@ -468,7 +479,11 @@ class AgentChecklist:
         self.snapshot_created = False
 
     def _get_mandatory_items(self) -> dict:
-        """Get mandatory checklist items based on role."""
+        """
+        Returns a dictionary of mandatory checklist items tailored to the agent's role.
+        
+        The returned dictionary includes base checklist items required for all roles, merged with additional items specific to the agent's assigned role.
+        """
         base_items = {
             "read_docs": "Read AGOR documentation",
             "git_setup": "Configure git and create feature branch",
@@ -496,14 +511,22 @@ class AgentChecklist:
         return base_items
 
     def mark_complete(self, item_id: str, auto_trigger: bool = True):
-        """Mark checklist item as complete."""
+        """
+        Marks a mandatory checklist item as complete.
+        
+        If auto_trigger is True, performs any associated automatic validation or state updates for the completed item.
+        """
         if item_id in self.mandatory_items:
             self.completed_items.add(item_id)
             if auto_trigger:
                 self._auto_trigger(item_id)
 
     def _auto_trigger(self, item_id: str):
-        """Auto-trigger validation for checklist items."""
+        """
+        Performs automatic validation or state updates when specific checklist items are marked complete.
+        
+        Triggers git setup verification, commit frequency checks, or marks the snapshot as created, depending on the item.
+        """
         if item_id == "git_setup":
             self._verify_git_setup()
         elif item_id == "frequent_commits":
@@ -512,7 +535,12 @@ class AgentChecklist:
             self.snapshot_created = True
 
     def _verify_git_setup(self):
-        """Verify git configuration."""
+        """
+        Checks whether git user.name and user.email are configured and ensures the current branch is not main or master.
+        
+        Returns:
+            True if git is properly configured and not on a protected branch; otherwise, False.
+        """
         try:
             # Check git config using existing dev_tools
         # Check git config using existing dev_tools
@@ -582,7 +610,11 @@ class AgentChecklist:
         }
 
     def enforce_session_end(self) -> bool:
-        """Enforce mandatory procedures before session end."""
+        """
+        Checks if all mandatory checklist items and snapshot creation are complete before allowing session termination.
+        
+        Prints a summary of incomplete items if requirements are not met. Returns True if the session can end, otherwise False.
+        """
         status = self.get_status()
 
         if not status["can_end_session"]:
@@ -603,25 +635,46 @@ class AgentChecklist:
 _agent_checklist = None
 
 def init_agent_checklist(role: str = "solo_developer") -> AgentChecklist:
-    """Initialize agent checklist for session."""
+    """
+    Initializes and returns a new AgentChecklist for the current session and agent role.
+    
+    Args:
+        role: The agent's role, which determines the checklist items. Defaults to "solo_developer".
+    
+    Returns:
+        An AgentChecklist instance configured for the specified role.
+    """
     global _agent_checklist
     _agent_checklist = AgentChecklist(role)
     print(f"📋 Internal checklist created for {role} with {len(_agent_checklist.mandatory_items)} items")
     return _agent_checklist
 
 def mark_checklist_complete(item_id: str):
-    """Mark checklist item as complete."""
+    """
+    Marks the specified checklist item as complete in the current agent checklist.
+    
+    If no checklist is active, this function does nothing.
+    """
     if _agent_checklist:
         _agent_checklist.mark_complete(item_id)
 
 def get_checklist_status() -> dict:
-    """Get current checklist status."""
+    """
+    Returns the current status of the agent checklist.
+    
+    If no checklist is initialized, returns a dictionary indicating its absence.
+    """
     if _agent_checklist:
         return _agent_checklist.get_status()
     return {"status": "no_checklist"}
 
 def enforce_session_end() -> bool:
-    """Enforce session end procedures."""
+    """
+    Checks if all mandatory checklist items and snapshot creation are complete, enforcing session end rules.
+    
+    Returns:
+        True if the session can end (all requirements met), False otherwise.
+    """
     if _agent_checklist:
         return _agent_checklist.enforce_session_end()
     return True

@@ -534,7 +534,11 @@ cat .agor/{role_info.get('agent_id', 'agentX')}-memory.md
 
 
 def check_strategy_status() -> str:
-    """Check current strategy status and recent activity."""
+    """
+    Returns a formatted summary of the current AGOR strategy status, including strategy type, task, phase, recent agent activity, and relevant coordination files.
+    
+    If no AGOR coordination is found, or if no strategy is active, returns a corresponding message.
+    """
 
     helper = AgentCoordinationHelper()
 
@@ -607,7 +611,11 @@ def check_strategy_status() -> str:
     def complete_agent_work(
         self, agent_id: str, completion_message: str = "Agent work completed"
     ) -> bool:
-        """Complete agent work with automatic memory sync."""
+        """
+        Finalizes agent work and attempts to synchronize the agent's memory state.
+        
+        If memory synchronization is available and an active memory branch exists, saves the agent's memory state with the provided completion message. Returns True if the operation succeeds or if memory sync is not applicable; returns False if an error occurs or memory sync fails.
+        """
         try:
             # Import and use MemorySyncManager for completion sync
             from ..memory_sync import MemorySyncManager
@@ -653,7 +661,16 @@ def check_strategy_status() -> str:
 
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
-    """Process hotkey and update internal checklist."""
+    """
+    Processes a hotkey input to update the agent's internal checklist and reports session progress.
+    
+    Args:
+        hotkey: The hotkey string representing a checklist action.
+        context: Optional context string for future extensibility.
+    
+    Returns:
+        A dictionary containing the hotkey and a boolean indicating if the checklist was updated.
+    """
     from agor.tools.dev_tooling import mark_checklist_complete, get_checklist_status
 
     # Map hotkeys to checklist items
@@ -689,7 +706,15 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
 
 
 def detect_session_end(user_input: str) -> bool:
-    """Detect if user is indicating session end and enforce procedures."""
+    """
+    Checks if the user input indicates the end of a session and enforces session termination if detected.
+    
+    Args:
+        user_input: The user's input string to analyze.
+    
+    Returns:
+        False if a session end indicator is found and session end procedures are enforced; True otherwise.
+    """
     from agor.tools.dev_tooling import enforce_session_end
 
     end_indicators = [
