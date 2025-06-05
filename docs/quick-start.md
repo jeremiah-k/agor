@@ -25,7 +25,7 @@ pipx install agor
 
 # Verify installation
 agor --version
-# Should output: agor, version 0.2.0
+# Should output: agor, version 0.4.1
 
 # Configure git (optional but recommended)
 agor git-config --import-env  # Import from environment variables

@@ -533,7 +533,7 @@ class DevTooling:
 **Agent**: Augment Agent (Software Engineering)
 **Branch**: {current_branch.strip()}
 **Commit**: {current_commit.strip()}
-**AGOR Version**: 0.3.3 → 0.3.4 development
+**AGOR Version**: 0.4.1 development
 
 ## 🎯 Development Context
 
@@ -617,9 +617,9 @@ If you're picking up this work:
         Prepare content for use in single codeblock prompts by escaping nested codeblocks.
 
         This function reduces triple backticks (```) to double backticks (``) to prevent
-        formatting issues when the content is placed inside a single codeblock for agent handoffs.
+        formatting issues when the content is placed inside a single codeblock for agent transitions.
 
-        When agents create snapshots for handoffs, the content often contains code examples
+        When agents create snapshots for transitions, the content often contains code examples
         with triple backticks. If this content is then placed inside a single codeblock
         (as required for agent initialization prompts), the nested triple backticks break
         the formatting and create visual garbage in the UI.
