@@ -210,7 +210,6 @@ def bundle(
         "-q",
         help="Minimal output mode",
     ),
-
 ):
     """
     [CLI] Bundle a git repository into an archive for AI assistant upload.
@@ -241,7 +240,6 @@ def bundle(
     )
     auto_yes = assume_yes if assume_yes is not None else config.get("assume_yes", False)
     quiet_mode = quiet if quiet is not None else config.get("quiet", False)
-
 
     # Validate compression format
     try:
@@ -329,8 +327,6 @@ def bundle(
         if not quiet_mode:
             print(f"⚠️  Warning: Could not add git binary to bundle: {e}")
             print("   Bundle will still work if target system has git installed")
-
-
 
     # Create archive with the specified format
     archive_extension = ARCHIVE_EXTENSIONS[compression_format]

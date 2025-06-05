@@ -59,11 +59,14 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 
 ### Step 1: Read AGOR Documentation
 ```
+
 MANDATORY: Read these files from workspace sources before starting any development work:
+
 - src/agor/tools/README_ai.md (role selection and initialization)
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
+
 ```
 
 ### Step 2: Role Selection
@@ -325,6 +328,7 @@ After reading these files, help me initialize AGOR for this project and select t
 > OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
 >
 > **Expected Features:**
+>
 > - Direct terminal access for git operations
 > - Code execution capabilities
 > - Integration with existing OpenAI ecosystem
@@ -338,6 +342,7 @@ AGOR facilitates AI-driven development through a distinct set of interactions. W
 ## 📚 Documentation
 
 ### For Users
+
 **[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
 **[🚀 Quick Start Guide](docs/quick-start.md)** - Step-by-step getting started instructions
 **[📦 Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
@@ -345,6 +350,7 @@ AGOR facilitates AI-driven development through a distinct set of interactions. W
 **[📸 Snapshot System](docs/snapshots.md)** - Context preservation and agent transitions
 
 ### For AI Agents
+
 **[🤖 Agent Entry Point](src/agor/tools/README_ai.md)** - Role selection and initialization (start here)
 **[📋 User Guidelines for AugmentCode Local](AGOR_USER_GUIDELINES.md)** - Complete guidelines for local agent integration
 **[🚀 Platform Initialization Prompts](src/agor/tools/PLATFORM_INITIALIZATION_PROMPTS.md)** - Copy-paste prompts for each platform
@@ -442,7 +448,6 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 - `mem-add`: add memory
 - `mem-search`: search memories
 
-
 **Editing & Version Control**:
 
 - `edit`: modify files
@@ -459,16 +464,19 @@ AGOR utilizes a conversational hotkey system for AI-user interaction. The AI wil
 ## 🏢 Platform Support
 
 ### Bundle Mode Platforms
+
 - **Google AI Studio Pro** (Function Calling enabled, use `.zip` format) - _Free tier available_
 - **ChatGPT** (requires subscription, use `.tar.gz` format)
 - **Other upload-based platforms** (use appropriate format)
 
 ### Remote Agent Platforms
+
 - **Augment Code Remote Agents** (cloud-based agents with direct git access)
 - **Jules by Google** (direct URL access to files, limited git capabilities)
 - **Any AI agent with git and shell access**
 
 ### Local Integration Platforms
+
 - **AugmentCode Local Agent** (flagship local extension with workspace context)
 - **Any local AI assistant** with file system access
 - **Development environments** with AI integration

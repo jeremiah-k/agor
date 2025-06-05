@@ -113,12 +113,14 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### � Development Guidelines
 
 **Language and Tone**:
+
 - **Minimize aggressive language**: Avoid excessive use of "CRITICAL", "URGENT", "MANDATORY" etc.
 - **Use measured language**: Prefer "Important", "Note", "Required" for emphasis
 - **Aggressive language loses impact**: When everything is "CRITICAL", nothing is
 - **Reserve strong language**: Only for truly critical safety or data loss scenarios
 
 **File Creation Policy**:
+
 - **Avoid creating new files**: Always check if functionality can be added to existing files first
 - **Integration over proliferation**: Add to existing modules rather than creating new ones
 - **Justify new files**: Only create new files when existing ones are inappropriate or would become too large
@@ -237,6 +239,7 @@ print(f"Session started at: {get_timestamp()}")
 ```
 
 **Why this is essential:**
+
 - Validates git binary access and repository status
 - Confirms timestamp utilities are working correctly
 - Ensures quick_commit_push() function is available for frequent commits

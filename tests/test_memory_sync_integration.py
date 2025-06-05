@@ -214,8 +214,5 @@ class TestMemorySyncIntegration:
             assert mock_instance.auto_sync_on_shutdown.call_count == 2
 
 
-
-
-
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -73,6 +73,7 @@ Mode: Bundle Mode (copy-paste workflow)
 **When using the AugmentCode Local Agent (VS Code extension), use this approach:**
 
 ### Setup (One-time)
+
 1. Clone AGOR repository locally: `git clone https://github.com/jeremiah-k/agor.git ~/agor`
 2. Add `~/agor` to your AugmentCode workspace sources
 3. Add this to your User Guidelines:
@@ -82,6 +83,7 @@ When working on development projects, utilize the AGOR (AgentOrchestrator) frame
 ```
 
 ### Session Initialization Prompt
+
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
