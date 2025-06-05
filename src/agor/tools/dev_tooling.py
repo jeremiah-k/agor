@@ -184,9 +184,10 @@ class DevTooling:
         self, file_path: str, branch_name: str, commit_message: str
     ) -> bool:
         """
-        Attempt to commit file to memory branch without switching branches.
+        SAFE memory branch commit - NEVER switches branches.
 
-        This uses advanced Git operations to commit to a different branch.
+        This function is designed to be safe and never switch the current working branch.
+        If memory branch operations fail, it gracefully falls back without disruption.
 
         Args:
             file_path: Path to file to commit
@@ -194,108 +195,34 @@ class DevTooling:
             commit_message: Commit message
 
         Returns:
-            True if successful, False otherwise
+            True if successful, False otherwise (fallback to regular commit)
         """
         try:
-            # Check if memory branch exists
-            success, _ = self._run_git_command(["rev-parse", "--verify", branch_name])
+            # SAFETY CHECK: Never switch branches in memory operations
+            success, current_branch = self._run_git_command(["branch", "--show-current"])
             if not success:
-                # Create orphan memory branch
-                print(f"📝 Creating new memory branch: {branch_name}")
-                success, _ = self._run_git_command(
-                    ["checkout", "--orphan", branch_name]
-                )
-                if not success:
-                    return False
-
-                # Clear working directory and create initial commit
-                success, _ = self._run_git_command(["rm", "-rf", "."])
-                if not success:
-                    return False
-
-                success, _ = self._run_git_command(
-                    [
-                        "commit",
-                        "--allow-empty",
-                        "-m",
-                        f"Initial commit for {branch_name}",
-                    ]
-                )
-                if not success:
-                    return False
-
-                # Switch back to original branch
-                success, _ = self._run_git_command(["checkout", "-"])
-                if not success:
-                    return False
-
-            # Advanced Git operations for cross-branch commit
-            # 1. Add file to index
-            success, _ = self._run_git_command(["add", file_path])
-            if not success:
+                print("⚠️  Cannot determine current branch - aborting memory commit for safety")
                 return False
 
-            # 2. Create blob object
-            success, blob_hash = self._run_git_command(["hash-object", "-w", file_path])
+            original_branch = current_branch.strip()
+
+            # Check if memory branch exists remotely
+            success, _ = self._run_git_command(["ls-remote", "--heads", "origin", branch_name])
             if not success:
+                print(f"📝 Memory branch {branch_name} does not exist remotely")
+                print("💡 Memory branch creation requires manual setup - using fallback")
                 return False
 
-            # 3. Get current tree of memory branch
-            success, tree_hash = self._run_git_command(
-                ["rev-parse", f"{branch_name}^{{tree}}"]
-            )
-            if not success:
-                return False
+            # For now, disable complex memory branch operations to prevent branch switching
+            # This ensures we NEVER accidentally switch to main or other branches
+            print(f"🔒 Memory branch operations disabled for safety")
+            print(f"💡 Would commit to {branch_name}: {commit_message}")
+            print(f"🛡️  Staying safely on {original_branch}")
 
-            # 4. Update index with new file
-            success, _ = self._run_git_command(
-                [
-                    "update-index",
-                    "--add",
-                    "--cacheinfo",
-                    "100644",
-                    blob_hash.strip(),
-                    file_path,
-                ]
-            )
-            if not success:
-                return False
-
-            # 5. Write new tree
-            success, new_tree = self._run_git_command(["write-tree"])
-            if not success:
-                return False
-
-            # 6. Create commit object
-            success, new_commit = self._run_git_command(
-                [
-                    "commit-tree",
-                    new_tree.strip(),
-                    "-p",
-                    branch_name,
-                    "-m",
-                    commit_message,
-                ]
-            )
-            if not success:
-                return False
-
-            # 7. Update branch reference
-            success, _ = self._run_git_command(
-                ["update-ref", f"refs/heads/{branch_name}", new_commit.strip()]
-            )
-            if not success:
-                return False
-
-            # 8. Push memory branch
-            success, _ = self._run_git_command(["push", "origin", branch_name])
-            if not success:
-                print("⚠️  Failed to push memory branch, but local commit succeeded")
-
-            return True
+            return False  # Always use fallback for safety
 
         except Exception as e:
-            print(f"❌ Cross-branch commit failed: {e}")
+            print(f"❌ Memory branch commit failed safely: {e}")
             return False
 
     def create_development_snapshot(self, title: str, context: str) -> bool:
@@ -849,3 +776,113 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
     mark_checklist_complete("create_snapshot")
 
     return str(snapshot_file)
+
+
+def log_to_agentconvo(agent_id: str, message: str, memory_branch: str = None) -> bool:
+    """
+    SAFE agentconvo logging - never switches branches.
+
+    Args:
+        agent_id: Agent identifier
+        message: Message to log
+        memory_branch: Memory branch to use (currently disabled for safety)
+
+    Returns:
+        True if successful, False otherwise
+    """
+    timestamp = dev_tools.get_precise_timestamp()
+    log_entry = f"{agent_id}: {timestamp} - {message}\n"
+
+    print(f"📝 Logging to agentconvo.md: {agent_id} - {message}")
+
+    # Create agentconvo.md content
+    agentconvo_content = f"""# Agent Communication Log
+
+Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
+
+## Communication History
+
+{log_entry}
+"""
+
+    # Write agentconvo.md file to current working directory
+    agentconvo_path = dev_tools.repo_path / ".agor" / "agentconvo.md"
+    agentconvo_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Append to existing file or create new one
+    if agentconvo_path.exists():
+        with open(agentconvo_path, "a") as f:
+            f.write(log_entry)
+    else:
+        agentconvo_path.write_text(agentconvo_content)
+
+    # SAFE: Always use regular commit on current branch
+    print("🛡️  Using safe commit on current branch (memory branch disabled)")
+    return dev_tools.quick_commit_push(
+        f"Update agentconvo.md: {agent_id} - {message}", "💬"
+    )
+
+
+def update_agent_memory(agent_id: str, memory_type: str, content: str, memory_branch: str = None) -> bool:
+    """
+    SAFE agent memory update - never switches branches.
+
+    Args:
+        agent_id: Agent identifier
+        memory_type: Type of memory update (progress, decision, etc.)
+        content: Memory content to add
+        memory_branch: Memory branch to use (currently disabled for safety)
+
+    Returns:
+        True if successful, False otherwise
+    """
+    memory_file = f".agor/{agent_id.lower()}-memory.md"
+    timestamp = dev_tools.get_current_timestamp()
+
+    print(f"🧠 Updating {agent_id} memory: {memory_type}")
+
+    # Create or update memory content
+    memory_entry = f"""
+## {memory_type.title()} - {timestamp}
+
+{content}
+
+---
+"""
+
+    # Write memory file to current working directory
+    memory_path = dev_tools.repo_path / memory_file
+    memory_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Append to existing file or create new one
+    if memory_path.exists():
+        with open(memory_path, "a") as f:
+            f.write(memory_entry)
+    else:
+        initial_content = f"""# {agent_id.title()} Memory Log
+
+## Current Task
+[Describe the task you're working on]
+
+## Decisions Made
+- [Key architectural choices]
+- [Implementation approaches]
+
+## Files Modified
+- [List of changed files with brief description]
+
+## Problems Encountered
+- [Issues hit and how resolved]
+
+## Next Steps
+- [What needs to be done next]
+
+{memory_entry}
+"""
+        memory_path.write_text(initial_content)
+
+    # SAFE: Always use regular commit on current branch
+    print("🛡️  Using safe commit on current branch (memory branch disabled)")
+    return dev_tools.quick_commit_push(
+        f"Update {agent_id} memory: {memory_type}", "🧠"
+    )
