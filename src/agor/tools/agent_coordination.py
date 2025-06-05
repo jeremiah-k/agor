@@ -4,6 +4,18 @@ Agent Coordination Helper for AGOR Multi-Agent Development.
 This module provides helper functions for agents to discover their role,
 understand the current strategy, and get concrete next actions within
 the existing AGOR protocol framework.
+
+Key Features:
+- Strategy detection and parsing
+- Agent role assignment and discovery
+- Concrete action generation for different strategies
+- Communication protocol management
+- Memory synchronization integration
+
+Public API:
+- discover_my_role(agent_id): Main entry point for agents
+- check_strategy_status(): Get current strategy status
+- AgentCoordinationHelper: Core coordination logic
 """
 
 import json
@@ -13,9 +25,24 @@ from typing import Dict, List, Optional
 
 
 class AgentCoordinationHelper:
-    """Helper for agents to coordinate within AGOR protocols."""
+    """
+    Helper for agents to coordinate within AGOR protocols.
+
+    This class provides the core coordination logic for multi-agent development,
+    including strategy detection, role assignment, and action generation.
+
+    Attributes:
+        project_root (Path): Root directory of the project
+        agor_dir (Path): Path to .agor coordination directory
+    """
 
     def __init__(self, project_root: Optional[Path] = None):
+        """
+        Initialize the coordination helper.
+
+        Args:
+            project_root: Root directory of the project. Defaults to current directory.
+        """
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
 
@@ -69,46 +96,98 @@ class AgentCoordinationHelper:
         }
 
     def _detect_active_strategy(self) -> Optional[Dict]:
-        """Detect what strategy is currently active."""
+        """
+        Detect what strategy is currently active.
 
+        Returns:
+            Dictionary containing strategy information, or None if no strategy is active.
+        """
         strategy_file = self.agor_dir / "strategy-active.md"
         if not strategy_file.exists():
             return None
 
         content = strategy_file.read_text()
 
-        # Detect strategy type from content
-        if "Parallel Divergent Strategy" in content:
-            return self._parse_parallel_divergent_strategy(content)
-        elif "Pipeline Strategy" in content:
-            return self._parse_pipeline_strategy(content)
-        elif "Swarm Strategy" in content:
-            return self._parse_swarm_strategy(content)
-        elif "Red Team Strategy" in content:
-            return {"type": "red_team", "phase": "active"}
-        elif "Mob Programming Strategy" in content:
-            return {"type": "mob_programming", "phase": "active"}
+        # Strategy type detection mapping
+        strategy_patterns = {
+            "Parallel Divergent Strategy": ("parallel_divergent", self._parse_parallel_divergent_strategy),
+            "Pipeline Strategy": ("pipeline", self._parse_pipeline_strategy),
+            "Swarm Strategy": ("swarm", self._parse_swarm_strategy),
+            "Red Team Strategy": ("red_team", lambda c: {"type": "red_team", "phase": "active"}),
+            "Mob Programming Strategy": ("mob_programming", lambda c: {"type": "mob_programming", "phase": "active"}),
+        }
+
+        for pattern, (strategy_type, parser) in strategy_patterns.items():
+            if pattern in content:
+                return parser(content)
 
         return None
 
-    def _parse_parallel_divergent_strategy(self, content: str) -> Dict:
-        """Parse Parallel Divergent strategy details."""
+    def _extract_task_from_content(self, content: str) -> str:
+        """
+        Extract task description from strategy content.
 
-        # Extract task description
+        Args:
+            content: Strategy file content
+
+        Returns:
+            Task description or "Unknown task" if not found
+        """
         task_match = re.search(r"### Task: (.+)", content)
-        task = task_match.group(1) if task_match else "Unknown task"
+        return task_match.group(1) if task_match else "Unknown task"
 
-        # Determine current phase
-        if "Phase 1 - Divergent Execution (ACTIVE)" in content:
-            phase = "divergent"
-        elif "Phase 2 - Convergent Review (ACTIVE)" in content:
-            phase = "convergent"
-        elif "Phase 3 - Synthesis (ACTIVE)" in content:
-            phase = "synthesis"
-        else:
-            phase = "setup"
+    def _parse_parallel_divergent_strategy(self, content: str) -> Dict:
+        """
+        Parse Parallel Divergent strategy details.
 
-        # Extract agent assignments
+        Args:
+            content: Strategy file content
+
+        Returns:
+            Dictionary containing strategy details
+        """
+        task = self._extract_task_from_content(content)
+        phase = self._extract_pd_phase(content)
+        agent_assignments = self._extract_agent_assignments(content)
+
+        return {
+            "type": "parallel_divergent",
+            "phase": phase,
+            "task": task,
+            "agents": agent_assignments,
+        }
+
+    def _extract_pd_phase(self, content: str) -> str:
+        """
+        Extract current phase from Parallel Divergent strategy content.
+
+        Args:
+            content: Strategy file content
+
+        Returns:
+            Current phase name
+        """
+        phase_patterns = {
+            "Phase 1 - Divergent Execution (ACTIVE)": "divergent",
+            "Phase 2 - Convergent Review (ACTIVE)": "convergent",
+            "Phase 3 - Synthesis (ACTIVE)": "synthesis",
+        }
+
+        for pattern, phase in phase_patterns.items():
+            if pattern in content:
+                return phase
+        return "setup"
+
+    def _extract_agent_assignments(self, content: str) -> List[Dict]:
+        """
+        Extract agent assignments from strategy content.
+
+        Args:
+            content: Strategy file content
+
+        Returns:
+            List of agent assignment dictionaries
+        """
         agent_assignments = []
         agent_pattern = (
             r"### (Agent\d+) Assignment.*?Branch.*?`([^`]+)`.*?Status.*?([^\n]+)"
@@ -121,32 +200,20 @@ class AgentCoordinationHelper:
                     "status": match.group(3).strip(),
                 }
             )
-
-        return {
-            "type": "parallel_divergent",
-            "phase": phase,
-            "task": task,
-            "agents": agent_assignments,
-        }
+        return agent_assignments
 
     def _parse_pipeline_strategy(self, content: str) -> Dict:
-        """Parse Pipeline strategy details."""
+        """
+        Parse Pipeline strategy details.
 
-        # Extract task description
-        task_match = re.search(r"### Task: (.+)", content)
-        task = task_match.group(1) if task_match else "Unknown task"
+        Args:
+            content: Strategy file content
 
-        # Extract current stage
-        current_stage_match = re.search(
-            r"### Status: Stage (\d+) - ([^(]+) \(ACTIVE\)", content
-        )
-        if current_stage_match:
-            current_stage = {
-                "number": int(current_stage_match.group(1)),
-                "name": current_stage_match.group(2).strip(),
-            }
-        else:
-            current_stage = {"number": 1, "name": "Unknown"}
+        Returns:
+            Dictionary containing strategy details
+        """
+        task = self._extract_task_from_content(content)
+        current_stage = self._extract_current_stage(content)
 
         return {
             "type": "pipeline",
@@ -155,14 +222,37 @@ class AgentCoordinationHelper:
             "current_stage": current_stage,
         }
 
+    def _extract_current_stage(self, content: str) -> Dict:
+        """
+        Extract current stage from Pipeline strategy content.
+
+        Args:
+            content: Strategy file content
+
+        Returns:
+            Dictionary containing stage number and name
+        """
+        current_stage_match = re.search(
+            r"### Status: Stage (\d+) - ([^(]+) \(ACTIVE\)", content
+        )
+        if current_stage_match:
+            return {
+                "number": int(current_stage_match.group(1)),
+                "name": current_stage_match.group(2).strip(),
+            }
+        return {"number": 1, "name": "Unknown"}
+
     def _parse_swarm_strategy(self, content: str) -> Dict:
-        """Parse Swarm strategy details."""
+        """
+        Parse Swarm strategy details.
 
-        # Extract task description
-        task_match = re.search(r"### Task: (.+)", content)
-        task = task_match.group(1) if task_match else "Unknown task"
+        Args:
+            content: Strategy file content
 
-        # Get task queue status
+        Returns:
+            Dictionary containing strategy details
+        """
+        task = self._extract_task_from_content(content)
         queue_status = self._get_swarm_queue_status()
 
         return {
@@ -173,43 +263,73 @@ class AgentCoordinationHelper:
         }
 
     def _get_swarm_queue_status(self) -> Dict:
-        """Get current swarm task queue status."""
+        """
+        Get current swarm task queue status.
+
+        Returns:
+            Dictionary containing task counts by status
+        """
         queue_file = self.agor_dir / "task-queue.json"
+        default_status = {"available": 0, "in_progress": 0, "completed": 0, "total": 0}
 
         if not queue_file.exists():
-            return {"available": 0, "in_progress": 0, "completed": 0, "total": 0}
+            return default_status
 
         try:
             with open(queue_file) as f:
                 queue_data = json.load(f)
 
             tasks = queue_data.get("tasks", [])
-            available = len([t for t in tasks if t["status"] == "available"])
-            in_progress = len([t for t in tasks if t["status"] == "in_progress"])
-            completed = len([t for t in tasks if t["status"] == "completed"])
+            status_counts = self._count_tasks_by_status(tasks)
+            status_counts["total"] = len(tasks)
 
-            return {
-                "available": available,
-                "in_progress": in_progress,
-                "completed": completed,
-                "total": len(tasks),
-            }
+            return status_counts
         except (json.JSONDecodeError, KeyError):
-            return {"available": 0, "in_progress": 0, "completed": 0, "total": 0}
+            return default_status
+
+    def _count_tasks_by_status(self, tasks: List[Dict]) -> Dict:
+        """
+        Count tasks by their status.
+
+        Args:
+            tasks: List of task dictionaries
+
+        Returns:
+            Dictionary with counts for each status
+        """
+        status_counts = {"available": 0, "in_progress": 0, "completed": 0}
+
+        for task in tasks:
+            status = task.get("status", "unknown")
+            if status in status_counts:
+                status_counts[status] += 1
+
+        return status_counts
 
     def _determine_agent_role(
         self, strategy_info: Dict, agent_id: Optional[str]
     ) -> Dict:
-        """Determine what role this agent should play."""
+        """
+        Determine what role this agent should play in the current strategy.
 
+        Args:
+            strategy_info: Information about the current strategy
+            agent_id: Optional agent identifier
+
+        Returns:
+            Dictionary containing role information and next actions
+        """
         strategy_type = strategy_info["type"]
 
-        if strategy_type == "parallel_divergent":
-            return self._determine_pd_role(strategy_info, agent_id)
-        elif strategy_type == "pipeline":
-            return self._determine_pipeline_role(strategy_info, agent_id)
-        elif strategy_type == "swarm":
-            return self._determine_swarm_role(strategy_info, agent_id)
+        # Strategy-specific role determination
+        role_handlers = {
+            "parallel_divergent": self._determine_pd_role,
+            "pipeline": self._determine_pipeline_role,
+            "swarm": self._determine_swarm_role,
+        }
+
+        if strategy_type in role_handlers:
+            return role_handlers[strategy_type](strategy_info, agent_id)
         else:
             return {
                 "role": "participant",
@@ -217,22 +337,40 @@ class AgentCoordinationHelper:
                 "status": "active",
             }
 
-    def _determine_pd_role(self, strategy_info: Dict, agent_id: Optional[str]) -> Dict:
-        """Determine role in Parallel Divergent strategy."""
+    def _get_claimed_agents(self, pattern: str = r"(agent\d+): .+ - CLAIMING") -> set:
+        """
+        Get set of agents that have claimed assignments from agentconvo.md.
 
-        phase = strategy_info["phase"]
-        agents = strategy_info.get("agents", [])
+        Args:
+            pattern: Regex pattern to match claims
 
-        # Check agent communication for assignments
+        Returns:
+            Set of claimed agent IDs
+        """
         agentconvo_file = self.agor_dir / "agentconvo.md"
         claimed_agents = set()
 
         if agentconvo_file.exists():
             content = agentconvo_file.read_text()
-            # Look for assignment claims
-            claim_pattern = r"(agent\d+): .+ - CLAIMING"
-            for match in re.finditer(claim_pattern, content, re.IGNORECASE):
+            for match in re.finditer(pattern, content, re.IGNORECASE):
                 claimed_agents.add(match.group(1).lower())
+
+        return claimed_agents
+
+    def _determine_pd_role(self, strategy_info: Dict, agent_id: Optional[str]) -> Dict:
+        """
+        Determine role in Parallel Divergent strategy.
+
+        Args:
+            strategy_info: Strategy information
+            agent_id: Optional agent identifier
+
+        Returns:
+            Dictionary containing role assignment
+        """
+        phase = strategy_info["phase"]
+        agents = strategy_info.get("agents", [])
+        claimed_agents = self._get_claimed_agents()
 
         if phase == "divergent":
             # Check if agent already has assignment
@@ -289,21 +427,41 @@ class AgentCoordinationHelper:
                 "status": "waiting",
             }
 
+    def _is_stage_claimed(self, stage_number: int) -> bool:
+        """
+        Check if a pipeline stage is already claimed.
+
+        Args:
+            stage_number: Stage number to check
+
+        Returns:
+            True if stage is claimed, False otherwise
+        """
+        agentconvo_file = self.agor_dir / "agentconvo.md"
+
+        if not agentconvo_file.exists():
+            return False
+
+        content = agentconvo_file.read_text()
+        stage_pattern = f"CLAIMING STAGE {stage_number}"
+        return stage_pattern in content
+
     def _determine_pipeline_role(
         self, strategy_info: Dict, agent_id: Optional[str]
     ) -> Dict:
-        """Determine role in Pipeline strategy."""
+        """
+        Determine role in Pipeline strategy.
 
+        Args:
+            strategy_info: Strategy information
+            agent_id: Optional agent identifier
+
+        Returns:
+            Dictionary containing role assignment
+        """
         current_stage = strategy_info.get("current_stage", {})
-
-        # Check if current stage is claimed
-        agentconvo_file = self.agor_dir / "agentconvo.md"
-        stage_claimed = False
-
-        if agentconvo_file.exists():
-            content = agentconvo_file.read_text()
-            stage_pattern = f"CLAIMING STAGE {current_stage.get('number', 1)}"
-            stage_claimed = stage_pattern in content
+        stage_number = current_stage.get("number", 1)
+        stage_claimed = self._is_stage_claimed(stage_number)
 
         if stage_claimed:
             return {
@@ -347,18 +505,27 @@ class AgentCoordinationHelper:
             }
 
     def _get_concrete_actions(self, strategy_info: Dict, role_info: Dict) -> List[str]:
-        """Get concrete next actions for the agent."""
+        """
+        Get concrete next actions for the agent based on strategy and role.
 
+        Args:
+            strategy_info: Information about the current strategy
+            role_info: Information about the agent's role
+
+        Returns:
+            List of concrete action strings
+        """
         strategy_type = strategy_info["type"]
-        role_info["role"]
-        role_info.get("status", "unknown")
 
-        if strategy_type == "parallel_divergent":
-            return self._get_pd_actions(role_info, strategy_info)
-        elif strategy_type == "pipeline":
-            return self._get_pipeline_actions(role_info, strategy_info)
-        elif strategy_type == "swarm":
-            return self._get_swarm_actions(role_info, strategy_info)
+        # Strategy-specific action handlers
+        action_handlers = {
+            "parallel_divergent": self._get_pd_actions,
+            "pipeline": self._get_pipeline_actions,
+            "swarm": self._get_swarm_actions,
+        }
+
+        if strategy_type in action_handlers:
+            return action_handlers[strategy_type](role_info, strategy_info)
         else:
             return [
                 "Check strategy details in .agor/strategy-active.md",
@@ -367,8 +534,16 @@ class AgentCoordinationHelper:
             ]
 
     def _get_pd_actions(self, role_info: Dict, strategy_info: Dict) -> List[str]:
-        """Get Parallel Divergent specific actions."""
+        """
+        Get Parallel Divergent specific actions.
 
+        Args:
+            role_info: Information about the agent's role
+            strategy_info: Information about the strategy
+
+        Returns:
+            List of concrete action strings for Parallel Divergent strategy
+        """
         role = role_info["role"]
         status = role_info.get("status", "unknown")
 
@@ -419,8 +594,16 @@ class AgentCoordinationHelper:
         return ["Check strategy-active.md for current phase instructions"]
 
     def _get_pipeline_actions(self, role_info: Dict, strategy_info: Dict) -> List[str]:
-        """Get Pipeline specific actions."""
+        """
+        Get Pipeline specific actions.
 
+        Args:
+            role_info: Information about the agent's role
+            strategy_info: Information about the strategy
+
+        Returns:
+            List of concrete action strings for Pipeline strategy
+        """
         role = role_info["role"]
         status = role_info.get("status", "unknown")
 
@@ -447,8 +630,16 @@ class AgentCoordinationHelper:
         return ["Check strategy-active.md for current stage instructions"]
 
     def _get_swarm_actions(self, role_info: Dict, strategy_info: Dict) -> List[str]:
-        """Get Swarm specific actions."""
+        """
+        Get Swarm specific actions.
 
+        Args:
+            role_info: Information about the agent's role
+            strategy_info: Information about the strategy
+
+        Returns:
+            List of concrete action strings for Swarm strategy
+        """
         role = role_info["role"]
         status = role_info.get("status", "unknown")
 
@@ -482,9 +673,23 @@ class AgentCoordinationHelper:
 def discover_my_role(agent_id: Optional[str] = None) -> str:
     """
     Main entry point for agents to discover their role and next actions.
-    Returns formatted guidance for the agent.
-    """
 
+    This function analyzes the current project state, detects active strategies,
+    and provides concrete next actions for the agent to take.
+
+    Args:
+        agent_id: Optional agent identifier (e.g., "agent1", "agent2")
+
+    Returns:
+        Formatted string with role information and concrete next actions
+
+    Example:
+        >>> role_info = discover_my_role("agent1")
+        >>> print(role_info)
+        # 🤖 AGOR Agent Coordination
+        ## Status: Strategy Active
+        Active strategy: parallel_divergent. Claim assignment as agent1...
+    """
     helper = AgentCoordinationHelper()
     result = helper.discover_current_situation(agent_id)
 
@@ -534,7 +739,23 @@ cat .agor/{role_info.get('agent_id', 'agentX')}-memory.md
 
 
 def check_strategy_status() -> str:
-    """Check current strategy status and recent activity."""
+    """
+    Check current strategy status and recent activity.
+
+    This function provides a quick overview of the current AGOR strategy,
+    including recent agent communication and activity.
+
+    Returns:
+        Formatted string with strategy status and recent activity
+
+    Example:
+        >>> status = check_strategy_status()
+        >>> print(status)
+        📊 AGOR Strategy Status
+        **Strategy**: Parallel Divergent
+        **Task**: implement user authentication
+        **Recent Activity**: agent1: 2024-01-15 14:30 - CLAIMING ASSIGNMENT
+    """
 
     helper = AgentCoordinationHelper()
 
