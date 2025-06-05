@@ -35,7 +35,11 @@ class DevTooling:
     """Development utilities for AGOR development workflow."""
 
     def __init__(self, repo_path: Optional[Path] = None):
-        """Initialize development tooling."""
+        """
+        Initializes the development tooling utilities for the specified repository path.
+        
+        If no path is provided, uses the current working directory. Determines the git binary location for subsequent git operations.
+        """
         self.repo_path = repo_path if repo_path else Path.cwd()
         self.git_binary = git_manager.get_git_binary()
 
@@ -45,14 +49,14 @@ class DevTooling:
         env: Optional[dict[str, str]] = None
     ) -> tuple[bool, str]:
         """
-        Run a git command and return success status and output.
-
+        Executes a git command in the repository and returns its success status and output.
+        
         Args:
-            command: Git command arguments
-            env: Optional environment variables to add
-
+            command: List of git command arguments to execute.
+            env: Optional dictionary of environment variables to include in the subprocess.
+        
         Returns:
-            Tuple of (success, output)
+            A tuple (success, output), where success is True if the command succeeded, and output contains the command's stdout or error message.
         """
         try:
             # Prepare environment - always copy current env, update if provided
@@ -197,19 +201,9 @@ class DevTooling:
         self, file_path: str, branch_name: str, commit_message: str
     ) -> bool:
         """
-        SAFE memory branch commit using git plumbing - NEVER switches branches.
-
-        Uses low-level git commands to commit files to memory branch without
-        changing the current working branch or working directory.
-
-        Args:
-            file_path: Path to file to commit (relative to repo root)
-            branch_name: Target memory branch
-            commit_message: Commit message
-
-        Returns:
-            True if successful, False otherwise (fallback to regular commit)
-        """
+        Safely commits a file to a memory branch using low-level git commands without switching branches.
+        
+        Uses git plumbing commands to create or update a memory branch by committing the specified file, ensuring the current working branch and directory remain unchanged. Creates the branch if it does not exist, stages the file in a temporary index, writes a new tree and commit, updates the branch reference, and attempts to push the branch. Cleans up temporary files and returns True on success, or False if any step fails.
         try:
             # SAFETY CHECK: Never switch branches in memory operations
             success, current_branch = self._run_git_command(["branch", "--show-current"])
@@ -368,16 +362,14 @@ class DevTooling:
 
     def _read_from_memory_branch(self, file_path: str, branch_name: str) -> Optional[str]:
         """
-        SAFE memory branch read - NEVER switches branches.
-
-        Reads file content from memory branch without changing current working branch.
-
+        Reads the content of a file from a specified memory branch without switching branches.
+        
         Args:
-            file_path: Path to file to read (relative to repo root)
-            branch_name: Source memory branch
-
+            file_path: The path to the file relative to the repository root.
+            branch_name: The name of the memory branch to read from.
+        
         Returns:
-            File content as string if successful, None otherwise
+            The file content as a string if successful, or None if the file or branch does not exist or if a safety check fails.
         """
         try:
             # SAFETY CHECK: Verify we're not switching branches
@@ -415,12 +407,12 @@ class DevTooling:
 
     def list_memory_branches(self) -> list[str]:
         """
-        List all memory branches without switching branches.
-
-        Uses the existing memory_sync.py implementation to avoid code duplication.
-
+        Lists all memory branches in the repository without switching branches.
+        
+        Attempts to use the MemorySync implementation for comprehensive local and remote branch discovery, falling back to parsing git branch output if necessary.
+        
         Returns:
-            List of memory branch names
+            A sorted list of memory branch names.
         """
         try:
             from agor.memory_sync import MemorySync
@@ -461,14 +453,14 @@ class DevTooling:
 
     def create_development_snapshot(self, title: str, context: str) -> bool:
         """
-        Create a comprehensive development snapshot.
-
+        Creates a markdown snapshot of the current development state, including branch, commit, and context information, and commits it to the repository.
+        
         Args:
-            title: Snapshot title
-            context: Development context and progress
-
+            title: The title for the snapshot.
+            context: Description of the current development context and progress.
+        
         Returns:
-            True if successful, False otherwise
+            True if the snapshot was created, committed, and pushed successfully; False otherwise.
         """
         timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H%M")
         snapshot_file = (
@@ -526,7 +518,11 @@ If you're picking up this work:
         return self.quick_commit_push(f"📸 Create development snapshot: {title}", "📸")
 
     def test_tooling(self) -> bool:
-        """Test all development tooling functions to ensure they work properly."""
+        """
+        Runs a comprehensive test of development tooling functions to verify their proper operation.
+        
+        Prints the results of timestamp generation, git binary detection, basic git command execution, and repository status checks. Returns True if all tests pass successfully; otherwise, returns False.
+        """
         print("🧪 Testing AGOR Development Tooling...")
 
         # Test timestamp functions
@@ -572,21 +568,15 @@ If you're picking up this work:
 
     def prepare_prompt_content(self, content: str) -> str:
         """
-        Prepare content for use in single codeblock prompts by escaping nested codeblocks.
-
-        This function reduces triple backticks (```) to double backticks (``) to prevent
-        formatting issues when the content is placed inside a single codeblock for agent handoffs.
-
-        When agents create snapshots for handoffs, the content often contains code examples
-        with triple backticks. If this content is then placed inside a single codeblock
-        (as required for agent initialization prompts), the nested triple backticks break
-        the formatting and create visual garbage in the UI.
-
+        Escapes nested codeblocks in content to ensure correct formatting within a single codeblock prompt.
+        
+        Replaces triple backticks with double backticks and quadruple backticks with triple backticks to prevent formatting issues when embedding code examples inside a single codeblock, such as during agent handoffs.
+        
         Args:
-            content: Raw content that may contain codeblocks
-
+            content: The text to be processed, potentially containing codeblocks.
+        
         Returns:
-            Content with escaped codeblocks safe for single codeblock usage
+            The content with codeblocks escaped for safe inclusion in single codeblock prompts.
         """
         # Replace triple backticks with double backticks to prevent codeblock nesting issues
         escaped_content = content.replace('```', '``')
@@ -639,12 +629,21 @@ def get_precise_timestamp() -> str:
 
 
 def get_ntp_timestamp() -> str:
-    """Get accurate timestamp from NTP server."""
+    """
+    Retrieves the current UTC timestamp from an NTP server.
+    
+    Returns:
+        A string representing the current UTC time in "YYYY-MM-DD HH:MM UTC" format. Falls back to local time if the NTP server is unavailable.
+    """
     return dev_tools.get_ntp_timestamp()
 
 
 def prepare_prompt_content(content: str) -> str:
-    """Prepare content for single codeblock prompts by escaping nested codeblocks."""
+    """
+    Escapes nested triple backticks in content to prevent formatting issues in single codeblock prompts.
+    
+    Replaces nested triple backticks with double backticks and handles quadruple backticks by reducing them to triple backticks.
+    """
     return dev_tools.prepare_prompt_content(content)
 
 
@@ -953,7 +952,14 @@ def process_work_order_hotkey(task_description: str = "") -> str:
 
 
 def process_create_pr_hotkey(pr_title: str = "") -> str:
-    """Process create-pr hotkey and generate PR description for user to copy."""
+    """
+    Prompts the user for pull request details, generates a PR description snapshot, and marks the relevant checklist item as complete.
+    
+    Guides the user through entering PR title, description, completed work, testing, breaking changes, target branch, reviewers, and related issues. Retrieves recent commits and changed files from git, generates a formatted PR description snapshot, saves it to a file, and notifies the user. Marks the "create_snapshot" checklist item as complete.
+    
+    Returns:
+        The file path of the created PR description snapshot.
+    """
     from agor.tools.snapshot_templates import (
         generate_pr_description_snapshot,
         save_pr_description_snapshot,
@@ -1045,15 +1051,17 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
 
 def log_to_agentconvo(agent_id: str, message: str, memory_branch: str = None) -> bool:
     """
-    SAFE agentconvo logging with memory branch support - never switches branches.
-
+    Logs a message to the agent communication log and commits the update to a memory branch without switching branches.
+    
+    If committing to the memory branch fails, falls back to a regular commit and push on the current branch.
+    
     Args:
-        agent_id: Agent identifier
-        message: Message to log
-        memory_branch: Memory branch to use (auto-generated if None)
-
+        agent_id: Identifier for the agent writing the message.
+        message: The message to log in the communication file.
+        memory_branch: Optional memory branch name; if not provided, a timestamped branch is generated.
+    
     Returns:
-        True if successful, False otherwise
+        True if the log entry is successfully committed, False otherwise.
     """
     timestamp = dev_tools.get_precise_timestamp()
     log_entry = f"{agent_id}: {timestamp} - {message}\n"
@@ -1100,16 +1108,18 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 
 def update_agent_memory(agent_id: str, memory_type: str, content: str, memory_branch: str = None) -> bool:
     """
-    SAFE agent memory update with memory branch support - never switches branches.
-
+    Updates an agent's memory log with new content and commits the change to a dedicated memory branch without switching branches.
+    
+    Appends a formatted memory entry to the agent's memory markdown file, creating the file with a template if it does not exist. Attempts to commit the update to a specified or auto-generated memory branch using a safe, low-level Git operation. Falls back to a regular commit and push on the current branch if the memory branch commit fails.
+    
     Args:
-        agent_id: Agent identifier
-        memory_type: Type of memory update (progress, decision, etc.)
-        content: Memory content to add
-        memory_branch: Memory branch to use (auto-generated if None)
-
+        agent_id: Unique identifier for the agent.
+        memory_type: Category of the memory entry (e.g., progress, decision).
+        content: The memory content to record.
+        memory_branch: Optional branch name for memory storage; auto-generated if not provided.
+    
     Returns:
-        True if successful, False otherwise
+        True if the memory update and commit succeed, False otherwise.
     """
     memory_file = f".agor/{agent_id.lower()}-memory.md"
     timestamp = dev_tools.get_current_timestamp()

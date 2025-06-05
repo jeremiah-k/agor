@@ -432,7 +432,10 @@ def generate_completion_report(
     issues_encountered: str = "None",
     recommendations: str = "None",
 ) -> str:
-    """Generate a completion report document (can be a form of snapshot) to return to coordinator."""
+    """
+    Generates a structured completion report snapshot summarizing a finished task for coordinator review.
+    
+    The report includes metadata, original task details, work completed, files modified, commits made, results summary, issues encountered, recommendations, technical Git context, and step-by-step coordinator instructions. It is formatted for seamless integration into the AGOR coordination workflow.
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -581,7 +584,24 @@ def generate_progress_report_snapshot(
     estimated_completion_time: str = "Unknown",
     additional_notes: str = "None",
 ) -> str:
-    """Generate a progress report snapshot for status updates to coordinators or team."""
+    """
+    Generates a structured progress report snapshot summarizing current task status, work completed, blockers, next steps, and technical context for coordinators or team members.
+    
+    Args:
+        current_task: Description of the task being reported on.
+        progress_percentage: Overall progress as a percentage or descriptive string.
+        work_completed: List of completed work items.
+        current_blockers: List of current blockers or obstacles.
+        next_immediate_steps: Ordered list of next steps to be taken.
+        commits_made: List of recent commit hashes or messages.
+        files_modified: List of files modified during the reporting period.
+        agent_role: Role or identifier of the reporting agent.
+        estimated_completion_time: Estimated time to completion (default "Unknown").
+        additional_notes: Any additional notes or context (default "None").
+    
+    Returns:
+        A markdown-formatted string containing the progress report snapshot, including metadata, task details, blockers, next steps, file and commit summaries, technical Git context, and coordination instructions.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -673,7 +693,27 @@ def generate_work_order_snapshot(
     deadline: str = "None specified",
     context_notes: str = "None",
 ) -> str:
-    """Generate a work order snapshot for task assignment to agents."""
+    """
+    Generates a structured work order snapshot for assigning tasks to agents.
+    
+    The snapshot includes task details, requirements, acceptance criteria, files to modify, reference materials, priority, estimated effort, deadline, context notes, and relevant Git context. It provides instructions for agents on how to proceed and communicate within the AGOR coordination system.
+    
+    Args:
+        task_description: Brief summary of the task to be performed.
+        task_requirements: List of specific requirements or subtasks.
+        acceptance_criteria: List of conditions that must be met for task completion.
+        files_to_modify: List of files to be changed, with placeholders for descriptions.
+        reference_materials: List of supporting documents or resources.
+        coordinator_id: Identifier for the coordinator issuing the work order.
+        assigned_agent_role: Role or identifier of the agent assigned to the task.
+        priority_level: Task priority (default "Medium").
+        estimated_effort: Estimated effort required (default "Unknown").
+        deadline: Task deadline (default "None specified").
+        context_notes: Additional context or important notes (default "None").
+    
+    Returns:
+        A markdown-formatted string representing the work order snapshot.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -764,7 +804,11 @@ def generate_pr_description_snapshot(
     reviewers_requested: list[str] = None,
     related_issues: list[str] = None,
 ) -> str:
-    """Generate a PR description snapshot for user to copy when creating pull request."""
+    """
+    Generates a structured pull request (PR) description snapshot for user copy-paste when creating a PR.
+    
+    The snapshot includes PR metadata, work completed, files changed, commits included, testing performed, breaking changes, related issues, requested reviewers, and technical Git context. Coordination notes and references to relevant documentation are also provided to facilitate seamless PR creation and review.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
