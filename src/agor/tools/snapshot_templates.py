@@ -818,7 +818,7 @@ Update `.agor/agentconvo.md` with work order receipt:
 """
 
 
-def generate_pr_creation_snapshot(
+def generate_pr_description_snapshot(
     pr_title: str,
     pr_description: str,
     work_completed: List[str],
@@ -831,7 +831,7 @@ def generate_pr_creation_snapshot(
     reviewers_requested: List[str] = None,
     related_issues: List[str] = None,
 ) -> str:
-    """Generate a PR creation snapshot for code review and integration."""
+    """Generate a PR description snapshot for user to copy when creating pull request."""
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -839,11 +839,11 @@ def generate_pr_creation_snapshot(
     reviewers_requested = reviewers_requested or []
     related_issues = related_issues or []
 
-    return f"""# 🔀 Pull Request Creation Snapshot
+    return f"""# 🔀 Pull Request Description Snapshot
 
 **Generated**: {timestamp}
 **From Agent Role**: {agent_role}
-**Snapshot Type**: PR Creation
+**Snapshot Type**: PR Description
 **AGOR Version**: {agor_version}
 **Target Branch**: {target_branch}
 
@@ -866,7 +866,7 @@ def generate_pr_creation_snapshot(
 
 **No work should begin until all documentation is read and understood.**
 
-## 🔀 Pull Request Details
+## 🔀 Pull Request Description (Copy & Paste)
 
 ### Title
 {pr_title}
@@ -915,7 +915,7 @@ def generate_pr_creation_snapshot(
 {git_context['recent_commits']}
 ```
 
-## 🎯 PR Creation Instructions
+## 🎯 PR Creation Instructions for User
 
 ### 1. Pre-PR Checklist
 - [ ] All work is committed and pushed to feature branch
@@ -924,17 +924,19 @@ def generate_pr_creation_snapshot(
 - [ ] Documentation is updated
 - [ ] No merge conflicts with target branch
 
-### 2. Create Pull Request
+### 2. Create Pull Request (User Action Required)
 ```bash
-# Ensure branch is up to date
+# Ensure branch is up to date (if needed)
 git checkout {git_context['branch']}
 git push origin {git_context['branch']}
 
 # Create PR using GitHub CLI (if available)
-gh pr create --title "{pr_title}" --body "See PR description in snapshot" --base {target_branch} --head {git_context['branch']}
+gh pr create --title "{pr_title}" --body "See PR description below" --base {target_branch} --head {git_context['branch']}
 
 # Or create PR manually through GitHub web interface
 ```
+
+**Note**: Agent has prepared all work and description. User should create the actual PR using the description provided below.
 
 ### 3. PR Description Template
 ```markdown
@@ -954,7 +956,7 @@ gh pr create --title "{pr_title}" --body "See PR description in snapshot" --base
 {chr(10).join(f"- {issue}" for issue in related_issues) if related_issues else "None"}
 ```
 
-### 4. Post-PR Actions
+### 4. Post-PR Actions (User Responsibilities)
 - [ ] Link PR to related issues
 - [ ] Request reviews from specified reviewers
 - [ ] Monitor CI/CD pipeline status
@@ -999,7 +1001,7 @@ gh pr create --title "{pr_title}" --body "See PR description in snapshot" --base
 
 ---
 
-**PR Ready**: This snapshot contains all information needed to create and manage the pull request.
+**PR Description Ready**: This snapshot contains the complete PR description for the user to copy when creating the pull request.
 """
 
 
@@ -1009,7 +1011,7 @@ SNAPSHOT_HOTKEY_HELP = """
 snapshot) create work snapshot for context or another agent
 progress-report) create progress report snapshot for status updates
 work-order) create work order snapshot for task assignment
-pr-snapshot) create PR creation snapshot for code review
+pr-description) generate PR description for user to copy
 complete) create completion report/snapshot for coordinator
 receive-snapshot) receive work snapshot from another agent (or load context)
 snapshots) list all snapshot documents
@@ -1058,22 +1060,22 @@ def save_work_order_snapshot(
     return order_file
 
 
-def save_pr_creation_snapshot(
+def save_pr_description_snapshot(
     pr_content: str, pr_title: str
 ) -> Path:
-    """Save PR creation snapshot for code review preparation."""
+    """Save PR description snapshot for user to copy when creating pull request."""
 
     snapshot_dir = create_snapshot_directory()
 
     # Generate filename with timestamp and PR title
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
     safe_title = "".join(c for c in pr_title if c.isalnum() or c in "-_")[:30]
-    filename = f"{timestamp}_PR_{safe_title}_snapshot.md"
+    filename = f"{timestamp}_PR_DESC_{safe_title}_snapshot.md"
 
     pr_file = snapshot_dir / filename
     pr_file.write_text(pr_content)
 
     # Update index
-    update_snapshot_index(filename, f"PR: {pr_title}", "active")
+    update_snapshot_index(filename, f"PR DESC: {pr_title}", "active")
 
     return pr_file

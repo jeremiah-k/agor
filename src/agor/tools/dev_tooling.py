@@ -733,11 +733,11 @@ def process_work_order_hotkey(task_description: str = "") -> str:
 
 
 def process_create_pr_hotkey(pr_title: str = "") -> str:
-    """Process create-pr hotkey and create PR creation snapshot."""
-    from .snapshot_templates import generate_pr_creation_snapshot, save_pr_creation_snapshot
+    """Process create-pr hotkey and generate PR description for user to copy."""
+    from .snapshot_templates import generate_pr_description_snapshot, save_pr_description_snapshot
     import subprocess
 
-    # Get user input for PR details
+    # Get user input for PR description details
     if not pr_title:
         pr_title = input("🔀 Enter PR title: ")
 
@@ -775,8 +775,8 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
         commits = ["Unable to get commit history"]
         files_changed = ["Unable to get changed files"]
 
-    # Generate and save PR snapshot
-    pr_content = generate_pr_creation_snapshot(
+    # Generate and save PR description snapshot
+    pr_content = generate_pr_description_snapshot(
         pr_title=pr_title,
         pr_description=pr_description,
         work_completed=work_completed,
@@ -790,8 +790,9 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
         related_issues=[input("🔗 Related issues (comma-separated): ").split(',') if input else []]
     )
 
-    snapshot_file = save_pr_creation_snapshot(pr_content, pr_title)
-    print(f"🔀 PR creation snapshot created: {snapshot_file}")
+    snapshot_file = save_pr_description_snapshot(pr_content, pr_title)
+    print(f"🔀 PR description snapshot created: {snapshot_file}")
+    print("📋 User can copy the PR description from the snapshot to create the actual pull request")
 
     # Mark checklist item complete
     mark_checklist_complete("create_snapshot")

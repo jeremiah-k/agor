@@ -121,7 +121,7 @@ sp) strategic plan bp) break down project
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
 progress-report) create progress report snapshot for status updates
-create-pr) create pull request for current work
+create-pr) generate PR description for current work
 receive-snapshot) receive snapshot from another agent
 **💾 Memory Sync (Advanced/Dev Use):**
 mem-sync-start) start memory sync mem-sync-save) save memory state
@@ -172,7 +172,7 @@ a ) analyze codebase da) detailed snapshot
 snapshot) create snapshot document for another agent
 work-order) create work order snapshot for task assignment
 progress-report) create progress report snapshot for status updates
-create-pr) create pull request for current work
+create-pr) generate PR description for current work
 receive-snapshot) receive snapshot from another agent
 **💾 Memory Sync (Advanced/Dev Use):**
 mem-sync-start) start memory sync mem-sync-save) save memory state
@@ -219,7 +219,7 @@ a ) analyze codebase f ) full files co) changes only
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
 progress-report) create progress report snapshot for status updates
-create-pr) create pull request for current work
+create-pr) generate PR description for current work
 receive-snapshot) receive snapshot from another agent
 **💾 Memory Sync (Advanced/Dev Use):**
 mem-sync-start) start memory sync mem-sync-save) save memory state
@@ -319,7 +319,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status (Memory Synchronization System will persist this)
 - **`progress-report`**: Create progress report snapshot for status updates to coordinators or team members
 - **`work-order`**: Create work order snapshot for task assignment (Project Coordinator role)
-- **`create-pr`**: Create pull request for current work with comprehensive description and context
+- **`create-pr`**: Generate PR description for current work with comprehensive context (user will create the actual PR)
 - **`receive-snapshot`**: Receive and acknowledge snapshot from another agent or coordinator
 
 **Meta-Development:**
