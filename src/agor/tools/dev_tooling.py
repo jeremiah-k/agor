@@ -7,6 +7,7 @@ to streamline development workflow and memory management.
 
 import os
 import subprocess
+import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -38,7 +39,11 @@ class DevTooling:
         self.repo_path = repo_path if repo_path else Path.cwd()
         self.git_binary = git_manager.get_git_binary()
 
-    def _run_git_command(self, command: list[str], env: dict = None) -> tuple[bool, str]:
+    def _run_git_command(
+        self,
+        command: list[str],
+        env: Optional[dict[str, str]] = None
+    ) -> tuple[bool, str]:
         """
         Run a git command and return success status and output.
 
@@ -50,8 +55,8 @@ class DevTooling:
             Tuple of (success, output)
         """
         try:
-            # Prepare environment
-            cmd_env = os.environ.copy() if env else None
+            # Prepare environment - always copy current env, update if provided
+            cmd_env = os.environ.copy()
             if env:
                 cmd_env.update(env)
 
@@ -274,36 +279,49 @@ class DevTooling:
 
             # Step 4: Create tree with the new file
             # Use git update-index to stage the file in a temporary index
-            temp_index = self.repo_path / ".git" / "temp_memory_index"
+            temp_index = None
+            try:
+                # Create unique temporary index file to avoid collisions
+                temp_fd, temp_index_path = tempfile.mkstemp(
+                    prefix="agor_memory_index_",
+                    suffix=".tmp",
+                    dir=self.repo_path / ".git"
+                )
+                os.close(temp_fd)  # Close file descriptor, we only need the path
+                temp_index = Path(temp_index_path)
 
-            # Read current tree into temporary index
-            success, _ = self._run_git_command([
-                "read-tree", f"{branch_name}^{{tree}}"
-            ], env={"GIT_INDEX_FILE": str(temp_index)})
-            if not success:
-                print("❌ Failed to read current tree")
-                return False
+                # Read current tree into temporary index
+                success, _ = self._run_git_command([
+                    "read-tree", f"{branch_name}^{{tree}}"
+                ], env={"GIT_INDEX_FILE": str(temp_index)})
+                if not success:
+                    print("❌ Failed to read current tree")
+                    return False
 
-            # Add our file to the temporary index
-            success, _ = self._run_git_command([
-                "update-index", "--add", "--cacheinfo", "100644", blob_hash, file_path
-            ], env={"GIT_INDEX_FILE": str(temp_index)})
-            if not success:
-                print("❌ Failed to update index")
-                return False
+                # Add our file to the temporary index
+                success, _ = self._run_git_command([
+                    "update-index", "--add", "--cacheinfo", "100644", blob_hash, file_path
+                ], env={"GIT_INDEX_FILE": str(temp_index)})
+                if not success:
+                    print("❌ Failed to update index")
+                    return False
 
-            # Write tree from temporary index
-            success, new_tree = self._run_git_command([
-                "write-tree"
-            ], env={"GIT_INDEX_FILE": str(temp_index)})
-            if not success:
-                print("❌ Failed to write tree")
-                return False
-            new_tree = new_tree.strip()
+                # Write tree from temporary index
+                success, new_tree = self._run_git_command([
+                    "write-tree"
+                ], env={"GIT_INDEX_FILE": str(temp_index)})
+                if not success:
+                    print("❌ Failed to write tree")
+                    return False
+                new_tree = new_tree.strip()
 
-            # Clean up temporary index
-            if temp_index.exists():
-                temp_index.unlink()
+            finally:
+                # Ensure cleanup of temporary index file
+                if temp_index and temp_index.exists():
+                    try:
+                        temp_index.unlink()
+                    except Exception as e:
+                        print(f"⚠️  Failed to cleanup temporary index: {e}")
 
             # Step 5: Create commit object
             success, new_commit = self._run_git_command([
@@ -324,9 +342,7 @@ class DevTooling:
 
             # Step 7: Push memory branch (optional, don't fail if this doesn't work)
             success, _ = self._run_git_command(["push", "origin", branch_name])
-            if success:
-                print(f"✅ Pushed memory branch {branch_name} to origin")
-            else:
+            if not success:
                 print(f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)")
 
             print(f"✅ Successfully committed {file_path} to memory branch {branch_name}")

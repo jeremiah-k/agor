@@ -117,7 +117,7 @@ class AgentCoordinationHelper:
             "Mob Programming Strategy": ("mob_programming", lambda c: {"type": "mob_programming", "phase": "active"}),
         }
 
-        for pattern, (strategy_type, parser) in strategy_patterns.items():
+        for pattern, (_, parser) in strategy_patterns.items():
             if pattern in content:
                 return parser(content)
 
@@ -330,12 +330,12 @@ class AgentCoordinationHelper:
 
         if strategy_type in role_handlers:
             return role_handlers[strategy_type](strategy_info, agent_id)
-        else:
-            return {
-                "role": "participant",
-                "message": f"Participate in {strategy_type} strategy",
-                "status": "active",
-            }
+
+        return {
+            "role": "participant",
+            "message": f"Participate in {strategy_type} strategy",
+            "status": "active",
+        }
 
     def _get_claimed_agents(self, pattern: str = r"(agent\d+): .+ - CLAIMING") -> set:
         """

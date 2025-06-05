@@ -71,7 +71,7 @@ When setting up AGOR with AugmentCode Local Agent:
 2. **Configure User Guidelines**
 
    **Recommended**: Use the comprehensive AGOR User Guidelines from the repository root:
-   **[augment_user_guidelines.md](../../../docs/augment_user_guidelines.md)**
+   **[docs/augment_user_guidelines.md](../../../docs/augment_user_guidelines.md)**
 
    This provides complete AGOR integration with proper protocols, snapshot requirements, and coordination workflows.
 
