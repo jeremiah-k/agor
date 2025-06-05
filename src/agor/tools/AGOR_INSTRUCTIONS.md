@@ -66,7 +66,7 @@ If no captured configuration is available, you can:
 - Set manually: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
   **This ensures proper commit attribution for all development work.**
 
-**CRITICAL**: You have a real, executable git binary at `/tmp/agor_tools/git`. DO NOT simulate git commands.
+**Important**: You have a real, executable git binary at `/tmp/agor_tools/git`. DO NOT simulate git commands.
 
 ```bash
 # Make the git binary executable
