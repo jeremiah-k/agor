@@ -31,6 +31,21 @@ def generate_snapshot_prompt(from_agent, to_agent, work_completed, next_tasks, c
     return f"""
 AGENT SNAPSHOT: {from_agent} → {to_agent}
 
+SETUP REQUIREMENTS:
+# Install dependencies for memory manager types
+pip install pydantic pydantic-settings || {{
+    echo "⚠️ pip install failed, trying .pyenv venv fallback"
+    if [ -d ".pyenv" ]; then
+        source .pyenv/bin/activate
+        pip install pydantic pydantic-settings
+    else
+        echo "❌ No .pyenv directory found, creating virtual environment"
+        python3 -m venv .pyenv
+        source .pyenv/bin/activate
+        pip install pydantic pydantic-settings
+    fi
+}}
+
 COMPLETED WORK:
 {work_completed}
 
