@@ -40,11 +40,11 @@ Once the user has selected a role (a, b, or c), please proceed as follows:
 
 1.  **Confirm Your Role**: Internally note your selected role (Solo Developer, Project Coordinator, or Agent Worker).
 
-2.  **Create Your Session Checklist**: Use the enhanced checklist system to create a personalized checklist:
+2.  **Initialize Internal Checklist**: System automatically creates internal checklist:
     ```python
-    from agor.tools.enhanced_hotkeys import create_agent_checklist
-    # Prompt user for task description and custom checklist items
-    # System will automatically include mandatory AGOR items
+    from agor.tools.dev_tooling import init_agent_checklist
+    # Automatically creates internal checklist with mandatory items
+    init_agent_checklist(role)  # Called automatically during initialization
     ```
 
 3.  **Determine Your Mode** (see `MODE_DETECTION.md` for details):
@@ -59,4 +59,4 @@ Once the user has selected a role (a, b, or c), please proceed as follows:
 
 5.  **After Initialization**: Both modes converge to the same role-specific menus and capabilities
 
-Please await the user's role selection. After their response, create the checklist and follow the appropriate initialization guide.
+Please await the user's role selection. After their response, initialize the internal checklist and follow the appropriate initialization guide.

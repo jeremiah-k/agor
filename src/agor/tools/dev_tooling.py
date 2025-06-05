@@ -454,3 +454,154 @@ def get_precise_timestamp() -> str:
 def get_ntp_timestamp() -> str:
     """Get accurate timestamp from NTP server."""
     return dev_tools.get_ntp_timestamp()
+
+
+# Agent Internal Checklist System
+class AgentChecklist:
+    """Internal agent checklist for tracking mandatory procedures."""
+
+    def __init__(self, agent_role: str = "solo_developer"):
+        self.agent_role = agent_role
+        self.session_id = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        self.mandatory_items = self._get_mandatory_items()
+        self.completed_items = set()
+        self.snapshot_created = False
+
+    def _get_mandatory_items(self) -> dict:
+        """Get mandatory checklist items based on role."""
+        base_items = {
+            "read_docs": "Read AGOR documentation",
+            "git_setup": "Configure git and create feature branch",
+            "frequent_commits": "Commit and push frequently",
+            "create_snapshot": "Create snapshot before session end",
+            "update_coordination": "Update coordination files"
+        }
+
+        role_items = {
+            "solo_developer": {
+                "analyze_codebase": "Perform codebase analysis",
+                "test_changes": "Test all changes"
+            },
+            "project_coordinator": {
+                "select_strategy": "Select development strategy",
+                "coordinate_team": "Set up team coordination"
+            },
+            "agent_worker": {
+                "receive_task": "Receive task from coordinator",
+                "report_completion": "Report task completion"
+            }
+        }
+
+        base_items.update(role_items.get(self.agent_role, {}))
+        return base_items
+
+    def mark_complete(self, item_id: str, auto_trigger: bool = True):
+        """Mark checklist item as complete."""
+        if item_id in self.mandatory_items:
+            self.completed_items.add(item_id)
+            if auto_trigger:
+                self._auto_trigger(item_id)
+
+    def _auto_trigger(self, item_id: str):
+        """Auto-trigger validation for checklist items."""
+        if item_id == "git_setup":
+            self._verify_git_setup()
+        elif item_id == "frequent_commits":
+            self._check_commit_frequency()
+        elif item_id == "create_snapshot":
+            self.snapshot_created = True
+
+    def _verify_git_setup(self):
+        """Verify git configuration."""
+        try:
+            result = subprocess.run(["git", "config", "user.name"], capture_output=True, text=True)
+            if not result.stdout.strip():
+                print("⚠️  Git user.name not configured")
+                return False
+
+            result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+            branch = result.stdout.strip()
+            if branch in ["main", "master"]:
+                print("⚠️  Working on main branch - should create feature branch")
+                return False
+
+            print(f"✅ Git setup verified - on branch: {branch}")
+            return True
+        except Exception as e:
+            print(f"⚠️  Git verification failed: {e}")
+            return False
+
+    def _check_commit_frequency(self):
+        """Check if commits are frequent enough."""
+        try:
+            result = subprocess.run(
+                ["git", "log", "--oneline", "-5", "--since=1 hour ago"],
+                capture_output=True, text=True
+            )
+            commits = len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+            if commits < 2:
+                print("💡 Reminder: Consider committing more frequently")
+            else:
+                print(f"✅ Good commit frequency: {commits} recent commits")
+        except Exception:
+            pass
+
+    def get_status(self) -> dict:
+        """Get checklist status."""
+        total = len(self.mandatory_items)
+        completed = len(self.completed_items)
+        incomplete = [item for item in self.mandatory_items if item not in self.completed_items]
+
+        return {
+            "completion_percentage": (completed / total) * 100 if total > 0 else 0,
+            "completed": completed,
+            "total": total,
+            "incomplete": incomplete,
+            "snapshot_created": self.snapshot_created,
+            "can_end_session": len(incomplete) == 0 and self.snapshot_created
+        }
+
+    def enforce_session_end(self) -> bool:
+        """Enforce mandatory procedures before session end."""
+        status = self.get_status()
+
+        if not status["can_end_session"]:
+            print("🚨 Cannot end session - incomplete mandatory items:")
+            for item in status["incomplete"]:
+                print(f"  ❌ {self.mandatory_items[item]}")
+
+            if not status["snapshot_created"]:
+                print("  ❌ Snapshot not created")
+
+            return False
+
+        print("✅ All mandatory procedures complete - session can end")
+        return True
+
+
+# Global agent checklist instance
+_agent_checklist = None
+
+def init_agent_checklist(role: str = "solo_developer") -> AgentChecklist:
+    """Initialize agent checklist for session."""
+    global _agent_checklist
+    _agent_checklist = AgentChecklist(role)
+    print(f"📋 Internal checklist created for {role} with {len(_agent_checklist.mandatory_items)} items")
+    return _agent_checklist
+
+def mark_checklist_complete(item_id: str):
+    """Mark checklist item as complete."""
+    if _agent_checklist:
+        _agent_checklist.mark_complete(item_id)
+
+def get_checklist_status() -> dict:
+    """Get current checklist status."""
+    if _agent_checklist:
+        return _agent_checklist.get_status()
+    return {"status": "no_checklist"}
+
+def enforce_session_end() -> bool:
+    """Enforce session end procedures."""
+    if _agent_checklist:
+        return _agent_checklist.enforce_session_end()
+    return True
