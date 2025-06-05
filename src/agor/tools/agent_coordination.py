@@ -97,10 +97,9 @@ class AgentCoordinationHelper:
 
     def _detect_active_strategy(self) -> Optional[Dict]:
         """
-        Detect what strategy is currently active.
-
-        Returns:
-            Dictionary containing strategy information, or None if no strategy is active.
+        Detects and parses the currently active AGOR coordination strategy.
+        
+        Reads the `.agor/strategy-active.md` file to identify the active strategy type and extracts relevant strategy details using the appropriate parser. Returns a dictionary with strategy information, or `None` if no active strategy is found.
         """
         strategy_file = self.agor_dir / "strategy-active.md"
         if not strategy_file.exists():

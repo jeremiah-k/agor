@@ -35,7 +35,11 @@ class DevTooling:
     """Development utilities for AGOR development workflow."""
 
     def __init__(self, repo_path: Optional[Path] = None):
-        """Initialize development tooling."""
+        """
+        Initializes the DevTooling instance with the specified repository path.
+        
+        If no repository path is provided, uses the current working directory.
+        """
         self.repo_path = repo_path if repo_path else Path.cwd()
         self.git_binary = git_manager.get_git_binary()
 
@@ -43,14 +47,14 @@ class DevTooling:
         self, command: list[str], env: Optional[dict[str, str]] = None
     ) -> tuple[bool, str]:
         """
-        Run a git command and return success status and output.
-
+        Executes a git command in the repository and returns its success status and output.
+        
         Args:
-            command: Git command arguments
-            env: Optional environment variables to add
-
+            command: List of git command arguments to execute.
+            env: Optional dictionary of environment variables to include.
+        
         Returns:
-            Tuple of (success, output)
+            A tuple containing a boolean indicating success and the command's output or error message.
         """
         try:
             # Prepare environment - always copy current env, update if provided
@@ -195,18 +199,17 @@ class DevTooling:
         self, file_path: str, branch_name: str, commit_message: str
     ) -> bool:
         """
-        SAFE memory branch commit using git plumbing - NEVER switches branches.
-
-        Uses low-level git commands to commit files to memory branch without
-        changing the current working branch or working directory.
-
+        Commits a file to a memory branch using low-level git commands without switching branches.
+        
+        Performs a safe commit of the specified file to the given memory branch by directly manipulating git objects and references, ensuring the current working branch and directory remain unchanged. Creates the memory branch if it does not exist.
+        
         Args:
-            file_path: Path to file to commit (relative to repo root)
-            branch_name: Target memory branch
-            commit_message: Commit message
-
+            file_path: Path to the file to commit, relative to the repository root.
+            branch_name: Name of the target memory branch.
+            commit_message: Commit message for the operation.
+        
         Returns:
-            True if successful, False otherwise (fallback to regular commit)
+            True if the commit to the memory branch succeeds; False otherwise.
         """
         try:
             # SAFETY CHECK: Never switch branches in memory operations
@@ -400,16 +403,14 @@ class DevTooling:
         self, file_path: str, branch_name: str
     ) -> Optional[str]:
         """
-        SAFE memory branch read - NEVER switches branches.
-
-        Reads file content from memory branch without changing current working branch.
-
+        Reads the content of a file from a specified memory branch without switching branches.
+        
         Args:
-            file_path: Path to file to read (relative to repo root)
-            branch_name: Source memory branch
-
+            file_path: Path to the file relative to the repository root.
+            branch_name: Name of the memory branch to read from.
+        
         Returns:
-            File content as string if successful, None otherwise
+            The file content as a string if successful, or None if the file or branch does not exist or if a safety check fails.
         """
         try:
             # SAFETY CHECK: Verify we're not switching branches
@@ -457,12 +458,12 @@ class DevTooling:
 
     def list_memory_branches(self) -> list[str]:
         """
-        List all memory branches without switching branches.
-
-        Uses the existing memory_sync.py implementation to avoid code duplication.
-
+        Lists all memory branches in the repository without switching branches.
+        
+        Attempts to use the MemorySync implementation for comprehensive local and remote branch discovery. Falls back to parsing git branch output if MemorySync is unavailable or fails.
+        
         Returns:
-            List of memory branch names
+            A sorted list of memory branch names. Returns an empty list if no memory branches are found or on error.
         """
         try:
             from agor.memory_sync import MemorySync
@@ -614,21 +615,15 @@ If you're picking up this work:
 
     def prepare_prompt_content(self, content: str) -> str:
         """
-        Prepare content for use in single codeblock prompts by escaping nested codeblocks.
-
-        This function reduces triple backticks (```) to double backticks (``) to prevent
-        formatting issues when the content is placed inside a single codeblock for agent handoffs.
-
-        When agents create snapshots for handoffs, the content often contains code examples
-        with triple backticks. If this content is then placed inside a single codeblock
-        (as required for agent initialization prompts), the nested triple backticks break
-        the formatting and create visual garbage in the UI.
-
+        Escapes nested triple backticks in content to ensure safe rendering within a single codeblock prompt.
+        
+        Replaces triple backticks with double backticks and handles quadruple backticks to prevent formatting issues when embedding code examples inside agent initialization prompts.
+        
         Args:
-            content: Raw content that may contain codeblocks
-
+            content: The text to be prepared, potentially containing codeblocks.
+        
         Returns:
-            Content with escaped codeblocks safe for single codeblock usage
+            The content with codeblock delimiters adjusted for safe inclusion in a single codeblock.
         """
         # Replace triple backticks with double backticks to prevent codeblock nesting issues
         escaped_content = content.replace("```", "``")
@@ -1087,15 +1082,17 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
 
 def log_to_agentconvo(agent_id: str, message: str, memory_branch: str = None) -> bool:
     """
-    SAFE agentconvo logging with memory branch support - never switches branches.
-
+    Appends a message to the agent communication log and commits it to a memory branch without switching branches.
+    
+    If committing to the memory branch fails, falls back to a regular commit on the current branch.
+    
     Args:
-        agent_id: Agent identifier
-        message: Message to log
-        memory_branch: Memory branch to use (auto-generated if None)
-
+        agent_id: Identifier of the agent logging the message.
+        message: The message to log in the agent communication log.
+        memory_branch: Optional name of the memory branch to use; auto-generated if not provided.
+    
     Returns:
-        True if successful, False otherwise
+        True if the log entry was successfully committed, False otherwise.
     """
     timestamp = dev_tools.get_precise_timestamp()
     log_entry = f"{agent_id}: {timestamp} - {message}\n"
@@ -1146,16 +1143,18 @@ def update_agent_memory(
     agent_id: str, memory_type: str, content: str, memory_branch: str = None
 ) -> bool:
     """
-    SAFE agent memory update with memory branch support - never switches branches.
-
+    Appends a memory entry for an agent to a markdown log and commits it to a memory branch.
+    
+    If the memory branch commit fails, falls back to a regular commit on the current branch.
+    
     Args:
-        agent_id: Agent identifier
-        memory_type: Type of memory update (progress, decision, etc.)
-        content: Memory content to add
-        memory_branch: Memory branch to use (auto-generated if None)
-
+        agent_id: Identifier for the agent whose memory is being updated.
+        memory_type: Category of the memory entry (e.g., progress, decision).
+        content: The memory content to append.
+        memory_branch: Optional branch name for memory storage; auto-generated if not provided.
+    
     Returns:
-        True if successful, False otherwise
+        True if the memory update and commit succeed, False otherwise.
     """
     memory_file = f".agor/{agent_id.lower()}-memory.md"
     timestamp = dev_tools.get_current_timestamp()

@@ -432,7 +432,11 @@ def generate_completion_report(
     issues_encountered: str = "None",
     recommendations: str = "None",
 ) -> str:
-    """Generate a completion report document (can be a form of snapshot) to return to coordinator."""
+    """
+    Generates a task completion report snapshot document for returning completed work to a coordinator.
+    
+    The report includes task details, work completed, commits, files modified, results summary, issues, recommendations, and technical context. It provides mandatory reading instructions, verification steps, quality assurance checklist, and communication protocol for the coordinator. The document is formatted in markdown for clarity and consistency.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -581,7 +585,24 @@ def generate_progress_report_snapshot(
     estimated_completion_time: str = "Unknown",
     additional_notes: str = "None",
 ) -> str:
-    """Generate a progress report snapshot for status updates to coordinators or team."""
+    """
+    Generates a markdown-formatted progress report snapshot summarizing the current task, progress, blockers, next steps, and technical context for coordinators or team members.
+    
+    Args:
+        current_task: Description of the task being reported on.
+        progress_percentage: Stated progress as a percentage (e.g., "60%").
+        work_completed: List of completed work items.
+        current_blockers: List of current blockers or impediments.
+        next_immediate_steps: Ordered list of next steps to be taken.
+        commits_made: List of recent commit hashes or messages.
+        files_modified: List of files modified during the reporting period.
+        agent_role: Role or identifier of the reporting agent.
+        estimated_completion_time: Estimated time to completion (default "Unknown").
+        additional_notes: Any additional notes or context (default "None").
+    
+    Returns:
+        A string containing the formatted progress report snapshot document.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -673,7 +694,11 @@ def generate_work_order_snapshot(
     deadline: str = "None specified",
     context_notes: str = "None",
 ) -> str:
-    """Generate a work order snapshot for task assignment to agents."""
+    """
+    Generates a work order snapshot document for assigning tasks to agents.
+    
+    The snapshot includes task details, requirements, acceptance criteria, files to modify, reference materials, priority, estimated effort, deadline, context notes, and relevant Git context. It provides instructions for agents on how to proceed, where to find additional documentation, and how to communicate progress or issues. The document is formatted in markdown for clarity and consistency.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
@@ -764,7 +789,11 @@ def generate_pr_description_snapshot(
     reviewers_requested: list[str] = None,
     related_issues: list[str] = None,
 ) -> str:
-    """Generate a PR description snapshot for user to copy when creating pull request."""
+    """
+    Generates a formatted pull request (PR) description snapshot for users to copy when creating a PR.
+    
+    Includes PR title, description, completed work, commits, changed files, testing, breaking changes, related issues, requested reviewers, and technical context. The output is a markdown-formatted document with coordination notes and instructions for PR creation.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
