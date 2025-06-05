@@ -461,7 +461,7 @@ Based on comprehensive audit findings, the following documentation improvements 
 **Prompt Content Preparation**:
 
 - **Codeblock escaping**: When creating snapshots for agent handoffs, use `prepare_prompt_content()` to escape nested codeblocks
-- **Formatting safety**: Triple backticks (```) are reduced to double backticks (``) to prevent UI formatting issues
+- **Formatting safety**: Triple backticks (``) are reduced to double backticks (`) to prevent UI formatting issues
 - **Single codeblock requirement**: Agent initialization prompts must be in single codeblocks, so nested codeblocks break the formatting
 - **Visual clarity**: This prevents the "garbage" formatting that occurs when nested codeblocks are rendered in agent UIs
 

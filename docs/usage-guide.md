@@ -234,6 +234,7 @@ agor bundle your-project -f zip
 **For the flagship AugmentCode Local Agent (VS Code extension) running locally:**
 
 #### Prerequisites:
+
 - VS Code with AugmentCode extension installed
 - Git access for cloning repositories
 - Basic familiarity with VS Code workspace management
@@ -241,28 +242,32 @@ agor bundle your-project -f zip
 #### Setup Steps:
 
 **Step 1: Clone AGOR Repository**
+
 ```bash
 git clone https://github.com/jeremiah-k/agor.git ~/agor
 ```
 
 **Step 2: Add AGOR as Workspace Context**
+
 - Open VS Code with Augment extension installed
 - Click the folder icon in the Augment sidebar panel
 - Click **+ Add more...** at the bottom of Source Folders
 - Select the `~/agor` directory and click **Add Source Folder**
 
-*This gives the agent direct access to all AGOR documentation and tools*
+_This gives the agent direct access to all AGOR documentation and tools_
 
 **Step 3: Configure User Guidelines**
+
 - In Augment Chat, click the **Context menu** or use **@-mention**
 - Select **User Guidelines**
 - Copy and paste the complete User Guidelines (see below)
 
-*This ensures the agent follows AGOR protocols and creates mandatory snapshots*
+_This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 
 **Step 4: Agent Initialization Requirements**
 
 **CRITICAL**: The agent must read these files before starting any work:
+
 - `src/agor/tools/README_ai.md` (role selection and initialization)
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
 - `src/agor/tools/agent-start-here.md` (quick startup guide)

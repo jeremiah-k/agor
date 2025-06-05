@@ -436,7 +436,7 @@ def generate_completion_report(
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
-    agor_version = get_agor_version()
+    get_agor_version()
 
     return f"""# 📦 AGOR Snapshot: Task Completion Report
 
@@ -585,7 +585,8 @@ def generate_progress_report_snapshot(
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
-    agor_version = get_agor_version()
+-    get_agor_version()
++    agor_version = get_agor_version()
 
     return f"""# 📈 AGOR Snapshot: Progress Report
 
@@ -677,7 +678,8 @@ def generate_work_order_snapshot(
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
-    agor_version = get_agor_version()
+-    get_agor_version()
++    agor_version = get_agor_version()
 
     return f"""# 📦 AGOR Snapshot: Work Order
 
@@ -768,7 +770,7 @@ def generate_pr_description_snapshot(
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
-    agor_version = get_agor_version()
+    get_agor_version()
     reviewers_requested = reviewers_requested or []
     related_issues = related_issues or []
 
