@@ -1023,19 +1023,22 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 
 def update_agent_memory(agent_id: str, memory_type: str, content: str, memory_branch: str = None) -> bool:
     """
-    SAFE agent memory update - never switches branches.
+    SAFE agent memory update with memory branch support - never switches branches.
 
     Args:
         agent_id: Agent identifier
         memory_type: Type of memory update (progress, decision, etc.)
         content: Memory content to add
-        memory_branch: Memory branch to use (currently disabled for safety)
+        memory_branch: Memory branch to use (auto-generated if None)
 
     Returns:
         True if successful, False otherwise
     """
     memory_file = f".agor/{agent_id.lower()}-memory.md"
     timestamp = dev_tools.get_current_timestamp()
+
+    if not memory_branch:
+        memory_branch = f"agor/mem/{dev_tools.get_timestamp_for_files()}"
 
     print(f"🧠 Updating {agent_id} memory: {memory_type}")
 
@@ -1079,8 +1082,15 @@ def update_agent_memory(agent_id: str, memory_type: str, content: str, memory_br
 """
         memory_path.write_text(initial_content)
 
-    # SAFE: Always use regular commit on current branch
-    print("🛡️  Using safe commit on current branch (memory branch disabled)")
-    return dev_tools.quick_commit_push(
-        f"Update {agent_id} memory: {memory_type}", "🧠"
-    )
+    # Try to commit to memory branch using new safe system
+    if dev_tools._commit_to_memory_branch(
+        memory_file, memory_branch, f"Update {agent_id} memory: {memory_type}"
+    ):
+        print(f"✅ Agent memory logged to memory branch {memory_branch}")
+        return True
+    else:
+        # Fallback: regular commit to current branch
+        print("⚠️  Memory branch commit failed, using regular commit")
+        return dev_tools.quick_commit_push(
+            f"Update {agent_id} memory: {memory_type}", "🧠"
+        )
