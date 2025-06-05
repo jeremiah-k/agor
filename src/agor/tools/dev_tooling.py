@@ -769,12 +769,15 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
 
     # Get git information
     try:
-        commits = subprocess.check_output(["git", "log", "--oneline", "-10"], text=True).strip().split('\n')
-        files_changed = subprocess.check_output(["git", "diff", "--name-only", "main"], text=True).strip().split('\n')
-    except:
-        commits = ["Unable to get commit history"]
-        files_changed = ["Unable to get changed files"]
-
+        commits = subprocess.check_output(
+            ["git", "log", "--oneline", "-10"], text=True
+        ).strip().split('\n')
+        files_changed = subprocess.check_output(
+            ["git", "diff", "--name-only", "main"], text=True
+        ).strip().split('\n')
+    except subprocess.CalledProcessError as err:
+        commits = [f"Git error: {err}"]
+        files_changed = ["<unknown>"]
     # Generate and save PR description snapshot
     pr_content = generate_pr_description_snapshot(
         pr_title=pr_title,
