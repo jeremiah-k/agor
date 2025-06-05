@@ -554,7 +554,10 @@ class AgentChecklist:
         """Check if commits are frequent enough."""
         try:
             # Use existing dev_tools for git operations
-            result = dev_tools._run_git_command(["log", "--oneline", "-5", "--since=1 hour ago"])
+            success, result = dev_tools._run_git_command(["log", "--oneline", "-5", "--since=1 hour ago"])
+            if not success:
+                print("⚠️  Could not check commit history")
+                return
             commits = len(result.strip().split('\n')) if result.strip() else 0
             if commits < 2:
                 print("💡 Reminder: Consider committing more frequently")
