@@ -514,18 +514,25 @@ class AgentChecklist:
     def _verify_git_setup(self):
         """Verify git configuration."""
         try:
-            result = subprocess.run(["git", "config", "user.name"], capture_output=True, text=True)
-            if not result.stdout.strip():
+            # Check git config using existing dev_tools
+            user_name = dev_tools._run_git_command(["config", "user.name"])
+            if not user_name.strip():
                 print("⚠️  Git user.name not configured")
                 return False
 
-            result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
-            branch = result.stdout.strip()
-            if branch in ["main", "master"]:
+            user_email = dev_tools._run_git_command(["config", "user.email"])
+            if not user_email.strip():
+                print("⚠️  Git user.email not configured")
+                return False
+
+            # Check if on feature branch
+            current_branch = dev_tools._run_git_command(["branch", "--show-current"])
+            current_branch = current_branch.strip()
+            if current_branch in ["main", "master"]:
                 print("⚠️  Working on main branch - should create feature branch")
                 return False
 
-            print(f"✅ Git setup verified - on branch: {branch}")
+            print(f"✅ Git setup verified - on branch: {current_branch}")
             return True
         except Exception as e:
             print(f"⚠️  Git verification failed: {e}")
@@ -534,17 +541,15 @@ class AgentChecklist:
     def _check_commit_frequency(self):
         """Check if commits are frequent enough."""
         try:
-            result = subprocess.run(
-                ["git", "log", "--oneline", "-5", "--since=1 hour ago"],
-                capture_output=True, text=True
-            )
-            commits = len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+            # Use existing dev_tools for git operations
+            result = dev_tools._run_git_command(["log", "--oneline", "-5", "--since=1 hour ago"])
+            commits = len(result.strip().split('\n')) if result.strip() else 0
             if commits < 2:
                 print("💡 Reminder: Consider committing more frequently")
             else:
                 print(f"✅ Good commit frequency: {commits} recent commits")
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"⚠️  Commit frequency check failed: {e}")
 
     def get_status(self) -> dict:
         """Get checklist status."""

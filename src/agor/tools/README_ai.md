@@ -40,7 +40,7 @@ Once the user has selected a role (a, b, or c), please proceed as follows:
 
 1.  **Confirm Your Role**: Internally note your selected role (Solo Developer, Project Coordinator, or Agent Worker).
 
-2.  **Initialize Internal Checklist**: System automatically creates internal checklist:
+2.  **Initialize Internal Checklist**: System automatically creates an internal checklist:
     ```python
     from agor.tools.dev_tooling import init_agent_checklist
     # Automatically creates internal checklist with mandatory items

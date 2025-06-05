@@ -105,7 +105,7 @@ Find your selected role below for detailed guidance, including specific initiali
      - Development Setup: Identify build systems, CI/CD, development tools.
   3. Present your detailed analysis results.
 
-  **Important**: After completing these initial actions, display the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command. Show only the clean menu without technical function names or internal documentation.
+  **Important**: After completing these initial actions, display the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command. Show only the clean menu, without technical function names or internal documentation.
 
 **SOLO DEVELOPER Menu (Role A):**
 **📊 Analysis & Display:**
