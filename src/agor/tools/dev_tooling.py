@@ -621,7 +621,7 @@ def enforce_session_end() -> bool:
 # New hotkey processing functions
 def process_progress_report_hotkey(task_description: str = "", progress: str = "50%") -> str:
     """Process progress-report hotkey and create progress report snapshot."""
-    from .snapshot_templates import generate_progress_report_snapshot, save_progress_report_snapshot
+    from agor.tools.snapshot_templates import generate_progress_report_snapshot, save_progress_report_snapshot
 
     # Get user input for progress report details
     if not task_description:
@@ -678,7 +678,7 @@ def process_progress_report_hotkey(task_description: str = "", progress: str = "
 
 def process_work_order_hotkey(task_description: str = "") -> str:
     """Process work-order hotkey and create work order snapshot."""
-    from .snapshot_templates import generate_work_order_snapshot, save_work_order_snapshot
+    from agor.tools.snapshot_templates import generate_work_order_snapshot, save_work_order_snapshot
 
     # Get user input for work order details
     if not task_description:
@@ -734,8 +734,7 @@ def process_work_order_hotkey(task_description: str = "") -> str:
 
 def process_create_pr_hotkey(pr_title: str = "") -> str:
     """Process create-pr hotkey and generate PR description for user to copy."""
-    from .snapshot_templates import generate_pr_description_snapshot, save_pr_description_snapshot
-    import subprocess
+    from agor.tools.snapshot_templates import generate_pr_description_snapshot, save_pr_description_snapshot
 
     # Get user input for PR description details
     if not pr_title:
@@ -767,17 +766,27 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
             break
         breaking_changes.append(change)
 
-    # Get git information
+    # Get git information using proper git manager
     try:
+        git_binary = git_manager.get_git_binary()
         commits = subprocess.check_output(
-            ["git", "log", "--oneline", "-10"], text=True
+            [git_binary, "log", "--oneline", "-10"], text=True
         ).strip().split('\n')
         files_changed = subprocess.check_output(
-            ["git", "diff", "--name-only", "main"], text=True
+            [git_binary, "diff", "--name-only", "main"], text=True
         ).strip().split('\n')
-    except subprocess.CalledProcessError as err:
+    except Exception as err:
         commits = [f"Git error: {err}"]
         files_changed = ["<unknown>"]
+    # Get additional PR details
+    target_branch = input("🎯 Target branch (default: main): ") or "main"
+
+    reviewers_input = input("👥 Requested reviewers (comma-separated): ")
+    reviewers_requested = reviewers_input.split(',') if reviewers_input.strip() else []
+
+    issues_input = input("🔗 Related issues (comma-separated): ")
+    related_issues = issues_input.split(',') if issues_input.strip() else []
+
     # Generate and save PR description snapshot
     pr_content = generate_pr_description_snapshot(
         pr_title=pr_title,
@@ -788,9 +797,9 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
         testing_completed=testing_completed,
         breaking_changes=breaking_changes,
         agent_role="Solo Developer",
-        target_branch=input("🎯 Target branch (default: main): ") or "main",
-        reviewers_requested=[input("👥 Requested reviewers (comma-separated): ").split(',') if input else []],
-        related_issues=[input("🔗 Related issues (comma-separated): ").split(',') if input else []]
+        target_branch=target_branch,
+        reviewers_requested=reviewers_requested,
+        related_issues=related_issues
     )
 
     snapshot_file = save_pr_description_snapshot(pr_content, pr_title)
