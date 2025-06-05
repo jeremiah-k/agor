@@ -515,20 +515,32 @@ class AgentChecklist:
         """Verify git configuration."""
         try:
             # Check git config using existing dev_tools
-            user_name = dev_tools._run_git_command(["config", "user.name"])
-            if not user_name.strip():
-                print("⚠️  Git user.name not configured")
-                return False
+        # Check git config using existing dev_tools
+-       user_name = dev_tools._run_git_command(["config", "user.name"])
+-       if not user_name.strip():
++       success, user_name = dev_tools._run_git_command(["config", "user.name"])
++       if not success or not user_name.strip():
+            print("⚠️  Git user.name not configured")
+            return False
 
-            user_email = dev_tools._run_git_command(["config", "user.email"])
-            if not user_email.strip():
-                print("⚠️  Git user.email not configured")
-                return False
+-       user_email = dev_tools._run_git_command(["config", "user.email"])
+-       if not user_email.strip():
++       success, user_email = dev_tools._run_git_command(["config", "user.email"])
++       if not success or not user_email.strip():
+            print("⚠️  Git user.email not configured")
+            return False
 
-            # Check if on feature branch
-            current_branch = dev_tools._run_git_command(["branch", "--show-current"])
-            current_branch = current_branch.strip()
-            if current_branch in ["main", "master"]:
+        # Check if on feature branch
+-       current_branch = dev_tools._run_git_command(["branch", "--show-current"])
+-       current_branch = current_branch.strip()
++       success, current_branch = dev_tools._run_git_command(["branch", "--show-current"])
++       if not success:
++           print("⚠️  Could not determine current branch")
++           return False
++       current_branch = current_branch.strip()
+        if current_branch in ["main", "master"]:
+            print("⚠️  Working on main branch - should create feature branch")
+            return False
                 print("⚠️  Working on main branch - should create feature branch")
                 return False
 
