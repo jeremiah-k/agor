@@ -540,6 +540,32 @@ If you're picking up this work:
         print("🎉 Development tooling test completed successfully!")
         return True
 
+    def prepare_prompt_content(self, content: str) -> str:
+        """
+        Prepare content for use in single codeblock prompts by escaping nested codeblocks.
+
+        This function reduces triple backticks (```) to double backticks (``) to prevent
+        formatting issues when the content is placed inside a single codeblock for agent handoffs.
+
+        When agents create snapshots for handoffs, the content often contains code examples
+        with triple backticks. If this content is then placed inside a single codeblock
+        (as required for agent initialization prompts), the nested triple backticks break
+        the formatting and create visual garbage in the UI.
+
+        Args:
+            content: Raw content that may contain codeblocks
+
+        Returns:
+            Content with escaped codeblocks safe for single codeblock usage
+        """
+        # Replace triple backticks with double backticks to prevent codeblock nesting issues
+        escaped_content = content.replace('```', '``')
+
+        # Also handle any quadruple backticks that might exist (from previous escaping)
+        escaped_content = escaped_content.replace('````', '```')
+
+        return escaped_content
+
 
 # Global instance for easy access
 dev_tools = DevTooling()
@@ -585,6 +611,11 @@ def get_precise_timestamp() -> str:
 def get_ntp_timestamp() -> str:
     """Get accurate timestamp from NTP server."""
     return dev_tools.get_ntp_timestamp()
+
+
+def prepare_prompt_content(content: str) -> str:
+    """Prepare content for single codeblock prompts by escaping nested codeblocks."""
+    return dev_tools.prepare_prompt_content(content)
 
 
 # Agent Internal Checklist System

@@ -448,7 +448,24 @@ Based on comprehensive audit findings, the following documentation improvements 
 - **Issue**: Unclear how parameters translate to concrete states in `.agor/` files
 - **Action**: ✅ Added comprehensive parameter effects section with concrete file mapping
 
-#### 3. SQLite Memory System (Internal Use Only)
+#### 3. Memory System Architecture
+
+**Cross-Branch Memory Operations**:
+
+- **Memory branches**: Use `agor/mem/*` naming convention for all memory storage
+- **Branch safety**: Memory operations must NEVER switch the current working branch
+- **Git plumbing**: Use low-level git commands (`hash-object`, `commit-tree`, `update-ref`) for safe cross-branch commits
+- **Graceful fallback**: If memory operations fail, fall back to regular commits on current branch
+- **Remote sync**: Push memory branches to origin for multi-agent coordination
+
+**Prompt Content Preparation**:
+
+- **Codeblock escaping**: When creating snapshots for agent handoffs, use `prepare_prompt_content()` to escape nested codeblocks
+- **Formatting safety**: Triple backticks (```) are reduced to double backticks (``) to prevent UI formatting issues
+- **Single codeblock requirement**: Agent initialization prompts must be in single codeblocks, so nested codeblocks break the formatting
+- **Visual clarity**: This prevents the "garbage" formatting that occurs when nested codeblocks are rendered in agent UIs
+
+#### 4. SQLite Memory System (Internal Use Only)
 
 - **Status**: Experimental internal system, not for agent use
 - **Purpose**: Advanced coordination logging and state management
