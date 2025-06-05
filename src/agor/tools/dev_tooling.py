@@ -5,6 +5,7 @@ Provides utility functions for frequent commits and cross-branch memory operatio
 to streamline development workflow and memory management.
 """
 
+import os
 import subprocess
 from datetime import datetime
 from pathlib import Path
@@ -37,23 +38,30 @@ class DevTooling:
         self.repo_path = repo_path if repo_path else Path.cwd()
         self.git_binary = git_manager.get_git_binary()
 
-    def _run_git_command(self, command: list[str]) -> tuple[bool, str]:
+    def _run_git_command(self, command: list[str], env: dict = None) -> tuple[bool, str]:
         """
         Run a git command and return success status and output.
 
         Args:
             command: Git command arguments
+            env: Optional environment variables to add
 
         Returns:
             Tuple of (success, output)
         """
         try:
+            # Prepare environment
+            cmd_env = os.environ.copy() if env else None
+            if env:
+                cmd_env.update(env)
+
             result = subprocess.run(
                 [self.git_binary] + command,
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
                 check=True,
+                env=cmd_env,
             )
             return True, result.stdout.strip()
         except subprocess.CalledProcessError as e:
@@ -184,13 +192,13 @@ class DevTooling:
         self, file_path: str, branch_name: str, commit_message: str
     ) -> bool:
         """
-        SAFE memory branch commit - NEVER switches branches.
+        SAFE memory branch commit using git plumbing - NEVER switches branches.
 
-        This function is designed to be safe and never switch the current working branch.
-        If memory branch operations fail, it gracefully falls back without disruption.
+        Uses low-level git commands to commit files to memory branch without
+        changing the current working branch or working directory.
 
         Args:
-            file_path: Path to file to commit
+            file_path: Path to file to commit (relative to repo root)
             branch_name: Target memory branch
             commit_message: Commit message
 
@@ -205,25 +213,205 @@ class DevTooling:
                 return False
 
             original_branch = current_branch.strip()
+            print(f"🛡️  Safe memory commit: staying on {original_branch}")
 
-            # Check if memory branch exists remotely
-            success, _ = self._run_git_command(["ls-remote", "--heads", "origin", branch_name])
-            if not success:
-                print(f"📝 Memory branch {branch_name} does not exist remotely")
-                print("💡 Memory branch creation requires manual setup - using fallback")
+            # Check if file exists
+            full_file_path = self.repo_path / file_path
+            if not full_file_path.exists():
+                print(f"❌ File does not exist: {file_path}")
                 return False
 
-            # For now, disable complex memory branch operations to prevent branch switching
-            # This ensures we NEVER accidentally switch to main or other branches
-            print(f"🔒 Memory branch operations disabled for safety")
-            print(f"💡 Would commit to {branch_name}: {commit_message}")
-            print(f"🛡️  Staying safely on {original_branch}")
+            # Step 1: Create blob object for the file
+            success, blob_hash = self._run_git_command(["hash-object", "-w", str(full_file_path)])
+            if not success:
+                print("❌ Failed to create blob object")
+                return False
+            blob_hash = blob_hash.strip()
 
-            return False  # Always use fallback for safety
+            # Step 2: Check if memory branch exists
+            success, _ = self._run_git_command(["rev-parse", "--verify", f"refs/heads/{branch_name}"])
+            branch_exists = success
+
+            if not branch_exists:
+                # Create new memory branch without switching
+                print(f"📝 Creating new memory branch: {branch_name}")
+
+                # Create empty tree
+                success, empty_tree = self._run_git_command(["hash-object", "-t", "tree", "/dev/null"])
+                if not success:
+                    # Alternative method for empty tree
+                    success, empty_tree = self._run_git_command(["write-tree"])
+                    if not success:
+                        print("❌ Failed to create empty tree")
+                        return False
+                empty_tree = empty_tree.strip()
+
+                # Create initial commit
+                success, initial_commit = self._run_git_command([
+                    "commit-tree", empty_tree, "-m", f"Initial commit for memory branch {branch_name}"
+                ])
+                if not success:
+                    print("❌ Failed to create initial commit")
+                    return False
+                initial_commit = initial_commit.strip()
+
+                # Create branch reference
+                success, _ = self._run_git_command([
+                    "update-ref", f"refs/heads/{branch_name}", initial_commit
+                ])
+                if not success:
+                    print("❌ Failed to create branch reference")
+                    return False
+
+                print(f"✅ Created memory branch {branch_name}")
+
+            # Step 3: Get current commit of memory branch
+            success, parent_commit = self._run_git_command(["rev-parse", f"refs/heads/{branch_name}"])
+            if not success:
+                print("❌ Failed to get parent commit")
+                return False
+            parent_commit = parent_commit.strip()
+
+            # Step 4: Create tree with the new file
+            # Use git update-index to stage the file in a temporary index
+            temp_index = self.repo_path / ".git" / "temp_memory_index"
+
+            # Read current tree into temporary index
+            success, _ = self._run_git_command([
+                "read-tree", f"{branch_name}^{{tree}}"
+            ], env={"GIT_INDEX_FILE": str(temp_index)})
+            if not success:
+                print("❌ Failed to read current tree")
+                return False
+
+            # Add our file to the temporary index
+            success, _ = self._run_git_command([
+                "update-index", "--add", "--cacheinfo", "100644", blob_hash, file_path
+            ], env={"GIT_INDEX_FILE": str(temp_index)})
+            if not success:
+                print("❌ Failed to update index")
+                return False
+
+            # Write tree from temporary index
+            success, new_tree = self._run_git_command([
+                "write-tree"
+            ], env={"GIT_INDEX_FILE": str(temp_index)})
+            if not success:
+                print("❌ Failed to write tree")
+                return False
+            new_tree = new_tree.strip()
+
+            # Clean up temporary index
+            if temp_index.exists():
+                temp_index.unlink()
+
+            # Step 5: Create commit object
+            success, new_commit = self._run_git_command([
+                "commit-tree", new_tree, "-p", parent_commit, "-m", commit_message
+            ])
+            if not success:
+                print("❌ Failed to create commit")
+                return False
+            new_commit = new_commit.strip()
+
+            # Step 6: Update branch reference
+            success, _ = self._run_git_command([
+                "update-ref", f"refs/heads/{branch_name}", new_commit
+            ])
+            if not success:
+                print("❌ Failed to update branch reference")
+                return False
+
+            # Step 7: Push memory branch (optional, don't fail if this doesn't work)
+            success, _ = self._run_git_command(["push", "origin", branch_name])
+            if success:
+                print(f"✅ Pushed memory branch {branch_name} to origin")
+            else:
+                print(f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)")
+
+            print(f"✅ Successfully committed {file_path} to memory branch {branch_name}")
+            return True
 
         except Exception as e:
-            print(f"❌ Memory branch commit failed safely: {e}")
+            print(f"❌ Memory branch commit failed: {e}")
             return False
+
+    def _read_from_memory_branch(self, file_path: str, branch_name: str) -> Optional[str]:
+        """
+        SAFE memory branch read - NEVER switches branches.
+
+        Reads file content from memory branch without changing current working branch.
+
+        Args:
+            file_path: Path to file to read (relative to repo root)
+            branch_name: Source memory branch
+
+        Returns:
+            File content as string if successful, None otherwise
+        """
+        try:
+            # SAFETY CHECK: Verify we're not switching branches
+            success, current_branch = self._run_git_command(["branch", "--show-current"])
+            if not success:
+                print("⚠️  Cannot determine current branch - aborting memory read for safety")
+                return None
+
+            original_branch = current_branch.strip()
+
+            # Check if memory branch exists
+            success, _ = self._run_git_command(["rev-parse", "--verify", f"refs/heads/{branch_name}"])
+            if not success:
+                print(f"⚠️  Memory branch {branch_name} does not exist")
+                return None
+
+            # Read file from memory branch using git show
+            success, content = self._run_git_command(["show", f"{branch_name}:{file_path}"])
+            if not success:
+                print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
+                return None
+
+            # Verify we're still on the original branch
+            success, check_branch = self._run_git_command(["branch", "--show-current"])
+            if success and check_branch.strip() != original_branch:
+                print(f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}")
+                return None
+
+            print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
+            return content
+
+        except Exception as e:
+            print(f"❌ Memory branch read failed: {e}")
+            return None
+
+    def list_memory_branches(self) -> list[str]:
+        """
+        List all memory branches without switching branches.
+
+        Returns:
+            List of memory branch names
+        """
+        try:
+            # Get all branches
+            success, branches_output = self._run_git_command(["branch", "-a"])
+            if not success:
+                return []
+
+            memory_branches = []
+            for line in branches_output.split('\n'):
+                line = line.strip()
+                if line.startswith('*'):
+                    line = line[1:].strip()
+                if line.startswith('remotes/origin/'):
+                    line = line.replace('remotes/origin/', '')
+
+                if line.startswith('agor/mem/'):
+                    memory_branches.append(line)
+
+            return memory_branches
+
+        except Exception as e:
+            print(f"❌ Failed to list memory branches: {e}")
+            return []
 
     def create_development_snapshot(self, title: str, context: str) -> bool:
         """
