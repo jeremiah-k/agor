@@ -968,18 +968,21 @@ def process_create_pr_hotkey(pr_title: str = "") -> str:
 
 def log_to_agentconvo(agent_id: str, message: str, memory_branch: str = None) -> bool:
     """
-    SAFE agentconvo logging - never switches branches.
+    SAFE agentconvo logging with memory branch support - never switches branches.
 
     Args:
         agent_id: Agent identifier
         message: Message to log
-        memory_branch: Memory branch to use (currently disabled for safety)
+        memory_branch: Memory branch to use (auto-generated if None)
 
     Returns:
         True if successful, False otherwise
     """
     timestamp = dev_tools.get_precise_timestamp()
     log_entry = f"{agent_id}: {timestamp} - {message}\n"
+
+    if not memory_branch:
+        memory_branch = f"agor/mem/{dev_tools.get_timestamp_for_files()}"
 
     print(f"📝 Logging to agentconvo.md: {agent_id} - {message}")
 
@@ -1004,11 +1007,18 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
     else:
         agentconvo_path.write_text(agentconvo_content)
 
-    # SAFE: Always use regular commit on current branch
-    print("🛡️  Using safe commit on current branch (memory branch disabled)")
-    return dev_tools.quick_commit_push(
-        f"Update agentconvo.md: {agent_id} - {message}", "💬"
-    )
+    # Try to commit to memory branch using new safe system
+    if dev_tools._commit_to_memory_branch(
+        ".agor/agentconvo.md", memory_branch, f"Update agentconvo.md: {agent_id} - {message}"
+    ):
+        print(f"✅ Agentconvo logged to memory branch {memory_branch}")
+        return True
+    else:
+        # Fallback: regular commit to current branch
+        print("⚠️  Memory branch commit failed, using regular commit")
+        return dev_tools.quick_commit_push(
+            f"Update agentconvo.md: {agent_id} - {message}", "💬"
+        )
 
 
 def update_agent_memory(agent_id: str, memory_type: str, content: str, memory_branch: str = None) -> bool:
