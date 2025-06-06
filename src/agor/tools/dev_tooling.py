@@ -721,15 +721,16 @@ def detect_environment() -> dict:
     if Path(".pyenv").exists():
         environment["has_pyenv"] = True
 
-    # Detect environment mode
-    if Path("src/agor/tools").exists():
-        environment["mode"] = "development"
-    elif "AUGMENTCODE_LOCAL" in os.environ:
+    # Detect environment mode - check env vars first to avoid misclassification in containers
+    if "AUGMENTCODE_LOCAL" in os.environ:
         environment["mode"] = "augmentcode_local"
         environment["platform"] = "augmentcode_local_agent"
     elif "AUGMENTCODE_REMOTE" in os.environ:
         environment["mode"] = "augmentcode_remote"
         environment["platform"] = "augmentcode_remote_agent"
+    elif Path("src/agor/tools").exists():
+        environment["mode"] = "development"
+        environment["platform"] = "local_development"
     elif Path("/tmp/agor").exists():
         environment["mode"] = "standalone"
         environment["platform"] = "remote_agent"
@@ -738,6 +739,23 @@ def detect_environment() -> dict:
         environment["platform"] = "upload_based"
 
     return environment
+
+
+def get_agent_dependency_install_commands() -> str:
+    """Get standardized agent dependency installation commands with fallback."""
+    return """# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
+python3 -m pip install pydantic pydantic-settings || {
+    echo "⚠️ pip install failed, trying .pyenv venv fallback"
+    if [ -d ".pyenv" ]; then
+        source .pyenv/bin/activate
+        python3 -m pip install pydantic pydantic-settings
+    else
+        echo "❌ No .pyenv directory found, creating virtual environment"
+        python3 -m venv .pyenv
+        source .pyenv/bin/activate
+        python3 -m pip install pydantic pydantic-settings
+    fi
+}"""
 
 
 def generate_dynamic_installation_prompt(environment: dict = None) -> str:
@@ -764,23 +782,13 @@ def generate_dynamic_installation_prompt(environment: dict = None) -> str:
 
     # Add mode-specific instructions
     if environment["mode"] == "development":
-        base_instructions += """### Development Mode Setup
+        dev_install_commands = get_agent_dependency_install_commands()
+        base_instructions += f"""### Development Mode Setup
 ```bash
 # Install development dependencies
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
-# Install memory manager dependencies with fallback
-pip install pydantic pydantic-settings || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    else
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    fi
-}
+{dev_install_commands}
 
 # Test development tooling
 python3 -c "
@@ -792,29 +800,25 @@ test_tooling()
 ```
 """
     elif environment["mode"] == "augmentcode_local":
-        base_instructions += """### AugmentCode Local Agent Setup
+        local_install_commands = get_agent_dependency_install_commands()
+        base_instructions += f"""### AugmentCode Local Agent Setup
 ```bash
 # Dependencies should be automatically available
 # Verify memory manager dependencies
 python3 -c "import pydantic, pydantic_settings; print('✅ Dependencies OK')"
 
 # If missing, install with fallback
-pip install pydantic pydantic-settings || {
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    fi
-}
+{local_install_commands}
 ```
 """
     elif environment["mode"] == "standalone":
-        base_instructions += """### Standalone Mode Setup
+        standalone_install_commands = get_agent_dependency_install_commands()
+        base_instructions += f"""### Standalone Mode Setup
 ```bash
 # Install dependencies from requirements.txt
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
-# Install memory manager dependencies
-pip install pydantic pydantic-settings
+{standalone_install_commands}
 
 # Test AGOR tooling
 python3 -c "
@@ -923,7 +927,7 @@ def update_version_references(target_version: str = None) -> list:
     updated_files = []
     version_patterns = [
         (r"agor, version \d+\.\d+\.\d+", f"agor, version {target_version}"),
-        (r"AGOR Version\*\*: \d+\.\d+\.\d+", f"AGOR Version**: {target_version}"),
+        (r"\*\*AGOR Version\*\*: \d+\.\d+\.\d+", f"**AGOR Version**: {target_version}"),
         (r"version \d+\.\d+\.\d+ development", f"version {target_version} development"),
     ]
 
@@ -946,9 +950,12 @@ def update_version_references(target_version: str = None) -> list:
                 content = re.sub(pattern, replacement, content)
 
             if content != original_content:
-                file_path_obj.write_text(content)
-                updated_files.append(file_path)
-                print(f"✅ Updated version references in {file_path}")
+                try:
+                    file_path_obj.write_text(content)
+                    updated_files.append(file_path)
+                    print(f"✅ Updated version references in {file_path}")
+                except Exception as e:
+                    print(f"❌ Failed to update {file_path}: {e}")
 
     return updated_files
 

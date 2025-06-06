@@ -478,7 +478,7 @@ Each entry includes:
 
 ### 🎯 Memory Manager Pydantic Dependencies Fix
 
-**Problem**: Memory manager uses pydantic types but prompt generators didn't include dependency installation with fallback handling.
+**Problem**: Memory manager uses pydantic types, but prompt generators didn't include dependency installation with fallback handling.
 
 **Solution**:
 - Added `pip install pydantic pydantic-settings` with .pyenv venv fallback to all initialization methods
@@ -488,7 +488,7 @@ Each entry includes:
 
 ### 📚 Documentation Consolidation Strategy
 
-**Problem**: Installation instructions duplicated across 5+ files with slight variations, creating maintenance burden.
+**Problem**: Installation instructions duplicated across 5+ files with slight variations, creating a maintenance burden.
 
 **Solution**:
 - Fixed pydantic dependency installation with .pyenv venv fallback across all agent initialization methods

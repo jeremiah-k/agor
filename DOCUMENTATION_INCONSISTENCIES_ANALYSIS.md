@@ -62,7 +62,7 @@
 - [ ] Ensure consistent "codeblock prompts" usage
 
 ### 3. Consolidate Installation Instructions
-- [ ] Create single source of truth for installation
+- [ ] Create a single source of truth for installation
 - [ ] Reference from other docs instead of duplicating
 - [ ] Move complex installation logic to dev tooling
 

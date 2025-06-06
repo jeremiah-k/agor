@@ -43,16 +43,16 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 # Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
-pip install pydantic pydantic-settings || {
+python3 -m pip install pydantic pydantic-settings || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
         source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
+        python3 -m pip install pydantic pydantic-settings
     else
         echo "❌ No .pyenv directory found, creating virtual environment"
         python3 -m venv .pyenv
         source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
+        python3 -m pip install pydantic pydantic-settings
     fi
 }
 
@@ -489,16 +489,16 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 # Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
-pip install pydantic pydantic-settings || {
+python3 -m pip install pydantic pydantic-settings || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
         source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
+        python3 -m pip install pydantic pydantic-settings
     else
         echo "❌ No .pyenv directory found, creating virtual environment"
         python3 -m venv .pyenv
         source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
+        python3 -m pip install pydantic pydantic-settings
     fi
 }
 
