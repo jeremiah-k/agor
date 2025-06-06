@@ -18,26 +18,26 @@ AGOR supports multiple deployment modes for different AI platforms and workflows
 **🚀 Standalone Mode** - Direct git access - AugmentCode Remote, Jules by Google (limited support), Codex (currently untested)
 **🏠 Local Integration** - Workspace integration (AugmentCode Local Agent)
 
-**For complete installation instructions and platform-specific setup, see the [Complete Usage Guide](docs/usage-guide.md).**
+AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team.
 
-AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)**.
+**For installation instructions and platform-specific setup, see the [Usage Guide](docs/usage-guide.md).**
 
 ## 📚 Documentation
 
 ### For Users
 
-**[📖 Complete Usage Guide](docs/usage-guide.md)** - Comprehensive overview of modes, roles, and workflows
+**[📖 Usage Guide](docs/usage-guide.md)** - Overview of modes, roles, and workflows
 **[🚀 Quick Start Guide](docs/quick-start.md)** - Step-by-step getting started instructions
-**[📦 Bundle Mode Guide](docs/bundle-mode.md)** - Complete platform setup (Google AI Studio, ChatGPT)
+**[📦 Bundle Mode Guide](docs/bundle-mode.md)** - Platform setup (Google AI Studio, ChatGPT)
 **[🔄 Multi-Agent Strategies](docs/strategies.md)** - Coordination strategies and when to use them
 **[📸 Snapshot System](docs/snapshots.md)** - Context preservation and agent transitions
 
 ### For AI Agents
 
 **[🤖 Agent Entry Point](src/agor/tools/README_ai.md)** - Role selection and initialization (start here)
-**[📋 User Guidelines for AugmentCode Local](docs/augment_user_guidelines.md)** - Complete guidelines for local agent integration
+**[📋 User Guidelines for AugmentCode Local](docs/augment_user_guidelines.md)** - Guidelines for local agent integration
 **[🚀 Platform Initialization Prompts](src/agor/tools/PLATFORM_INITIALIZATION_PROMPTS.md)** - Copy-paste prompts for each platform
-**[📋 Comprehensive Instructions](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Complete operational guide
+**[📋 Instructions](src/agor/tools/AGOR_INSTRUCTIONS.md)** - Operational guide
 **[📋 Documentation Index](src/agor/tools/index.md)** - Token-efficient lookup for AI models
 **[🛠️ AGOR Development Guide](docs/agor-development-guide.md)** - For agents working on AGOR itself
 **[💬 Agent Meta Feedback](src/agor/tools/agor-meta.md)** - Help improve AGOR through feedback
