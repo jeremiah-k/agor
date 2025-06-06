@@ -39,25 +39,24 @@ Choose your operational role based on your task:
 
 What is your primary goal today?
 
-**🔍 SOLO DEVELOPER** - For:
+**🔧 WORKER AGENT** (Solo or as Team) - For:
 - Codebase analysis and exploration
 - Feature implementation and debugging
 - Technical documentation and code explanation
 - Direct development work
+- Executing specific assigned tasks
+- Following coordinator instructions
+- Participating in multi-agent workflows
+- Task completion and reporting
 
 **📋 PROJECT COORDINATOR** - For:
 - Strategic planning and architecture design
 - Multi-agent workflow coordination
 - Project breakdown and task assignment
 - Team management and strategy selection
+- High-level oversight and direction
 
-**🤖 AGENT WORKER** - For:
-- Executing specific assigned tasks
-- Following coordinator instructions
-- Participating in multi-agent workflows
-- Task completion and reporting
-
-Please select your role (Solo Developer/Project Coordinator/Agent Worker):
+Please select your role (Worker Agent/Project Coordinator):
 ```
 
 ### STEP 3: MODE-SPECIFIC INITIALIZATION

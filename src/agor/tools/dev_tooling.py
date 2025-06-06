@@ -2212,3 +2212,109 @@ def generate_handoff_prompt_only(
         generate_release_notes=False,
     )
     return generate_complete_project_outputs(request)
+
+
+def generate_meta_feedback(
+    current_project: str = None,
+    agor_issues_encountered: list = None,
+    suggested_improvements: list = None,
+    workflow_friction_points: list = None,
+    positive_experiences: list = None
+) -> dict:
+    """
+    Generate AGOR meta feedback for continuous improvement.
+
+    This function creates feedback about AGOR itself while working on other projects.
+    The output includes a link to submit feedback to the AGOR meta repository.
+
+    Args:
+        current_project: Name/description of the project you're working on
+        agor_issues_encountered: List of issues or problems with AGOR
+        suggested_improvements: List of suggestions for improving AGOR
+        workflow_friction_points: List of workflow friction points
+        positive_experiences: List of positive experiences with AGOR
+
+    Returns:
+        Dictionary with processed meta feedback ready for single codeblock usage
+    """
+    try:
+        from datetime import datetime
+
+        # Prepare meta feedback content
+        feedback_content = f"""# 🔄 AGOR Meta Feedback
+
+**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}
+**Current Project**: {current_project or 'Not specified'}
+**Feedback Type**: User Experience & Improvement Suggestions
+
+## 📋 AGOR Usage Context
+
+**Project Being Worked On**: {current_project or 'Not specified'}
+**AGOR Version**: 0.4.2+
+**Usage Pattern**: {_detect_environment()}
+
+## 🎯 Issues Encountered
+
+{_format_feedback_list(agor_issues_encountered, 'No issues reported')}
+
+## 💡 Suggested Improvements
+
+{_format_feedback_list(suggested_improvements, 'No suggestions provided')}
+
+## 🚧 Workflow Friction Points
+
+{_format_feedback_list(workflow_friction_points, 'No friction points identified')}
+
+## ✅ Positive Experiences
+
+{_format_feedback_list(positive_experiences, 'No positive experiences noted')}
+
+## 🔗 Submit This Feedback
+
+**To submit this feedback for AGOR improvement:**
+
+1. **Copy this entire feedback** (it's already processed for single codeblock usage)
+2. **Visit**: https://github.com/jeremiah-k/agor-meta/issues/new
+3. **Paste the feedback** as the issue description
+4. **Add a descriptive title** like "AGOR Feedback: [Brief Description]"
+5. **Submit the issue** to help improve AGOR for everyone
+
+## 🎯 How This Helps
+
+Your feedback helps improve AGOR by:
+- Identifying real-world usage patterns and friction points
+- Gathering suggestions from actual users working on diverse projects
+- Building a knowledge base of common issues and solutions
+- Prioritizing development efforts based on user needs
+- Creating a community-driven improvement process
+
+**Thank you for helping make AGOR better!** 🚀
+
+---
+*This meta feedback was generated automatically using AGOR's dev tooling*
+*Generated while working on: {current_project or 'unspecified project'}*
+"""
+
+        # Process the content for single codeblock usage
+        processed_content = prepare_prompt_content(feedback_content)
+
+        return {
+            'success': True,
+            'meta_feedback': processed_content,
+            'github_url': 'https://github.com/jeremiah-k/agor-meta/issues/new',
+            'instructions': 'Copy the meta_feedback content and paste it at the GitHub URL to submit feedback'
+        }
+
+    except Exception as e:
+        return {
+            'success': False,
+            'error': f'Failed to generate meta feedback: {str(e)}'
+        }
+
+
+def _format_feedback_list(items: list, default_message: str) -> str:
+    """Format a list of feedback items."""
+    if not items:
+        return f"- {default_message}"
+
+    return '\n'.join(f"- {item}" for item in items)

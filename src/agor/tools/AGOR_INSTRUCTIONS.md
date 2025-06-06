@@ -122,6 +122,7 @@ outputs) generate complete project outputs (snapshot + handoff + PR)
 qcp) quick commit and push with timestamp
 test-tools) test all dev tooling functions
 env-info) show environment and version info
+meta) generate AGOR feedback for continuous improvement
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
 progress-report) create progress report snapshot for status updates
@@ -310,6 +311,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`qcp`**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
 - **`test-tools`**: Test all dev tooling functions to ensure they work properly. No parameters required.
 - **`env-info`**: Show current environment detection, AGOR version, and platform information. No parameters required.
+- **`meta`**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Links to https://github.com/jeremiah-k/agor-meta/issues/new for feedback submission.
 
 **AGENT WORKER ACTIONS:**
 **Coordination:**
