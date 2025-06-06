@@ -1409,28 +1409,7 @@ def get_checklist_status() -> dict:
     return {"status": "no_checklist"}
 
 
-def generate_processed_output(content: str, output_type: str = "general") -> str:
-    """
-    Generate processed output ready for single codeblock usage.
 
-    This function takes any content (snapshots, PR descriptions, prompts, etc.)
-    and processes it through the backtick processing system to ensure clean
-    formatting when placed inside single codeblocks for agent handoffs.
-
-    Args:
-        content: The content to process (can contain triple backticks)
-        output_type: Type of output for context (e.g., "snapshot", "pr_description", "prompt")
-
-    Returns:
-        Processed content with backticks converted for single codeblock usage
-    """
-    # Apply backtick processing
-    processed_content = prepare_prompt_content(content)
-
-    # Add header comment for clarity
-    header = f"# Processed {output_type.replace('_', ' ').title()} - Ready for Single Codeblock Usage\n\n"
-
-    return header + processed_content
 
 
 
