@@ -42,8 +42,7 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install dependencies for memory manager types
-pip install -r requirements.txt
+# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
 pip install pydantic pydantic-settings || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then

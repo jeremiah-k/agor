@@ -491,10 +491,10 @@ Each entry includes:
 **Problem**: Installation instructions duplicated across 5+ files with slight variations, creating maintenance burden.
 
 **Solution**:
-- Created `src/agor/tools/INSTALLATION_MASTER.md` as single source of truth for all installation instructions
-- Updated all documentation files to reference master guide instead of duplicating content
-- Eliminated installation duplication across README.md, docs/usage-guide.md, docs/quick-start.md, docs/bundle-mode.md
-- Simplified maintenance by centralizing installation logic in single location
+- Fixed pydantic dependency installation with .pyenv venv fallback across all agent initialization methods
+- Maintained platform-specific installation instructions in appropriate user documentation
+- Preserved important dropdown sections for user platform guidance
+- Avoided inappropriate centralization that would remove user-facing instructions
 
 ### 🔄 Terminology Consistency Cleanup
 

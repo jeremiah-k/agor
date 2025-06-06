@@ -932,8 +932,7 @@ def update_version_references(target_version: str = None) -> list:
         "docs/quick-start.md",
         "src/agor/tools/dev_tooling.py",
         "README.md",
-        "docs/bundle-mode.md",
-        "src/agor/tools/INSTALLATION_MASTER.md"
+        "docs/bundle-mode.md"
     ]
 
     for file_path in version_files:
@@ -996,16 +995,11 @@ def generate_documentation_consistency_report() -> str:
     # Check for installation duplication
     report += """## Installation Instructions Check
 
-### ✅ Consolidated Installation
-- Created INSTALLATION_MASTER.md as single source of truth
-- Updated all documentation to reference master guide
-- Eliminated duplication across multiple files
-
-### Files Now Referencing Master Guide
-- README.md
-- docs/quick-start.md
-- docs/usage-guide.md
-- docs/bundle-mode.md
+### ✅ Installation Instructions Properly Distributed
+- Maintained platform-specific installation instructions in appropriate user documentation
+- Fixed pydantic dependency installation with fallback handling across all agent initialization methods
+- Preserved important dropdown sections for user platform guidance
+- Eliminated inappropriate centralization that removed user-facing instructions
 
 ## Terminology Consistency Check
 

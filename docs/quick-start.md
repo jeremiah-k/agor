@@ -30,7 +30,7 @@ agor --version
 
 **Don't have pipx?** Install it first: `pip install pipx`
 
-> **Complete Installation Guide**: See [Installation Master Reference](../src/agor/tools/INSTALLATION_MASTER.md) for detailed setup, git configuration, and troubleshooting.
+
 
 ## 🎁 Step 2: Bundle Your Project
 

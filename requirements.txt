@@ -1,3 +1,8 @@
+# AGOR CLI Dependencies - For local AGOR installation and development
+# NOTE: AI agents should NOT install these dependencies
+# Agents only need: pip install pydantic pydantic-settings
+# These dependencies are for the AGOR CLI tool, not for agent dev tooling
+
 fastapi
 httpx
 plumbum

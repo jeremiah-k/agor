@@ -119,9 +119,9 @@
 - Fixed remaining terminology inconsistencies
 
 **Phase 2: Documentation Consolidation** - ✅ COMPLETED
-- Created INSTALLATION_MASTER.md as single source of truth
-- Eliminated installation duplication across 5+ files
-- Updated all documentation to reference consolidated guide
+- Fixed pydantic dependency installation with .pyenv venv fallback across all agent initialization methods
+- Maintained platform-specific installation instructions in appropriate user documentation
+- Preserved important dropdown sections for user platform guidance
 
 **Phase 3: Dev Tooling Enhancement** - ✅ COMPLETED
 - Added environment detection capabilities

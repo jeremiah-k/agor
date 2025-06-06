@@ -13,7 +13,7 @@ agor bundle /path/to/your/project -f zip    # Google AI Studio
 agor bundle /path/to/your/project           # ChatGPT (.tar.gz)
 ```
 
-> **Complete Installation Guide**: See [Installation Master Reference](../src/agor/tools/INSTALLATION_MASTER.md) for detailed setup, git configuration, and troubleshooting.
+
 
 ## 🤖 Platform-Specific Setup
 
