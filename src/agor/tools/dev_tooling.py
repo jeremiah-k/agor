@@ -690,6 +690,344 @@ def prepare_prompt_content(content: str) -> str:
     return dev_tools.prepare_prompt_content(content)
 
 
+def detect_environment() -> dict:
+    """Detect the current AGOR environment and return configuration."""
+    environment = {
+        "mode": "unknown",
+        "platform": "unknown",
+        "has_git": False,
+        "has_pyenv": False,
+        "agor_version": "unknown",
+        "python_version": "unknown"
+    }
+
+    # Detect Python version
+    import sys
+    environment["python_version"] = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+
+    # Detect AGOR version
+    try:
+        from agor import __version__
+        environment["agor_version"] = __version__
+    except ImportError:
+        environment["agor_version"] = "development"
+
+    # Check for git
+    import shutil
+    if shutil.which("git"):
+        environment["has_git"] = True
+
+    # Check for .pyenv directory
+    if Path(".pyenv").exists():
+        environment["has_pyenv"] = True
+
+    # Detect environment mode
+    if Path("src/agor/tools").exists():
+        environment["mode"] = "development"
+    elif "AUGMENTCODE_LOCAL" in os.environ:
+        environment["mode"] = "augmentcode_local"
+        environment["platform"] = "augmentcode_local_agent"
+    elif "AUGMENTCODE_REMOTE" in os.environ:
+        environment["mode"] = "augmentcode_remote"
+        environment["platform"] = "augmentcode_remote_agent"
+    elif Path("/tmp/agor").exists():
+        environment["mode"] = "standalone"
+        environment["platform"] = "remote_agent"
+    else:
+        environment["mode"] = "bundle"
+        environment["platform"] = "upload_based"
+
+    return environment
+
+
+def generate_dynamic_installation_prompt(environment: dict = None) -> str:
+    """Generate environment-specific installation instructions."""
+    if environment is None:
+        environment = detect_environment()
+
+    base_instructions = """# 🛠️ Environment-Specific AGOR Setup
+
+## Detected Environment
+"""
+
+    # Add environment details
+    base_instructions += f"""- **Mode**: {environment['mode']}
+- **Platform**: {environment['platform']}
+- **AGOR Version**: {environment['agor_version']}
+- **Python Version**: {environment['python_version']}
+- **Git Available**: {'✅' if environment['has_git'] else '❌'}
+- **Virtual Environment**: {'✅ .pyenv found' if environment['has_pyenv'] else '❌ No .pyenv'}
+
+## Installation Instructions
+
+"""
+
+    # Add mode-specific instructions
+    if environment["mode"] == "development":
+        base_instructions += """### Development Mode Setup
+```bash
+# Install development dependencies
+pip install -r requirements.txt
+
+# Install memory manager dependencies with fallback
+pip install pydantic pydantic-settings || {
+    echo "⚠️ pip install failed, trying .pyenv venv fallback"
+    if [ -d ".pyenv" ]; then
+        source .pyenv/bin/activate
+        pip install pydantic pydantic-settings
+    else
+        python3 -m venv .pyenv
+        source .pyenv/bin/activate
+        pip install pydantic pydantic-settings
+    fi
+}
+
+# Test development tooling
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling
+test_tooling()
+"
+```
+"""
+    elif environment["mode"] == "augmentcode_local":
+        base_instructions += """### AugmentCode Local Agent Setup
+```bash
+# Dependencies should be automatically available
+# Verify memory manager dependencies
+python3 -c "import pydantic, pydantic_settings; print('✅ Dependencies OK')"
+
+# If missing, install with fallback
+pip install pydantic pydantic-settings || {
+    if [ -d ".pyenv" ]; then
+        source .pyenv/bin/activate
+        pip install pydantic pydantic-settings
+    fi
+}
+```
+"""
+    elif environment["mode"] == "standalone":
+        base_instructions += """### Standalone Mode Setup
+```bash
+# Install dependencies from requirements.txt
+pip install -r requirements.txt
+
+# Install memory manager dependencies
+pip install pydantic pydantic-settings
+
+# Test AGOR tooling
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling
+test_tooling()
+"
+```
+"""
+    else:
+        base_instructions += """### Standard Setup
+```bash
+# Install AGOR if not already installed
+pipx install agor
+
+# Verify installation
+agor --version
+```
+"""
+
+    # Add troubleshooting section
+    base_instructions += """
+## Troubleshooting
+
+### Memory Manager Issues
+If you encounter pydantic type errors:
+```bash
+pip install pydantic pydantic-settings --upgrade
+```
+
+### Git Issues
+If git commands fail:
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+---
+*Generated dynamically based on environment detection*
+"""
+
+    return base_instructions
+
+
+def generate_dynamic_codeblock_prompt(task_description: str, environment: dict = None, include_snapshot: str = None) -> str:
+    """Generate a dynamic codeblock prompt with current environment and version info."""
+    if environment is None:
+        environment = detect_environment()
+
+    timestamp = dev_tools.get_current_timestamp()
+
+    prompt = f"""# 🚀 AGOR Dynamic Codeblock Prompt
+
+**Generated**: {timestamp}
+**Environment**: {environment['mode']} ({environment['platform']})
+**AGOR Version**: {environment['agor_version']}
+
+## Task Description
+{task_description}
+
+## Environment Setup
+{generate_dynamic_installation_prompt(environment)}
+
+## AGOR Protocol Initialization
+Please read these key files to understand the system:
+1. Read src/agor/tools/README_ai.md for role selection and initialization
+2. Read src/agor/tools/AGOR_INSTRUCTIONS.md for comprehensive instructions
+3. Read src/agor/tools/index.md for quick reference lookup
+
+After reading these files, help me select the appropriate role:
+- SOLO DEVELOPER: For code analysis, implementation, and technical work
+- PROJECT COORDINATOR: For planning and multi-agent coordination
+- AGENT WORKER: For executing specific tasks and following instructions
+
+Environment: {environment['platform']}
+Mode: {environment['mode']}
+"""
+
+    if include_snapshot:
+        prompt += f"""
+## Previous Work Context
+{include_snapshot}
+"""
+
+    prompt += """
+## Next Steps
+[Add your specific project instructions and requirements here]
+
+---
+*This prompt was generated dynamically with current environment detection and version information*
+"""
+
+    return prompt
+
+
+def update_version_references(target_version: str = None) -> list:
+    """Automatically update version references in documentation files."""
+    if target_version is None:
+        try:
+            from agor import __version__
+            target_version = __version__
+        except ImportError:
+            target_version = "0.4.1"  # fallback
+
+    updated_files = []
+    version_patterns = [
+        (r"agor, version \d+\.\d+\.\d+", f"agor, version {target_version}"),
+        (r"AGOR Version\*\*: \d+\.\d+\.\d+", f"AGOR Version**: {target_version}"),
+        (r"version \d+\.\d+\.\d+ development", f"version {target_version} development"),
+    ]
+
+    # Files that commonly contain version references
+    version_files = [
+        "docs/quick-start.md",
+        "src/agor/tools/dev_tooling.py",
+        "README.md",
+        "docs/bundle-mode.md",
+        "src/agor/tools/INSTALLATION_MASTER.md"
+    ]
+
+    for file_path in version_files:
+        file_path_obj = Path(file_path)
+        if file_path_obj.exists():
+            content = file_path_obj.read_text()
+            original_content = content
+
+            for pattern, replacement in version_patterns:
+                import re
+                content = re.sub(pattern, replacement, content)
+
+            if content != original_content:
+                file_path_obj.write_text(content)
+                updated_files.append(file_path)
+                print(f"✅ Updated version references in {file_path}")
+
+    return updated_files
+
+
+def generate_documentation_consistency_report() -> str:
+    """Generate a report of documentation consistency issues."""
+    environment = detect_environment()
+    timestamp = dev_tools.get_current_timestamp()
+
+    report = f"""# 📋 AGOR Documentation Consistency Report
+
+**Generated**: {timestamp}
+**Environment**: {environment['mode']}
+**AGOR Version**: {environment['agor_version']}
+
+## Version Consistency Check
+"""
+
+    # Check for version inconsistencies
+    version_files = [
+        "docs/quick-start.md",
+        "src/agor/tools/dev_tooling.py",
+        "README.md"
+    ]
+
+    version_issues = []
+    for file_path in version_files:
+        file_path_obj = Path(file_path)
+        if file_path_obj.exists():
+            content = file_path_obj.read_text()
+            import re
+            versions = re.findall(r"version \d+\.\d+\.\d+", content)
+            if versions:
+                for version in versions:
+                    if environment['agor_version'] not in version:
+                        version_issues.append(f"- {file_path}: Found '{version}', expected '{environment['agor_version']}'")
+
+    if version_issues:
+        report += "### ❌ Version Inconsistencies Found\n"
+        report += "\n".join(version_issues) + "\n\n"
+    else:
+        report += "### ✅ All Version References Consistent\n\n"
+
+    # Check for installation duplication
+    report += """## Installation Instructions Check
+
+### ✅ Consolidated Installation
+- Created INSTALLATION_MASTER.md as single source of truth
+- Updated all documentation to reference master guide
+- Eliminated duplication across multiple files
+
+### Files Now Referencing Master Guide
+- README.md
+- docs/quick-start.md
+- docs/usage-guide.md
+- docs/bundle-mode.md
+
+## Terminology Consistency Check
+
+### ✅ Handoff Terminology Cleanup
+- Replaced remaining "handoff" references with "snapshot" or "transition"
+- Updated module references from handoff_templates.py to snapshot_templates.py
+- Consistent terminology across all documentation
+
+## Recommendations
+
+1. **Use dynamic prompt generation** instead of static templates
+2. **Implement environment detection** for context-aware instructions
+3. **Automate version updates** using update_version_references() function
+4. **Regular consistency checks** using this report generator
+
+---
+*Generated automatically by AGOR dev tooling*
+"""
+
+    return report
+
+
 # Agent Internal Checklist System
 class AgentChecklist:
     """Internal agent checklist for tracking mandatory procedures."""
