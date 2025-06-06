@@ -2013,62 +2013,20 @@ def generate_final_handoff_outputs(
     return outputs
 
 
-def generate_complete_project_outputs(
-    task_description: str,
-    work_completed: list = None,
-    next_steps: list = None,
-    files_modified: list = None,
-    context_notes: str = None,
-    brief_context: str = None,
-    pr_title: str = None,
-    pr_description: str = None,
-    release_notes: str = None,
-    # Output selection flags for flexible generation
-    generate_snapshot: bool = True,
-    generate_handoff_prompt: bool = True,
-    generate_pr_description: bool = True,
-    generate_release_notes: bool = True
-) -> dict:
+def generate_complete_project_outputs(request: HandoffRequest) -> dict:
     """
     Generate flexible project outputs without creating temporary files.
 
     This function generates selected outputs (snapshot, handoff prompt, PR description,
-    release notes) based on flags, directly in memory and returns them processed for
-    single codeblock usage. No temporary files are created on the working branch.
+    release notes) based on request configuration, directly in memory and returns them
+    processed for single codeblock usage. No temporary files are created on the working branch.
 
     Args:
-        task_description: Description of the task
-        work_completed: List of completed work items
-        next_steps: List of next steps
-        files_modified: List of files modified
-        context_notes: Additional context notes
-        brief_context: Brief context for quick orientation
-        pr_title: Title for PR description
-        pr_description: PR description content
-        release_notes: Release notes content
-        generate_snapshot: Whether to generate snapshot (default: True)
-        generate_handoff_prompt: Whether to generate handoff prompt (default: True)
-        generate_pr_description: Whether to generate PR description (default: True)
-        generate_release_notes: Whether to generate release notes (default: True)
+        request: HandoffRequest object containing all configuration parameters and output selection flags
 
     Returns:
         Dictionary with selected processed outputs ready for single codeblock usage
     """
-    request = HandoffRequest(
-        task_description=task_description,
-        work_completed=work_completed,
-        next_steps=next_steps,
-        files_modified=files_modified,
-        context_notes=context_notes,
-        brief_context=brief_context,
-        pr_title=pr_title,
-        pr_description=pr_description,
-        release_notes=release_notes,
-        generate_snapshot=generate_snapshot,
-        generate_handoff_prompt=generate_handoff_prompt,
-        generate_pr_description=generate_pr_description,
-        generate_release_notes=generate_release_notes
-    )
     return dev_tools.generate_complete_project_outputs(request)
 
 
