@@ -753,6 +753,29 @@ Remember: Always create a snapshot before ending your session using the dev tool
 
         return processed_prompt
 
+    def generate_processed_output(self, content: str, output_type: str = "general") -> str:
+        """
+        Generate processed output ready for single codeblock usage.
+
+        This method takes any content (snapshots, PR descriptions, prompts, etc.)
+        and processes it through the backtick processing system to ensure clean
+        formatting when placed inside single codeblocks for agent handoffs.
+
+        Args:
+            content: The content to process (can contain triple backticks)
+            output_type: Type of output for context (e.g., "snapshot", "pr_description", "prompt")
+
+        Returns:
+            Processed content with backticks converted for single codeblock usage
+        """
+        # Apply backtick processing
+        processed_content = self.prepare_prompt_content(content)
+
+        # Add header comment for clarity
+        header = f"# Processed {output_type.replace('_', ' ').title()} - Ready for Single Codeblock Usage\n\n"
+
+        return header + processed_content
+
 
 # Global instance for easy access
 dev_tools = DevTooling()
@@ -1410,70 +1433,7 @@ def generate_processed_output(content: str, output_type: str = "general") -> str
     return header + processed_content
 
 
-def generate_final_handoff_outputs(
-    task_description: str,
-    work_completed: list = None,
-    next_steps: list = None,
-    files_modified: list = None,
-    context_notes: str = None,
-    brief_context: str = None,
-    pr_title: str = None,
-    pr_description: str = None
-) -> dict:
-    """
-    Generate all final outputs for agent handoff with automatic backtick processing.
 
-    This function creates a complete set of handoff materials:
-    - Processed snapshot content
-    - Processed handoff prompt
-    - Processed PR description
-
-    All outputs are automatically processed for clean single codeblock formatting.
-
-    Args:
-        task_description: Description of the task being handed off
-        work_completed: List of completed work items
-        next_steps: List of next steps for the receiving agent
-        files_modified: List of files that were modified
-        context_notes: Additional context notes
-        brief_context: Brief verbal background for quick orientation
-        pr_title: Title for the PR description
-        pr_description: Description for the PR
-
-    Returns:
-        Dictionary containing all processed outputs ready for use
-    """
-    outputs = {}
-
-    try:
-        # Generate handoff using the seamless handoff system
-        snapshot_content, handoff_prompt = create_seamless_handoff(
-            task_description=task_description,
-            work_completed=work_completed or [],
-            next_steps=next_steps or [],
-            files_modified=files_modified or [],
-            context_notes=context_notes or "",
-            brief_context=brief_context or ""
-        )
-
-        # Process outputs for single codeblock usage
-        outputs['snapshot'] = generate_processed_output(snapshot_content, "snapshot")
-        outputs['handoff_prompt'] = generate_processed_output(handoff_prompt, "handoff_prompt")
-
-        # Generate PR description if provided
-        if pr_title and pr_description:
-            processed_pr = generate_processed_output(pr_description, "pr_description")
-            outputs['pr_description'] = processed_pr
-
-        outputs['success'] = True
-        outputs['message'] = "All outputs generated successfully with backtick processing"
-
-    except Exception as e:
-        outputs['success'] = False
-        outputs['error'] = str(e)
-        outputs['message'] = f"Failed to generate outputs: {e}"
-
-    return outputs
 
 
 def enforce_session_end() -> bool:
@@ -1849,7 +1809,34 @@ def generate_final_handoff_outputs(
     pr_description: str = None
 ) -> dict:
     """Generate all final outputs for agent handoff with automatic backtick processing."""
-    return dev_tools.generate_final_handoff_outputs(
-        task_description, work_completed, next_steps, files_modified,
-        context_notes, brief_context, pr_title, pr_description
-    )
+    outputs = {}
+
+    try:
+        # Generate handoff using the seamless handoff system
+        snapshot_content, handoff_prompt = create_seamless_handoff(
+            task_description=task_description,
+            work_completed=work_completed or [],
+            next_steps=next_steps or [],
+            files_modified=files_modified or [],
+            context_notes=context_notes or "",
+            brief_context=brief_context or ""
+        )
+
+        # Process outputs for single codeblock usage
+        outputs['snapshot'] = generate_processed_output(snapshot_content, "snapshot")
+        outputs['handoff_prompt'] = generate_processed_output(handoff_prompt, "handoff_prompt")
+
+        # Generate PR description if provided
+        if pr_title and pr_description:
+            processed_pr = generate_processed_output(pr_description, "pr_description")
+            outputs['pr_description'] = processed_pr
+
+        outputs['success'] = True
+        outputs['message'] = "All outputs generated successfully with backtick processing"
+
+    except Exception as e:
+        outputs['success'] = False
+        outputs['error'] = str(e)
+        outputs['message'] = f"Failed to generate outputs: {e}"
+
+    return outputs
