@@ -65,18 +65,22 @@ Please select your role (Solo Developer/Project Coordinator/Agent Worker):
 Based on your environment detection:
 
 **Bundle Mode** (uploaded files):
+
 - Read `BUNDLE_INITIALIZATION.md` for streamlined setup
 - Work with extracted files in temporary directory
 
 **Standalone Mode** (direct git access):
+
 - Read `STANDALONE_INITIALIZATION.md` for comprehensive setup
 - Full repository access and coordination capabilities
 
 **Development Mode** (local AGOR development):
+
 - Read `AGOR_INSTRUCTIONS.md` for complete development guide
 - Access to all dev tooling and testing capabilities
 
 **AugmentCode Local/Remote** (integrated environments):
+
 - Read `PLATFORM_INITIALIZATION_PROMPTS.md` for platform-specific setup
 - Enhanced memory and context preservation
 
@@ -93,12 +97,14 @@ Based on your environment detection:
 ### STEP 5: QUICK REFERENCE
 
 **Essential Files to Read**:
+
 - `AGOR_INSTRUCTIONS.md` - Comprehensive operational guide
 - `agent-start-here.md` - Quick startup guide
 - `index.md` - Documentation index for efficient lookup
 - `SNAPSHOT_SYSTEM_GUIDE.md` - Snapshot requirements and templates
 
 **Core Hotkeys**:
+
 - `a` - Comprehensive codebase analysis
 - `f` - Display complete files with formatting
 - `edit` - Modify files with targeted changes
@@ -107,6 +113,7 @@ Based on your environment detection:
 - `status` - Check coordination and project status
 
 **Development Tools**:
+
 - `src/agor/tools/dev_tooling.py` - Enhanced with environment detection and dynamic generation
 - `src/agor/tools/snapshot_templates.py` - Snapshot generation system
 - `src/agor/memory_sync.py` - Memory branch management

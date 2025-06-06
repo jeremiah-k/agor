@@ -481,6 +481,7 @@ Each entry includes:
 **Problem**: Memory manager uses pydantic types, but prompt generators didn't include dependency installation with fallback handling.
 
 **Solution**:
+
 - Added `pip install pydantic pydantic-settings` with .pyenv venv fallback to all initialization methods
 - Updated PLATFORM_INITIALIZATION_PROMPTS.md, README.md, docs/usage-guide.md, STANDALONE_INITIALIZATION.md
 - Updated agent_prompt_templates.py to include dependency setup in snapshot prompts
@@ -491,6 +492,7 @@ Each entry includes:
 **Problem**: Installation instructions duplicated across 5+ files with slight variations, creating a maintenance burden.
 
 **Solution**:
+
 - Fixed pydantic dependency installation with .pyenv venv fallback across all agent initialization methods
 - Maintained platform-specific installation instructions in appropriate user documentation
 - Preserved important dropdown sections for user platform guidance
@@ -501,6 +503,7 @@ Each entry includes:
 **Problem**: Remaining "handoff" references despite previous cleanup efforts.
 
 **Solution**:
+
 - Fixed remaining handoff references in docs/agor-development-guide.md and src/agor/tools/agent_coordination.py
 - Updated module references from handoff_templates.py to snapshot_templates.py
 - Ensured consistent "snapshot" and "transition" terminology across all documentation
@@ -511,21 +514,25 @@ Each entry includes:
 **New Features Added**:
 
 1. **Environment Detection** (`detect_environment()`):
+
    - Auto-detects development, augmentcode_local, augmentcode_remote, standalone, or bundle mode
    - Identifies platform type and available tools (git, .pyenv)
    - Returns comprehensive environment configuration
 
 2. **Dynamic Installation Prompts** (`generate_dynamic_installation_prompt()`):
+
    - Generates environment-specific installation instructions
    - Adapts to detected mode and available tools
    - Replaces static templates with context-aware generation
 
 3. **Dynamic Codeblock Prompts** (`generate_dynamic_codeblock_prompt()`):
+
    - Creates codeblock prompts with current version and environment info
    - Includes appropriate setup instructions for detected environment
    - Supports snapshot integration for seamless agent transitions
 
 4. **Automatic Version Updates** (`update_version_references()`):
+
    - Automatically updates version references across documentation files
    - Uses regex patterns to find and replace version numbers
    - Reduces manual maintenance of version consistency
@@ -547,22 +554,26 @@ Each entry includes:
 ### 🎯 Implementation Strategy
 
 **Phase 1: Critical Fixes** (✅ COMPLETED)
+
 - Fixed prompt generator pydantic dependencies
 - Updated version references
 - Fixed terminology inconsistencies
 
 **Phase 2: Documentation Consolidation** (✅ COMPLETED)
+
 - Created single source of truth for installation
 - Eliminated duplication across multiple files
 - Updated all references to point to consolidated docs
 
 **Phase 3: Dev Tooling Enhancement** (✅ COMPLETED)
+
 - Added environment detection capabilities
 - Created dynamic prompt generators
 - Built automation tools for version management
 - Added consistency reporting
 
 **Phase 4: Static Template Replacement** (🔄 NEXT)
+
 - Replace remaining static templates with dynamic generation
 - Implement smart, context-aware documentation
 - Minimize maintenance burden through automation

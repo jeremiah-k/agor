@@ -13,8 +13,6 @@ agor bundle /path/to/your/project -f zip    # Google AI Studio
 agor bundle /path/to/your/project           # ChatGPT (.tar.gz)
 ```
 
-
-
 ## 🤖 Platform-Specific Setup
 
 ### Google AI Studio (Recommended - Free)

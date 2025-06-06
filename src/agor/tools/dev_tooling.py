@@ -698,22 +698,27 @@ def detect_environment() -> dict:
         "has_git": False,
         "has_pyenv": False,
         "agor_version": "unknown",
-        "python_version": "unknown"
+        "python_version": "unknown",
     }
 
     # Detect Python version
     import sys
-    environment["python_version"] = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+
+    environment["python_version"] = (
+        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    )
 
     # Detect AGOR version
     try:
         from agor import __version__
+
         environment["agor_version"] = __version__
     except ImportError:
         environment["agor_version"] = "development"
 
     # Check for git
     import shutil
+
     if shutil.which("git"):
         environment["has_git"] = True
 
@@ -864,7 +869,9 @@ git config --global user.email "your@email.com"
     return base_instructions
 
 
-def generate_dynamic_codeblock_prompt(task_description: str, environment: dict = None, include_snapshot: str = None) -> str:
+def generate_dynamic_codeblock_prompt(
+    task_description: str, environment: dict = None, include_snapshot: str = None
+) -> str:
     """Generate a dynamic codeblock prompt with current environment and version info."""
     if environment is None:
         environment = detect_environment()
@@ -920,6 +927,7 @@ def update_version_references(target_version: str = None) -> list:
     if target_version is None:
         try:
             from agor import __version__
+
             target_version = __version__
         except ImportError:
             target_version = "0.4.1"  # fallback
@@ -936,7 +944,7 @@ def update_version_references(target_version: str = None) -> list:
         "docs/quick-start.md",
         "src/agor/tools/dev_tooling.py",
         "README.md",
-        "docs/bundle-mode.md"
+        "docs/bundle-mode.md",
     ]
 
     for file_path in version_files:
@@ -947,6 +955,7 @@ def update_version_references(target_version: str = None) -> list:
 
             for pattern, replacement in version_patterns:
                 import re
+
                 content = re.sub(pattern, replacement, content)
 
             if content != original_content:
@@ -958,9 +967,6 @@ def update_version_references(target_version: str = None) -> list:
                     print(f"❌ Failed to update {file_path}: {e}")
 
     return updated_files
-
-
-
 
 
 # Agent Internal Checklist System
