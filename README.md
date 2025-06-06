@@ -4,7 +4,7 @@
 
 Transform AI assistants into sophisticated development coordinators. Plan complex projects, design specialized agent teams, and orchestrate coordinated development workflows.
 
-**Supports**: Linux, macOS, Windows | **Free Option**: Google AI Studio Pro | **Subscription**: ChatGPT
+**Supports**: Linux, macOS, Windows | **Free Option**: Google AI Studio Pro | **Subscription**: AugmentCode, ChatGPT
 
 > **🔬 Alpha Protocol**: AGOR coordination strategies are actively evolving based on real-world usage. [Contribute feedback](https://github.com/jeremiah-k/agor/issues) to help shape AI coordination patterns.
 
