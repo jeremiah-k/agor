@@ -2318,3 +2318,128 @@ def _format_feedback_list(items: list, default_message: str) -> str:
         return f"- {default_message}"
 
     return '\n'.join(f"- {item}" for item in items)
+
+
+def generate_mandatory_session_end_prompt(
+    work_completed: list,
+    current_status: str,
+    next_agent_instructions: list = None,
+    critical_context: str = None,
+    files_modified: list = None
+) -> dict:
+    """
+    Generate mandatory session end prompt for agent coordination.
+
+    This function MUST be called before ending any agent session to ensure
+    proper coordination and context preservation for the next agent or session.
+
+    Args:
+        work_completed: List of work items completed in this session
+        current_status: Current status of the project/task
+        next_agent_instructions: Specific instructions for the next agent
+        critical_context: Critical context that must be preserved
+        files_modified: List of files that were modified
+
+    Returns:
+        Dictionary with processed session end prompt ready for coordination
+    """
+    try:
+        from datetime import datetime
+
+        # Prepare session end content
+        session_end_content = f"""# 🔄 MANDATORY SESSION END - Agent Coordination Required
+
+**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}
+**Session Type**: Agent Handoff Required
+**AGOR Version**: 0.4.2+
+
+## 📋 WORK COMPLETED THIS SESSION
+
+{_format_feedback_list(work_completed, 'No work completed')}
+
+## 📊 CURRENT PROJECT STATUS
+
+**Status**: {current_status or 'Status not provided'}
+
+## 📁 FILES MODIFIED
+
+{_format_feedback_list(files_modified, 'No files modified')}
+
+## 🎯 INSTRUCTIONS FOR NEXT AGENT/SESSION
+
+{_format_feedback_list(next_agent_instructions, 'No specific instructions provided')}
+
+## 🧠 CRITICAL CONTEXT TO PRESERVE
+
+{critical_context or 'No critical context provided'}
+
+## 🔧 ENVIRONMENT SETUP FOR CONTINUATION
+
+# Pull latest changes
+git pull origin work-0.4.3-2
+
+# Install dependencies
+python3 -m pip install -r src/agor/tools/agent-requirements.txt
+
+# Read updated documentation
+- src/agor/tools/README_ai.md (2-role system)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (meta mode hotkey)
+
+## ⚠️ CRITICAL REQUIREMENTS FOR NEXT SESSION
+
+1. **Review this session's work** - Understand what was completed
+2. **Continue from current status** - Don't restart or duplicate work
+3. **Use our dev tooling** - All coordination must use our backtick processing
+4. **Create return prompts** - Every session must end with coordination output
+5. **Focus on productivity** - Substantial progress, not just note-passing
+
+## 🚀 IMMEDIATE NEXT STEPS
+
+1. Review completed work and current status
+2. Continue development from where this session left off
+3. Make substantial progress on remaining tasks
+4. Generate return prompt using our dev tooling before ending
+
+## 📞 COORDINATION PROTOCOL
+
+**When you complete your work, you MUST run:**
+
+``python
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import generate_mandatory_session_end_prompt
+
+outputs = generate_mandatory_session_end_prompt(
+    work_completed=['List what you completed'],
+    current_status='Current project status',
+    next_agent_instructions=['Instructions for next agent'],
+    critical_context='Important context to preserve',
+    files_modified=['Files you modified']
+)
+print(outputs['session_end_prompt'])
+"
+``
+
+**This ensures continuous productivity and proper coordination!**
+
+---
+
+*This session end prompt was generated automatically to ensure coordination*
+*Next agent: Continue productive work and generate your own session end prompt*
+"""
+
+        # Process the content for single codeblock usage
+        processed_content = prepare_prompt_content(session_end_content)
+
+        return {
+            'success': True,
+            'session_end_prompt': processed_content,
+            'instructions': 'Copy the session_end_prompt content for agent coordination'
+        }
+
+    except Exception as e:
+        return {
+            'success': False,
+            'error': f'Failed to generate session end prompt: {str(e)}'
+        }
