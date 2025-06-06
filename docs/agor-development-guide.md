@@ -62,7 +62,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 - **Work Snapshots (as Work Orders)**: Task assignments with context, requirements, next steps.
 - **Completion Snapshots/Reports**: Results summary, commits, issues, recommendations.
 - **Used for**: Multi-agent coordination, work transitions, and state capture.
-- **Implementation**: `handoff_templates.py` (Note: module name might be dated, but generates snapshot documents).
+- **Implementation**: `snapshot_templates.py` (generates snapshot documents).
 
 **Bundle Contents** (What's Actually in Bundles):
 

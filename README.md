@@ -29,6 +29,8 @@ agor bundle /path/to/local/project
 **Bundle Options**: Use `-f zip` for Google AI Studio, `--branch` for specific branches
 
 > **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
+>
+> **Complete Installation Guide**: See [Installation Master Reference](src/agor/tools/INSTALLATION_MASTER.md) for detailed setup instructions.
 
 </details>
 
@@ -285,22 +287,9 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install dependencies and test development tooling
+# Install dependencies (see INSTALLATION_MASTER.md for complete instructions)
 pip install -r requirements.txt
-
-# Install additional dependencies for memory manager types
-pip install pydantic pydantic-settings || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    else
-        echo "❌ No .pyenv directory found, creating virtual environment"
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    fi
-}
+pip install pydantic pydantic-settings  # Required for memory manager
 
 # Test AGOR development tooling
 python3 -c "
