@@ -582,8 +582,8 @@ def generate_progress_report_snapshot(
     additional_notes: str = "None",
 ) -> str:
     """
-    Generates a markdown-formatted progress report snapshot summarizing the current task, progress, blockers, next steps, work completed, and technical context for status updates to coordinators or team members.
-
+    Generates a markdown-formatted progress report snapshot summarizing the current task, progress, blockers, next steps, completed work, modified files, recent commits, and technical Git context for status updates to coordinators or team members.
+    
     Args:
         current_task: Description of the task being reported on.
         progress_percentage: Current completion percentage of the task.
@@ -595,7 +595,7 @@ def generate_progress_report_snapshot(
         agent_role: Role of the reporting agent.
         estimated_completion_time: Estimated time to complete the task (default "Unknown").
         additional_notes: Any additional notes or context (default "None").
-
+    
     Returns:
         A markdown string containing the structured progress report snapshot.
     """
@@ -691,9 +691,9 @@ def generate_work_order_snapshot(
     context_notes: str = "None",
 ) -> str:
     """
-    Generates a markdown-formatted work order snapshot for assigning tasks to agents.
-
-    The snapshot includes task details, requirements, acceptance criteria, files to modify, reference materials, priority, estimated effort, deadline, context notes, and technical Git context. It also provides instructions for agent acknowledgment and coordination.
+    Generates a markdown-formatted work order snapshot for assigning a task to an agent.
+    
+    The snapshot includes task description, requirements, acceptance criteria, files to modify, reference materials, priority, estimated effort, deadline, context notes, and current Git repository context. It also provides instructions for agent acknowledgment and coordination.
     """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

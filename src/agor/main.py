@@ -103,9 +103,9 @@ def config_cmd(
     ),
 ):
     """
-    Manages AGOR configuration settings via the CLI.
-
-    Supports resetting to defaults, setting configuration keys with flexible input formats, and displaying current configuration and environment variables. Boolean and integer values are parsed automatically based on the key.
+    Manages AGOR configuration settings from the command line.
+    
+    Allows resetting configuration to defaults, setting individual configuration keys with flexible input formats, and displaying current configuration and environment variables. Boolean and integer values are automatically parsed based on the key.
     """
 
     if reset:
@@ -684,9 +684,9 @@ def generate_agor_feedback(
     ),
 ):
     """
-    Generates a detailed AGOR feedback and improvement suggestions template, including system and repository information.
-
-    If inside a git repository and `commit` is enabled, writes the feedback to `agor_feedback.md` and commits it. Otherwise, prints the feedback form for manual copy/paste and optionally copies it to the clipboard.
+    Generates a comprehensive AGOR feedback and improvement suggestions template, including system, platform, and repository details.
+    
+    If inside a git repository and `commit` is enabled, writes the feedback to `agor_feedback.md` and commits it to the repository. Otherwise, prints the feedback form for manual copy/paste and optionally copies it to the clipboard.
     """
     import platform
     import subprocess
@@ -928,9 +928,9 @@ def detick(
     ),
 ):
     """
-    Converts triple backticks to double backticks in the provided content or clipboard.
-
-    If no content is given, reads from the clipboard, processes it, and updates the clipboard with the result. Optionally displays the processed content.
+    Replaces all triple backticks with double backticks in the provided content or clipboard.
+    
+    If no content is specified, reads from the clipboard, processes it, and updates the clipboard with the result. Optionally displays the processed content if requested.
     """
     try:
         import pyperclip
@@ -992,9 +992,9 @@ def retick(
     ),
 ):
     """
-    Converts double backticks in the provided content or clipboard to triple backticks and updates the clipboard.
-
-    If no content is given, reads from the clipboard, processes it, and writes the result back to the clipboard. Optionally displays the processed content.
+    Converts all double backticks in the given content or clipboard to triple backticks and updates the clipboard.
+    
+    If no content is provided, reads from the clipboard, processes it, and writes the result back to the clipboard. Optionally displays the processed content if requested.
     """
     try:
         import pyperclip
@@ -1046,9 +1046,9 @@ def retick(
 
 def cli():
     """
-    Entry point for the AGOR CLI application.
-
-    Checks for version updates on certain commands, displays help if no arguments are provided, and runs the Typer CLI app. Handles keyboard interrupts and unexpected exceptions with user-friendly messages and exits with an error code.
+    Runs the AGOR CLI application, handling version checks, help display, and error reporting.
+    
+    Checks for version updates on key commands, displays help if no arguments are provided, and executes the Typer CLI app. Handles keyboard interrupts and unexpected errors with user-friendly messages and exits with an error code.
     """
     # Check for version updates for important commands
     from .version_check import check_versions_if_needed
