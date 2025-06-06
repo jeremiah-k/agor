@@ -92,7 +92,7 @@ Initialize as Project Coordinator and help me design a refactoring strategy with
 
 ## 🤝 Collaboration Prompts
 
-### Snapshot Handoff Preparation
+### Snapshot Transition Preparation
 
 ```
 I need to prepare a work snapshot for another agent using AGOR's snapshot system.

@@ -647,7 +647,7 @@ class AgentCoordinationHelper:
                 f"Create working branch: git checkout -b stage-{stage_num}-{stage_name.lower().replace(' ', '-')}",
                 "Read stage instructions in strategy-active.md",
                 "Complete stage deliverables",
-                "Create handoff document for next stage",
+                "Create snapshot document for next stage",
             ]
 
         elif role == "observer":

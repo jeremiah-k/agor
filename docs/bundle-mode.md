@@ -8,15 +8,12 @@
 # Install AGOR
 pipx install agor
 
-# Configure git (optional but recommended)
-agor git-config --import-env                # Import from environment variables
-agor git-config --name "Your Name" --email "your@email.com"  # Set manually
-
 # Bundle for your platform
 agor bundle /path/to/your/project -f zip    # Google AI Studio
 agor bundle /path/to/your/project           # ChatGPT (.tar.gz)
-
 ```
+
+
 
 ## 🤖 Platform-Specific Setup
 

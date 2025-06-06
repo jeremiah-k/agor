@@ -61,7 +61,21 @@ Before starting any work, familiarize yourself with AGOR's snapshot system:
 
    ```bash
    # Install required Python packages
-   pip install -r requirements.txt
+   python3 -m pip install -r requirements.txt
+
+   # Install additional dependencies for memory manager types
+   python3 -m pip install pydantic pydantic-settings || {
+       echo "⚠️ pip install failed, trying .pyenv venv fallback"
+       if [ -d ".pyenv" ]; then
+           source .pyenv/bin/activate
+           python3 -m pip install pydantic pydantic-settings
+       else
+           echo "❌ No .pyenv directory found, creating virtual environment"
+           python3 -m venv .pyenv
+           source .pyenv/bin/activate
+           python3 -m pip install pydantic pydantic-settings
+       fi
+   }
    ```
 
 5. **Test Development Tooling**:
