@@ -8,6 +8,7 @@ to streamline development workflow and memory management.
 import os
 import subprocess
 import tempfile
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -29,6 +30,42 @@ except ImportError:
             return git_path
 
     git_manager = FallbackGitManager()
+
+
+@dataclass
+class HandoffRequest:
+    """Configuration object for handoff operations to reduce parameter count."""
+    task_description: str
+    work_completed: list = None
+    next_steps: list = None
+    files_modified: list = None
+    context_notes: str = None
+    brief_context: str = None
+    pr_title: str = None
+    pr_description: str = None
+    release_notes: str = None
+    # Output selection flags for flexible generation
+    generate_snapshot: bool = True
+    generate_handoff_prompt: bool = True
+    generate_pr_description: bool = True
+    generate_release_notes: bool = True
+
+    def __post_init__(self):
+        """
+        Ensures all optional fields are initialized to empty lists or strings if not provided.
+        
+        This method sets default empty values for fields that may be None after dataclass initialization, preventing issues with mutable defaults.
+        """
+        if self.work_completed is None:
+            self.work_completed = []
+        if self.next_steps is None:
+            self.next_steps = []
+        if self.files_modified is None:
+            self.files_modified = []
+        if self.context_notes is None:
+            self.context_notes = ""
+        if self.brief_context is None:
+            self.brief_context = ""
 
 
 class DevTooling:
@@ -614,21 +651,15 @@ If you're picking up this work:
 
     def prepare_prompt_content(self, content: str) -> str:
         """
-        Prepare content for use in single codeblock prompts by escaping nested codeblocks.
-
-        This function reduces triple backticks (```) to double backticks (``) to prevent
-        formatting issues when the content is placed inside a single codeblock for agent transitions.
-
-        When agents create snapshots for transitions, the content often contains code examples
-        with triple backticks. If this content is then placed inside a single codeblock
-        (as required for agent initialization prompts), the nested triple backticks break
-        the formatting and create visual garbage in the UI.
-
+        Escapes nested codeblocks in content for safe inclusion within a single codeblock prompt.
+        
+        Replaces triple backticks with double backticks to prevent formatting issues when embedding code examples inside a single codeblock, ensuring agent transition prompts render correctly.
+        
         Args:
-            content: Raw content that may contain codeblocks
-
+            content: The input string potentially containing codeblocks.
+        
         Returns:
-            Content with escaped codeblocks safe for single codeblock usage
+            The content with codeblocks escaped for single codeblock usage.
         """
         # Replace triple backticks with double backticks to prevent codeblock nesting issues
         escaped_content = content.replace("```", "``")
@@ -637,6 +668,259 @@ If you're picking up this work:
         escaped_content = escaped_content.replace("````", "```")
 
         return escaped_content
+
+    def detick_content(self, content: str) -> str:
+        """
+        Converts all triple backticks in the content to double backticks for safe embedding within a single codeblock.
+        
+        Args:
+            content: The text in which to replace triple backticks.
+        
+        Returns:
+            The content with all triple backticks replaced by double backticks.
+        """
+        return self.prepare_prompt_content(content)
+
+    def retick_content(self, content: str) -> str:
+        """
+        Converts isolated double backticks in the content back to triple backticks.
+        
+        This reverses the detick operation, restoring standard Markdown code block formatting while avoiding unintended replacements in sequences of multiple backticks.
+        
+        Args:
+            content: The string in which to restore triple backticks.
+        
+        Returns:
+            The content with isolated double backticks replaced by triple backticks.
+        """
+        import re
+        # Convert double backticks back to triple backticks (retick)
+        # Use regex with negative lookbehind/lookahead to match only isolated double backticks
+        processed = re.sub(r'(?<!`)``(?!`)', '```', content)
+        return processed
+
+    def generate_agent_handoff_prompt(
+        self,
+        task_description: str,
+        snapshot_content: str = None,
+        memory_branch: str = None,
+        environment: dict = None,
+        brief_context: str = None
+    ) -> str:
+        """
+        Generates a formatted agent handoff prompt for seamless transitions between agents.
+        
+        Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
+        
+        Args:
+            task_description: Description of the task for the next agent.
+            snapshot_content: Optional content summarizing previous agent work.
+            memory_branch: Optional name of the memory branch for coordination.
+            environment: Optional environment information; auto-detected if not provided.
+            brief_context: Optional brief background for quick orientation.
+        
+        Returns:
+            A processed prompt string ready for use in a single codeblock.
+        """
+        if environment is None:
+            environment = detect_environment()
+
+        timestamp = self.get_current_timestamp()
+
+        # Start building the prompt
+        prompt = f"""# 🤖 AGOR Agent Handoff
+
+**Generated**: {timestamp}
+**Environment**: {environment['mode']} ({environment['platform']})
+**AGOR Version**: {environment['agor_version']}
+"""
+
+        # Add memory branch information if available
+        if memory_branch:
+            prompt += f"""**Memory Branch**: {memory_branch}
+"""
+
+        prompt += f"""
+## Task Overview
+{task_description}
+"""
+
+        # Add brief context if provided
+        if brief_context:
+            prompt += f"""
+## Quick Context
+{brief_context}
+"""
+
+        # Add environment-specific setup
+        prompt += f"""
+## Environment Setup
+{get_agent_dependency_install_commands()}
+
+## AGOR Initialization
+Read these files to understand the system:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (operational guide)
+- src/agor/tools/index.md (documentation index)
+
+Select appropriate role:
+- SOLO DEVELOPER: Code analysis, implementation, technical work
+- PROJECT COORDINATOR: Planning and multi-agent coordination
+- AGENT WORKER: Task execution and following instructions
+"""
+
+        # Add memory branch access if applicable
+        if memory_branch:
+            prompt += f"""
+## Memory Branch Access
+Your coordination files are stored on memory branch: {memory_branch}
+
+Access previous work context:
+```bash
+# View memory branch contents
+git show {memory_branch}:.agor/
+git show {memory_branch}:.agor/snapshots/
+```
+"""
+
+        # Add snapshot content if provided
+        if snapshot_content:
+            prompt += f"""
+## Previous Work Context
+{snapshot_content}
+"""
+
+        prompt += """
+## Getting Started
+1. Initialize your environment using the setup commands above
+2. Read the AGOR documentation files
+3. Select your role based on the task requirements
+4. Review any previous work context provided
+5. Begin work following AGOR protocols
+
+Remember: Always create a snapshot before ending your session using the dev tooling.
+
+---
+*This handoff prompt was generated automatically with environment detection and backtick processing*
+"""
+
+        # Apply backtick processing to prevent formatting issues
+        processed_prompt = self.prepare_prompt_content(prompt)
+
+        return processed_prompt
+
+    def generate_processed_output(self, content: str, output_type: str = "general") -> str:
+        """
+        Processes content for safe inclusion within a single codeblock, adding a descriptive header.
+        
+        Converts triple backticks to double backticks to prevent formatting issues when embedding codeblocks, and prepends a header indicating the output type.
+        
+        Args:
+            content: The content to process, which may include triple backticks.
+            output_type: A label describing the type of output (e.g., "snapshot", "pr_description", "prompt").
+        
+        Returns:
+            The processed content with backticks converted and a header added for single codeblock usage.
+        """
+        # Apply backtick processing
+        processed_content = self.prepare_prompt_content(content)
+
+        # Add header comment for clarity
+        header = f"# Processed {output_type.replace('_', ' ').title()} - Ready for Single Codeblock Usage\n\n"
+
+        return header + processed_content
+
+    def generate_complete_project_outputs(self, request: HandoffRequest) -> dict:
+        """
+        Generates selected project outputs such as snapshot, handoff prompt, PR description, and release notes in memory.
+        
+        Processes outputs for safe embedding in single codeblocks, based on the configuration and flags in the provided HandoffRequest. Returns a dictionary containing the requested outputs and a combined display string. No temporary files are created.
+        
+        Args:
+            request: HandoffRequest specifying content, context, and which outputs to generate.
+        
+        Returns:
+            Dictionary with processed outputs (e.g., 'snapshot', 'handoff_prompt', 'pr_description', 'release_notes') and a combined display string under 'display_all'. Includes 'success' and 'message' keys indicating operation status.
+        """
+        try:
+            outputs = {'success': True, 'message': 'Selected outputs generated successfully'}
+
+            # Generate snapshot and handoff prompt if requested
+            if request.generate_snapshot or request.generate_handoff_prompt:
+                handoff_outputs = generate_final_handoff_outputs(
+                    task_description=request.task_description,
+                    work_completed=request.work_completed,
+                    next_steps=request.next_steps,
+                    files_modified=request.files_modified,
+                    context_notes=request.context_notes,
+                    brief_context=request.brief_context,
+                    pr_title=request.pr_title if request.generate_pr_description else None,
+                    pr_description=request.pr_description if request.generate_pr_description else None
+                )
+
+                if not handoff_outputs['success']:
+                    return handoff_outputs
+
+                # Add only requested outputs
+                if request.generate_snapshot and 'snapshot' in handoff_outputs:
+                    outputs['snapshot'] = handoff_outputs['snapshot']
+                if request.generate_handoff_prompt and 'handoff_prompt' in handoff_outputs:
+                    outputs['handoff_prompt'] = handoff_outputs['handoff_prompt']
+                if request.generate_pr_description and 'pr_description' in handoff_outputs:
+                    outputs['pr_description'] = handoff_outputs['pr_description']
+
+            # Generate standalone PR description if requested but not generated above
+            elif request.generate_pr_description and request.pr_description:
+                processed_pr = self.generate_processed_output(request.pr_description, "pr_description")
+                outputs['pr_description'] = processed_pr
+
+            # Generate release notes if requested and provided
+            if request.generate_release_notes and request.release_notes:
+                processed_release_notes = self.generate_processed_output(request.release_notes, "release_notes")
+                outputs['release_notes'] = processed_release_notes
+
+            # Add convenience method for displaying selected outputs
+            outputs['display_all'] = self._format_all_outputs_display(outputs)
+
+            return outputs
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'message': f"Failed to generate selected project outputs: {e}"
+            }
+
+    def _format_all_outputs_display(self, outputs: dict) -> str:
+        """
+        Formats all generated project outputs into a single display string.
+        
+        Combines handoff prompt, PR description, and release notes into a unified, human-readable format suitable for display or copying, with headers and usage instructions.
+        """
+        display_parts = []
+
+        display_parts.append("🚀 Complete Project Outputs - All Processed for Single Codeblock Usage")
+        display_parts.append("=" * 80)
+
+        if 'handoff_prompt' in outputs:
+            display_parts.append("\n📸 FINAL SNAPSHOT & HANDOFF PROMPT")
+            display_parts.append("=" * 80)
+            display_parts.append(outputs['handoff_prompt'])
+
+        if 'pr_description' in outputs:
+            display_parts.append("\n📋 FINAL PR DESCRIPTION")
+            display_parts.append("=" * 80)
+            display_parts.append(outputs['pr_description'])
+
+        if 'release_notes' in outputs:
+            display_parts.append("\n📦 FINAL RELEASE NOTES")
+            display_parts.append("=" * 80)
+            display_parts.append(outputs['release_notes'])
+
+        display_parts.append("\n🎉 All outputs generated and processed for single codeblock usage!")
+        display_parts.append("Use 'agor retick' to restore triple backticks when needed for external usage.")
+
+        return "\n".join(display_parts)
 
 
 # Global instance for easy access
@@ -686,16 +970,172 @@ def get_ntp_timestamp() -> str:
 
 
 def prepare_prompt_content(content: str) -> str:
-    """Prepare content for single codeblock prompts by escaping nested codeblocks."""
+    """
+    Escapes nested codeblocks in the given content to ensure safe inclusion within a single codeblock prompt.
+    
+    Replaces triple backticks with double backticks to prevent formatting issues when embedding code within codeblocks.
+    """
     return dev_tools.prepare_prompt_content(content)
+
+
+def detick_content(content: str) -> str:
+    """
+    Replaces all triple backticks in the content with double backticks for safe embedding within a single codeblock.
+    """
+    return dev_tools.detick_content(content)
+
+
+def retick_content(content: str) -> str:
+    """
+    Converts double backticks (``) in the content back to triple backticks (```) for standard codeblock formatting.
+    
+    Args:
+        content: The string content with double backticks to be converted.
+    
+    Returns:
+        The content with double backticks replaced by triple backticks.
+    """
+    return dev_tools.retick_content(content)
+
+
+def generate_agent_handoff_prompt(
+    task_description: str,
+    snapshot_content: str = None,
+    memory_branch: str = None,
+    environment: dict = None,
+    brief_context: str = None
+) -> str:
+    """
+    Generates a formatted agent handoff prompt for seamless transfer between agents.
+    
+    The prompt includes task description, optional snapshot content, memory branch details, environment information, and brief context. Triple backticks in the content are automatically converted to double backticks to ensure safe embedding within single codeblocks.
+     
+    Args:
+        task_description: Description of the current task or work order.
+        snapshot_content: Optional snapshot or summary of the current project state.
+        memory_branch: Optional name of the memory branch containing relevant files.
+        environment: Optional dictionary with environment details (e.g., platform, versions).
+        brief_context: Optional concise context or summary for the next agent.
+    
+    Returns:
+        A processed string containing the complete handoff prompt, ready for agent consumption.
+    """
+    return dev_tools.generate_agent_handoff_prompt(
+        task_description, snapshot_content, memory_branch, environment, brief_context
+    )
+
+
+def create_seamless_handoff(
+    task_description: str,
+    work_completed: list = None,
+    next_steps: list = None,
+    files_modified: list = None,
+    context_notes: str = None,
+    brief_context: str = None
+) -> tuple[str, str]:
+    """
+    Generates a comprehensive agent handoff by creating a project snapshot and a formatted handoff prompt.
+    
+    This function automates the agent handoff process by generating a detailed snapshot of the current work, attempting to commit it to a dedicated memory branch with a safe fallback, and producing a ready-to-use handoff prompt with formatting safeguards. Both the snapshot content and the prompt are returned for immediate use.
+    
+    Args:
+        task_description: Description of the task being handed off.
+        work_completed: List of completed work items.
+        next_steps: List of next steps for the receiving agent.
+        files_modified: List of files that were modified.
+        context_notes: Additional context notes.
+        brief_context: Brief verbal background for quick orientation.
+    
+    Returns:
+        A tuple containing the snapshot content and the processed handoff prompt.
+    """
+    from agor.tools.snapshot_templates import generate_snapshot_document
+
+    # Generate comprehensive snapshot
+    snapshot_content = generate_snapshot_document(
+        problem_description=task_description,
+        work_completed=work_completed or [],
+        commits_made=[],  # Will be filled by git context
+        current_status="Ready for handoff",
+        next_steps=next_steps or [],
+        files_modified=files_modified or [],
+        context_notes=context_notes or "",
+        agent_role="Handoff Agent",
+        snapshot_reason="Agent transition handoff"
+    )
+
+    # Attempt to save snapshot to memory branch using safe cross-branch commit
+    memory_branch = None
+    try:
+        from agor.memory_sync import MemorySync
+
+        memory_sync = MemorySync()
+        memory_branch = memory_sync.generate_memory_branch_name()
+
+        # Create snapshot file in current working directory
+        snapshot_dir = Path(".agor/snapshots")
+        snapshot_dir.mkdir(parents=True, exist_ok=True)
+
+        timestamp = dev_tools.get_timestamp_for_files()
+        snapshot_file = snapshot_dir / f"{timestamp}_handoff_snapshot.md"
+        snapshot_file.write_text(snapshot_content)
+
+        # Use safe cross-branch commit that NEVER switches branches
+        relative_path = f".agor/snapshots/{timestamp}_handoff_snapshot.md"
+        commit_message = f"📸 Agent handoff snapshot: {task_description[:50]}"
+
+        if dev_tools._commit_to_memory_branch(relative_path, memory_branch, commit_message):
+            print(f"✅ Snapshot safely committed to memory branch: {memory_branch}")
+        else:
+            print("⚠️ Cross-branch commit failed, using regular commit as fallback")
+            dev_tools.quick_commit_push(commit_message, "📸")
+            memory_branch = None
+
+    except Exception as e:
+        memory_branch = None
+        print(f"⚠️ Memory sync not available: {e}, proceeding without memory branch")
+
+        # Fallback: regular commit to current branch
+        try:
+            dev_tools.quick_commit_push(f"� Agent handoff snapshot: {task_description[:50]}", "📸")
+        except Exception as fallback_error:
+            print(f"⚠️ Fallback commit also failed: {fallback_error}")
+
+    # Verify we're still on the original branch (should never change)
+    try:
+        import subprocess
+        result = subprocess.run(['git', 'branch', '--show-current'],
+                              capture_output=True, text=True, check=True)
+        current_branch = result.stdout.strip()
+        print(f"✅ Branch safety verified: {current_branch}")
+
+        # Warn if we're on a memory branch (should never happen with safe commit)
+        if current_branch.startswith('agor/mem/'):
+            print("🚨 CRITICAL: Branch safety violation detected!")
+        elif current_branch == 'main':
+            print("⚠️ WARNING: Currently on main branch - consider using a feature branch")
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️ Could not verify branch status: {e}")
+    except Exception as e:
+        print(f"⚠️ Unexpected error checking branch status: {e}")
+
+    # Generate handoff prompt with automatic backtick processing
+    handoff_prompt = dev_tools.generate_agent_handoff_prompt(
+        task_description=task_description,
+        snapshot_content=snapshot_content,
+        memory_branch=memory_branch,
+        brief_context=brief_context
+    )
+
+    return snapshot_content, handoff_prompt
 
 
 def detect_environment() -> dict:
     """
-    Detects the current AGOR environment and returns a dictionary of configuration details.
+    Detects the current AGOR environment and returns configuration details.
     
     Returns:
-        A dictionary containing environment mode, platform, git and pyenv availability, AGOR version, and Python version.
+        A dictionary with keys for environment mode, platform, git and pyenv availability, AGOR version, and Python version.
     """
     environment = {
         "mode": "unknown",
@@ -752,18 +1192,20 @@ def detect_environment() -> dict:
 
 
 def get_agent_dependency_install_commands() -> str:
-    """Get standardized agent dependency installation commands with fallback."""
+    """
+    Returns shell commands for installing agent development tooling dependencies, with automatic fallback to a `.pyenv` virtual environment if standard installation fails.
+    """
     return """# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
-python3 -m pip install pydantic pydantic-settings || {
+python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
         source .pyenv/bin/activate
-        python3 -m pip install pydantic pydantic-settings
+        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     else
         echo "❌ No .pyenv directory found, creating virtual environment"
         python3 -m venv .pyenv
         source .pyenv/bin/activate
-        python3 -m pip install pydantic pydantic-settings
+        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     fi
 }"""
 
@@ -888,15 +1330,15 @@ def generate_dynamic_codeblock_prompt(
     task_description: str, environment: dict = None, include_snapshot: str = None
 ) -> str:
     """
-    Generates a dynamic codeblock prompt containing the current environment, AGOR version, task description, installation instructions, protocol initialization guidance, and optional previous work context.
+    Generates a formatted codeblock prompt with environment details, AGOR version, task description, setup instructions, protocol guidance, and optional previous work context.
     
     Args:
-        task_description: Description of the task to be performed.
-        environment: Optional dictionary with environment details; if not provided, environment is auto-detected.
+        task_description: The description of the task to be performed.
+        environment: Optional dictionary with environment details; auto-detected if not provided.
         include_snapshot: Optional string containing previous work context to include in the prompt.
     
     Returns:
-        A formatted string suitable for use as a codeblock prompt, including environment and setup information.
+        A Markdown-formatted string suitable for use as a codeblock prompt, including environment and setup information.
     """
     if environment is None:
         environment = detect_environment()
@@ -947,11 +1389,17 @@ Mode: {environment['mode']}
     return prompt
 
 
+
+
+
 def update_version_references(target_version: str = None) -> list:
     """
-    Updates version strings in documentation and source files to the specified or current AGOR version.
+    Updates version strings in documentation and source files to the specified or detected AGOR version.
     
-    If no target version is provided, attempts to use the AGOR package version, falling back to "0.4.1" if unavailable. Searches for common version reference patterns in predefined files and replaces them with the target version. Returns a list of files that were updated.
+    If no version is provided, uses the AGOR package version or defaults to "0.4.1". Searches predefined files for common version reference patterns and replaces them with the target version.
+    
+    Returns:
+        A list of file paths that were updated.
     """
     if target_version is None:
         try:
@@ -1165,14 +1613,31 @@ def mark_checklist_complete(item_id: str):
 
 
 def get_checklist_status() -> dict:
-    """Get current checklist status."""
+    """
+    Retrieves the current status of the agent checklist.
+    
+    Returns:
+        A dictionary containing checklist completion status and related information, or
+        {"status": "no_checklist"} if no checklist is initialized.
+    """
     if _agent_checklist:
         return _agent_checklist.get_status()
     return {"status": "no_checklist"}
 
 
+
+
+
+
+
+
 def enforce_session_end() -> bool:
-    """Enforce session end procedures."""
+    """
+    Checks if all mandatory agent session tasks are complete and enforces session end requirements.
+    
+    Returns:
+        True if the session can end (all checklist items complete and snapshot created), False otherwise.
+    """
     if _agent_checklist:
         return _agent_checklist.enforce_session_end()
     return True
@@ -1454,16 +1919,18 @@ def update_agent_memory(
     agent_id: str, memory_type: str, content: str, memory_branch: str = None
 ) -> bool:
     """
-    SAFE agent memory update with memory branch support - never switches branches.
-
+    Appends a memory entry for an agent to a dedicated memory file and commits it to a memory branch without switching branches.
+    
+    If committing to the memory branch fails, falls back to a regular commit on the current branch. Returns True if the update and commit succeed, otherwise False.
+    
     Args:
-        agent_id: Agent identifier
-        memory_type: Type of memory update (progress, decision, etc.)
-        content: Memory content to add
-        memory_branch: Memory branch to use (auto-generated if None)
-
+        agent_id: Identifier for the agent whose memory is being updated.
+        memory_type: Category of the memory entry (e.g., progress, decision).
+        content: The memory content to append.
+        memory_branch: Optional memory branch name; auto-generated if not provided.
+    
     Returns:
-        True if successful, False otherwise
+        True if the memory update and commit succeed, False otherwise.
     """
     memory_file = f".agor/{agent_id.lower()}-memory.md"
     timestamp = dev_tools.get_current_timestamp()
@@ -1525,3 +1992,190 @@ def update_agent_memory(
         return dev_tools.quick_commit_push(
             f"Update {agent_id} memory: {memory_type}", "🧠"
         )
+
+
+# Convenience functions for the new handoff system
+def generate_processed_output(content: str, output_type: str = "general") -> str:
+    """
+    Processes content for safe inclusion in a single codeblock, adding a header indicating the output type.
+    
+    Args:
+        content: The content to process.
+        output_type: A label describing the type of output (e.g., "handoff", "snapshot").
+    
+    Returns:
+        The processed content with backtick escaping and a descriptive header.
+    """
+    return dev_tools.generate_processed_output(content, output_type)
+
+
+def generate_final_handoff_outputs(
+    task_description: str,
+    work_completed: list = None,
+    next_steps: list = None,
+    files_modified: list = None,
+    context_notes: str = None,
+    brief_context: str = None,
+    pr_title: str = None,
+    pr_description: str = None
+) -> dict:
+    """
+    Generates all final outputs for an agent handoff, including snapshot, handoff prompt, and optionally PR description, with automatic backtick processing for safe codeblock embedding.
+    
+    Args:
+        task_description: Description of the current task or handoff context.
+        work_completed: List of completed work items to include in the outputs.
+        next_steps: List of recommended next steps for the agent.
+        files_modified: List of files changed during the task.
+        context_notes: Additional context or notes relevant to the handoff.
+        brief_context: Short summary of the context for quick reference.
+        pr_title: Title for the pull request, if generating a PR description.
+        pr_description: Description for the pull request, if generating a PR description.
+    
+    Returns:
+        A dictionary containing the generated outputs:
+            - 'snapshot': Processed snapshot content.
+            - 'handoff_prompt': Processed handoff prompt.
+            - 'pr_description': Processed PR description (if provided).
+            - 'success': Boolean indicating success.
+            - 'message': Status or error message.
+            - 'error': Error details if generation fails.
+    """
+    outputs = {}
+
+    try:
+        # Generate handoff using the seamless handoff system
+        snapshot_content, handoff_prompt = create_seamless_handoff(
+            task_description=task_description,
+            work_completed=work_completed or [],
+            next_steps=next_steps or [],
+            files_modified=files_modified or [],
+            context_notes=context_notes or "",
+            brief_context=brief_context or ""
+        )
+
+        # Process outputs for single codeblock usage
+        outputs['snapshot'] = generate_processed_output(snapshot_content, "snapshot")
+        outputs['handoff_prompt'] = generate_processed_output(handoff_prompt, "handoff_prompt")
+
+        # Generate PR description if provided
+        if pr_title and pr_description:
+            processed_pr = generate_processed_output(pr_description, "pr_description")
+            outputs['pr_description'] = processed_pr
+
+        outputs['success'] = True
+        outputs['message'] = "All outputs generated successfully with backtick processing"
+
+    except Exception as e:
+        outputs['success'] = False
+        outputs['error'] = str(e)
+        outputs['message'] = f"Failed to generate outputs: {e}"
+
+    return outputs
+
+
+def generate_complete_project_outputs(request: HandoffRequest) -> dict:
+    """
+    Generates selected project outputs such as snapshot, handoff prompt, PR description, and release notes in memory.
+    
+    Processes outputs for safe embedding in single codeblocks, based on the configuration provided in the HandoffRequest. No temporary files are created on disk.
+    
+    Args:
+        request: Contains configuration and flags indicating which outputs to generate.
+    
+    Returns:
+        A dictionary with the requested outputs, each processed for single codeblock usage.
+    """
+    return dev_tools.generate_complete_project_outputs(request)
+
+
+def generate_pr_description_only(
+    task_description: str,
+    pr_title: str,
+    pr_description: str,
+    work_completed: list = None
+) -> dict:
+    """
+    Generates a processed pull request description for a given task.
+    
+    Creates a PR description output using the provided task description, PR title, PR description, and optionally a list of completed work. Other outputs such as snapshots, handoff prompts, or release notes are not generated.
+    
+    Args:
+        task_description: Description of the task or feature for the PR.
+        pr_title: Title for the pull request.
+        pr_description: Detailed description for the pull request.
+        work_completed: Optional list of completed work items to include.
+    
+    Returns:
+        A dictionary containing the processed PR description and related output fields.
+    """
+    request = HandoffRequest(
+        task_description=task_description,
+        work_completed=work_completed,
+        pr_title=pr_title,
+        pr_description=pr_description,
+        generate_snapshot=False,
+        generate_handoff_prompt=False,
+        generate_pr_description=True,
+        generate_release_notes=False
+    )
+    return generate_complete_project_outputs(request)
+
+
+def generate_release_notes_only(
+    task_description: str,
+    release_notes: str,
+    work_completed: list = None
+) -> dict:
+    """
+    Generates release notes output for a given task without producing other handoff artifacts.
+    
+    Args:
+        task_description: Description of the completed task or release.
+        release_notes: The release notes content to be included.
+        work_completed: Optional list of completed work items to provide context.
+    
+    Returns:
+        A dictionary containing the processed release notes and related output fields.
+    """
+    request = HandoffRequest(
+        task_description=task_description,
+        work_completed=work_completed,
+        release_notes=release_notes,
+        generate_snapshot=False,
+        generate_handoff_prompt=False,
+        generate_pr_description=False,
+        generate_release_notes=True
+    )
+    return generate_complete_project_outputs(request)
+
+
+def generate_handoff_prompt_only(
+    task_description: str,
+    work_completed: list = None,
+    next_steps: list = None,
+    brief_context: str = None
+) -> dict:
+    """
+    Generates a handoff prompt for agent transition based on the provided task details.
+    
+    Args:
+        task_description: Description of the current task or work order.
+        work_completed: Optional list of completed work items.
+        next_steps: Optional list of recommended next steps.
+        brief_context: Optional brief context or summary for the handoff.
+    
+    Returns:
+        A dictionary containing the generated handoff prompt and related output fields.
+    """
+    request = HandoffRequest(
+        task_description=task_description,
+        work_completed=work_completed,
+        next_steps=next_steps,
+        brief_context=brief_context,
+        generate_snapshot=False,
+        generate_handoff_prompt=True,
+        generate_pr_description=False,
+        generate_release_notes=False
+    )
+    return generate_complete_project_outputs(request)
