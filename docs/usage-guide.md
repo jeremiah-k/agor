@@ -454,13 +454,13 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
         source .pyenv/bin/activate
-        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     else
         echo "❌ No .pyenv directory found, creating virtual environment"
         python3 -m venv .pyenv
         source .pyenv/bin/activate
-        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     fi
+    # Install dependencies after environment is ready
+    python3 -m pip install -r src/agor/tools/agent-requirements.txt
 }
 
 # Test AGOR development tooling
@@ -598,13 +598,13 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
         source .pyenv/bin/activate
-        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     else
         echo "❌ No .pyenv directory found, creating virtual environment"
         python3 -m venv .pyenv
         source .pyenv/bin/activate
-        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     fi
+    # Install dependencies after environment is ready
+    python3 -m pip install -r src/agor/tools/agent-requirements.txt
 }
 
 # Test AGOR development tooling
