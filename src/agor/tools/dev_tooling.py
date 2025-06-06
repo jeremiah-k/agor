@@ -1181,16 +1181,16 @@ def detect_environment() -> dict:
 def get_agent_dependency_install_commands() -> str:
     """Get standardized agent dependency installation commands with fallback."""
     return """# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
-python3 -m pip install pydantic pydantic-settings || {
+python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
         source .pyenv/bin/activate
-        python3 -m pip install pydantic pydantic-settings
+        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     else
         echo "❌ No .pyenv directory found, creating virtual environment"
         python3 -m venv .pyenv
         source .pyenv/bin/activate
-        python3 -m pip install pydantic pydantic-settings
+        python3 -m pip install -r src/agor/tools/agent-requirements.txt
     fi
 }"""
 

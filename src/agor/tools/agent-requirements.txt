@@ -1,0 +1,11 @@
+# Agent Development Requirements
+# These dependencies are required for agents using AGOR dev tooling
+# Install with: python3 -m pip install -r src/agor/tools/agent-requirements.txt
+
+# Core dependencies for AGOR dev tooling
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+platformdirs>=3.0.0
+
+# Note: These are NOT the same as requirements.txt in the root directory
+# requirements.txt is for the CLI application, this file is for agent dev tooling
