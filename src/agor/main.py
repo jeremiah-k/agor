@@ -102,7 +102,11 @@ def config_cmd(
         False, "--reset", help="Reset configuration to defaults"
     ),
 ):
-    """[CLI] Manage AGOR configuration settings"""
+    """
+    Manages AGOR configuration settings via the CLI.
+    
+    Supports resetting to defaults, setting configuration keys with flexible input formats, and displaying current configuration and environment variables. Boolean and integer values are parsed automatically based on the key.
+    """
 
     if reset:
         config.reset()
@@ -679,7 +683,11 @@ def generate_agor_feedback(
         False, "--commit", help="Attempt to commit feedback directly to repository"
     ),
 ):
-    """[AGENT] Generate AGOR feedback and improvement suggestions"""
+    """
+    Generates a detailed AGOR feedback and improvement suggestions template, including system and repository information.
+    
+    If inside a git repository and `commit` is enabled, writes the feedback to `agor_feedback.md` and commits it. Otherwise, prints the feedback form for manual copy/paste and optionally copies it to the clipboard.
+    """
     import platform
     import subprocess
     from datetime import datetime
@@ -913,10 +921,10 @@ def detick(
     content: Optional[str] = typer.Argument(None, help="Content to detick (uses clipboard if not provided)"),
     show: bool = typer.Option(False, "--show", help="Show processed content instead of just updating clipboard"),
 ):
-    """[CLI] Convert triple backticks to double backticks for single codeblock usage
-
-    Works directly with clipboard content - no need to paste! If no content argument
-    is provided, reads from clipboard, processes it, and updates the clipboard.
+    """
+    Converts triple backticks to double backticks in the provided content or clipboard.
+    
+    If no content is given, reads from the clipboard, processes it, and updates the clipboard with the result. Optionally displays the processed content.
     """
     try:
         import pyperclip
@@ -966,10 +974,10 @@ def retick(
     content: Optional[str] = typer.Argument(None, help="Content to retick (uses clipboard if not provided)"),
     show: bool = typer.Option(False, "--show", help="Show processed content instead of just updating clipboard"),
 ):
-    """[CLI] Convert double backticks back to triple backticks for normal usage
-
-    Works directly with clipboard content - no need to paste! If no content argument
-    is provided, reads from clipboard, processes it, and updates the clipboard.
+    """
+    Converts double backticks in the provided content or clipboard to triple backticks and updates the clipboard.
+    
+    If no content is given, reads from the clipboard, processes it, and writes the result back to the clipboard. Optionally displays the processed content.
     """
     try:
         import pyperclip
@@ -1015,7 +1023,11 @@ def retick(
 
 
 def cli():
-    """Main CLI entry point"""
+    """
+    Entry point for the AGOR CLI application.
+    
+    Checks for version updates on certain commands, displays help if no arguments are provided, and runs the Typer CLI app. Handles keyboard interrupts and unexpected exceptions with user-friendly messages and exits with an error code.
+    """
     # Check for version updates for important commands
     from .version_check import check_versions_if_needed
 
