@@ -247,6 +247,24 @@ You are successfully using AGOR when you:
 **Remember**: AGOR transforms AI assistants into sophisticated development coordinators. Your adherence to these protocols ensures effective coordination, context preservation, and successful project outcomes.
 ```
 
+**Step 5: Agent Initialization Prompt**
+
+**Copy and paste this initialization prompt to your agent:**
+
+```
+I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+Please read these key files from the workspace sources to understand the system:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
+- src/agor/tools/agent-start-here.md (quick startup guide)
+- src/agor/tools/index.md (documentation index for efficient lookup)
+
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker) based on the task requirements.
+
+# <--- Add your detailed step-by-step instructions below --->
+```
+
 **Workflow:**
 
 1. Agent reads AGOR protocol from your local Sources
