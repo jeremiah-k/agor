@@ -8,31 +8,17 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 > **🔬 Alpha Protocol**: AGOR coordination strategies are actively evolving based on real-world usage. [Contribute feedback](https://github.com/jeremiah-k/agor/issues) to help shape AI coordination patterns.
 
-## 🚀 Quick Start
+> **🚧 Under Construction**: We're still figuring out what works and what doesn't for the dev tooling, so be warned some functionality might be broken.
 
-<details>
-<summary><b>Bundle Mode - Google AI Studio, ChatGPT (without Codex)</b></summary>
+## 🚀 Installation & Deployment
 
-**For Google AI Studio, ChatGPT (classic interface), and other upload-based platforms:**
+AGOR supports multiple deployment modes for different AI platforms and workflows. Choose the approach that matches your environment:
 
-```bash
-# Install AGOR locally
-pipx install agor
+**📦 Bundle Mode** - Upload-based platforms - Google AI Studio, ChatGPT (not Codex)
+**🚀 Standalone Mode** - Direct git access - AugmentCode Remote, Jules by Google (limited support), Codex (currently untested)
+**🏠 Local Integration** - Workspace integration (AugmentCode Local Agent)
 
-# Bundle your project
-agor bundle https://github.com/your-username/your-repo
-agor bundle /path/to/local/project
-
-# Upload bundle to your AI platform and follow embedded instructions
-```
-
-**Bundle Options**: Use `-f zip` for Google AI Studio, `--branch` for specific branches
-
-> **First time?** AGOR will guide you through an interactive setup menu to configure your preferred platform and options.
-
-</details>
-
-**For detailed platform-specific agent initialization instructions, see the [Complete Usage Guide](docs/usage-guide.md#platform-specific-agent-initialization).**
+**For complete installation instructions and platform-specific setup, see the [Complete Usage Guide](docs/usage-guide.md).**
 
 AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)**.
 
