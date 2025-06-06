@@ -925,7 +925,7 @@ def detick(
             except Exception as e:
                 print(f"❌ Could not access clipboard: {e}")
                 print("💡 Provide content as argument: agor detick 'your content'")
-                raise typer.Exit(1)
+                raise typer.Exit(1) from e
 
         # Process the content
         processed = detick_content(content)
@@ -947,10 +947,10 @@ def detick(
 
     except ImportError:
         print("❌ pyperclip not available. Install with: pip install pyperclip")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
     except Exception as e:
         print(f"❌ Error processing content: {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
@@ -978,7 +978,7 @@ def retick(
             except Exception as e:
                 print(f"❌ Could not access clipboard: {e}")
                 print("💡 Provide content as argument: agor retick 'your content'")
-                raise typer.Exit(1)
+                raise typer.Exit(1) from e
 
         # Process the content
         processed = retick_content(content)
@@ -1000,10 +1000,10 @@ def retick(
 
     except ImportError:
         print("❌ pyperclip not available. Install with: pip install pyperclip")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
     except Exception as e:
         print(f"❌ Error processing content: {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 def cli():

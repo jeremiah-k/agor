@@ -31,7 +31,7 @@ Each entry includes:
 
 ### 18. 2024-12-19 | v0.4.2-dev | Detick/Retick CLI Commands with Direct Clipboard Processing
 
-**Technical Focus**: Implementing comprehensive backtick management system with CLI commands that work directly with clipboard content, eliminating the need for manual pasting. Similar to aiprep's deblock/reblock functionality but with enhanced clipboard workflow.
+**Technical Focus**: Implementing a comprehensive backtick-management system with CLI commands that work directly with clipboard content, eliminating the need for manual pasting. Similar to aiprep's deblock/reblock functionality but with enhanced clipboard workflow.
 
 **Implementation Details**:
 

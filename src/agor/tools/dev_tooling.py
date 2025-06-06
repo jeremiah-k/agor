@@ -657,6 +657,8 @@ If you're picking up this work:
         Retick content by converting `` back to ``` for normal usage.
 
         This is the reverse operation of detick - restoring triple backticks.
+        Uses regex to safely convert only isolated double backticks to prevent
+        runaway replacements when multiple backticks appear consecutively.
 
         Args:
             content: The content to retick
@@ -664,8 +666,10 @@ If you're picking up this work:
         Returns:
             Content with double backticks converted back to triple backticks
         """
+        import re
         # Convert double backticks back to triple backticks (retick)
-        processed = content.replace("``", "```")
+        # Use regex with negative lookbehind/lookahead to match only isolated double backticks
+        processed = re.sub(r'(?<!`)``(?!`)', '```', content)
         return processed
 
     def generate_agent_handoff_prompt(
@@ -1017,10 +1021,22 @@ def create_seamless_handoff(
         snapshot_reason="Agent transition handoff"
     )
 
-    # Attempt to save snapshot to memory branch (graceful fallback)
+    # Attempt to save snapshot to memory branch (graceful fallback with branch safety)
     memory_branch = None
+    original_branch = None
     try:
         from agor.memory_sync import MemorySync
+        import subprocess
+
+        # Save current branch before any operations
+        try:
+            result = subprocess.run(['git', 'branch', '--show-current'],
+                                  capture_output=True, text=True, check=True)
+            original_branch = result.stdout.strip()
+            print(f"📍 Current branch: {original_branch}")
+        except subprocess.CalledProcessError:
+            print("⚠️ Could not determine current branch, proceeding without branch safety")
+            original_branch = None
 
         memory_sync = MemorySync()
         memory_branch = memory_sync.generate_memory_branch_name()
@@ -1039,6 +1055,16 @@ def create_seamless_handoff(
             dev_tools.quick_commit_push(f"📸 Agent handoff snapshot: {task_description[:50]}")
 
             print(f"✅ Snapshot saved to memory branch: {memory_branch}")
+
+            # CRITICAL: Switch back to original branch to maintain branch safety
+            if original_branch:
+                try:
+                    subprocess.run(['git', 'checkout', original_branch],
+                                 capture_output=True, text=True, check=True)
+                    print(f"🔄 Switched back to original branch: {original_branch}")
+                except subprocess.CalledProcessError as e:
+                    print(f"⚠️ Could not switch back to original branch {original_branch}: {e}")
+                    print("🚨 WARNING: Currently on memory branch - manual checkout required")
         else:
             memory_branch = None
             print("⚠️ Could not create memory branch, proceeding without memory sync")
@@ -1046,6 +1072,32 @@ def create_seamless_handoff(
     except Exception as e:
         memory_branch = None
         print(f"⚠️ Memory sync not available: {e}, proceeding without memory branch")
+
+        # Attempt to restore original branch if we have it
+        if original_branch:
+            try:
+                import subprocess
+                subprocess.run(['git', 'checkout', original_branch],
+                             capture_output=True, text=True, check=True)
+                print(f"🔄 Restored original branch: {original_branch} after error")
+            except:
+                print(f"🚨 WARNING: Could not restore original branch {original_branch}")
+
+    # Final branch status check
+    try:
+        import subprocess
+        result = subprocess.run(['git', 'branch', '--show-current'],
+                              capture_output=True, text=True, check=True)
+        current_branch = result.stdout.strip()
+        print(f"✅ Final branch status: {current_branch}")
+
+        # Warn if we're on a memory branch or main
+        if current_branch.startswith('memory-'):
+            print("🚨 WARNING: Currently on memory branch - this should not happen!")
+        elif current_branch == 'main':
+            print("⚠️ WARNING: Currently on main branch - consider using a feature branch")
+    except:
+        print("⚠️ Could not verify final branch status")
 
     # Generate handoff prompt with automatic backtick processing
     handoff_prompt = dev_tools.generate_agent_handoff_prompt(
