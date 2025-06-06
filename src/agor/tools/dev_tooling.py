@@ -2037,7 +2037,7 @@ def generate_pr_description_only(
     work_completed: list = None
 ) -> dict:
     """Generate only PR description without other outputs."""
-    return generate_complete_project_outputs(
+    request = HandoffRequest(
         task_description=task_description,
         work_completed=work_completed,
         pr_title=pr_title,
@@ -2047,6 +2047,7 @@ def generate_pr_description_only(
         generate_pr_description=True,
         generate_release_notes=False
     )
+    return generate_complete_project_outputs(request)
 
 
 def generate_release_notes_only(
@@ -2055,7 +2056,7 @@ def generate_release_notes_only(
     work_completed: list = None
 ) -> dict:
     """Generate only release notes without other outputs."""
-    return generate_complete_project_outputs(
+    request = HandoffRequest(
         task_description=task_description,
         work_completed=work_completed,
         release_notes=release_notes,
@@ -2064,6 +2065,7 @@ def generate_release_notes_only(
         generate_pr_description=False,
         generate_release_notes=True
     )
+    return generate_complete_project_outputs(request)
 
 
 def generate_handoff_prompt_only(
@@ -2073,7 +2075,7 @@ def generate_handoff_prompt_only(
     brief_context: str = None
 ) -> dict:
     """Generate only handoff prompt without other outputs."""
-    return generate_complete_project_outputs(
+    request = HandoffRequest(
         task_description=task_description,
         work_completed=work_completed,
         next_steps=next_steps,
@@ -2083,3 +2085,4 @@ def generate_handoff_prompt_only(
         generate_pr_description=False,
         generate_release_notes=False
     )
+    return generate_complete_project_outputs(request)
