@@ -104,7 +104,7 @@ def config_cmd(
 ):
     """
     Manages AGOR configuration settings via the CLI.
-    
+
     Supports resetting to defaults, setting configuration keys with flexible input formats, and displaying current configuration and environment variables. Boolean and integer values are parsed automatically based on the key.
     """
 
@@ -685,7 +685,7 @@ def generate_agor_feedback(
 ):
     """
     Generates a detailed AGOR feedback and improvement suggestions template, including system and repository information.
-    
+
     If inside a git repository and `commit` is enabled, writes the feedback to `agor_feedback.md` and commits it. Otherwise, prints the feedback form for manual copy/paste and optionally copies it to the clipboard.
     """
     import platform
@@ -918,16 +918,23 @@ def generate_agor_feedback(
 
 @app.command()
 def detick(
-    content: Optional[str] = typer.Argument(None, help="Content to detick (uses clipboard if not provided)"),
-    show: bool = typer.Option(False, "--show", help="Show processed content instead of just updating clipboard"),
+    content: Optional[str] = typer.Argument(
+        None, help="Content to detick (uses clipboard if not provided)"
+    ),
+    show: bool = typer.Option(
+        False,
+        "--show",
+        help="Show processed content instead of just updating clipboard",
+    ),
 ):
     """
     Converts triple backticks to double backticks in the provided content or clipboard.
-    
+
     If no content is given, reads from the clipboard, processes it, and updates the clipboard with the result. Optionally displays the processed content.
     """
     try:
         import pyperclip
+
         from .tools.dev_tooling import detick_content
 
         # Get content from clipboard if not provided as argument
@@ -935,7 +942,9 @@ def detick(
             try:
                 content = pyperclip.paste()
                 if not content.strip():
-                    print("❌ Clipboard is empty. Copy some content first or provide content as argument.")
+                    print(
+                        "❌ Clipboard is empty. Copy some content first or provide content as argument."
+                    )
                     raise typer.Exit(1)
                 print("📋 Processing clipboard content...")
             except Exception as e:
@@ -959,7 +968,9 @@ def detick(
             print(processed)
             print("-" * 40)
 
-        print(f"✅ Deticked content updated in clipboard ({original_backticks} ``` → {processed_backticks} ``)")
+        print(
+            f"✅ Deticked content updated in clipboard ({original_backticks} ``` → {processed_backticks} ``)"
+        )
 
     except ImportError:
         print("❌ pyperclip not available. Install with: pip install pyperclip")
@@ -971,16 +982,23 @@ def detick(
 
 @app.command()
 def retick(
-    content: Optional[str] = typer.Argument(None, help="Content to retick (uses clipboard if not provided)"),
-    show: bool = typer.Option(False, "--show", help="Show processed content instead of just updating clipboard"),
+    content: Optional[str] = typer.Argument(
+        None, help="Content to retick (uses clipboard if not provided)"
+    ),
+    show: bool = typer.Option(
+        False,
+        "--show",
+        help="Show processed content instead of just updating clipboard",
+    ),
 ):
     """
     Converts double backticks in the provided content or clipboard to triple backticks and updates the clipboard.
-    
+
     If no content is given, reads from the clipboard, processes it, and writes the result back to the clipboard. Optionally displays the processed content.
     """
     try:
         import pyperclip
+
         from .tools.dev_tooling import retick_content
 
         # Get content from clipboard if not provided as argument
@@ -988,7 +1006,9 @@ def retick(
             try:
                 content = pyperclip.paste()
                 if not content.strip():
-                    print("❌ Clipboard is empty. Copy some content first or provide content as argument.")
+                    print(
+                        "❌ Clipboard is empty. Copy some content first or provide content as argument."
+                    )
                     raise typer.Exit(1)
                 print("📋 Processing clipboard content...")
             except Exception as e:
@@ -1012,7 +1032,9 @@ def retick(
             print(processed)
             print("-" * 40)
 
-        print(f"✅ Reticked content updated in clipboard ({original_backticks} `` → {processed_backticks} ```)")
+        print(
+            f"✅ Reticked content updated in clipboard ({original_backticks} `` → {processed_backticks} ```)"
+        )
 
     except ImportError:
         print("❌ pyperclip not available. Install with: pip install pyperclip")
@@ -1025,7 +1047,7 @@ def retick(
 def cli():
     """
     Entry point for the AGOR CLI application.
-    
+
     Checks for version updates on certain commands, displays help if no arguments are provided, and runs the Typer CLI app. Handles keyboard interrupts and unexpected exceptions with user-friendly messages and exits with an error code.
     """
     # Check for version updates for important commands
