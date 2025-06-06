@@ -691,7 +691,12 @@ def prepare_prompt_content(content: str) -> str:
 
 
 def detect_environment() -> dict:
-    """Detect the current AGOR environment and return configuration."""
+    """
+    Detects the current AGOR environment and returns a dictionary of configuration details.
+    
+    Returns:
+        A dictionary containing environment mode, platform, git and pyenv availability, AGOR version, and Python version.
+    """
     environment = {
         "mode": "unknown",
         "platform": "unknown",
@@ -764,7 +769,17 @@ python3 -m pip install pydantic pydantic-settings || {
 
 
 def generate_dynamic_installation_prompt(environment: dict = None) -> str:
-    """Generate environment-specific installation instructions."""
+    """
+    Generates installation instructions tailored to the detected AGOR environment.
+    
+    If no environment dictionary is provided, the function detects the current environment and produces a Markdown-formatted setup guide. The instructions include environment details, mode-specific installation steps, and troubleshooting tips for common issues.
+     
+    Args:
+        environment: Optional dictionary describing the current environment. If not provided, the environment is auto-detected.
+    
+    Returns:
+        A Markdown string containing environment-specific installation and troubleshooting instructions.
+    """
     if environment is None:
         environment = detect_environment()
 
@@ -872,7 +887,17 @@ git config --global user.email "your@email.com"
 def generate_dynamic_codeblock_prompt(
     task_description: str, environment: dict = None, include_snapshot: str = None
 ) -> str:
-    """Generate a dynamic codeblock prompt with current environment and version info."""
+    """
+    Generates a dynamic codeblock prompt containing the current environment, AGOR version, task description, installation instructions, protocol initialization guidance, and optional previous work context.
+    
+    Args:
+        task_description: Description of the task to be performed.
+        environment: Optional dictionary with environment details; if not provided, environment is auto-detected.
+        include_snapshot: Optional string containing previous work context to include in the prompt.
+    
+    Returns:
+        A formatted string suitable for use as a codeblock prompt, including environment and setup information.
+    """
     if environment is None:
         environment = detect_environment()
 
@@ -923,7 +948,11 @@ Mode: {environment['mode']}
 
 
 def update_version_references(target_version: str = None) -> list:
-    """Automatically update version references in documentation files."""
+    """
+    Updates version strings in documentation and source files to the specified or current AGOR version.
+    
+    If no target version is provided, attempts to use the AGOR package version, falling back to "0.4.1" if unavailable. Searches for common version reference patterns in predefined files and replaces them with the target version. Returns a list of files that were updated.
+    """
     if target_version is None:
         try:
             from agor import __version__
