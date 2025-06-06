@@ -1129,7 +1129,7 @@ def create_seamless_handoff(
         # Fallback: regular commit to current branch
         try:
             dev_tools.quick_commit_push(
-                f"� Agent handoff snapshot: {task_description[:50]}", "📸"
+                f"📸 Agent handoff snapshot: {task_description[:50]}", "📸"
             )
         except Exception as fallback_error:
             print(f"⚠️ Fallback commit also failed: {fallback_error}")
