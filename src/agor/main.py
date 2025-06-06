@@ -111,9 +111,16 @@ def config_cmd(
 
     if set_key:
         try:
-            if "=" not in set_key:
-                raise ValueError("Format must be key=value")
-            key, value = set_key.split("=", 1)
+            # Support flexible formats: key=value, key value, or just key (for booleans)
+            if "=" in set_key:
+                key, value = set_key.split("=", 1)
+            elif " " in set_key:
+                parts = set_key.split(" ", 1)
+                key, value = parts[0], parts[1] if len(parts) > 1 else "true"
+            else:
+                # Just key provided - assume boolean true
+                key = set_key
+                value = "true"
 
             # Convert string values to appropriate types
             if key in [
@@ -124,7 +131,8 @@ def config_cmd(
                 "assume_yes",
                 "clipboard_copy_default",
             ]:
-                value = value.lower() in ("true", "1", "yes", "on")
+                # Support flexible boolean values
+                value = value.lower() in ("true", "1", "yes", "on", "t", "y")
             elif key in ["shallow_depth", "download_chunk_size", "progress_bar_width"]:
                 value = int(value)
 

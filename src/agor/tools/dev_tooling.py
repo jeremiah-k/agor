@@ -8,6 +8,7 @@ to streamline development workflow and memory management.
 import os
 import subprocess
 import tempfile
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -29,6 +30,33 @@ except ImportError:
             return git_path
 
     git_manager = FallbackGitManager()
+
+
+@dataclass
+class HandoffRequest:
+    """Configuration object for handoff operations to reduce parameter count."""
+    task_description: str
+    work_completed: list = None
+    next_steps: list = None
+    files_modified: list = None
+    context_notes: str = None
+    brief_context: str = None
+    pr_title: str = None
+    pr_description: str = None
+    release_notes: str = None
+
+    def __post_init__(self):
+        """Initialize empty lists for None values."""
+        if self.work_completed is None:
+            self.work_completed = []
+        if self.next_steps is None:
+            self.next_steps = []
+        if self.files_modified is None:
+            self.files_modified = []
+        if self.context_notes is None:
+            self.context_notes = ""
+        if self.brief_context is None:
+            self.brief_context = ""
 
 
 class DevTooling:
@@ -810,18 +838,7 @@ Remember: Always create a snapshot before ending your session using the dev tool
 
         return header + processed_content
 
-    def generate_complete_project_outputs(
-        self,
-        task_description: str,
-        work_completed: list = None,
-        next_steps: list = None,
-        files_modified: list = None,
-        context_notes: str = None,
-        brief_context: str = None,
-        pr_title: str = None,
-        pr_description: str = None,
-        release_notes: str = None
-    ) -> dict:
+    def generate_complete_project_outputs(self, request: HandoffRequest) -> dict:
         """
         Generate complete project outputs without creating temporary files.
 
@@ -830,15 +847,7 @@ Remember: Always create a snapshot before ending your session using the dev tool
         No temporary files are created on the working branch.
 
         Args:
-            task_description: Description of the task
-            work_completed: List of completed work items
-            next_steps: List of next steps
-            files_modified: List of files modified
-            context_notes: Additional context notes
-            brief_context: Brief context for quick orientation
-            pr_title: Title for PR description
-            pr_description: PR description content
-            release_notes: Release notes content
+            request: HandoffRequest object containing all configuration parameters
 
         Returns:
             Dictionary with all processed outputs ready for single codeblock usage
@@ -846,22 +855,22 @@ Remember: Always create a snapshot before ending your session using the dev tool
         try:
             # Generate handoff outputs using existing function
             handoff_outputs = generate_final_handoff_outputs(
-                task_description=task_description,
-                work_completed=work_completed or [],
-                next_steps=next_steps or [],
-                files_modified=files_modified or [],
-                context_notes=context_notes or "",
-                brief_context=brief_context or "",
-                pr_title=pr_title,
-                pr_description=pr_description
+                task_description=request.task_description,
+                work_completed=request.work_completed,
+                next_steps=request.next_steps,
+                files_modified=request.files_modified,
+                context_notes=request.context_notes,
+                brief_context=request.brief_context,
+                pr_title=request.pr_title,
+                pr_description=request.pr_description
             )
 
             if not handoff_outputs['success']:
                 return handoff_outputs
 
             # Process release notes if provided
-            if release_notes:
-                processed_release_notes = self.generate_processed_output(release_notes, "release_notes")
+            if request.release_notes:
+                processed_release_notes = self.generate_processed_output(request.release_notes, "release_notes")
                 handoff_outputs['release_notes'] = processed_release_notes
 
             # Add convenience method for displaying all outputs
@@ -1080,8 +1089,10 @@ def create_seamless_handoff(
                 subprocess.run(['git', 'checkout', original_branch],
                              capture_output=True, text=True, check=True)
                 print(f"🔄 Restored original branch: {original_branch} after error")
-            except:
-                print(f"🚨 WARNING: Could not restore original branch {original_branch}")
+            except subprocess.CalledProcessError as e:
+                print(f"🚨 WARNING: Could not restore original branch {original_branch}: {e}")
+            except Exception as e:
+                print(f"🚨 WARNING: Unexpected error restoring branch {original_branch}: {e}")
 
     # Final branch status check
     try:
@@ -1096,8 +1107,10 @@ def create_seamless_handoff(
             print("🚨 WARNING: Currently on memory branch - this should not happen!")
         elif current_branch == 'main':
             print("⚠️ WARNING: Currently on main branch - consider using a feature branch")
-    except:
-        print("⚠️ Could not verify final branch status")
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️ Could not verify final branch status: {e}")
+    except Exception as e:
+        print(f"⚠️ Unexpected error checking branch status: {e}")
 
     # Generate handoff prompt with automatic backtick processing
     handoff_prompt = dev_tools.generate_agent_handoff_prompt(
@@ -2038,7 +2051,15 @@ def generate_complete_project_outputs(
     Returns:
         Dictionary with all processed outputs ready for single codeblock usage
     """
-    return dev_tools.generate_complete_project_outputs(
-        task_description, work_completed, next_steps, files_modified,
-        context_notes, brief_context, pr_title, pr_description, release_notes
+    request = HandoffRequest(
+        task_description=task_description,
+        work_completed=work_completed,
+        next_steps=next_steps,
+        files_modified=files_modified,
+        context_notes=context_notes,
+        brief_context=brief_context,
+        pr_title=pr_title,
+        pr_description=pr_description,
+        release_notes=release_notes
     )
+    return dev_tools.generate_complete_project_outputs(request)

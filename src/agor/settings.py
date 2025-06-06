@@ -24,7 +24,7 @@ class AgorSettings(BaseSettings):
 
     # Git operations
     default_shallow_depth: int = Field(
-        default=5, description="Default depth for shallow git clones"
+        default=100, description="Default depth for shallow git clones"
     )
     git_binary_url: str = Field(
         default="https://github.com/nikvdp/1bin/releases/download/v0.0.40/git",
@@ -40,7 +40,7 @@ class AgorSettings(BaseSettings):
         default="zip", description="Default compression format for bundles"
     )
     preserve_history: bool = Field(
-        default=False, description="Whether to preserve full git history in bundles"
+        default=True, description="Whether to preserve full git history in bundles"
     )
     main_only: bool = Field(
         default=False,
