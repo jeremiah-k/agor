@@ -14,8 +14,8 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 AGOR supports multiple deployment modes for different AI platforms and workflows. Choose the approach that matches your environment:
 
-**📦 Bundle Mode** - Upload-based platforms (Google AI Studio, ChatGPT)
-**🚀 Standalone Mode** - Direct git access (AugmentCode Remote, Jules by Google)
+**📦 Bundle Mode** - Upload-based platforms - Google AI Studio, ChatGPT (not Codex)
+**🚀 Standalone Mode** - Direct git access - AugmentCode Remote, Jules by Google (limited support), Codex (currently untested)
 **🏠 Local Integration** - Workspace integration (AugmentCode Local Agent)
 
 **For complete installation instructions and platform-specific setup, see the [Complete Usage Guide](docs/usage-guide.md).**
