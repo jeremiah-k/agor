@@ -8,6 +8,8 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 > **🔬 Alpha Protocol**: AGOR coordination strategies are actively evolving based on real-world usage. [Contribute feedback](https://github.com/jeremiah-k/agor/issues) to help shape AI coordination patterns.
 
+> **🚧 Under Construction**: We're still figuring out what works and what doesn't for the dev tooling, so be warned some functionality might be broken.
+
 ## 🚀 Quick Start
 
 <details>
@@ -32,7 +34,7 @@ agor bundle /path/to/local/project
 
 </details>
 
-**For detailed platform-specific agent initialization instructions, see the [Complete Usage Guide](docs/usage-guide.md#platform-specific-agent-initialization).**
+**For complete platform-specific agent initialization instructions (AugmentCode Integration, Jules by Google, OpenAI Codex, etc.), see the [Complete Usage Guide](docs/usage-guide.md#platform-specific-agent-initialization).**
 
 AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team. For more details on this architecture and comprehensive usage, please refer to our **[Complete Usage Guide](docs/usage-guide.md)**.
 
