@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agor"
-version = "0.4.0"
+version = "0.4.1"
 description = "AgentOrchestrator - Multi-Agent Development Coordination Platform"
 authors = [{ name = "Jeremiah K.", email = "jeremiahk@gmx.com" }]
 readme = "README.md"

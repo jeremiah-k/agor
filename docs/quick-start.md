@@ -30,8 +30,6 @@ agor --version
 
 **Don't have pipx?** Install it first: `pip install pipx`
 
-
-
 ## 🎁 Step 2: Bundle Your Project
 
 ```bash
