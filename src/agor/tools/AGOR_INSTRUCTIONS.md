@@ -116,8 +116,12 @@ bfs) breadth-first search grep) search patterns tree) directory structure
 edit) modify files commit) save changes diff) show changes
 **📋 Documentation:**
 doc) generate docs comment) add comments explain) code explanation
-**🎯 Planning Support:**
-sp) strategic plan bp) break down project
+**🚀 Dev Tooling Integration:**
+handoff) generate handoff prompt using dev tooling
+outputs) generate complete project outputs (snapshot + handoff + PR)
+qcp) quick commit and push with timestamp
+test-tools) test all dev tooling functions
+env-info) show environment and version info
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
 progress-report) create progress report snapshot for status updates
@@ -130,7 +134,7 @@ mem-sync-restore) restore memory mem-sync-status) show sync status
 meta) provide feedback on AGOR itself
 
 **🔄 Session Navigation:**
-?) quick help menu) refresh options reset) clean restart
+help) show this menu status) show current status refresh) refresh options reset) clean restart
 
 **Menu Flow**: After the user selects any hotkey option:
 
@@ -299,6 +303,14 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`comment`**: Add inline comments and docstrings to improve code readability
 - **`explain`**: Provide detailed code explanation with logic flow and purpose
 
+**Dev Tooling Integration:**
+
+- **`handoff`**: Generate handoff prompt using dev tooling. Usage: provide task description, work completed, and next steps
+- **`outputs`**: Generate complete project outputs (snapshot + handoff + PR description). Usage: provide task description and context
+- **`qcp`**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
+- **`test-tools`**: Test all dev tooling functions to ensure they work properly. No parameters required.
+- **`env-info`**: Show current environment detection, AGOR version, and platform information. No parameters required.
+
 **AGENT WORKER ACTIONS:**
 **Coordination:**
 
@@ -331,7 +343,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`c`**: Continue previous operation
 - **`r`**: Refresh context or retry last action
 - **`w`**: Work autonomously on the current task
-- **`?`**: Display help or this menu
+- **`help`**: Display this menu and available hotkeys
 
 ### 3.2. Agent Coordination System
 
