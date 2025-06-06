@@ -638,6 +638,36 @@ If you're picking up this work:
 
         return escaped_content
 
+    def detick_content(self, content: str) -> str:
+        """
+        Detick content by converting ``` to `` for single codeblock usage.
+
+        This is an alias for prepare_prompt_content() with clearer naming.
+
+        Args:
+            content: The content to detick
+
+        Returns:
+            Content with triple backticks converted to double backticks
+        """
+        return self.prepare_prompt_content(content)
+
+    def retick_content(self, content: str) -> str:
+        """
+        Retick content by converting `` back to ``` for normal usage.
+
+        This is the reverse operation of detick - restoring triple backticks.
+
+        Args:
+            content: The content to retick
+
+        Returns:
+            Content with double backticks converted back to triple backticks
+        """
+        # Convert double backticks back to triple backticks (retick)
+        processed = content.replace("``", "```")
+        return processed
+
     def generate_agent_handoff_prompt(
         self,
         task_description: str,
@@ -826,6 +856,16 @@ def get_ntp_timestamp() -> str:
 def prepare_prompt_content(content: str) -> str:
     """Prepare content for single codeblock prompts by escaping nested codeblocks."""
     return dev_tools.prepare_prompt_content(content)
+
+
+def detick_content(content: str) -> str:
+    """Detick content by converting ``` to `` for single codeblock usage."""
+    return dev_tools.detick_content(content)
+
+
+def retick_content(content: str) -> str:
+    """Retick content by converting `` back to ``` for normal usage."""
+    return dev_tools.retick_content(content)
 
 
 def generate_agent_handoff_prompt(

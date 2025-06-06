@@ -900,6 +900,64 @@ def generate_agor_feedback(
         )
 
 
+@app.command()
+def detick(
+    content: str = typer.Argument(help="Content to detick (convert ``` to ``)"),
+    copy: bool = typer.Option(True, "--copy/--no-copy", help="Copy result to clipboard"),
+):
+    """[CLI] Convert triple backticks to double backticks for single codeblock usage"""
+    try:
+        import pyperclip
+        from .tools.dev_tooling import detick_content
+
+        # Process the content
+        processed = detick_content(content)
+
+        # Copy to clipboard if requested
+        if copy:
+            pyperclip.copy(processed)
+            print("✅ Deticked content copied to clipboard")
+        else:
+            print("📝 Deticked content:")
+            print(processed)
+
+    except ImportError:
+        print("❌ pyperclip not available. Install with: pip install pyperclip")
+        raise typer.Exit(1)
+    except Exception as e:
+        print(f"❌ Error processing content: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def retick(
+    content: str = typer.Argument(help="Content to retick (convert `` to ```)"),
+    copy: bool = typer.Option(True, "--copy/--no-copy", help="Copy result to clipboard"),
+):
+    """[CLI] Convert double backticks back to triple backticks for normal usage"""
+    try:
+        import pyperclip
+        from .tools.dev_tooling import retick_content
+
+        # Process the content
+        processed = retick_content(content)
+
+        # Copy to clipboard if requested
+        if copy:
+            pyperclip.copy(processed)
+            print("✅ Reticked content copied to clipboard")
+        else:
+            print("📝 Reticked content:")
+            print(processed)
+
+    except ImportError:
+        print("❌ pyperclip not available. Install with: pip install pyperclip")
+        raise typer.Exit(1)
+    except Exception as e:
+        print(f"❌ Error processing content: {e}")
+        raise typer.Exit(1)
+
+
 def cli():
     """Main CLI entry point"""
     # Check for version updates for important commands

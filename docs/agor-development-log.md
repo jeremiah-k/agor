@@ -29,6 +29,56 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 18. 2024-12-19 | v0.4.2-dev | Detick/Retick CLI Commands and Comprehensive Backtick Management
+
+**Technical Focus**: Implementing comprehensive backtick management system with CLI commands for seamless content processing across different contexts, similar to aiprep's deblock/reblock functionality.
+
+**Implementation Details**:
+
+- **CLI Commands**: Added `agor detick` and `agor retick` commands with clipboard integration
+- **Core Functions**: Implemented `detick_content()` and `retick_content()` methods in DevTooling class
+- **Clipboard Integration**: Added pyperclip support for seamless copy-paste workflows
+- **Auto-Integration**: All AGOR outputs (snapshots, handoff prompts, PR descriptions, release notes) automatically deticked
+- **Complete Ecosystem**: Created comprehensive backtick management system for different usage contexts
+- **Documentation Updates**: Updated CLI help, development log, and function documentation
+
+**Rationale**:
+
+- Need for systematic backtick management across different content contexts
+- Single codeblocks require `` backticks to prevent formatting issues
+- Users need ability to restore ``` backticks when using content elsewhere
+- Similar to aiprep's deblock/reblock, this creates a complete content processing ecosystem
+- CLI commands provide user control over backtick formatting
+
+**Impact**:
+
+- **Complete Backtick Management**: Systematic handling of backticks across all AGOR outputs
+- **User Control**: CLI commands give users control over backtick formatting
+- **Seamless Workflows**: Auto-detick for single codeblocks, retick for external usage
+- **Professional Tooling**: Creates a comprehensive content processing ecosystem
+- **Cross-Context Compatibility**: Content works correctly in different usage scenarios
+
+**Lessons Learned**:
+
+- Comprehensive content processing requires both automatic and manual control
+- CLI tools for content transformation improve user workflows significantly
+- Clipboard integration is essential for seamless copy-paste operations
+- Auto-processing should be combined with user override capabilities
+- Content formatting needs vary significantly across different usage contexts
+
+**Next Steps**:
+
+- Test CLI commands with real content processing scenarios
+- Monitor user adoption of detick/retick workflows
+- Consider additional content processing features based on usage patterns
+- Integrate with agent hotkey systems for enhanced workflows
+
+**Files Modified**:
+
+- `src/agor/main.py` - Added detick/retick CLI commands
+- `src/agor/tools/dev_tooling.py` - Added detick/retick methods and convenience functions
+- `docs/agor-development-log.md` - Updated development log
+
 ### 17. 2024-12-19 | v0.4.2-dev | Enhanced Agent Handoff System with Automatic Backtick Processing
 
 **Technical Focus**: Implementing seamless agent-to-agent communication system with automatic backtick processing for clean codeblock formatting when agents approach context limits or session end.
