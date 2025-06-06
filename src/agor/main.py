@@ -902,24 +902,48 @@ def generate_agor_feedback(
 
 @app.command()
 def detick(
-    content: str = typer.Argument(help="Content to detick (convert ``` to ``)"),
-    copy: bool = typer.Option(True, "--copy/--no-copy", help="Copy result to clipboard"),
+    content: Optional[str] = typer.Argument(None, help="Content to detick (uses clipboard if not provided)"),
+    show: bool = typer.Option(False, "--show", help="Show processed content instead of just updating clipboard"),
 ):
-    """[CLI] Convert triple backticks to double backticks for single codeblock usage"""
+    """[CLI] Convert triple backticks to double backticks for single codeblock usage
+
+    Works directly with clipboard content - no need to paste! If no content argument
+    is provided, reads from clipboard, processes it, and updates the clipboard.
+    """
     try:
         import pyperclip
         from .tools.dev_tooling import detick_content
 
+        # Get content from clipboard if not provided as argument
+        if content is None:
+            try:
+                content = pyperclip.paste()
+                if not content.strip():
+                    print("❌ Clipboard is empty. Copy some content first or provide content as argument.")
+                    raise typer.Exit(1)
+                print("📋 Processing clipboard content...")
+            except Exception as e:
+                print(f"❌ Could not access clipboard: {e}")
+                print("💡 Provide content as argument: agor detick 'your content'")
+                raise typer.Exit(1)
+
         # Process the content
         processed = detick_content(content)
 
-        # Copy to clipboard if requested
-        if copy:
-            pyperclip.copy(processed)
-            print("✅ Deticked content copied to clipboard")
-        else:
-            print("📝 Deticked content:")
+        # Update clipboard with processed content
+        pyperclip.copy(processed)
+
+        # Show results
+        original_backticks = content.count("```")
+        processed_backticks = processed.count("``")
+
+        if show:
+            print("📝 Processed content:")
+            print("-" * 40)
             print(processed)
+            print("-" * 40)
+
+        print(f"✅ Deticked content updated in clipboard ({original_backticks} ``` → {processed_backticks} ``)")
 
     except ImportError:
         print("❌ pyperclip not available. Install with: pip install pyperclip")
@@ -931,24 +955,48 @@ def detick(
 
 @app.command()
 def retick(
-    content: str = typer.Argument(help="Content to retick (convert `` to ```)"),
-    copy: bool = typer.Option(True, "--copy/--no-copy", help="Copy result to clipboard"),
+    content: Optional[str] = typer.Argument(None, help="Content to retick (uses clipboard if not provided)"),
+    show: bool = typer.Option(False, "--show", help="Show processed content instead of just updating clipboard"),
 ):
-    """[CLI] Convert double backticks back to triple backticks for normal usage"""
+    """[CLI] Convert double backticks back to triple backticks for normal usage
+
+    Works directly with clipboard content - no need to paste! If no content argument
+    is provided, reads from clipboard, processes it, and updates the clipboard.
+    """
     try:
         import pyperclip
         from .tools.dev_tooling import retick_content
 
+        # Get content from clipboard if not provided as argument
+        if content is None:
+            try:
+                content = pyperclip.paste()
+                if not content.strip():
+                    print("❌ Clipboard is empty. Copy some content first or provide content as argument.")
+                    raise typer.Exit(1)
+                print("📋 Processing clipboard content...")
+            except Exception as e:
+                print(f"❌ Could not access clipboard: {e}")
+                print("💡 Provide content as argument: agor retick 'your content'")
+                raise typer.Exit(1)
+
         # Process the content
         processed = retick_content(content)
 
-        # Copy to clipboard if requested
-        if copy:
-            pyperclip.copy(processed)
-            print("✅ Reticked content copied to clipboard")
-        else:
-            print("📝 Reticked content:")
+        # Update clipboard with processed content
+        pyperclip.copy(processed)
+
+        # Show results
+        original_backticks = content.count("``")
+        processed_backticks = processed.count("```")
+
+        if show:
+            print("📝 Processed content:")
+            print("-" * 40)
             print(processed)
+            print("-" * 40)
+
+        print(f"✅ Reticked content updated in clipboard ({original_backticks} `` → {processed_backticks} ```)")
 
     except ImportError:
         print("❌ pyperclip not available. Install with: pip install pyperclip")
