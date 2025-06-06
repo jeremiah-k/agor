@@ -44,6 +44,11 @@ class HandoffRequest:
     pr_title: str = None
     pr_description: str = None
     release_notes: str = None
+    # Output selection flags for flexible generation
+    generate_snapshot: bool = True
+    generate_handoff_prompt: bool = True
+    generate_pr_description: bool = True
+    generate_release_notes: bool = True
 
     def __post_init__(self):
         """Initialize empty lists for None values."""
@@ -840,49 +845,65 @@ Remember: Always create a snapshot before ending your session using the dev tool
 
     def generate_complete_project_outputs(self, request: HandoffRequest) -> dict:
         """
-        Generate complete project outputs without creating temporary files.
+        Generate flexible project outputs without creating temporary files.
 
-        This method generates all final outputs (snapshot, handoff prompt, PR description,
-        release notes) directly in memory and returns them processed for single codeblock usage.
-        No temporary files are created on the working branch.
+        This method generates selected outputs (snapshot, handoff prompt, PR description,
+        release notes) based on request flags, directly in memory and returns them
+        processed for single codeblock usage. No temporary files are created on the working branch.
 
         Args:
-            request: HandoffRequest object containing all configuration parameters
+            request: HandoffRequest object containing all configuration parameters and output selection flags
 
         Returns:
-            Dictionary with all processed outputs ready for single codeblock usage
+            Dictionary with selected processed outputs ready for single codeblock usage
         """
         try:
-            # Generate handoff outputs using existing function
-            handoff_outputs = generate_final_handoff_outputs(
-                task_description=request.task_description,
-                work_completed=request.work_completed,
-                next_steps=request.next_steps,
-                files_modified=request.files_modified,
-                context_notes=request.context_notes,
-                brief_context=request.brief_context,
-                pr_title=request.pr_title,
-                pr_description=request.pr_description
-            )
+            outputs = {'success': True, 'message': 'Selected outputs generated successfully'}
 
-            if not handoff_outputs['success']:
-                return handoff_outputs
+            # Generate snapshot and handoff prompt if requested
+            if request.generate_snapshot or request.generate_handoff_prompt:
+                handoff_outputs = generate_final_handoff_outputs(
+                    task_description=request.task_description,
+                    work_completed=request.work_completed,
+                    next_steps=request.next_steps,
+                    files_modified=request.files_modified,
+                    context_notes=request.context_notes,
+                    brief_context=request.brief_context,
+                    pr_title=request.pr_title if request.generate_pr_description else None,
+                    pr_description=request.pr_description if request.generate_pr_description else None
+                )
 
-            # Process release notes if provided
-            if request.release_notes:
+                if not handoff_outputs['success']:
+                    return handoff_outputs
+
+                # Add only requested outputs
+                if request.generate_snapshot and 'snapshot' in handoff_outputs:
+                    outputs['snapshot'] = handoff_outputs['snapshot']
+                if request.generate_handoff_prompt and 'handoff_prompt' in handoff_outputs:
+                    outputs['handoff_prompt'] = handoff_outputs['handoff_prompt']
+                if request.generate_pr_description and 'pr_description' in handoff_outputs:
+                    outputs['pr_description'] = handoff_outputs['pr_description']
+
+            # Generate standalone PR description if requested but not generated above
+            elif request.generate_pr_description and request.pr_description:
+                processed_pr = self.generate_processed_output(request.pr_description, "pr_description")
+                outputs['pr_description'] = processed_pr
+
+            # Generate release notes if requested and provided
+            if request.generate_release_notes and request.release_notes:
                 processed_release_notes = self.generate_processed_output(request.release_notes, "release_notes")
-                handoff_outputs['release_notes'] = processed_release_notes
+                outputs['release_notes'] = processed_release_notes
 
-            # Add convenience method for displaying all outputs
-            handoff_outputs['display_all'] = self._format_all_outputs_display(handoff_outputs)
+            # Add convenience method for displaying selected outputs
+            outputs['display_all'] = self._format_all_outputs_display(outputs)
 
-            return handoff_outputs
+            return outputs
 
         except Exception as e:
             return {
                 'success': False,
                 'error': str(e),
-                'message': f"Failed to generate complete project outputs: {e}"
+                'message': f"Failed to generate selected project outputs: {e}"
             }
 
     def _format_all_outputs_display(self, outputs: dict) -> str:
@@ -1030,85 +1051,58 @@ def create_seamless_handoff(
         snapshot_reason="Agent transition handoff"
     )
 
-    # Attempt to save snapshot to memory branch (graceful fallback with branch safety)
+    # Attempt to save snapshot to memory branch using safe cross-branch commit
     memory_branch = None
-    original_branch = None
     try:
         from agor.memory_sync import MemorySync
-        import subprocess
-
-        # Save current branch before any operations
-        try:
-            result = subprocess.run(['git', 'branch', '--show-current'],
-                                  capture_output=True, text=True, check=True)
-            original_branch = result.stdout.strip()
-            print(f"📍 Current branch: {original_branch}")
-        except subprocess.CalledProcessError:
-            print("⚠️ Could not determine current branch, proceeding without branch safety")
-            original_branch = None
 
         memory_sync = MemorySync()
         memory_branch = memory_sync.generate_memory_branch_name()
 
-        # Create and switch to memory branch
-        if memory_sync.ensure_memory_branch_exists(memory_branch, switch_if_exists=True):
-            # Save snapshot to memory branch
-            snapshot_dir = Path(".agor/snapshots")
-            snapshot_dir.mkdir(parents=True, exist_ok=True)
+        # Create snapshot file in current working directory
+        snapshot_dir = Path(".agor/snapshots")
+        snapshot_dir.mkdir(parents=True, exist_ok=True)
 
-            timestamp = dev_tools.get_timestamp_for_files()
-            snapshot_file = snapshot_dir / f"{timestamp}_handoff_snapshot.md"
-            snapshot_file.write_text(snapshot_content)
+        timestamp = dev_tools.get_timestamp_for_files()
+        snapshot_file = snapshot_dir / f"{timestamp}_handoff_snapshot.md"
+        snapshot_file.write_text(snapshot_content)
 
-            # Commit to memory branch
-            dev_tools.quick_commit_push(f"📸 Agent handoff snapshot: {task_description[:50]}")
+        # Use safe cross-branch commit that NEVER switches branches
+        relative_path = f".agor/snapshots/{timestamp}_handoff_snapshot.md"
+        commit_message = f"📸 Agent handoff snapshot: {task_description[:50]}"
 
-            print(f"✅ Snapshot saved to memory branch: {memory_branch}")
-
-            # CRITICAL: Switch back to original branch to maintain branch safety
-            if original_branch:
-                try:
-                    subprocess.run(['git', 'checkout', original_branch],
-                                 capture_output=True, text=True, check=True)
-                    print(f"🔄 Switched back to original branch: {original_branch}")
-                except subprocess.CalledProcessError as e:
-                    print(f"⚠️ Could not switch back to original branch {original_branch}: {e}")
-                    print("🚨 WARNING: Currently on memory branch - manual checkout required")
+        if dev_tools._commit_to_memory_branch(relative_path, memory_branch, commit_message):
+            print(f"✅ Snapshot safely committed to memory branch: {memory_branch}")
         else:
+            print("⚠️ Cross-branch commit failed, using regular commit as fallback")
+            dev_tools.quick_commit_push(commit_message, "📸")
             memory_branch = None
-            print("⚠️ Could not create memory branch, proceeding without memory sync")
 
     except Exception as e:
         memory_branch = None
         print(f"⚠️ Memory sync not available: {e}, proceeding without memory branch")
 
-        # Attempt to restore original branch if we have it
-        if original_branch:
-            try:
-                import subprocess
-                subprocess.run(['git', 'checkout', original_branch],
-                             capture_output=True, text=True, check=True)
-                print(f"🔄 Restored original branch: {original_branch} after error")
-            except subprocess.CalledProcessError as e:
-                print(f"🚨 WARNING: Could not restore original branch {original_branch}: {e}")
-            except Exception as e:
-                print(f"🚨 WARNING: Unexpected error restoring branch {original_branch}: {e}")
+        # Fallback: regular commit to current branch
+        try:
+            dev_tools.quick_commit_push(f"� Agent handoff snapshot: {task_description[:50]}", "📸")
+        except Exception as fallback_error:
+            print(f"⚠️ Fallback commit also failed: {fallback_error}")
 
-    # Final branch status check
+    # Verify we're still on the original branch (should never change)
     try:
         import subprocess
         result = subprocess.run(['git', 'branch', '--show-current'],
                               capture_output=True, text=True, check=True)
         current_branch = result.stdout.strip()
-        print(f"✅ Final branch status: {current_branch}")
+        print(f"✅ Branch safety verified: {current_branch}")
 
-        # Warn if we're on a memory branch or main
-        if current_branch.startswith('memory-'):
-            print("🚨 WARNING: Currently on memory branch - this should not happen!")
+        # Warn if we're on a memory branch (should never happen with safe commit)
+        if current_branch.startswith('agor/mem/'):
+            print("🚨 CRITICAL: Branch safety violation detected!")
         elif current_branch == 'main':
             print("⚠️ WARNING: Currently on main branch - consider using a feature branch")
     except subprocess.CalledProcessError as e:
-        print(f"⚠️ Could not verify final branch status: {e}")
+        print(f"⚠️ Could not verify branch status: {e}")
     except Exception as e:
         print(f"⚠️ Unexpected error checking branch status: {e}")
 
@@ -2028,14 +2022,19 @@ def generate_complete_project_outputs(
     brief_context: str = None,
     pr_title: str = None,
     pr_description: str = None,
-    release_notes: str = None
+    release_notes: str = None,
+    # Output selection flags for flexible generation
+    generate_snapshot: bool = True,
+    generate_handoff_prompt: bool = True,
+    generate_pr_description: bool = True,
+    generate_release_notes: bool = True
 ) -> dict:
     """
-    Generate complete project outputs without creating temporary files.
+    Generate flexible project outputs without creating temporary files.
 
-    This function generates all final outputs (snapshot, handoff prompt, PR description,
-    release notes) directly in memory and returns them processed for single codeblock usage.
-    No temporary files are created on the working branch.
+    This function generates selected outputs (snapshot, handoff prompt, PR description,
+    release notes) based on flags, directly in memory and returns them processed for
+    single codeblock usage. No temporary files are created on the working branch.
 
     Args:
         task_description: Description of the task
@@ -2047,9 +2046,13 @@ def generate_complete_project_outputs(
         pr_title: Title for PR description
         pr_description: PR description content
         release_notes: Release notes content
+        generate_snapshot: Whether to generate snapshot (default: True)
+        generate_handoff_prompt: Whether to generate handoff prompt (default: True)
+        generate_pr_description: Whether to generate PR description (default: True)
+        generate_release_notes: Whether to generate release notes (default: True)
 
     Returns:
-        Dictionary with all processed outputs ready for single codeblock usage
+        Dictionary with selected processed outputs ready for single codeblock usage
     """
     request = HandoffRequest(
         task_description=task_description,
@@ -2060,6 +2063,65 @@ def generate_complete_project_outputs(
         brief_context=brief_context,
         pr_title=pr_title,
         pr_description=pr_description,
-        release_notes=release_notes
+        release_notes=release_notes,
+        generate_snapshot=generate_snapshot,
+        generate_handoff_prompt=generate_handoff_prompt,
+        generate_pr_description=generate_pr_description,
+        generate_release_notes=generate_release_notes
     )
     return dev_tools.generate_complete_project_outputs(request)
+
+
+def generate_pr_description_only(
+    task_description: str,
+    pr_title: str,
+    pr_description: str,
+    work_completed: list = None
+) -> dict:
+    """Generate only PR description without other outputs."""
+    return generate_complete_project_outputs(
+        task_description=task_description,
+        work_completed=work_completed,
+        pr_title=pr_title,
+        pr_description=pr_description,
+        generate_snapshot=False,
+        generate_handoff_prompt=False,
+        generate_pr_description=True,
+        generate_release_notes=False
+    )
+
+
+def generate_release_notes_only(
+    task_description: str,
+    release_notes: str,
+    work_completed: list = None
+) -> dict:
+    """Generate only release notes without other outputs."""
+    return generate_complete_project_outputs(
+        task_description=task_description,
+        work_completed=work_completed,
+        release_notes=release_notes,
+        generate_snapshot=False,
+        generate_handoff_prompt=False,
+        generate_pr_description=False,
+        generate_release_notes=True
+    )
+
+
+def generate_handoff_prompt_only(
+    task_description: str,
+    work_completed: list = None,
+    next_steps: list = None,
+    brief_context: str = None
+) -> dict:
+    """Generate only handoff prompt without other outputs."""
+    return generate_complete_project_outputs(
+        task_description=task_description,
+        work_completed=work_completed,
+        next_steps=next_steps,
+        brief_context=brief_context,
+        generate_snapshot=False,
+        generate_handoff_prompt=True,
+        generate_pr_description=False,
+        generate_release_notes=False
+    )
