@@ -293,11 +293,14 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 
 ### Step 1: Read AGOR Documentation
 ```
+
 MANDATORY: Read these files from workspace sources before starting any development work:
+
 - src/agor/tools/README_ai.md (role selection and initialization)
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
+
 ```
 
 ### Step 2: Role Selection
@@ -759,8 +762,6 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 2. Receive task assignment (`task` - often a snapshot)
 3. Execute assigned work
 4. Report completion and create a new snapshot (`complete`, `snapshot`)
-
-
 
 ## 🎼 Multi-Agent Coordination Strategies
 
