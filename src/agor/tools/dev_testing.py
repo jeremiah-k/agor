@@ -56,11 +56,11 @@ def detect_environment() -> Dict[str, Any]:
         environment["platform"] = "Standalone Mode"
     else:
         # Try to detect if we're in AugmentCode environment
-        try:
-            import augment
+        import importlib.util
+        if importlib.util.find_spec("augment"):
             environment["mode"] = "augmentcode_local"
             environment["platform"] = "AugmentCode Local Agent"
-        except ImportError:
+        else:
             environment["mode"] = "bundle"
             environment["platform"] = "Bundle Mode"
     
@@ -92,45 +92,25 @@ def test_tooling() -> bool:
     print("🧪 Testing AGOR Development Tooling...")
     
     try:
-        # Test git binary detection
-        success, output = run_git_command(["--version"])
-        if success:
-            print("⚠️  Using fallback git binary (development mode)")
-        else:
-            print(f"❌ Git not available: {output}")
-            return False
-        
         print("Testing dev tooling functions...")
-        
+
         # Test timestamp functions
         current_ts = get_current_timestamp()
         file_ts = get_file_timestamp()
         precise_ts = get_precise_timestamp()
         ntp_ts = get_ntp_timestamp()
-        
+
         print(f"📅 Current timestamp: {current_ts}")
         print(f"📁 File timestamp: {file_ts}")
         print(f"⏰ Precise timestamp: {precise_ts}")
         print(f"🌐 NTP timestamp: {ntp_ts}")
-        
-        # Test git operations
-        git_binary = "/bin/git"  # Default
-        if not Path(git_binary).exists():
-            result = subprocess.run(
-                ["which", "git"], capture_output=True, text=True, timeout=10
-            )
-            if result.returncode == 0:
-                git_binary = result.stdout.strip()
-            else:
-                git_binary = "git"
-        
-        print(f"🔧 Git binary: {git_binary}")
-        
+
+        # Test git operations (git binary detection handled in run_git_command)
         success, version_output = run_git_command(["--version"])
         if success:
             print(f"✅ Git working: {version_output.strip()}")
         else:
-            print(f"❌ Git issue: {version_output}")
+            print(f"❌ Git not available: {version_output}")
             return False
         
         # Test current branch detection
@@ -192,7 +172,7 @@ def generate_dynamic_installation_prompt(environment: Dict[str, Any]) -> str:
     Returns:
         Formatted installation instructions
     """
-    base_instructions = f"""
+    base_instructions = """
 ## Detected Environment
 """
 

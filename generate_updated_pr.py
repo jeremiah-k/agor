@@ -2,7 +2,7 @@
 import sys
 sys.path.insert(0, 'src')
 
-from agor.tools.dev_tooling import detick_content
+from agor.tools.agent_handoffs import detick_content
 
 pr_description = """# 🚀 AGOR Comprehensive Refactoring and Safety Improvements
 

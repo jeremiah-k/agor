@@ -67,7 +67,7 @@ generate_meta_feedback(
 ### 1. Parallel Divergent Strategy
 
 **Use Case**: Multiple approaches to the same problem
-**Team Size**: 2-4 agents
+**Team Size**: 2–4 agents
 **Coordination Level**: Medium
 
 **Implementation Protocol**:
@@ -101,7 +101,7 @@ outputs = generate_handoff_prompt_only(
 ### 2. Pipeline Strategy
 
 **Use Case**: Sequential tasks with dependencies
-**Team Size**: 3-6 agents
+**Team Size**: 3–6 agents
 **Coordination Level**: High
 
 **Implementation Protocol**:
@@ -121,7 +121,7 @@ generate_mandatory_session_end_prompt(
 ### 3. Swarm Strategy
 
 **Use Case**: Many independent parallel tasks
-**Team Size**: 4-8 agents
+**Team Size**: 4–8 agents
 **Coordination Level**: Low
 
 **Implementation Protocol**:
@@ -142,7 +142,7 @@ generate_handoff_prompt_only(
 ### 4. Red Team Strategy
 
 **Use Case**: Adversarial testing and security validation
-**Team Size**: 2-4 agents (Blue Team + Red Team)
+**Team Size**: 2–4 agents (Blue Team + Red Team)
 **Coordination Level**: High
 
 **Implementation Protocol**:
@@ -170,7 +170,7 @@ generate_mandatory_session_end_prompt(
 ### 5. Mob Programming Strategy
 
 **Use Case**: Complex problems requiring collective intelligence
-**Team Size**: 3-5 agents
+**Team Size**: 3–5 agents
 **Coordination Level**: Very High
 
 **Implementation Protocol**:

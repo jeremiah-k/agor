@@ -102,9 +102,18 @@ def generate_handoff_prompt_only(
     Returns:
         Formatted handoff prompt with deticked content
     """
+    # Validate required inputs
+    if not isinstance(work_completed, list):
+        work_completed = []
+    if not isinstance(next_agent_instructions, list):
+        next_agent_instructions = []
+    if not current_status:
+        current_status = "Status not provided"
+    if not critical_context:
+        critical_context = "No critical context provided"
     if files_modified is None:
         files_modified = []
-    
+
     timestamp = get_current_timestamp()
     current_branch = get_current_branch()
     agor_version = get_agor_version()

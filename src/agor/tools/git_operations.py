@@ -11,8 +11,6 @@ Functions:
 """
 
 import subprocess
-import tempfile
-import os
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -82,8 +80,7 @@ def run_git_command(command: list, env: Optional[dict] = None) -> Tuple[bool, st
         
         if result.returncode == 0:
             return True, result.stdout
-        else:
-            return False, f"Git error: {result.stderr}"
+        return False, f"Git error: {result.stderr}"
             
     except subprocess.TimeoutExpired:
         return False, "Git command timed out"
