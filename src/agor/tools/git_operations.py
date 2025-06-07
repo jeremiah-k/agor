@@ -13,6 +13,7 @@ Functions:
 import subprocess
 import tempfile
 import os
+import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Tuple
@@ -20,17 +21,17 @@ from typing import Optional, Tuple
 
 def get_current_timestamp() -> str:
     """Get current timestamp in AGOR format."""
-    return datetime.now().strftime("%Y-%m-%d %H:%M UTC")
+    return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
 
 def get_file_timestamp() -> str:
     """Get file-safe timestamp for naming."""
-    return datetime.now().strftime("%Y-%m-%d_%H%M")
+    return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
 
 
 def get_precise_timestamp() -> str:
     """Get precise timestamp with seconds."""
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
 
 def get_ntp_timestamp() -> str:
@@ -52,28 +53,22 @@ def get_ntp_timestamp() -> str:
         return get_current_timestamp()
 
 
-def run_git_command(command: list) -> Tuple[bool, str]:
+def run_git_command(command: list, env: Optional[dict] = None) -> Tuple[bool, str]:
     """
     Execute a git command and return success status and output.
-    
+
     Args:
         command: List of git command arguments (without 'git')
-    
+        env: Optional environment variables to pass to git command
+
     Returns:
         Tuple of (success: bool, output: str)
     """
     try:
-        # Detect git binary
-        git_binary = "/bin/git"  # Default for most systems
-        if not Path(git_binary).exists():
-            # Fallback detection
-            result = subprocess.run(
-                ["which", "git"], capture_output=True, text=True, timeout=10
-            )
-            if result.returncode == 0:
-                git_binary = result.stdout.strip()
-            else:
-                git_binary = "git"  # Hope it's in PATH
+        # Detect git binary using shutil.which for better cross-platform compatibility
+        git_binary = shutil.which("git")
+        if git_binary is None:
+            git_binary = "git"  # Fallback
 
         full_command = [git_binary] + command
         result = subprocess.run(
@@ -81,7 +76,8 @@ def run_git_command(command: list) -> Tuple[bool, str]:
             capture_output=True,
             text=True,
             timeout=30,
-            cwd=Path.cwd()
+            cwd=Path.cwd(),
+            env=env
         )
         
         if result.returncode == 0:
@@ -155,6 +151,8 @@ def safe_git_push(
     local_commit = local_commit.strip()
     
     success, remote_commit = run_git_command(["rev-parse", f"origin/{branch_name}"])
+    remote_branch_exists = success
+
     if success:
         remote_commit = remote_commit.strip()
         if local_commit != remote_commit and not force:
@@ -165,9 +163,13 @@ def safe_git_push(
                 print("You need to pull and merge/rebase before pushing")
                 print(f"Run: git pull origin {branch_name}")
                 return False
-    
+
     # Step 3: Perform the push
     push_command = ["push", "origin", branch_name]
+
+    # If remote branch doesn't exist, add --set-upstream for first push
+    if not remote_branch_exists:
+        push_command.extend(["--set-upstream"])
     if force:
         push_command.append("--force")
         print(f"⚠️  FORCE PUSHING to {branch_name} (explicit_force=True)")
@@ -186,30 +188,35 @@ def safe_git_push(
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """
     Quick commit and push with timestamp and safety checks.
-    
+
     Args:
         message: Commit message
         emoji: Emoji prefix for commit
-    
+
     Returns:
         True if successful, False otherwise
     """
     timestamp = get_current_timestamp()
-    full_message = f"{emoji} {message}"
-    
+    full_message = f"{emoji} {message} - {timestamp}"
+
     print(f"🚀 Quick commit/push: {emoji} {message}")
-    
+
     # Add all changes
     success, output = run_git_command(["add", "."])
     if not success:
         print(f"❌ Failed to add files: {output}")
         return False
-    
+
     # Commit
     success, output = run_git_command(["commit", "-m", full_message])
     if not success:
-        print(f"❌ Failed to commit: {output}")
-        return False
+        # Check if it's just "nothing to commit"
+        if "nothing to commit" in output.lower():
+            print("✅ No changes to commit (working directory clean)")
+            return True
+        else:
+            print(f"❌ Failed to commit: {output}")
+            return False
     
     # Safe push
     if not safe_git_push():

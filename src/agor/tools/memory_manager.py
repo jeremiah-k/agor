@@ -100,7 +100,7 @@ def commit_to_memory_branch(
             temp_file = Path(temp_path)
             
             # Write content to temporary file
-            with open(temp_fd, 'w', encoding='utf-8') as f:
+            with os.fdopen(temp_fd, 'w', encoding='utf-8') as f:
                 f.write(file_content)
             
             # Step 3: Add file to git index for the memory branch
@@ -133,18 +133,18 @@ def commit_to_memory_branch(
                 
                 # Read existing tree into index
                 if tree_hash != "4b825dc642cb6eb9a060e54bf8d69288fbee4904":  # Not empty tree
-                    success, _ = run_git_command(["read-tree", tree_hash])
-                
+                    success, _ = run_git_command(["read-tree", tree_hash], env=env)
+
                 # Add our file to index
                 success, _ = run_git_command([
                     "update-index", "--add", "--cacheinfo", "100644", blob_hash, f".agor/{file_name}"
-                ])
+                ], env=env)
                 if not success:
                     print("❌ Failed to update index")
                     return False
                 
                 # Write new tree
-                success, new_tree_hash = run_git_command(["write-tree"])
+                success, new_tree_hash = run_git_command(["write-tree"], env=env)
                 if not success:
                     print("❌ Failed to write tree")
                     return False

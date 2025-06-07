@@ -12,10 +12,26 @@ Functions:
 """
 
 import re
-from datetime import datetime
-from typing import List, Optional
+from typing import List
 
-from .git_operations import get_current_timestamp
+from agor.tools.git_operations import get_current_timestamp, run_git_command
+
+
+def get_current_branch() -> str:
+    """Get current git branch name."""
+    success, branch = run_git_command(["branch", "--show-current"])
+    if success:
+        return branch.strip()
+    return "main"  # fallback
+
+
+def get_agor_version() -> str:
+    """Get current AGOR version."""
+    try:
+        import agor
+        return getattr(agor, '__version__', '0.4.3+')
+    except ImportError:
+        return '0.4.3+'
 
 
 def detick_content(content: str) -> str:
@@ -90,12 +106,14 @@ def generate_handoff_prompt_only(
         files_modified = []
     
     timestamp = get_current_timestamp()
-    
+    current_branch = get_current_branch()
+    agor_version = get_agor_version()
+
     prompt_content = f"""# 🚀 AGOR Agent Handoff Prompt
 
 **Generated**: {timestamp}
 **Session Type**: Agent Handoff Required
-**AGOR Version**: 0.4.3+
+**AGOR Version**: {agor_version}
 
 ## 📋 WORK COMPLETED THIS SESSION
 
@@ -120,7 +138,7 @@ def generate_handoff_prompt_only(
 ## 🔧 ENVIRONMENT SETUP FOR CONTINUATION
 
 # Pull latest changes
-git pull origin work-0.4.3-3
+git pull origin {current_branch}
 
 # Install dependencies
 python3 -m pip install -r src/agor/tools/agent-requirements.txt
@@ -200,12 +218,14 @@ def generate_mandatory_session_end_prompt(
         files_modified = []
     
     timestamp = get_current_timestamp()
-    
+    current_branch = get_current_branch()
+    agor_version = get_agor_version()
+
     session_end_content = f"""# 📋 MANDATORY SESSION END REPORT
 
 **Generated**: {timestamp}
 **Session Type**: Work Session Complete
-**AGOR Version**: 0.4.3+
+**AGOR Version**: {agor_version}
 
 ## ✅ WORK ACCOMPLISHED
 
@@ -231,7 +251,7 @@ def generate_mandatory_session_end_prompt(
 
 The next agent should:
 
-1. **Pull latest changes**: `git pull origin work-0.4.3-3`
+1. **Pull latest changes**: `git pull origin {current_branch}`
 2. **Install dependencies**: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
 3. **Review this report**: Understand completed work and current status
 4. **Continue from current state**: Don't restart or duplicate work
@@ -274,12 +294,13 @@ def generate_meta_feedback(
         suggestions = []
     
     timestamp = get_current_timestamp()
-    
+    agor_version = get_agor_version()
+
     meta_content = f"""# 🔄 AGOR Meta Feedback
 
 **Generated**: {timestamp}
 **Feedback Type**: {feedback_type}
-**AGOR Version**: 0.4.3+
+**AGOR Version**: {agor_version}
 
 ## 📝 FEEDBACK CONTENT
 
