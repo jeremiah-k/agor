@@ -23,11 +23,23 @@ AGOR supports structured multi-agent coordination through:
 
 ### Communication Protocol
 
-**Coordination Files**:
-- `.agor/agentconvo.md` - Inter-agent communication log
-- `.agor/strategy-active.md` - Current strategy and phase status
-- `.agor/agent{N}-memory.md` - Individual agent memory files
-- `.agor/snapshots/` - Session snapshots for handoffs
+**IMPORTANT**: The `.agor` directory does NOT exist on main or feature branches. It only exists on dedicated memory branches and is accessed exclusively through our dev tooling functions.
+
+**Memory Branch System**:
+- **Memory branches**: Created automatically by dev tooling (e.g., `agor/mem/2025-06-07_1300`)
+- **Cross-branch commits**: Dev tooling commits to memory branches without switching your working branch
+- **Coordination files**: Stored on memory branches, accessed via dev tooling functions
+- **No direct file access**: Never manually create/edit `.agor` files
+
+**Coordination Through Dev Tooling**:
+```python
+# Create snapshots and memories (auto-commits to memory branches)
+auto_commit_memory(content, "session_progress", "agent_id")
+generate_mandatory_session_end_prompt(work_completed, status, instructions, context)
+
+# Load previous snapshots/memories (reads from memory branches)
+# Use dev tooling functions to access coordination data
+```
 
 **Required Functions**:
 ```python
@@ -82,9 +94,9 @@ outputs = generate_handoff_prompt_only(
 
 **Agent Workflow**:
 1. **Divergent Phase**: Work independently on assigned branch
-2. **Signal Completion**: Post "PHASE1_COMPLETE" to agentconvo.md
-3. **Review Phase**: Examine other agents' solutions
-4. **Synthesis Phase**: Collaborate on final integrated solution
+2. **Signal Completion**: Use `auto_commit_memory()` to record "PHASE1_COMPLETE" status
+3. **Review Phase**: Use dev tooling to access other agents' progress from memory branches
+4. **Synthesis Phase**: Collaborate using snapshots and memory-based coordination
 
 ### 2. Pipeline Strategy
 
@@ -181,17 +193,17 @@ generate_handoff_prompt_only(
 
 **Every agent session MUST start with**:
 1. `git pull origin [branch-name]` - Get latest changes
-2. Read strategy-active.md if it exists
-3. Check agentconvo.md for latest communications
-4. Install dependencies: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
+2. Use dev tooling to check for previous session memories and coordination status
+3. Install dependencies: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
+4. Initialize dev tooling and test functionality
 
 ### Session Termination
 
 **Every agent session MUST end with**:
-1. Commit all changes with descriptive messages
-2. Push changes to remote repository
-3. Generate session end prompt using `generate_mandatory_session_end_prompt()`
-4. Update agentconvo.md with session summary
+1. Commit all changes with descriptive messages using `quick_commit_push()`
+2. Generate session end prompt using `generate_mandatory_session_end_prompt()`
+3. Create memory entry using `auto_commit_memory()` with session summary
+4. Clean up any temporary files created during the session
 
 ### Handoff Generation
 
@@ -199,6 +211,29 @@ generate_handoff_prompt_only(
 - `generate_handoff_prompt_only()` - Quick handoffs
 - `generate_mandatory_session_end_prompt()` - Full session end
 - `generate_complete_project_outputs()` - Comprehensive outputs
+
+### Temporary Files and Cleanup
+
+**If you must create temporary files for dev tooling execution**:
+
+1. **Chain commands** to minimize tool calls:
+```bash
+# Good: One-shot execution with cleanup
+python temp_script.py && rm temp_script.py
+
+# Better: Use dev tooling functions directly without temp files
+python3 -c "
+import sys; sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import quick_commit_push
+quick_commit_push('Your message', '🔧')
+"
+```
+
+2. **Immediate cleanup**: Always remove temporary files in the same command chain
+3. **Minimize file creation**: Prefer direct dev tooling function calls over temporary scripts
+4. **Document cleanup**: If other agents need to create temp files, remind them to clean up immediately
+
+**Best Practice**: Use dev tooling functions directly rather than creating temporary files whenever possible.
 
 ## 🎯 Role-Specific Protocols
 
@@ -313,8 +348,8 @@ from agor.tools.dev_tooling import (
 - `src/agor/tools/README_ai.md` - Role selection and initialization
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` - Operational guide with hotkeys
 - `docs/strategies.md` - Strategy decision matrix and examples
-- `.agor/strategy-active.md` - Current strategy status
-- `.agor/agentconvo.md` - Inter-agent communication
+- `src/agor/tools/dev_tooling.py` - Memory and coordination functions
+- Memory branches (accessed via dev tooling) - Session memories and coordination data
 
 ---
 
