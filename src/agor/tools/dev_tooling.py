@@ -369,60 +369,34 @@ class DevTooling:
             branch_exists = success
 
             if not branch_exists:
-                # Create new memory branch without switching
+                # Create new memory branch 1 commit behind HEAD (not orphan)
                 print(f"📝 Creating new memory branch: {branch_name}")
 
-                # Create empty tree using cross-platform method
-                # Create a temporary empty file for cross-platform compatibility
-                temp_empty_file = None
-                try:
-                    temp_fd, temp_empty_path = tempfile.mkstemp(
-                        prefix="agor_empty_", suffix=".tmp"
-                    )
-                    os.close(temp_fd)  # Close immediately, we just need an empty file
-                    temp_empty_file = Path(temp_empty_path)
-
-                    success, empty_tree = self._run_git_command(
-                        ["hash-object", "-t", "tree", str(temp_empty_file)]
-                    )
-                    if not success:
-                        # Alternative method for empty tree
-                        success, empty_tree = self._run_git_command(["write-tree"])
-                        if not success:
-                            print("❌ Failed to create empty tree")
-                            return False
-                finally:
-                    # Clean up temporary file
-                    if temp_empty_file and temp_empty_file.exists():
-                        try:
-                            temp_empty_file.unlink()
-                        except Exception as e:
-                            print(f"⚠️  Failed to cleanup temporary empty file: {e}")
-                empty_tree = empty_tree.strip()
-
-                # Create initial commit
-                success, initial_commit = self._run_git_command(
-                    [
-                        "commit-tree",
-                        empty_tree,
-                        "-m",
-                        f"Initial commit for memory branch {branch_name}",
-                    ]
-                )
+                # Get HEAD commit to create branch 1 commit behind
+                success, head_commit = self._run_git_command(["rev-parse", "HEAD"])
                 if not success:
-                    print("❌ Failed to create initial commit")
+                    print("❌ Failed to get HEAD commit")
                     return False
-                initial_commit = initial_commit.strip()
+                head_commit = head_commit.strip()
 
-                # Create branch reference
+                # Get parent of HEAD (1 commit behind)
+                success, parent_commit = self._run_git_command(["rev-parse", "HEAD~1"])
+                if not success:
+                    # If no parent (first commit), use HEAD itself
+                    print("⚠️  No parent commit found, using HEAD as base")
+                    parent_commit = head_commit
+                else:
+                    parent_commit = parent_commit.strip()
+
+                # Create branch reference pointing to parent commit
                 success, _ = self._run_git_command(
-                    ["update-ref", f"refs/heads/{branch_name}", initial_commit]
+                    ["update-ref", f"refs/heads/{branch_name}", parent_commit]
                 )
                 if not success:
                     print("❌ Failed to create branch reference")
                     return False
 
-                print(f"✅ Created memory branch {branch_name}")
+                print(f"✅ Created memory branch {branch_name} (1 commit behind HEAD: {parent_commit[:8]})")
 
             # Step 3: Get current commit of memory branch
             success, parent_commit = self._run_git_command(
