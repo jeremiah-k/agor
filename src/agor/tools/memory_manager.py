@@ -112,12 +112,11 @@ def commit_to_memory_branch(
             # Step 4: Get current tree of memory branch
             success, tree_hash = run_git_command(["rev-parse", f"{branch_name}^{{tree}}"])
             if not success:
-                # If branch has no commits, create empty tree
-                success, tree_hash = run_git_command(["hash-object", "-t", "tree", "/dev/null"])
-                if not success:
-                    print("❌ Failed to get tree hash")
-                    return False
-            tree_hash = tree_hash.strip()
+                # If branch has no commits, use the known empty tree hash
+                # This is the SHA-1 hash of an empty tree in Git (cross-platform)
+                tree_hash = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+            else:
+                tree_hash = tree_hash.strip()
             
             # Step 5: Create new tree with our file
             # Create a temporary index file
