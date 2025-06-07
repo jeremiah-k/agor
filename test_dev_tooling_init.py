@@ -358,7 +358,7 @@ Working on comprehensive AGOR improvements based on review findings:
     print("\n📋 Generating PR description using dev tooling...")
 
     # Generate comprehensive PR description using dev tooling
-    from agor.tools.dev_tooling import generate_handoff_prompt_only, detick_content
+    from agor.tools.dev_tooling import generate_handoff_prompt_only, detick_content, generate_mandatory_session_end_prompt
 
     pr_description = """# 🚀 AGOR Comprehensive Refactoring and Safety Improvements
 
