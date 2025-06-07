@@ -51,10 +51,12 @@ What is your primary goal today?
 
 **📋 PROJECT COORDINATOR** - For:
 - Strategic planning and architecture design
+- Task delegation and work assignment to Worker Agents
+- Progress tracking and quality assurance
+- Code review and approval of agent changes
 - Multi-agent workflow coordination
-- Project breakdown and task assignment
-- Team management and strategy selection
-- High-level oversight and direction
+- Project breakdown and strategic oversight
+- Course correction and guidance
 
 Please select your role (Worker Agent/Project Coordinator):
 ```

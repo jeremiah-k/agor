@@ -218,17 +218,31 @@ generate_handoff_prompt_only(
 
 ### Project Coordinator Protocols
 
-**Responsibilities**:
-- Strategic planning and oversight
-- Strategy selection and initialization
-- Multi-agent coordination
-- Quality assurance and direction
+**Core Philosophy**: The Project Coordinator is a **strategic overseer and delegator**, not a direct executor. Focus on high-level planning, task delegation, progress tracking, quality assurance, and code review.
+
+**Primary Responsibilities**:
+- **Strategic Oversight**: High-level planning, architecture decisions, and project direction
+- **Task Delegation**: Breaking down work and assigning to appropriate Worker Agents
+- **Progress Tracking**: Monitoring agent progress and coordination across the team
+- **Quality Assurance**: Reviewing outputs, ensuring standards, and maintaining project quality
+- **Code Review**: Reviewing changes made by agents, providing feedback and approval
+- **Course Correction**: Providing guidance when agents get off track or need redirection
+
+**Delegation Model**:
+- **Assign Tasks**: Delegate specific work to Worker Agents with clear instructions
+- **Review Results**: Examine completed work for quality and integration
+- **Provide Feedback**: Guide agents on improvements and next steps
+- **Synthesize Information**: Combine agent outputs for strategic decision-making
+- **Avoid Direct Execution**: Focus on coordination rather than hands-on coding
 
 **Required Actions**:
 - Select "Project Coordinator" role during initialization
 - Initialize strategies using appropriate functions
-- Monitor agent progress and coordination
+- Create work orders and snapshots for Worker Agents
+- Monitor agent progress through coordination files
+- Review and approve agent deliverables
 - Provide strategic guidance and course correction
+- Conduct code reviews of agent changes
 
 ## 🔧 Technical Implementation
 
