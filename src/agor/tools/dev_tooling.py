@@ -2251,7 +2251,7 @@ def generate_meta_feedback(
 
 **Project Being Worked On**: {current_project or 'Not specified'}
 **AGOR Version**: 0.4.2+
-**Usage Pattern**: {_detect_environment()}
+**Usage Pattern**: {detect_environment()['mode']}
 
 ## 🎯 Issues Encountered
 
