@@ -19,16 +19,9 @@ from agor.tools.git_operations import run_git_command, get_current_timestamp, ge
 
 def detect_environment() -> Dict[str, Any]:
     """
-    Detect the current development environment and return configuration details.
+    Detects the current development environment and returns a dictionary of configuration details.
     
-    Returns:
-        Dictionary containing environment information:
-        - mode: development, standalone, augmentcode_local, or bundle
-        - platform: detected platform information
-        - agor_version: AGOR version if available
-        - python_version: Python version
-        - has_git: Whether git is available
-        - has_pyenv: Whether .pyenv directory exists
+    The returned dictionary includes the detected mode (such as development, standalone, augmentcode_local, or bundle), platform description, AGOR version (if available), Python version, and flags indicating the presence of git and a `.pyenv` directory.
     """
     environment = {
         "mode": "unknown",
@@ -77,16 +70,9 @@ def detect_environment() -> Dict[str, Any]:
 
 def test_tooling() -> bool:
     """
-    Test all development tooling functions to ensure they work correctly.
+    Runs a comprehensive test suite for AGOR development tooling functions.
     
-    This function validates:
-    - Timestamp generation
-    - Git operations
-    - Environment detection
-    - Import functionality
-    
-    Returns:
-        True if all tests pass, False otherwise
+    Validates timestamp generation, git operations, and related utilities. Prints detailed status messages for each test step. Returns True if all tests pass successfully; returns False if any test fails or an exception occurs.
     """
     print("🧪 Testing AGOR Development Tooling...")
     
@@ -140,11 +126,9 @@ def test_tooling() -> bool:
 
 def get_agent_dependency_install_commands() -> str:
     """
-    Returns shell commands for installing agent development tooling dependencies,
-    with automatic fallback to a `.pyenv` virtual environment if standard installation fails.
+    Returns shell commands to install agent development tooling dependencies.
     
-    Returns:
-        Shell commands for dependency installation
+    The returned script installs dependencies from `agent-requirements.txt` and includes a fallback to activate or create a `.pyenv` virtual environment if the initial installation fails.
     """
     return """# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
 python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
@@ -163,13 +147,15 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
 
 def generate_dynamic_installation_prompt(environment: Dict[str, Any]) -> str:
     """
-    Generate dynamic installation instructions based on detected environment.
+    Generates formatted installation instructions tailored to the detected environment.
     
+    Creates a markdown-formatted string with environment details and mode-specific installation commands, including troubleshooting steps. The instructions adapt to the provided environment configuration, offering guidance for development, standalone, augmentcode_local, or unknown modes.
+     
     Args:
-        environment: Environment configuration from detect_environment()
+        environment: A dictionary containing environment details as returned by detect_environment().
     
     Returns:
-        Formatted installation instructions
+        A string with formatted installation and troubleshooting instructions.
     """
     base_instructions = """
 ## Detected Environment

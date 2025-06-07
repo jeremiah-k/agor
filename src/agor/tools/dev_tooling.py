@@ -170,7 +170,11 @@ class DevTooling:
         return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
     def get_ntp_timestamp(self) -> str:
-        """Get accurate timestamp from NTP server, fallback to local time."""
+        """
+        Returns the current UTC timestamp from an NTP server, or local time if unavailable.
+        
+        Attempts to retrieve the current UTC time from an online NTP API. If the request fails, falls back to generating the timestamp using the local system clock.
+        """
         try:
             import json
             import urllib.request
@@ -194,21 +198,17 @@ class DevTooling:
         explicit_force: bool = False
     ) -> bool:
         """
-        Safe git push with upstream checking and protected branch validation.
-
-        This function implements safety checks to prevent dangerous git operations:
-        - Always pulls before pushing to check for upstream changes
-        - Prevents force pushes to protected branches (main, master, develop)
-        - Requires explicit confirmation for force pushes
-        - Fails safely if upstream changes require merge/rebase
-
+        Performs a safe git push with checks against force pushing protected branches and upstream changes.
+        
+        This method prevents accidental overwrites by disallowing force pushes to protected branches, requiring explicit confirmation for force pushes, and ensuring the local branch is not behind the remote before pushing. Returns True if the push succeeds, otherwise False.
+        
         Args:
-            branch_name: Target branch (default: current branch)
-            force: Whether to force push (requires explicit_force=True for safety)
-            explicit_force: Must be True to enable force push (safety check)
-
+            branch_name: The branch to push to. Defaults to the current branch if not specified.
+            force: If True, attempts a force push (only allowed with explicit_force).
+            explicit_force: Must be True to enable force push; prevents accidental force pushes.
+        
         Returns:
-            True if successful, False otherwise
+            True if the push is successful, False otherwise.
         """
         print("🛡️  Safe git push: performing safety checks...")
 
@@ -277,14 +277,14 @@ class DevTooling:
 
     def quick_commit_push(self, message: str, emoji: str = "🔧") -> bool:
         """
-        Commit and push in one operation with timestamp.
-
+        Stages all changes, commits them with a timestamped message, and safely pushes to the current branch.
+        
         Args:
-            message: Commit message
-            emoji: Emoji prefix for commit
-
+            message: The commit message to use.
+            emoji: An optional emoji prefix for the commit message.
+        
         Returns:
-            True if successful, False otherwise
+            True if the commit and push were successful or if there were no changes to commit; False otherwise.
         """
         timestamp = self.get_current_timestamp()
         full_message = f"{emoji} {message}\n\nTimestamp: {timestamp}"
@@ -367,18 +367,17 @@ class DevTooling:
         self, file_path: str, branch_name: str, commit_message: str
     ) -> bool:
         """
-        SAFE memory branch commit using git plumbing - NEVER switches branches.
-
-        Uses low-level git commands to commit files to memory branch without
-        changing the current working branch or working directory.
-
+        Commits a file to a memory branch using low-level git commands without switching branches.
+        
+        Creates or updates the specified memory branch by committing the given file using git plumbing commands, ensuring the current working branch and directory remain unchanged. If the memory branch does not exist, it is created one commit behind HEAD. The operation attempts to push the memory branch but does not fail if the push is unsuccessful.
+        
         Args:
-            file_path: Path to file to commit (relative to repo root)
-            branch_name: Target memory branch
-            commit_message: Commit message
-
+            file_path: Path to the file to commit, relative to the repository root.
+            branch_name: Name of the target memory branch.
+            commit_message: Commit message for the memory branch update.
+        
         Returns:
-            True if successful, False otherwise (fallback to regular commit)
+            True if the commit to the memory branch succeeds locally, False otherwise.
         """
         try:
             # SAFETY CHECK: Never switch branches in memory operations
@@ -2298,14 +2297,8 @@ def generate_handoff_prompt_only(
     brief_context: str = None,
 ) -> dict:
     """
-    Generates a handoff prompt for agent transition based on the provided task details.
-
-    Args:
-        task_description: Description of the current task or work order.
-        work_completed: Optional list of completed work items.
-        next_steps: Optional list of recommended next steps.
-        brief_context: Optional brief context or summary for the handoff.
-
+    Generates a formatted agent handoff prompt using the provided task description, completed work, next steps, and context.
+    
     Returns:
         A dictionary containing the generated handoff prompt and related output fields.
     """
@@ -2330,20 +2323,9 @@ def generate_meta_feedback(
     positive_experiences: list = None
 ) -> dict:
     """
-    Generate AGOR meta feedback for continuous improvement.
-
-    This function creates feedback about AGOR itself while working on other projects.
-    The output includes a link to submit feedback to the AGOR meta repository.
-
-    Args:
-        current_project: Name/description of the project you're working on
-        agor_issues_encountered: List of issues or problems with AGOR
-        suggested_improvements: List of suggestions for improving AGOR
-        workflow_friction_points: List of workflow friction points
-        positive_experiences: List of positive experiences with AGOR
-
-    Returns:
-        Dictionary with processed meta feedback ready for single codeblock usage
+    Generates a structured meta feedback report for AGOR, including issues, suggestions, workflow friction points, and positive experiences.
+    
+    The output is formatted for easy submission to the AGOR meta GitHub repository and is processed for safe inclusion in a single codeblock. Returns a dictionary containing the processed feedback, submission instructions, and status.
     """
     try:
         from datetime import datetime
@@ -2421,7 +2403,11 @@ Your feedback helps improve AGOR by:
 
 
 def _format_feedback_list(items: list, default_message: str) -> str:
-    """Format a list of feedback items."""
+    """
+    Formats a list of feedback items as a bulleted Markdown list.
+    
+    If the list is empty, returns a single bullet with the provided default message.
+    """
     if not items:
         return f"- {default_message}"
 
@@ -2436,20 +2422,19 @@ def generate_mandatory_session_end_prompt(
     files_modified: list = None
 ) -> dict:
     """
-    Generate mandatory session end prompt for agent coordination.
-
-    This function MUST be called before ending any agent session to ensure
-    proper coordination and context preservation for the next agent or session.
-
+    Generates a mandatory session end prompt for agent coordination.
+    
+    Creates a structured summary of completed work, current status, instructions for the next agent, critical context, and files modified, along with environment setup and coordination protocol instructions. The output is processed for safe inclusion in a single codeblock and is intended to be used before ending any agent session to ensure continuity.
+    
     Args:
-        work_completed: List of work items completed in this session
-        current_status: Current status of the project/task
-        next_agent_instructions: Specific instructions for the next agent
-        critical_context: Critical context that must be preserved
-        files_modified: List of files that were modified
-
+        work_completed: List of work items completed during the session.
+        current_status: Description of the current project or task status.
+        next_agent_instructions: Optional list of instructions for the next agent or session.
+        critical_context: Optional critical context information to be preserved.
+        files_modified: Optional list of files modified during the session.
+    
     Returns:
-        Dictionary with processed session end prompt ready for coordination
+        A dictionary containing the processed session end prompt and usage instructions.
     """
     try:
         from datetime import datetime
@@ -2558,7 +2543,11 @@ print(outputs['session_end_prompt'])
 # =============================================================================
 
 def get_timestamp() -> str:
-    """Get current timestamp - convenience function for backward compatibility."""
+    """
+    Returns the current UTC timestamp in AGOR standard format.
+    
+    This is a convenience function for backward compatibility, delegating to modular imports if available.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _get_current_timestamp()
     else:
@@ -2566,12 +2555,20 @@ def get_timestamp() -> str:
 
 
 def get_current_timestamp() -> str:
-    """Get current timestamp - convenience function for backward compatibility."""
+    """
+    Returns the current UTC timestamp in AGOR standard format.
+    
+    This is a convenience function for backward compatibility.
+    """
     return get_timestamp()
 
 
 def get_file_timestamp() -> str:
-    """Get file-safe timestamp - convenience function for backward compatibility."""
+    """
+    Returns a timestamp formatted for safe use in filenames.
+    
+    The format is 'YYYY-MM-DD_HHMM' in UTC.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _get_file_timestamp()
     else:
@@ -2579,7 +2576,11 @@ def get_file_timestamp() -> str:
 
 
 def get_precise_timestamp() -> str:
-    """Get precise timestamp - convenience function for backward compatibility."""
+    """
+    Returns the current UTC timestamp with second-level precision.
+    
+    Provides a backward-compatible interface for obtaining a precise timestamp, using modular imports if available.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _get_precise_timestamp()
     else:
@@ -2587,7 +2588,11 @@ def get_precise_timestamp() -> str:
 
 
 def get_ntp_timestamp() -> str:
-    """Get NTP timestamp - convenience function for backward compatibility."""
+    """
+    Returns the current UTC timestamp from an NTP server if available, otherwise falls back to the local timestamp.
+    
+    This function provides backward compatibility by delegating to a modular implementation if present.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _get_ntp_timestamp()
     else:
@@ -2595,7 +2600,11 @@ def get_ntp_timestamp() -> str:
 
 
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push - convenience function for backward compatibility."""
+    """
+    Commits all staged changes with a message and pushes to the current branch.
+    
+    This is a convenience function for backward compatibility, delegating to modular tooling if available. Returns True if the commit and push succeed, False otherwise.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _quick_commit_push(message, emoji)
     else:
@@ -2605,7 +2614,11 @@ def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
 
 
 def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
-    """Auto-commit memory - convenience function for backward compatibility."""
+    """
+    Commits memory content to a dedicated memory branch for the specified agent and memory type.
+    
+    Attempts to use the modular memory commit implementation if available; otherwise, falls back to the local DevTooling method. Returns True if the commit succeeds, False otherwise.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _auto_commit_memory(content, memory_type, agent_id)
     else:
@@ -2615,7 +2628,11 @@ def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") ->
 
 
 def test_tooling() -> bool:
-    """Test development tooling - convenience function for backward compatibility."""
+    """
+    Tests the availability and basic functionality of AGOR development tooling.
+    
+    Runs a series of checks including timestamp retrieval and git command execution to verify that the development environment is set up correctly. Returns True if all checks pass, otherwise False.
+    """
     if MODULAR_IMPORTS_AVAILABLE:
         return _test_tooling()
     else:
@@ -2645,7 +2662,11 @@ _dev_tools_instance = None
 
 
 def get_dev_tools() -> 'DevTooling':
-    """Get global DevTooling instance - convenience function."""
+    """
+    Returns a global singleton instance of the DevTooling class for shared access.
+    
+    If the instance does not exist, it is created and cached for subsequent calls.
+    """
     global _dev_tools_instance
     if _dev_tools_instance is None:
         _dev_tools_instance = DevTooling()

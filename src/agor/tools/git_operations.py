@@ -18,22 +18,34 @@ from typing import Optional, Tuple
 
 
 def get_current_timestamp() -> str:
-    """Get current timestamp in AGOR format."""
+    """
+    Returns the current UTC timestamp formatted as "YYYY-MM-DD HH:MM UTC".
+    """
     return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
 
 def get_file_timestamp() -> str:
-    """Get file-safe timestamp for naming."""
+    """
+    Returns the current UTC timestamp formatted for safe use in filenames.
+    
+    The timestamp is formatted as "YYYY-MM-DD_HHMM".
+    """
     return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
 
 
 def get_precise_timestamp() -> str:
-    """Get precise timestamp with seconds."""
+    """
+    Returns the current UTC timestamp including seconds, formatted as "YYYY-MM-DD HH:MM:SS UTC".
+    """
     return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
 
 def get_ntp_timestamp() -> str:
-    """Get accurate timestamp from NTP server, fallback to local time."""
+    """
+    Returns the current UTC timestamp from an NTP server, formatted as "YYYY-MM-DD HH:MM UTC".
+    
+    If the NTP server is unreachable or an error occurs, falls back to the local system time.
+    """
     try:
         import json
         import urllib.request
@@ -53,14 +65,14 @@ def get_ntp_timestamp() -> str:
 
 def run_git_command(command: list, env: Optional[dict] = None) -> Tuple[bool, str]:
     """
-    Execute a git command and return success status and output.
-
+    Executes a git command and returns whether it succeeded along with its output or error message.
+    
     Args:
-        command: List of git command arguments (without 'git')
-        env: Optional environment variables to pass to git command
-
+        command: List of arguments for the git command, excluding the 'git' executable.
+        env: Optional dictionary of environment variables to use for the command.
+    
     Returns:
-        Tuple of (success: bool, output: str)
+        A tuple containing a boolean indicating success, and the command's output or error message.
     """
     try:
         # Detect git binary using shutil.which for better cross-platform compatibility
@@ -94,21 +106,22 @@ def safe_git_push(
     explicit_force: bool = False
 ) -> bool:
     """
-    Safe git push with upstream checking and protected branch validation.
+    Performs a git push with safety checks to prevent accidental data loss or conflicts.
     
-    This function implements safety checks to prevent dangerous git operations:
-    - Always pulls before pushing to check for upstream changes
-    - Prevents force pushes to protected branches (main, master, develop)
-    - Requires explicit confirmation for force pushes
-    - Fails safely if upstream changes require merge/rebase
+    This function enforces safe push practices by:
+    - Determining the current branch if not specified.
+    - Preventing force pushes to protected branches (`main`, `master`, `develop`, `production`).
+    - Requiring explicit confirmation for force pushes.
+    - Fetching from the remote to detect upstream changes and aborting if the remote has new commits not present locally (unless forced).
+    - Adding `--set-upstream` if pushing to a new remote branch.
     
     Args:
-        branch_name: Target branch (default: current branch)
-        force: Whether to force push (requires explicit_force=True for safety)
-        explicit_force: Must be True to enable force push (safety check)
+        branch_name: The branch to push. If not provided, uses the current branch.
+        force: If True, attempts a force push (requires explicit_force=True).
+        explicit_force: Must be True to allow force pushing.
     
     Returns:
-        True if successful, False otherwise
+        True if the push succeeds, False otherwise.
     """
     print("🛡️  Safe git push: performing safety checks...")
     
@@ -184,14 +197,14 @@ def safe_git_push(
 
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """
-    Quick commit and push with timestamp and safety checks.
-
+    Stages all changes, commits with a timestamped message, and safely pushes to the remote repository.
+    
     Args:
-        message: Commit message
-        emoji: Emoji prefix for commit
-
+        message: The commit message to include.
+        emoji: An emoji to prefix the commit message.
+    
     Returns:
-        True if successful, False otherwise
+        True if the commit and push were successful or if there were no changes to commit; False otherwise.
     """
     timestamp = get_current_timestamp()
     full_message = f"{emoji} {message} - {timestamp}"

@@ -25,19 +25,18 @@ def commit_to_memory_branch(
     commit_message: Optional[str] = None,
 ) -> bool:
     """
-    Commit content to a memory branch without switching from current branch.
+    Commits file content to a memory branch without switching from the current Git branch.
     
-    This function creates memory branches 1 commit behind HEAD (not orphan branches)
-    for easier navigation and merge prevention.
+    Creates or updates a memory branch (named or auto-generated) that is always one commit behind HEAD, storing the provided file content under the `.agor/` directory. The function ensures the memory branch is created if it does not exist, writes the content as a new commit, and attempts to push the branch remotely. Returns `True` if the operation succeeds, or `False` if any step fails.
     
     Args:
-        file_content: Content to commit
-        file_name: Name of file to create/update
-        branch_name: Target memory branch (auto-generated if None)
-        commit_message: Commit message (auto-generated if None)
+        file_content: The content to be committed to the memory branch.
+        file_name: The name of the file to create or update within the `.agor/` directory.
+        branch_name: The target memory branch name. If not provided, a name is auto-generated.
+        commit_message: The commit message. If not provided, a default message is generated.
     
     Returns:
-        True if successful, False otherwise
+        True if the commit and branch update succeed, False otherwise.
     """
     print("🛡️  Safe memory commit: staying on current branch")
     
@@ -201,15 +200,12 @@ def commit_to_memory_branch(
 
 def auto_commit_memory(content: str, memory_type: str, agent_id: str) -> bool:
     """
-    Automatically commit content to memory branch with standardized naming.
+    Commits memory content to a memory branch using standardized file and commit message formats.
     
-    Args:
-        content: Memory content to commit
-        memory_type: Type of memory (e.g., 'session_start', 'progress', 'completion')
-        agent_id: Agent identifier
+    Constructs a file name and commit message based on the memory type and agent ID, then delegates the commit operation to the memory branch handler.
     
     Returns:
-        True if successful, False otherwise
+        True if the commit to the memory branch succeeds, False otherwise.
     """
     print(f"💾 Auto-committing memory: {memory_type} for {agent_id}")
     

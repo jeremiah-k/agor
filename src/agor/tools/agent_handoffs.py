@@ -18,7 +18,12 @@ from agor.tools.git_operations import get_current_timestamp, run_git_command
 
 
 def get_current_branch() -> str:
-    """Get current git branch name."""
+    """
+    Retrieves the current Git branch name.
+    
+    Returns:
+        The name of the current Git branch, or "main" if the branch cannot be determined.
+    """
     success, branch = run_git_command(["branch", "--show-current"])
     if success:
         return branch.strip()
@@ -26,7 +31,12 @@ def get_current_branch() -> str:
 
 
 def get_agor_version() -> str:
-    """Get current AGOR version."""
+    """
+    Retrieves the current AGOR version string.
+    
+    Returns:
+        The AGOR version as specified in the `agor` package, or a default version string if the package is not available.
+    """
     try:
         import agor
         return getattr(agor, '__version__', '0.4.3+')
@@ -36,16 +46,9 @@ def get_agor_version() -> str:
 
 def detick_content(content: str) -> str:
     """
-    Convert triple backticks (```) to double backticks (``) for clean codeblock rendering.
+    Converts triple backticks in the input content to double backticks for consistent codeblock rendering in markdown prompts.
     
-    This prevents codeblocks from jumping in and out when content is used in prompts.
-    Essential for agent-to-agent communication via snapshots and handoffs.
-    
-    Args:
-        content: Content with potential triple backticks
-    
-    Returns:
-        Content with triple backticks converted to double backticks
+    This helps prevent codeblock formatting issues during agent-to-agent communication by ensuring that triple backticks do not interfere with prompt rendering.
     """
     # Use regex to avoid runaway replacements
     # Only replace ``` that are not preceded or followed by another backtick
@@ -55,16 +58,9 @@ def detick_content(content: str) -> str:
 
 def retick_content(content: str) -> str:
     """
-    Convert double backticks (``) back to triple backticks (```) for normal rendering.
+    Restores triple backticks in content by converting double backticks to triple backticks.
     
-    Reverses the detick_content operation when content needs to be restored
-    to normal markdown format.
-    
-    Args:
-        content: Content with double backticks
-    
-    Returns:
-        Content with double backticks converted to triple backticks
+    Reverses the detick_content transformation to enable standard markdown codeblock formatting.
     """
     # Use regex to avoid runaway replacements
     # Only replace `` that are not preceded or followed by another backtick
@@ -73,7 +69,11 @@ def retick_content(content: str) -> str:
 
 
 def _format_feedback_list(items: List[str], empty_message: str) -> str:
-    """Format a list of items for feedback display."""
+    """
+    Formats a list of strings as a markdown bullet list for feedback display.
+    
+    If the list is empty, returns a single bullet with the provided empty message.
+    """
     if not items:
         return f"- {empty_message}"
     return "\n".join(f"- {item}" for item in items)
@@ -87,20 +87,19 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None
 ) -> str:
     """
-    Generate a handoff prompt for agent coordination using dev tooling.
+    Generates a structured handoff prompt for agent-to-agent coordination.
     
-    This function creates properly formatted prompts with deticked content
-    for seamless agent-to-agent communication.
+    Creates a formatted markdown prompt summarizing completed work, current project status, instructions for the next agent, critical context, and files modified. The prompt includes environment setup steps, critical requirements, immediate next steps, and coordination protocol, with all content processed to ensure clean codeblock rendering for seamless agent communication.
     
     Args:
-        work_completed: List of completed work items
-        current_status: Current project status
-        next_agent_instructions: Instructions for next agent
-        critical_context: Critical context to preserve
-        files_modified: List of modified files
+        work_completed: List of items completed during the session.
+        current_status: Description of the current project state.
+        next_agent_instructions: Actionable instructions for the next agent or session.
+        critical_context: Essential context that must be preserved for continuity.
+        files_modified: List of files changed during the session.
     
     Returns:
-        Formatted handoff prompt with deticked content
+        A deticked markdown-formatted handoff prompt for agent coordination.
     """
     # Validate required inputs
     if not isinstance(work_completed, list):
@@ -208,20 +207,19 @@ def generate_mandatory_session_end_prompt(
     files_modified: List[str] = None
 ) -> str:
     """
-    Generate mandatory session end prompt for agent coordination.
+    Generates a mandatory session end report prompt for agent coordination.
     
-    This function creates the required session end documentation with
-    deticked content for proper codeblock rendering in agent handoffs.
+    Creates a formatted markdown report summarizing completed work, current project status, files modified, instructions for the next agent, and critical context. The prompt includes handoff requirements and immediate next steps, with all content processed to ensure clean codeblock rendering for agent communication.
     
     Args:
-        work_completed: List of completed work items
-        current_status: Current project status
-        next_agent_instructions: Instructions for next agent
-        critical_context: Critical context to preserve
-        files_modified: List of modified files
+        work_completed: List of completed work items for the session.
+        current_status: Description of the current project status.
+        next_agent_instructions: Instructions for the next agent to follow.
+        critical_context: Essential context to preserve for project continuity.
+        files_modified: List of files modified during the session.
     
     Returns:
-        Formatted session end prompt with deticked content
+        A deticked markdown string containing the session end report prompt.
     """
     if files_modified is None:
         files_modified = []
@@ -289,15 +287,15 @@ def generate_meta_feedback(
     suggestions: List[str] = None
 ) -> str:
     """
-    Generate meta feedback about AGOR itself for continuous improvement.
+    Generates a formatted meta feedback report for AGOR, including feedback type, content, suggestions, and recommended actions.
     
     Args:
-        feedback_type: Type of feedback (bug, enhancement, workflow, etc.)
-        feedback_content: Main feedback content
-        suggestions: List of improvement suggestions
+        feedback_type: The category of feedback (e.g., bug, enhancement, workflow).
+        feedback_content: The main feedback message.
+        suggestions: Optional list of improvement suggestions.
     
     Returns:
-        Formatted meta feedback with deticked content
+        A markdown-formatted meta feedback report with deticked content for clean codeblock rendering.
     """
     if suggestions is None:
         suggestions = []
