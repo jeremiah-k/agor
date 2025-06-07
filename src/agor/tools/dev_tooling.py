@@ -1,5 +1,13 @@
 """
-Development Tooling for AGOR - Quick Commit/Push and Memory Operations
+AGOR Development Tooling - Main Interface Module
+
+This module provides the main interface for AGOR development utilities.
+It imports functionality from specialized modules for better organization:
+
+- git_operations: Safe git operations and timestamp utilities
+- memory_manager: Cross-branch memory commits and branch management
+- agent_handoffs: Agent coordination and handoff utilities
+- dev_testing: Testing utilities and environment detection
 
 Provides utility functions for frequent commits and cross-branch memory operations
 to streamline development workflow and memory management.
@@ -11,7 +19,46 @@ import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Dict, Any
+
+# Import from specialized modules for modular organization
+try:
+    from .git_operations import (
+        get_current_timestamp as _get_current_timestamp,
+        get_file_timestamp as _get_file_timestamp,
+        get_precise_timestamp as _get_precise_timestamp,
+        get_ntp_timestamp as _get_ntp_timestamp,
+        run_git_command as _run_git_command,
+        safe_git_push as _safe_git_push,
+        quick_commit_push as _quick_commit_push
+    )
+
+    from .memory_manager import (
+        commit_to_memory_branch as _commit_to_memory_branch,
+        auto_commit_memory as _auto_commit_memory
+    )
+
+    from .agent_handoffs import (
+        detick_content,
+        retick_content,
+        generate_handoff_prompt_only,
+        generate_mandatory_session_end_prompt,
+        generate_meta_feedback
+    )
+
+    from .dev_testing import (
+        test_tooling as _test_tooling,
+        detect_environment,
+        get_agent_dependency_install_commands,
+        generate_dynamic_installation_prompt
+    )
+
+    MODULAR_IMPORTS_AVAILABLE = True
+
+except ImportError as e:
+    # Fallback for development or when modules aren't available
+    print(f"⚠️  Modular imports not available: {e}")
+    MODULAR_IMPORTS_AVAILABLE = False
 
 # Handle imports for both installed and development environments
 try:
@@ -2504,3 +2551,102 @@ print(outputs['session_end_prompt'])
             'success': False,
             'error': f'Failed to generate session end prompt: {str(e)}'
         }
+
+
+# =============================================================================
+# CONVENIENCE FUNCTIONS FOR BACKWARD COMPATIBILITY AND EASY ACCESS
+# =============================================================================
+
+def get_timestamp() -> str:
+    """Get current timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_current_timestamp()
+    else:
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+
+def get_current_timestamp() -> str:
+    """Get current timestamp - convenience function for backward compatibility."""
+    return get_timestamp()
+
+
+def get_file_timestamp() -> str:
+    """Get file-safe timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_file_timestamp()
+    else:
+        return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
+
+
+def get_precise_timestamp() -> str:
+    """Get precise timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_precise_timestamp()
+    else:
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
+def get_ntp_timestamp() -> str:
+    """Get NTP timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_ntp_timestamp()
+    else:
+        return get_timestamp()
+
+
+def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
+    """Quick commit and push - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _quick_commit_push(message, emoji)
+    else:
+        # Fallback implementation
+        dev_tools = DevTooling()
+        return dev_tools.quick_commit_push(message, emoji)
+
+
+def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
+    """Auto-commit memory - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _auto_commit_memory(content, memory_type, agent_id)
+    else:
+        # Fallback implementation
+        dev_tools = DevTooling()
+        return dev_tools.auto_commit_memory(content, memory_type, agent_id)
+
+
+def test_tooling() -> bool:
+    """Test development tooling - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _test_tooling()
+    else:
+        # Fallback implementation
+        print("🧪 Testing AGOR Development Tooling...")
+        try:
+            dev_tools = DevTooling()
+            timestamp = dev_tools.get_current_timestamp()
+            print(f"📅 Current timestamp: {timestamp}")
+
+            success, output = dev_tools._run_git_command(["--version"])
+            if success:
+                print(f"✅ Git working: {output}")
+            else:
+                print(f"❌ Git issue: {output}")
+                return False
+
+            print("🎉 Development tooling test completed successfully!")
+            return True
+        except Exception as e:
+            print(f"❌ Development tooling test failed: {e}")
+            return False
+
+
+# Global instance for convenience
+_dev_tools_instance = None
+
+
+def get_dev_tools() -> 'DevTooling':
+    """Get global DevTooling instance - convenience function."""
+    global _dev_tools_instance
+    if _dev_tools_instance is None:
+        _dev_tools_instance = DevTooling()
+    return _dev_tools_instance
