@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from .git_operations import run_git_command, safe_git_push, get_file_timestamp
+from agor.tools.git_operations import run_git_command, safe_git_push, get_file_timestamp
 
 
 def commit_to_memory_branch(

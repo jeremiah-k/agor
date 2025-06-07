@@ -211,9 +211,8 @@ def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
         if "nothing to commit" in output.lower():
             print("✅ No changes to commit (working directory clean)")
             return True
-        else:
-            print(f"❌ Failed to commit: {output}")
-            return False
+        print(f"❌ Failed to commit: {output}")
+        return False
     
     # Safe push
     if not safe_git_push():

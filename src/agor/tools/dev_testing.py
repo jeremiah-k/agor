@@ -10,12 +10,11 @@ Functions:
 - Environment validation and setup utilities
 """
 
-import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, Any
 
-from .git_operations import run_git_command, get_current_timestamp, get_file_timestamp, get_precise_timestamp, get_ntp_timestamp
+from agor.tools.git_operations import run_git_command, get_current_timestamp, get_file_timestamp, get_precise_timestamp, get_ntp_timestamp
 
 
 def detect_environment() -> Dict[str, Any]:
