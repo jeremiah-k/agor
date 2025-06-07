@@ -252,6 +252,10 @@ Working on comprehensive AGOR improvements based on review findings:
     auto_commit_memory(modular_memory, "modularization_progress", "refactor_agent")
     print("💾 Updated memory with modularization progress")
 
+    # Commit the new modules
+    quick_commit_push("🧩 Create modular dev tooling: git_operations, memory_manager, agent_handoffs, dev_testing", "🧩")
+    print("✅ Committed new modular dev tooling modules")
+
 except Exception as e:
     print(f"❌ Dev tooling initialization failed: {e}")
     import traceback
