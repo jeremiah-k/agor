@@ -140,6 +140,94 @@ class DevTooling:
             # Fallback to local time if NTP fails
             return self.get_current_timestamp()
 
+    def safe_git_push(
+        self,
+        branch_name: Optional[str] = None,
+        force: bool = False,
+        explicit_force: bool = False
+    ) -> bool:
+        """
+        Safe git push with upstream checking and protected branch validation.
+
+        This function implements safety checks to prevent dangerous git operations:
+        - Always pulls before pushing to check for upstream changes
+        - Prevents force pushes to protected branches (main, master, develop)
+        - Requires explicit confirmation for force pushes
+        - Fails safely if upstream changes require merge/rebase
+
+        Args:
+            branch_name: Target branch (default: current branch)
+            force: Whether to force push (requires explicit_force=True for safety)
+            explicit_force: Must be True to enable force push (safety check)
+
+        Returns:
+            True if successful, False otherwise
+        """
+        print("🛡️  Safe git push: performing safety checks...")
+
+        # Get current branch if not specified
+        if not branch_name:
+            success, current_branch = self._run_git_command(["branch", "--show-current"])
+            if not success:
+                print("❌ Cannot determine current branch")
+                return False
+            branch_name = current_branch.strip()
+
+        # Protected branches - never allow force push
+        protected_branches = ["main", "master", "develop", "production"]
+        if force and branch_name in protected_branches:
+            print(f"🚨 SAFETY VIOLATION: Force push to protected branch '{branch_name}' is not allowed")
+            print(f"Protected branches: {', '.join(protected_branches)}")
+            return False
+
+        # Force push safety check
+        if force and not explicit_force:
+            print("🚨 SAFETY VIOLATION: Force push requires explicit_force=True")
+            print("This prevents accidental force pushes that could lose work")
+            return False
+
+        # Step 1: Fetch to check for upstream changes
+        print("📡 Fetching from remote to check for upstream changes...")
+        success, output = self._run_git_command(["fetch", "origin", branch_name])
+        if not success:
+            print(f"⚠️  Failed to fetch from remote: {output}")
+            print("Proceeding with push (remote may not exist yet)")
+
+        # Step 2: Check if upstream has changes we don't have
+        success, local_commit = self._run_git_command(["rev-parse", "HEAD"])
+        if not success:
+            print("❌ Cannot get local commit hash")
+            return False
+        local_commit = local_commit.strip()
+
+        success, remote_commit = self._run_git_command(["rev-parse", f"origin/{branch_name}"])
+        if success:
+            remote_commit = remote_commit.strip()
+            if local_commit != remote_commit and not force:
+                # Check if we're behind
+                success, merge_base = self._run_git_command(["merge-base", "HEAD", f"origin/{branch_name}"])
+                if success and merge_base.strip() == local_commit:
+                    print("🚨 UPSTREAM CHANGES DETECTED: Remote has commits we don't have")
+                    print("You need to pull and merge/rebase before pushing")
+                    print("Run: git pull origin {branch_name}")
+                    return False
+
+        # Step 3: Perform the push
+        push_command = ["push", "origin", branch_name]
+        if force:
+            push_command.append("--force")
+            print(f"⚠️  FORCE PUSHING to {branch_name} (explicit_force=True)")
+        else:
+            print(f"✅ Safe pushing to {branch_name}")
+
+        success, output = self._run_git_command(push_command)
+        if not success:
+            print(f"❌ Push failed: {output}")
+            return False
+
+        print(f"✅ Successfully pushed to {branch_name}")
+        return True
+
     def quick_commit_push(self, message: str, emoji: str = "🔧") -> bool:
         """
         Commit and push in one operation with timestamp.
@@ -171,10 +259,9 @@ class DevTooling:
             print(f"❌ Failed to commit: {output}")
             return False
 
-        # Push
-        success, output = self._run_git_command(["push"])
-        if not success:
-            print(f"❌ Failed to push: {output}")
+        # Safe push
+        if not self.safe_git_push():
+            print("❌ Safe push failed")
             return False
 
         print(f"✅ Successfully committed and pushed at {timestamp}")
@@ -419,8 +506,8 @@ class DevTooling:
                 return False
 
             # Step 7: Push memory branch (optional, don't fail if this doesn't work)
-            success, _ = self._run_git_command(["push", "origin", branch_name])
-            if not success:
+            # Use safe push for memory branches too, but don't fail the whole operation
+            if not self.safe_git_push(branch_name=branch_name):
                 print(
                     f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)"
                 )
