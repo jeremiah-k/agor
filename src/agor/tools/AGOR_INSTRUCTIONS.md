@@ -486,6 +486,9 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 ### 3.5. Development Strategies
 
 AGOR supports 5 multi-agent development strategies. The Memory Synchronization System will manage the persistence of strategy-specific files (like `strategy-active.md`, `agent{N}-memory.md`, task queues) on memory branches.
+
+**📋 COMPREHENSIVE PROTOCOLS**: See `docs/multi-agent-protocols.md` for complete implementation protocols, session management, and coordination requirements.
+
 🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
 ⚡ **Pipeline** (`pl`): Sequential work via snapshots with specialization
 🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue (tasks can be snapshots)

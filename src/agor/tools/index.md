@@ -42,6 +42,11 @@
   - Swarm: Dynamic task assignment
   - Red Team: Adversarial build/break cycles
   - Mob Programming: Collaborative coding
+- **[docs/multi-agent-protocols.md](../../../docs/multi-agent-protocols.md)** - **COMPREHENSIVE** - Complete coordination protocols
+  - Implementation protocols for all 5 strategies
+  - Session management and handoff requirements
+  - Role-specific workflows and responsibilities
+  - Technical implementation with dev tooling integration
 
 ### "I need to implement/execute a strategy"
 
@@ -104,6 +109,7 @@
 | **[../../../docs/google-ai-studio.md](../../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
 | **[../../../docs/standalone-mode.md](../../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
 | **[../../../docs/strategies.md](../../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
+| **[../../../docs/multi-agent-protocols.md](../../../docs/multi-agent-protocols.md)**   | **COMPREHENSIVE coordination protocols**  | **Implementation protocols, session management** | ~300  |
 | **[../../../docs/snapshots.md](../../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
 | **[coordination-example.md](coordination-example.md)**                                 | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
 | **[../../../docs/agor-development-guide.md](../../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
