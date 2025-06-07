@@ -1,6 +1,6 @@
 # AgentOrchestrator (AGOR) - Comprehensive Instructions
 
-This document provides comprehensive instructions for AgentOrchestrator (AGOR). It assumes you have already selected your operational role (Solo Developer, Project Coordinator, or Agent Worker) as guided by `README_ai.md`. If you have not selected a role, please refer to `README_ai.md` first.
+This document provides comprehensive instructions for AgentOrchestrator (AGOR). It assumes you have already selected your operational role (Worker Agent or Project Coordinator) as guided by `README_ai.md`. If you have not selected a role, please refer to `README_ai.md` first.
 
 This guide covers initial setup post-role selection, role-specific workflows, detailed AGOR protocols, tool usage, and more. After confirming your role, proceed immediately to 'Section 1: Essential Initial Setup' before attempting other actions.
 
@@ -89,13 +89,14 @@ chmod 755 /tmp/agor_tools/git
 
 Find your selected role below for detailed guidance, including specific initialization, focus areas, and relevant hotkey menus.
 
-### 2.1. Role A: SOLO DEVELOPER
+### 2.1. WORKER AGENT
 
-- **Focus**: Codebase analysis, direct code work, answering questions about the codebase.
+- **Focus**: Codebase analysis, direct code work, task execution, and technical implementation.
+- **Scope**: Can work solo or as part of a multi-agent team under Project Coordinator guidance.
 - **Initial Actions**:
 
   1. Complete "Essential Initial Setup" (Section 1).
-  2. Perform a comprehensive codebase analysis. This involves:
+  2. Perform comprehensive codebase analysis when working solo, or focus on assigned tasks when working under coordination:
      - Project Structure: Map directory tree and file organization.
      - Technology Stack: Identify languages, frameworks, dependencies.
      - Architecture Patterns: Analyze code organization and design patterns.
@@ -103,11 +104,11 @@ Find your selected role below for detailed guidance, including specific initiali
      - Dependencies: Examine package files, imports, external integrations.
      - Code Quality: Assess structure, documentation, testing coverage.
      - Development Setup: Identify build systems, CI/CD, development tools.
-  3. Present your detailed analysis results.
+  3. Present analysis results or execute assigned tasks.
 
-  **Important**: After completing these initial actions, display the **SOLO DEVELOPER Menu (Role A)** (as defined below) to the user and await their command. Show only the clean menu, without technical function names or internal documentation.
+  **Important**: After completing these initial actions, display the **WORKER AGENT Menu** (as defined below) to the user and await their command. Show only the clean menu, without technical function names or internal documentation.
 
-**SOLO DEVELOPER Menu (Role A):**
+**WORKER AGENT Menu:**
 **📊 Analysis & Display:**
 a ) analyze codebase f ) full files co) changes only da) detailed snapshot m ) show diff
 **🔍 Code Exploration:**
@@ -116,8 +117,18 @@ bfs) breadth-first search grep) search patterns tree) directory structure
 edit) modify files commit) save changes diff) show changes
 **📋 Documentation:**
 doc) generate docs comment) add comments explain) code explanation
-**🎯 Planning Support:**
-sp) strategic plan bp) break down project
+**🤝 Coordination (Multi-Agent):**
+status) check coordination sync) update from main ch) checkpoint planning
+log) update agent log msg) post to agentconvo report) status report
+task) receive task complete) mark complete
+**🚀 Dev Tooling Integration:**
+handoff) generate handoff prompt using dev tooling
+outputs) generate complete project outputs (snapshot + handoff + PR)
+qcp) quick commit and push with timestamp
+test-tools) test all dev tooling functions
+env-info) show environment and version info
+**🔄 Session Management:**
+session-end) MANDATORY session end prompt for agent coordination
 **🤝 Snapshot Procedures:**
 snapshot) create snapshot document for another agent
 progress-report) create progress report snapshot for status updates
@@ -130,7 +141,7 @@ mem-sync-restore) restore memory mem-sync-status) show sync status
 meta) provide feedback on AGOR itself
 
 **🔄 Session Navigation:**
-?) quick help menu) refresh options reset) clean restart
+help) show this menu status) show current status refresh) refresh options reset) clean restart
 
 **Menu Flow**: After the user selects any hotkey option:
 
@@ -143,21 +154,22 @@ meta) provide feedback on AGOR itself
 
 See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 
-### 2.2. Role B: PROJECT COORDINATOR
+### 2.2. PROJECT COORDINATOR
 
-- **Focus**: Strategic planning, agent coordination, managing multi-agent development workflows.
+- **Focus**: Strategic oversight, task delegation, progress tracking, quality assurance, and code review.
+- **Philosophy**: Act as strategic overseer and delegator, not direct executor. Focus on high-level coordination.
 - **Initial Actions**:
 
   1. Complete "Essential Initial Setup" (Section 1).
   2. Initialize the Coordination System:
      - The AGOR Memory Synchronization System will automatically handle the creation and management of `.agor/` directory and its contents (like `agentconvo.md`, `memory.md`) on dedicated memory branches. Your primary interaction with memory will be through this automated system.
-  3. Perform a quick project overview: Basic structure and technology identification.
-  4. Conduct a strategic assessment: Focus on architecture, dependencies, and planning needs.
-  5. Display organized analysis results in an actionable format to the user.
+  3. Perform strategic project assessment: Architecture, dependencies, planning needs, and team structure.
+  4. Break down work into delegatable tasks for Worker Agents.
+  5. Display organized strategic analysis and delegation plan to the user.
 
-  **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **PROJECT COORDINATOR Menu (Role B)** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
+  **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **PROJECT COORDINATOR Menu** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
 
-**PROJECT COORDINATOR Menu (Role B):**
+**PROJECT COORDINATOR Menu:**
 **🎯 Strategic Planning:**
 sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp) dependency planning rp) risk planning
 **⚡ Strategy Selection:**
@@ -185,52 +197,7 @@ meta) provide feedback on AGOR itself
 
 **CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
-### 2.3. Role C: AGENT WORKER
 
-- **Focus**: Receiving and executing specific tasks from a project coordinator.
-- **Initial Actions**:
-
-  1. Complete "Essential Initial Setup" (Section 1).
-  2. Perform minimal setup: Basic git configuration. The AGOR Memory Synchronization System will automatically manage your coordination files (like `.agor/agentconvo.md`, `.agor/memory.md`, and your own `agent{N}-memory.md`) on dedicated memory branches.
-  3. Provide a brief project overview if available, then enter standby mode.
-  4. Announce readiness and await instructions from the coordinator.
-
-  **Joining an Ongoing Project:**
-  If you are an Agent Worker joining a project where an AGOR strategy is already active and you haven't received a direct work snapshot or specific task from the Project Coordinator, you can use the `discover_my_role()` function to get oriented. To do this, you would typically execute:
-
-  ```python
-  from agor.tools.agent_coordination import discover_my_role
-  print(discover_my_role("your_agent_id")) # Replace "your_agent_id"
-  ```
-
-  This will provide information about the active strategy, your potential role, and next steps. However, always prioritize instructions from your Project Coordinator if available.
-
-  **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **AGENT WORKER Menu (Role C)** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
-
-**AGENT WORKER Menu (Role C):**
-**🤝 Coordination:**
-status) check coordination sync) update from main ch) checkpoint planning
-**📨 Communication:**
-log) update agent log msg) post to agentconvo report) status report
-**📋 Task Management:**
-task) receive task complete) mark complete snapshot) prepare snapshot
-**📊 Basic Analysis:**
-a ) analyze codebase f ) full files co) changes only
-**🤝 Snapshot Procedures:**
-snapshot) create snapshot document for another agent
-progress-report) create progress report snapshot for status updates
-create-pr) generate PR description for current work
-receive-snapshot) receive snapshot from another agent
-**💾 Memory Sync (Advanced/Dev Use):**
-mem-sync-start) start memory sync mem-sync-save) save memory state
-mem-sync-restore) restore memory mem-sync-status) show sync status
-**🔄 Meta-Development:**
-meta) provide feedback on AGOR itself
-
-**🔄 Session Navigation:**
-?) quick help menu) refresh options reset) clean restart
-
-**CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
 ---
 
@@ -272,7 +239,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
 - **`mb`**: Set up Mob Programming strategy (collaborative coding)
 
-**SOLO DEVELOPER ACTIONS:**
+**WORKER AGENT ACTIONS:**
 **Analysis & Display:**
 
 - **`a`**: Perform comprehensive codebase analysis with structure, dependencies, and recommendations
@@ -299,7 +266,17 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`comment`**: Add inline comments and docstrings to improve code readability
 - **`explain`**: Provide detailed code explanation with logic flow and purpose
 
-**AGENT WORKER ACTIONS:**
+**Dev Tooling Integration:**
+
+- **`handoff`**: Generate handoff prompt using dev tooling. Usage: provide task description, work completed, and next steps
+- **`outputs`**: Generate complete project outputs (snapshot + handoff + PR description). Usage: provide task description and context
+- **`qcp`**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
+- **`test-tools`**: Test all dev tooling functions to ensure they work properly. No parameters required.
+- **`env-info`**: Show current environment detection, AGOR version, and platform information. No parameters required.
+- **`meta`**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
+- **`session-end`**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
+
+**WORKER AGENT COORDINATION ACTIONS:**
 **Coordination:**
 
 - **`status`**: Check coordination files (via Memory Synchronization System), agent memory files, and recent activity in agentconvo.md
@@ -331,7 +308,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`c`**: Continue previous operation
 - **`r`**: Refresh context or retry last action
 - **`w`**: Work autonomously on the current task
-- **`?`**: Display help or this menu
+- **`help`**: Display this menu and available hotkeys
 
 ### 3.2. Agent Coordination System
 
@@ -469,6 +446,9 @@ Agent1: 2024-01-15 14:45 - Completed initial extraction, found 3 key functions
 ### 3.5. Development Strategies
 
 AGOR supports 5 multi-agent development strategies. The Memory Synchronization System will manage the persistence of strategy-specific files (like `strategy-active.md`, `agent{N}-memory.md`, task queues) on memory branches.
+
+**📋 COMPREHENSIVE PROTOCOLS**: See `docs/multi-agent-protocols.md` for complete implementation protocols, session management, and coordination requirements.
+
 🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
 ⚡ **Pipeline** (`pl`): Sequential work via snapshots with specialization
 🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue (tasks can be snapshots)

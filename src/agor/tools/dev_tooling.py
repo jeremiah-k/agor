@@ -1,5 +1,13 @@
 """
-Development Tooling for AGOR - Quick Commit/Push and Memory Operations
+AGOR Development Tooling - Main Interface Module
+
+This module provides the main interface for AGOR development utilities.
+It imports functionality from specialized modules for better organization:
+
+- git_operations: Safe git operations and timestamp utilities
+- memory_manager: Cross-branch memory commits and branch management
+- agent_handoffs: Agent coordination and handoff utilities
+- dev_testing: Testing utilities and environment detection
 
 Provides utility functions for frequent commits and cross-branch memory operations
 to streamline development workflow and memory management.
@@ -11,7 +19,46 @@ import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Dict, Any
+
+# Import from specialized modules for modular organization
+try:
+    from .git_operations import (
+        get_current_timestamp as _get_current_timestamp,
+        get_file_timestamp as _get_file_timestamp,
+        get_precise_timestamp as _get_precise_timestamp,
+        get_ntp_timestamp as _get_ntp_timestamp,
+        run_git_command as _run_git_command,
+        safe_git_push as _safe_git_push,
+        quick_commit_push as _quick_commit_push
+    )
+
+    from .memory_manager import (
+        commit_to_memory_branch as _commit_to_memory_branch,
+        auto_commit_memory as _auto_commit_memory
+    )
+
+    from .agent_handoffs import (
+        detick_content,
+        retick_content,
+        generate_handoff_prompt_only,
+        generate_mandatory_session_end_prompt,
+        generate_meta_feedback
+    )
+
+    from .dev_testing import (
+        test_tooling as _test_tooling,
+        detect_environment,
+        get_agent_dependency_install_commands,
+        generate_dynamic_installation_prompt
+    )
+
+    MODULAR_IMPORTS_AVAILABLE = True
+
+except ImportError as e:
+    # Fallback for development or when modules aren't available
+    print(f"⚠️  Modular imports not available: {e}")
+    MODULAR_IMPORTS_AVAILABLE = False
 
 # Handle imports for both installed and development environments
 try:
@@ -140,6 +187,94 @@ class DevTooling:
             # Fallback to local time if NTP fails
             return self.get_current_timestamp()
 
+    def safe_git_push(
+        self,
+        branch_name: Optional[str] = None,
+        force: bool = False,
+        explicit_force: bool = False
+    ) -> bool:
+        """
+        Safe git push with upstream checking and protected branch validation.
+
+        This function implements safety checks to prevent dangerous git operations:
+        - Always pulls before pushing to check for upstream changes
+        - Prevents force pushes to protected branches (main, master, develop)
+        - Requires explicit confirmation for force pushes
+        - Fails safely if upstream changes require merge/rebase
+
+        Args:
+            branch_name: Target branch (default: current branch)
+            force: Whether to force push (requires explicit_force=True for safety)
+            explicit_force: Must be True to enable force push (safety check)
+
+        Returns:
+            True if successful, False otherwise
+        """
+        print("🛡️  Safe git push: performing safety checks...")
+
+        # Get current branch if not specified
+        if not branch_name:
+            success, current_branch = self._run_git_command(["branch", "--show-current"])
+            if not success:
+                print("❌ Cannot determine current branch")
+                return False
+            branch_name = current_branch.strip()
+
+        # Protected branches - never allow force push
+        protected_branches = ["main", "master", "develop", "production"]
+        if force and branch_name in protected_branches:
+            print(f"🚨 SAFETY VIOLATION: Force push to protected branch '{branch_name}' is not allowed")
+            print(f"Protected branches: {', '.join(protected_branches)}")
+            return False
+
+        # Force push safety check
+        if force and not explicit_force:
+            print("🚨 SAFETY VIOLATION: Force push requires explicit_force=True")
+            print("This prevents accidental force pushes that could lose work")
+            return False
+
+        # Step 1: Fetch to check for upstream changes
+        print("📡 Fetching from remote to check for upstream changes...")
+        success, output = self._run_git_command(["fetch", "origin", branch_name])
+        if not success:
+            print(f"⚠️  Failed to fetch from remote: {output}")
+            print("Proceeding with push (remote may not exist yet)")
+
+        # Step 2: Check if upstream has changes we don't have
+        success, local_commit = self._run_git_command(["rev-parse", "HEAD"])
+        if not success:
+            print("❌ Cannot get local commit hash")
+            return False
+        local_commit = local_commit.strip()
+
+        success, remote_commit = self._run_git_command(["rev-parse", f"origin/{branch_name}"])
+        if success:
+            remote_commit = remote_commit.strip()
+            if local_commit != remote_commit and not force:
+                # Check if we're behind
+                success, merge_base = self._run_git_command(["merge-base", "HEAD", f"origin/{branch_name}"])
+                if success and merge_base.strip() == local_commit:
+                    print("🚨 UPSTREAM CHANGES DETECTED: Remote has commits we don't have")
+                    print("You need to pull and merge/rebase before pushing")
+                    print("Run: git pull origin {branch_name}")
+                    return False
+
+        # Step 3: Perform the push
+        push_command = ["push", "origin", branch_name]
+        if force:
+            push_command.append("--force")
+            print(f"⚠️  FORCE PUSHING to {branch_name} (explicit_force=True)")
+        else:
+            print(f"✅ Safe pushing to {branch_name}")
+
+        success, output = self._run_git_command(push_command)
+        if not success:
+            print(f"❌ Push failed: {output}")
+            return False
+
+        print(f"✅ Successfully pushed to {branch_name}")
+        return True
+
     def quick_commit_push(self, message: str, emoji: str = "🔧") -> bool:
         """
         Commit and push in one operation with timestamp.
@@ -171,10 +306,9 @@ class DevTooling:
             print(f"❌ Failed to commit: {output}")
             return False
 
-        # Push
-        success, output = self._run_git_command(["push"])
-        if not success:
-            print(f"❌ Failed to push: {output}")
+        # Safe push
+        if not self.safe_git_push():
+            print("❌ Safe push failed")
             return False
 
         print(f"✅ Successfully committed and pushed at {timestamp}")
@@ -282,60 +416,34 @@ class DevTooling:
             branch_exists = success
 
             if not branch_exists:
-                # Create new memory branch without switching
+                # Create new memory branch 1 commit behind HEAD (not orphan)
                 print(f"📝 Creating new memory branch: {branch_name}")
 
-                # Create empty tree using cross-platform method
-                # Create a temporary empty file for cross-platform compatibility
-                temp_empty_file = None
-                try:
-                    temp_fd, temp_empty_path = tempfile.mkstemp(
-                        prefix="agor_empty_", suffix=".tmp"
-                    )
-                    os.close(temp_fd)  # Close immediately, we just need an empty file
-                    temp_empty_file = Path(temp_empty_path)
-
-                    success, empty_tree = self._run_git_command(
-                        ["hash-object", "-t", "tree", str(temp_empty_file)]
-                    )
-                    if not success:
-                        # Alternative method for empty tree
-                        success, empty_tree = self._run_git_command(["write-tree"])
-                        if not success:
-                            print("❌ Failed to create empty tree")
-                            return False
-                finally:
-                    # Clean up temporary file
-                    if temp_empty_file and temp_empty_file.exists():
-                        try:
-                            temp_empty_file.unlink()
-                        except Exception as e:
-                            print(f"⚠️  Failed to cleanup temporary empty file: {e}")
-                empty_tree = empty_tree.strip()
-
-                # Create initial commit
-                success, initial_commit = self._run_git_command(
-                    [
-                        "commit-tree",
-                        empty_tree,
-                        "-m",
-                        f"Initial commit for memory branch {branch_name}",
-                    ]
-                )
+                # Get HEAD commit to create branch 1 commit behind
+                success, head_commit = self._run_git_command(["rev-parse", "HEAD"])
                 if not success:
-                    print("❌ Failed to create initial commit")
+                    print("❌ Failed to get HEAD commit")
                     return False
-                initial_commit = initial_commit.strip()
+                head_commit = head_commit.strip()
 
-                # Create branch reference
+                # Get parent of HEAD (1 commit behind)
+                success, parent_commit = self._run_git_command(["rev-parse", "HEAD~1"])
+                if not success:
+                    # If no parent (first commit), use HEAD itself
+                    print("⚠️  No parent commit found, using HEAD as base")
+                    parent_commit = head_commit
+                else:
+                    parent_commit = parent_commit.strip()
+
+                # Create branch reference pointing to parent commit
                 success, _ = self._run_git_command(
-                    ["update-ref", f"refs/heads/{branch_name}", initial_commit]
+                    ["update-ref", f"refs/heads/{branch_name}", parent_commit]
                 )
                 if not success:
                     print("❌ Failed to create branch reference")
                     return False
 
-                print(f"✅ Created memory branch {branch_name}")
+                print(f"✅ Created memory branch {branch_name} (1 commit behind HEAD: {parent_commit[:8]})")
 
             # Step 3: Get current commit of memory branch
             success, parent_commit = self._run_git_command(
@@ -419,8 +527,8 @@ class DevTooling:
                 return False
 
             # Step 7: Push memory branch (optional, don't fail if this doesn't work)
-            success, _ = self._run_git_command(["push", "origin", branch_name])
-            if not success:
+            # Use safe push for memory branches too, but don't fail the whole operation
+            if not self.safe_git_push(branch_name=branch_name):
                 print(
                     f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)"
                 )
@@ -2212,3 +2320,333 @@ def generate_handoff_prompt_only(
         generate_release_notes=False,
     )
     return generate_complete_project_outputs(request)
+
+
+def generate_meta_feedback(
+    current_project: str = None,
+    agor_issues_encountered: list = None,
+    suggested_improvements: list = None,
+    workflow_friction_points: list = None,
+    positive_experiences: list = None
+) -> dict:
+    """
+    Generate AGOR meta feedback for continuous improvement.
+
+    This function creates feedback about AGOR itself while working on other projects.
+    The output includes a link to submit feedback to the AGOR meta repository.
+
+    Args:
+        current_project: Name/description of the project you're working on
+        agor_issues_encountered: List of issues or problems with AGOR
+        suggested_improvements: List of suggestions for improving AGOR
+        workflow_friction_points: List of workflow friction points
+        positive_experiences: List of positive experiences with AGOR
+
+    Returns:
+        Dictionary with processed meta feedback ready for single codeblock usage
+    """
+    try:
+        from datetime import datetime
+
+        # Prepare meta feedback content
+        feedback_content = f"""# 🔄 AGOR Meta Feedback
+
+**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}
+**Current Project**: {current_project or 'Not specified'}
+**Feedback Type**: User Experience & Improvement Suggestions
+
+## 📋 AGOR Usage Context
+
+**Project Being Worked On**: {current_project or 'Not specified'}
+**AGOR Version**: 0.4.2+
+**Usage Pattern**: {detect_environment()['mode']}
+
+## 🎯 Issues Encountered
+
+{_format_feedback_list(agor_issues_encountered, 'No issues reported')}
+
+## 💡 Suggested Improvements
+
+{_format_feedback_list(suggested_improvements, 'No suggestions provided')}
+
+## 🚧 Workflow Friction Points
+
+{_format_feedback_list(workflow_friction_points, 'No friction points identified')}
+
+## ✅ Positive Experiences
+
+{_format_feedback_list(positive_experiences, 'No positive experiences noted')}
+
+## 🔗 Submit This Feedback
+
+**To submit this feedback for AGOR improvement:**
+
+1. **Copy this entire feedback** (it's already processed for single codeblock usage)
+2. **Visit**: https://github.com/jeremiah-k/agor-meta/issues/new
+3. **Paste the feedback** as the issue description
+4. **Add a descriptive title** like "AGOR Feedback: [Brief Description]"
+5. **Submit the issue** to help improve AGOR for everyone
+
+## 🎯 How This Helps
+
+Your feedback helps improve AGOR by:
+- Identifying real-world usage patterns and friction points
+- Gathering suggestions from actual users working on diverse projects
+- Building a knowledge base of common issues and solutions
+- Prioritizing development efforts based on user needs
+- Creating a community-driven improvement process
+
+**Thank you for helping make AGOR better!** 🚀
+
+---
+*This meta feedback was generated automatically using AGOR's dev tooling*
+*Generated while working on: {current_project or 'unspecified project'}*
+"""
+
+        # Process the content for single codeblock usage
+        processed_content = prepare_prompt_content(feedback_content)
+
+        return {
+            'success': True,
+            'meta_feedback': processed_content,
+            'github_url': 'https://github.com/jeremiah-k/agor-meta/issues/new',
+            'instructions': 'Copy the meta_feedback content and paste it at the GitHub URL to submit feedback'
+        }
+
+    except Exception as e:
+        return {
+            'success': False,
+            'error': f'Failed to generate meta feedback: {str(e)}'
+        }
+
+
+def _format_feedback_list(items: list, default_message: str) -> str:
+    """Format a list of feedback items."""
+    if not items:
+        return f"- {default_message}"
+
+    return '\n'.join(f"- {item}" for item in items)
+
+
+def generate_mandatory_session_end_prompt(
+    work_completed: list,
+    current_status: str,
+    next_agent_instructions: list = None,
+    critical_context: str = None,
+    files_modified: list = None
+) -> dict:
+    """
+    Generate mandatory session end prompt for agent coordination.
+
+    This function MUST be called before ending any agent session to ensure
+    proper coordination and context preservation for the next agent or session.
+
+    Args:
+        work_completed: List of work items completed in this session
+        current_status: Current status of the project/task
+        next_agent_instructions: Specific instructions for the next agent
+        critical_context: Critical context that must be preserved
+        files_modified: List of files that were modified
+
+    Returns:
+        Dictionary with processed session end prompt ready for coordination
+    """
+    try:
+        from datetime import datetime
+
+        # Prepare session end content
+        session_end_content = f"""# 🔄 MANDATORY SESSION END - Agent Coordination Required
+
+**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}
+**Session Type**: Agent Handoff Required
+**AGOR Version**: 0.4.2+
+
+## 📋 WORK COMPLETED THIS SESSION
+
+{_format_feedback_list(work_completed, 'No work completed')}
+
+## 📊 CURRENT PROJECT STATUS
+
+**Status**: {current_status or 'Status not provided'}
+
+## 📁 FILES MODIFIED
+
+{_format_feedback_list(files_modified, 'No files modified')}
+
+## 🎯 INSTRUCTIONS FOR NEXT AGENT/SESSION
+
+{_format_feedback_list(next_agent_instructions, 'No specific instructions provided')}
+
+## 🧠 CRITICAL CONTEXT TO PRESERVE
+
+{critical_context or 'No critical context provided'}
+
+## 🔧 ENVIRONMENT SETUP FOR CONTINUATION
+
+# Pull latest changes
+git pull origin work-0.4.3-2
+
+# Install dependencies
+python3 -m pip install -r src/agor/tools/agent-requirements.txt
+
+# Read updated documentation
+- src/agor/tools/README_ai.md (2-role system)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (meta mode hotkey)
+
+## ⚠️ CRITICAL REQUIREMENTS FOR NEXT SESSION
+
+1. **Review this session's work** - Understand what was completed
+2. **Continue from current status** - Don't restart or duplicate work
+3. **Use our dev tooling** - All coordination must use our backtick processing
+4. **Create return prompts** - Every session must end with coordination output
+5. **Focus on productivity** - Substantial progress, not just note-passing
+
+## 🚀 IMMEDIATE NEXT STEPS
+
+1. Review completed work and current status
+2. Continue development from where this session left off
+3. Make substantial progress on remaining tasks
+4. Generate return prompt using our dev tooling before ending
+
+## 📞 COORDINATION PROTOCOL
+
+**When you complete your work, you MUST run:**
+
+``python
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import generate_mandatory_session_end_prompt
+
+outputs = generate_mandatory_session_end_prompt(
+    work_completed=['List what you completed'],
+    current_status='Current project status',
+    next_agent_instructions=['Instructions for next agent'],
+    critical_context='Important context to preserve',
+    files_modified=['Files you modified']
+)
+print(outputs['session_end_prompt'])
+"
+``
+
+**This ensures continuous productivity and proper coordination!**
+
+---
+
+*This session end prompt was generated automatically to ensure coordination*
+*Next agent: Continue productive work and generate your own session end prompt*
+"""
+
+        # Process the content for single codeblock usage
+        processed_content = prepare_prompt_content(session_end_content)
+
+        return {
+            'success': True,
+            'session_end_prompt': processed_content,
+            'instructions': 'Copy the session_end_prompt content for agent coordination'
+        }
+
+    except Exception as e:
+        return {
+            'success': False,
+            'error': f'Failed to generate session end prompt: {str(e)}'
+        }
+
+
+# =============================================================================
+# CONVENIENCE FUNCTIONS FOR BACKWARD COMPATIBILITY AND EASY ACCESS
+# =============================================================================
+
+def get_timestamp() -> str:
+    """Get current timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_current_timestamp()
+    else:
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+
+def get_current_timestamp() -> str:
+    """Get current timestamp - convenience function for backward compatibility."""
+    return get_timestamp()
+
+
+def get_file_timestamp() -> str:
+    """Get file-safe timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_file_timestamp()
+    else:
+        return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
+
+
+def get_precise_timestamp() -> str:
+    """Get precise timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_precise_timestamp()
+    else:
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
+def get_ntp_timestamp() -> str:
+    """Get NTP timestamp - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _get_ntp_timestamp()
+    else:
+        return get_timestamp()
+
+
+def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
+    """Quick commit and push - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _quick_commit_push(message, emoji)
+    else:
+        # Fallback implementation
+        dev_tools = DevTooling()
+        return dev_tools.quick_commit_push(message, emoji)
+
+
+def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
+    """Auto-commit memory - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _auto_commit_memory(content, memory_type, agent_id)
+    else:
+        # Fallback implementation
+        dev_tools = DevTooling()
+        return dev_tools.auto_commit_memory(content, memory_type, agent_id)
+
+
+def test_tooling() -> bool:
+    """Test development tooling - convenience function for backward compatibility."""
+    if MODULAR_IMPORTS_AVAILABLE:
+        return _test_tooling()
+    else:
+        # Fallback implementation
+        print("🧪 Testing AGOR Development Tooling...")
+        try:
+            dev_tools = DevTooling()
+            timestamp = dev_tools.get_current_timestamp()
+            print(f"📅 Current timestamp: {timestamp}")
+
+            success, output = dev_tools._run_git_command(["--version"])
+            if success:
+                print(f"✅ Git working: {output}")
+            else:
+                print(f"❌ Git issue: {output}")
+                return False
+
+            print("🎉 Development tooling test completed successfully!")
+            return True
+        except Exception as e:
+            print(f"❌ Development tooling test failed: {e}")
+            return False
+
+
+# Global instance for convenience
+_dev_tools_instance = None
+
+
+def get_dev_tools() -> 'DevTooling':
+    """Get global DevTooling instance - convenience function."""
+    global _dev_tools_instance
+    if _dev_tools_instance is None:
+        _dev_tools_instance = DevTooling()
+    return _dev_tools_instance
