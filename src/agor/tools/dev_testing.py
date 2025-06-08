@@ -33,7 +33,7 @@ def detect_environment() -> Dict[str, Any]:
     environment = {
         "mode": "unknown",
         "platform": "unknown",
-        "agor_version": "0.4.3+",
+        "agor_version": "0.4.4+",
         "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "has_git": False,
         "has_pyenv": False
