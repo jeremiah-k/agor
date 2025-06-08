@@ -6,7 +6,6 @@ development strategies including Parallel Divergent, Pipeline, Swarm, etc.
 """
 
 import json
-import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -14,6 +13,7 @@ from typing import Dict, List, Optional
 import yaml
 
 from .memory_sync import MemorySyncManager
+from agor.tools.git_operations import run_git_command
 
 
 class StrategyManager:
@@ -116,14 +116,13 @@ class StrategyManager:
 
         try:
             # Pull latest changes
-            result = subprocess.run(
-                ["git", "pull"], capture_output=True, text=True, cwd=self.project_root
-            )
+            success, output = run_git_command(["pull"], cwd=str(self.project_root))
 
-            if result.returncode == 0:
+            if success:
                 print("✅ Git pull successful")
             else:
-                print(f"⚠️  Git pull warning: {result.stderr}")
+                # output from run_git_command contains stderr in case of error
+                print(f"⚠️  Git pull warning/error: {output}")
 
             # Update sync flags
             if self.state_dir.exists():
@@ -234,34 +233,23 @@ class StrategyManager:
             agent_branches[agent_id] = branch_name
 
             # Create branch if it doesn't exist
-            try:
-                subprocess.run(
-                    ["git", "checkout", "-b", branch_name],
-                    capture_output=True,
-                    cwd=self.project_root,
-                    check=False,  # Don't fail if branch exists
-                )
-            except Exception:
-                pass  # Branch might already exist
+            # Using run_git_command. Assuming project_root is the correct cwd.
+            # run_git_command doesn't have check=False, it returns (success, output).
+            # We want to create if not exists, so if it fails because it exists, that's okay.
+            # If it fails for other reasons, that might be an issue.
+            # For now, mimic check=False by not strictly checking `success`.
+            run_git_command(
+                ["checkout", "-b", branch_name],
+                cwd=str(self.project_root) # run_git_command might need cwd as string
+            )
+            # Original code used try/except Exception: pass. This is similar.
 
         # Return to main branch
-        try:
-            subprocess.run(
-                ["git", "checkout", "main"],
-                capture_output=True,
-                cwd=self.project_root,
-                check=False,
-            )
-        except Exception:
-            try:
-                subprocess.run(
-                    ["git", "checkout", "master"],
-                    capture_output=True,
-                    cwd=self.project_root,
-                    check=False,
-                )
-            except Exception:
-                pass
+        # Try 'main' first, then 'master'
+        success_main, _ = run_git_command(["checkout", "main"], cwd=str(self.project_root))
+        if not success_main:
+            run_git_command(["checkout", "master"], cwd=str(self.project_root))
+            # Ignoring success/failure of checkout master as per original logic
 
         return agent_branches
 

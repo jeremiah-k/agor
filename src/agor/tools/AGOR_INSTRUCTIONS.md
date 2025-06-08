@@ -38,11 +38,11 @@ After confirming your role, please perform these initial setup steps.
 
 Execute this sequence until a valid git repository is found:
 
-1. **Primary Check**: Test if `/tmp/project/.git` exists (Bundle Mode standard)
-2. **Recursive Search**: Run `find /tmp -name ".git" -type d 2>/dev/null` to locate all git repositories
-3. **Directory Navigation**: Change to the directory containing `.git` and set as working directory
-4. **Verification**: Run `/tmp/agor_tools/git ls-files` to confirm repository access and tracked files
-5. **Fallback Analysis**: If `/tmp/agor_tools/git ls-files` returns empty, use the provided `tree()` function to examine structure
+1. **Primary Check**: Test if `/tmp/project/.git` exists (standard for Bundle Mode). In Development/Standalone modes, this would be relative to your project root (e.g., `./.git`).
+2. **Recursive Search**: Run `find /tmp -name ".git" -type d 2>/dev/null` (primarily for Bundle Mode) to locate all git repositories. In other modes, you're likely already in the project.
+3. **Directory Navigation**: Change to the directory containing `.git` and set as working directory.
+4. **Verification**: Run `/tmp/agor_tools/git ls-files` (standard for Bundle Mode) to confirm repository access and tracked files. In Development/Standalone, you'd use the `git` command available in your PATH or a project-specific one.
+5. **Fallback Analysis**: If the git `ls-files` command returns empty, use the provided `tree()` function to examine structure.
 6. **Persistence**: Continue searching until a valid repository with tracked files is located
 7. **Never assume failure** - the git repository is always present in bundles
 
@@ -53,7 +53,7 @@ Execute this sequence until a valid git repository is found:
 Your bundle may include captured git configuration. To apply it:
 
 ```bash
-# Apply git configuration from bundle (recommended)
+# Apply git configuration from bundle (recommended for Bundle Mode)
 python /tmp/agor_tools/git_setup.py --apply-bundle
 
 # Or check what's available
@@ -62,23 +62,28 @@ python /tmp/agor_tools/git_setup.py --show
 
 If no captured configuration is available, you can:
 
-- Import from environment: `python /tmp/agor_tools/git_setup.py --import-env`
+- Import from environment: `python /tmp/agor_tools/git_setup.py --import-env` (works in all modes if system git is configured)
 - Set manually: `python /tmp/agor_tools/git_setup.py --set "Your Name" "your@email.com"`
   **This ensures proper commit attribution for all development work.**
 
-**Important**: You have a real, executable git binary at `/tmp/agor_tools/git`. DO NOT simulate git commands.
+**Important**: You have a real, executable git binary at `/tmp/agor_tools/git` (standard for Bundle Mode). In Development/Standalone modes, you'll typically use the system `git`. DO NOT simulate git commands.
 
 ```bash
-# Make the git binary executable
+# Make the git binary executable (primarily for Bundle Mode)
 chmod 755 /tmp/agor_tools/git
 
-# ALWAYS use the full path to the git binary - DO NOT use system git
+# ALWAYS use the full path to the git binary in Bundle Mode - DO NOT use system git
+# Example for Bundle Mode:
 /tmp/agor_tools/git config user.name "AgentOrchestrator"
 /tmp/agor_tools/git config user.email "agor@example.local"
 
 # Verify setup with REAL commands (not simulated)
+# Example for Bundle Mode:
 /tmp/agor_tools/git status
 /tmp/agor_tools/git ls-files
+# In Development/Standalone, you would typically just run:
+# git status
+# git ls-files
 ```
 
 **IMPORTANT**: Execute these commands for real. Do not simulate or pretend. The git binary is functional.
@@ -121,7 +126,7 @@ doc) generate docs comment) add comments explain) code explanation
 status) check coordination sync) update from main ch) checkpoint planning
 log) update agent log msg) post to agentconvo report) status report
 task) receive task complete) mark complete
-**🚀 Dev Tooling Integration:**
+**Dev Tooling Integration:** (Note: many of these invoke interactive tooling or prompt for input)
 handoff) generate handoff prompt using dev tooling
 outputs) generate complete project outputs (snapshot + handoff + PR)
 qcp) quick commit and push with timestamp
@@ -129,7 +134,7 @@ test-tools) test all dev tooling functions
 env-info) show environment and version info
 **🔄 Session Management:**
 session-end) MANDATORY session end prompt for agent coordination
-**🤝 Snapshot Procedures:**
+**🤝 Snapshot Procedures:** (Note: these invoke interactive tooling or use snapshot generation functions which may prompt for input)
 snapshot) create snapshot document for another agent
 progress-report) create progress report snapshot for status updates
 create-pr) generate PR description for current work
@@ -180,7 +185,7 @@ ct) create team ✅ tm) team manifest ✅ hp) snapshot prompts ✅ as) assign sp
 wf) workflow design ✅ qg) quality gates ✅ eo) execution order init) initialize coordination
 **📊 Basic Analysis:**
 a ) analyze codebase da) detailed snapshot
-**🤝 Snapshot Procedures:**
+**🤝 Snapshot Procedures:** (Note: these invoke interactive tooling or use snapshot generation functions which may prompt for input)
 snapshot) create snapshot document for another agent
 work-order) create work order snapshot for task assignment
 progress-report) create progress report snapshot for status updates
@@ -354,8 +359,8 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 **REPOSITORY OPERATIONS:**
 
-1. **ALWAYS use the full git binary path**: `/tmp/agor_tools/git ls-files`, `/tmp/agor_tools/git grep`, etc. for operations on the _working_ project branch.
-2. **Execute real commands**: Do not simulate. The git binary is functional and must be used.
+1. **ALWAYS use the full git binary path in Bundle Mode**: `/tmp/agor_tools/git ls-files` (standard for Bundle Mode), `/tmp/agor_tools/git grep`, etc. for operations on the _working_ project branch. In Development/Standalone modes, use your system `git`.
+2. **Execute real commands**: Do not simulate. The git binary (bundled or system) is functional and must be used.
 3. Display complete files when investigating code
 4. Edit by targeting specific line ranges, keep code cells short (1-2 lines)
 5. Verify all changes with `/tmp/agor_tools/git diff` before committing to the _working_ project branch.
@@ -365,6 +370,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 ```bash
 # Map codebase - EXECUTE THESE FOR REAL
+# (Examples below assume Bundle Mode paths; adapt for other modes by using system git)
 /tmp/agor_tools/git ls-files
 /tmp/agor_tools/git ls-files '*.py'
 /tmp/agor_tools/git grep "function_name"
@@ -514,6 +520,7 @@ The Memory Synchronization System is designed to handle concurrent access to coo
 
 ```bash
 # CORRECT: Pull before modifying shared files on working branch
+# (Example below assumes Bundle Mode path; adapt for other modes by using system git)
 /tmp/agor_tools/git pull origin main
 # ... make code changes to project files ...
 ```

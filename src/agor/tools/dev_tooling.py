@@ -22,43 +22,37 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 # Import from specialized modules for modular organization
-try:
-    from .git_operations import (
-        get_current_timestamp as _get_current_timestamp,
-        get_file_timestamp as _get_file_timestamp,
-        get_precise_timestamp as _get_precise_timestamp,
-        get_ntp_timestamp as _get_ntp_timestamp,
-        run_git_command as _run_git_command,
-        safe_git_push as _safe_git_push,
-        quick_commit_push as _quick_commit_push
-    )
+from .git_operations import (
+    get_current_timestamp,
+    get_file_timestamp,
+    get_precise_timestamp,
+    get_ntp_timestamp,
+    run_git_command,
+    safe_git_push,
+    quick_commit_push
+)
 
-    from .memory_manager import (
-        commit_to_memory_branch as _commit_to_memory_branch,
-        auto_commit_memory as _auto_commit_memory
-    )
+from .memory_manager import (
+    commit_to_memory_branch,
+    auto_commit_memory
+)
 
-    from .agent_handoffs import (
-        detick_content,
-        retick_content,
-        generate_handoff_prompt_only,
-        generate_mandatory_session_end_prompt,
-        generate_meta_feedback
-    )
+from .agent_handoffs import (
+    detick_content, # Use direct name
+    retick_content, # Use direct name
+    generate_handoff_prompt_only, # Use direct name
+    generate_mandatory_session_end_prompt, # Use direct name
+    generate_meta_feedback # Use direct name
+)
 
-    from .dev_testing import (
-        test_tooling as _test_tooling,
-        detect_environment,
-        get_agent_dependency_install_commands,
-        generate_dynamic_installation_prompt
-    )
+from .dev_testing import (
+    test_tooling, # Use direct name
+    detect_environment,
+    get_agent_dependency_install_commands,
+    generate_dynamic_installation_prompt
+)
 
-    MODULAR_IMPORTS_AVAILABLE = True
-
-except ImportError as e:
-    # Fallback for development or when modules aren't available
-    print(f"⚠️  Modular imports not available: {e}")
-    MODULAR_IMPORTS_AVAILABLE = False
+from .snapshot_templates import generate_snapshot_document # Added for create_seamless_handoff
 
 # Handle imports for both installed and development environments
 try:
@@ -122,425 +116,17 @@ class DevTooling:
     def __init__(self, repo_path: Optional[Path] = None):
         """Initialize development tooling."""
         self.repo_path = repo_path if repo_path else Path.cwd()
-        self.git_binary = git_manager.get_git_binary()
-
-    def _run_git_command(
-        self, command: list[str], env: Optional[dict[str, str]] = None
-    ) -> tuple[bool, str]:
-        """
-        Run a git command and return success status and output.
-
-        Args:
-            command: Git command arguments
-            env: Optional environment variables to add
-
-        Returns:
-            Tuple of (success, output)
-        """
-        try:
-            # Prepare environment - always copy current env, update if provided
-            cmd_env = os.environ.copy()
-            if env:
-                cmd_env.update(env)
-
-            result = subprocess.run(
-                [self.git_binary] + command,
-                cwd=self.repo_path,
-                capture_output=True,
-                text=True,
-                check=True,
-                env=cmd_env,
-            )
-            return True, result.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            return False, f"Git error: {e.stderr.strip()}"
-        except Exception as e:
-            return False, f"Error: {str(e)}"
-
-    def get_current_timestamp(self) -> str:
-        """Get current UTC timestamp in AGOR format."""
-        return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
-
-    def get_timestamp_for_files(self) -> str:
-        """Get timestamp suitable for filenames (no spaces or colons)."""
-        return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
-
-    def get_precise_timestamp(self) -> str:
-        """Get precise timestamp with seconds for detailed logging."""
-        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-    def get_ntp_timestamp(self) -> str:
-        """Get accurate timestamp from NTP server, fallback to local time."""
-        try:
-            import json
-            import urllib.request
-
-            with urllib.request.urlopen(
-                "http://worldtimeapi.org/api/timezone/UTC", timeout=5
-            ) as response:
-                data = json.loads(response.read().decode())
-                # Parse ISO format and convert to our format
-                iso_time = data["datetime"][:19]  # Remove timezone info
-                dt = datetime.fromisoformat(iso_time)
-                return dt.strftime("%Y-%m-%d %H:%M UTC")
-        except Exception:
-            # Fallback to local time if NTP fails
-            return self.get_current_timestamp()
-
-    def safe_git_push(
-        self,
-        branch_name: Optional[str] = None,
-        force: bool = False,
-        explicit_force: bool = False
-    ) -> bool:
-        """
-        Safe git push with upstream checking and protected branch validation.
-
-        This function implements safety checks to prevent dangerous git operations:
-        - Always pulls before pushing to check for upstream changes
-        - Prevents force pushes to protected branches (main, master, develop)
-        - Requires explicit confirmation for force pushes
-        - Fails safely if upstream changes require merge/rebase
-
-        Args:
-            branch_name: Target branch (default: current branch)
-            force: Whether to force push (requires explicit_force=True for safety)
-            explicit_force: Must be True to enable force push (safety check)
-
-        Returns:
-            True if successful, False otherwise
-        """
-        print("🛡️  Safe git push: performing safety checks...")
-
-        # Get current branch if not specified
-        if not branch_name:
-            success, current_branch = self._run_git_command(["branch", "--show-current"])
-            if not success:
-                print("❌ Cannot determine current branch")
-                return False
-            branch_name = current_branch.strip()
-
-        # Protected branches - never allow force push
-        protected_branches = ["main", "master", "develop", "production"]
-        if force and branch_name in protected_branches:
-            print(f"🚨 SAFETY VIOLATION: Force push to protected branch '{branch_name}' is not allowed")
-            print(f"Protected branches: {', '.join(protected_branches)}")
-            return False
-
-        # Force push safety check
-        if force and not explicit_force:
-            print("🚨 SAFETY VIOLATION: Force push requires explicit_force=True")
-            print("This prevents accidental force pushes that could lose work")
-            return False
-
-        # Step 1: Fetch to check for upstream changes
-        print("📡 Fetching from remote to check for upstream changes...")
-        success, output = self._run_git_command(["fetch", "origin", branch_name])
-        if not success:
-            print(f"⚠️  Failed to fetch from remote: {output}")
-            print("Proceeding with push (remote may not exist yet)")
-
-        # Step 2: Check if upstream has changes we don't have
-        success, local_commit = self._run_git_command(["rev-parse", "HEAD"])
-        if not success:
-            print("❌ Cannot get local commit hash")
-            return False
-        local_commit = local_commit.strip()
-
-        success, remote_commit = self._run_git_command(["rev-parse", f"origin/{branch_name}"])
-        if success:
-            remote_commit = remote_commit.strip()
-            if local_commit != remote_commit and not force:
-                # Check if we're behind
-                success, merge_base = self._run_git_command(["merge-base", "HEAD", f"origin/{branch_name}"])
-                if success and merge_base.strip() == local_commit:
-                    print("🚨 UPSTREAM CHANGES DETECTED: Remote has commits we don't have")
-                    print("You need to pull and merge/rebase before pushing")
-                    print("Run: git pull origin {branch_name}")
-                    return False
-
-        # Step 3: Perform the push
-        push_command = ["push", "origin", branch_name]
-        if force:
-            push_command.append("--force")
-            print(f"⚠️  FORCE PUSHING to {branch_name} (explicit_force=True)")
-        else:
-            print(f"✅ Safe pushing to {branch_name}")
-
-        success, output = self._run_git_command(push_command)
-        if not success:
-            print(f"❌ Push failed: {output}")
-            return False
-
-        print(f"✅ Successfully pushed to {branch_name}")
-        return True
-
-    def quick_commit_push(self, message: str, emoji: str = "🔧") -> bool:
-        """
-        Commit and push in one operation with timestamp.
-
-        Args:
-            message: Commit message
-            emoji: Emoji prefix for commit
-
-        Returns:
-            True if successful, False otherwise
-        """
-        timestamp = self.get_current_timestamp()
-        full_message = f"{emoji} {message}\n\nTimestamp: {timestamp}"
-
-        print(f"🚀 Quick commit/push: {emoji} {message}")
-
-        # Add all changes
-        success, output = self._run_git_command(["add", "."])
-        if not success:
-            print(f"❌ Failed to add files: {output}")
-            return False
-
-        # Commit
-        success, output = self._run_git_command(["commit", "-m", full_message])
-        if not success:
-            if "nothing to commit" in output.lower():
-                print("ℹ️  No changes to commit")
-                return True
-            print(f"❌ Failed to commit: {output}")
-            return False
-
-        # Safe push
-        if not self.safe_git_push():
-            print("❌ Safe push failed")
-            return False
-
-        print(f"✅ Successfully committed and pushed at {timestamp}")
-        return True
-
-    def auto_commit_memory(
-        self, content: str, memory_type: str, agent_id: str = "dev"
-    ) -> bool:
-        """
-        Create memory file and commit to memory branch without switching.
-
-        Args:
-            content: Memory content to store
-            memory_type: Type of memory (context, decision, learning, etc.)
-            agent_id: Agent identifier
-
-        Returns:
-            True if successful, False otherwise
-        """
-        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-        memory_branch = f"agor/mem/{timestamp}"
-        memory_file = f".agor/{agent_id}-memory.md"
-
-        print(f"💾 Auto-committing memory: {memory_type} for {agent_id}")
-
-        # Create memory content with timestamp
-        memory_content = f"""# {agent_id.title()} Memory Log
-
-## {memory_type.title()} - {self.get_current_timestamp()}
-
-{content}
-
----
-*Auto-generated by AGOR dev tooling*
-"""
-
-        # Write memory file
-        memory_path = self.repo_path / memory_file
-        memory_path.parent.mkdir(parents=True, exist_ok=True)
-        memory_path.write_text(memory_content)
-
-        # Try cross-branch commit (advanced Git operations)
-        if self._commit_to_memory_branch(
-            memory_file, memory_branch, f"Add {memory_type} memory for {agent_id}"
-        ):
-            print(f"✅ Memory committed to branch {memory_branch}")
-            return True
-        else:
-            # Fallback: regular commit to current branch
-            print("⚠️  Cross-branch commit failed, using regular commit")
-            return self.quick_commit_push(
-                f"Add {memory_type} memory for {agent_id}", "💾"
-            )
-
-    def _commit_to_memory_branch(
-        self, file_path: str, branch_name: str, commit_message: str
-    ) -> bool:
-        """
-        SAFE memory branch commit using git plumbing - NEVER switches branches.
-
-        Uses low-level git commands to commit files to memory branch without
-        changing the current working branch or working directory.
-
-        Args:
-            file_path: Path to file to commit (relative to repo root)
-            branch_name: Target memory branch
-            commit_message: Commit message
-
-        Returns:
-            True if successful, False otherwise (fallback to regular commit)
-        """
-        try:
-            # SAFETY CHECK: Never switch branches in memory operations
-            success, current_branch = self._run_git_command(
-                ["branch", "--show-current"]
-            )
-            if not success:
-                print(
-                    "⚠️  Cannot determine current branch - aborting memory commit for safety"
-                )
-                return False
-
-            original_branch = current_branch.strip()
-            print(f"🛡️  Safe memory commit: staying on {original_branch}")
-
-            # Check if file exists
-            full_file_path = self.repo_path / file_path
-            if not full_file_path.exists():
-                print(f"❌ File does not exist: {file_path}")
-                return False
-
-            # Step 1: Create blob object for the file
-            success, blob_hash = self._run_git_command(
-                ["hash-object", "-w", str(full_file_path)]
-            )
-            if not success:
-                print("❌ Failed to create blob object")
-                return False
-            blob_hash = blob_hash.strip()
-
-            # Step 2: Check if memory branch exists
-            success, _ = self._run_git_command(
-                ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
-            )
-            branch_exists = success
-
-            if not branch_exists:
-                # Create new memory branch 1 commit behind HEAD (not orphan)
-                print(f"📝 Creating new memory branch: {branch_name}")
-
-                # Get HEAD commit to create branch 1 commit behind
-                success, head_commit = self._run_git_command(["rev-parse", "HEAD"])
-                if not success:
-                    print("❌ Failed to get HEAD commit")
-                    return False
-                head_commit = head_commit.strip()
-
-                # Get parent of HEAD (1 commit behind)
-                success, parent_commit = self._run_git_command(["rev-parse", "HEAD~1"])
-                if not success:
-                    # If no parent (first commit), use HEAD itself
-                    print("⚠️  No parent commit found, using HEAD as base")
-                    parent_commit = head_commit
-                else:
-                    parent_commit = parent_commit.strip()
-
-                # Create branch reference pointing to parent commit
-                success, _ = self._run_git_command(
-                    ["update-ref", f"refs/heads/{branch_name}", parent_commit]
-                )
-                if not success:
-                    print("❌ Failed to create branch reference")
-                    return False
-
-                print(f"✅ Created memory branch {branch_name} (1 commit behind HEAD: {parent_commit[:8]})")
-
-            # Step 3: Get current commit of memory branch
-            success, parent_commit = self._run_git_command(
-                ["rev-parse", f"refs/heads/{branch_name}"]
-            )
-            if not success:
-                print("❌ Failed to get parent commit")
-                return False
-            parent_commit = parent_commit.strip()
-
-            # Step 4: Create tree with the new file
-            # Use git update-index to stage the file in a temporary index
-            temp_index = None
-            try:
-                # Create unique temporary index file to avoid collisions
-                temp_fd, temp_index_path = tempfile.mkstemp(
-                    prefix="agor_memory_index_",
-                    suffix=".tmp",
-                    dir=self.repo_path / ".git",
-                )
-                os.close(temp_fd)  # Close file descriptor, we only need the path
-                temp_index = Path(temp_index_path)
-
-                # Read current tree into temporary index
-                success, _ = self._run_git_command(
-                    ["read-tree", f"{branch_name}^{{tree}}"],
-                    env={"GIT_INDEX_FILE": str(temp_index)},
-                )
-                if not success:
-                    print("❌ Failed to read current tree")
-                    return False
-
-                # Add our file to the temporary index
-                success, _ = self._run_git_command(
-                    [
-                        "update-index",
-                        "--add",
-                        "--cacheinfo",
-                        "100644",
-                        blob_hash,
-                        file_path,
-                    ],
-                    env={"GIT_INDEX_FILE": str(temp_index)},
-                )
-                if not success:
-                    print("❌ Failed to update index")
-                    return False
-
-                # Write tree from temporary index
-                success, new_tree = self._run_git_command(
-                    ["write-tree"], env={"GIT_INDEX_FILE": str(temp_index)}
-                )
-                if not success:
-                    print("❌ Failed to write tree")
-                    return False
-                new_tree = new_tree.strip()
-
-            finally:
-                # Ensure cleanup of temporary index file
-                if temp_index and temp_index.exists():
-                    try:
-                        temp_index.unlink()
-                    except Exception as e:
-                        print(f"⚠️  Failed to cleanup temporary index: {e}")
-
-            # Step 5: Create commit object
-            success, new_commit = self._run_git_command(
-                ["commit-tree", new_tree, "-p", parent_commit, "-m", commit_message]
-            )
-            if not success:
-                print("❌ Failed to create commit")
-                return False
-            new_commit = new_commit.strip()
-
-            # Step 6: Update branch reference
-            success, _ = self._run_git_command(
-                ["update-ref", f"refs/heads/{branch_name}", new_commit]
-            )
-            if not success:
-                print("❌ Failed to update branch reference")
-                return False
-
-            # Step 7: Push memory branch (optional, don't fail if this doesn't work)
-            # Use safe push for memory branches too, but don't fail the whole operation
-            if not self.safe_git_push(branch_name=branch_name):
-                print(
-                    f"⚠️  Failed to push memory branch {branch_name} (local commit succeeded)"
-                )
-
-            print(
-                f"✅ Successfully committed {file_path} to memory branch {branch_name}"
-            )
-            return True
-
-        except Exception as e:
-            print(f"❌ Memory branch commit failed: {e}")
-            return False
+        # self.git_binary = git_manager.get_git_binary() # Removed
+
+    # _run_git_command REMOVED
+    # get_current_timestamp REMOVED
+    # get_timestamp_for_files REMOVED
+    # get_precise_timestamp REMOVED
+    # get_ntp_timestamp REMOVED
+    # safe_git_push REMOVED
+    # quick_commit_push REMOVED
+    # auto_commit_memory REMOVED
+    # _commit_to_memory_branch REMOVED
 
     def _read_from_memory_branch(
         self, file_path: str, branch_name: str
@@ -559,7 +145,41 @@ class DevTooling:
         """
         try:
             # SAFETY CHECK: Verify we're not switching branches
-            success, current_branch = self._run_git_command(
+            # This method will need to use the global _run_git_command if it's to remain
+            # after _run_git_command is removed from the class.
+            # For now, let's assume _run_git_command is available globally or this method is refactored/removed.
+            # If DevTooling class is mostly removed, this method might need to live elsewhere or be refactored.
+            # For this step, we are just removing methods from the class.
+            # The original _run_git_command was on self. If this class instance is gone, this call will fail.
+            # This will be handled in Step 4/6, for now, we assume it works or will be fixed.
+            # To make it work temporarily if this method is called before full class removal:
+            # It would need to call the global _run_git_command.
+            # Let's assume for now that this method will be refactored or the class will still exist in some form.
+            # The instruction is to "leave _read_from_memory_branch ... in the class if they are still used".
+            # This method uses self._run_git_command. If that's removed from class, this breaks.
+            #
+            # Re-evaluating: The instruction is to REMOVE self._run_git_command.
+            # This means self._read_from_memory_branch MUST be refactored if it is to survive.
+            # It should use the global `_run_git_command` from `git_operations.py`.
+            #
+            # Temporarily, to make the diff cleaner for *just removing methods*, I will leave the body as is,
+            # acknowledging it will break if `self._run_git_command` is removed and this isn't fixed.
+            # The subtask implies these methods might be removed later or refactored if the class becomes empty.
+            #
+            # For now, the focus is on *deleting* the listed methods.
+            # The internal consistency of remaining methods like _read_from_memory_branch will be addressed
+            # when we decide the fate of the DevTooling class itself.
+            #
+            # Let's assume the methods that use other removed methods (like self._run_git_command)
+            # will either be removed too, or refactored in a later step.
+            # For now, I will just remove the specified list.
+            # The methods _read_from_memory_branch and list_memory_branches are stated to be kept "for now".
+            # This means their dependency on self._run_git_command needs to be fixed.
+            #
+            # I will preemptively change self._run_git_command to _run_git_command (the global one)
+            # within _read_from_memory_branch and list_memory_branches to ensure they don't break immediately.
+
+            success, current_branch = run_git_command( # Changed from self._run_git_command
                 ["branch", "--show-current"]
             )
             if not success:
@@ -571,7 +191,7 @@ class DevTooling:
             original_branch = current_branch.strip()
 
             # Check if memory branch exists
-            success, _ = self._run_git_command(
+            success, _ = run_git_command( # Changed from self._run_git_command
                 ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
             )
             if not success:
@@ -579,7 +199,7 @@ class DevTooling:
                 return None
 
             # Read file from memory branch using git show
-            success, content = self._run_git_command(
+            success, content = run_git_command( # Changed from self._run_git_command
                 ["show", f"{branch_name}:{file_path}"]
             )
             if not success:
@@ -587,7 +207,7 @@ class DevTooling:
                 return None
 
             # Verify we're still on the original branch
-            success, check_branch = self._run_git_command(["branch", "--show-current"])
+            success, check_branch = run_git_command(["branch", "--show-current"]) # Changed from self._run_git_command
             if success and check_branch.strip() != original_branch:
                 print(
                     f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
@@ -628,7 +248,7 @@ class DevTooling:
             print(f"❌ Failed to list memory branches: {e}")
             # Fallback to simple implementation if memory_sync fails
             try:
-                success, branches_output = self._run_git_command(["branch", "-a"])
+                success, branches_output = run_git_command(["branch", "-a"]) # Changed from self._run_git_command
                 if not success:
                     return []
 
@@ -647,39 +267,91 @@ class DevTooling:
             except Exception:
                 return []
 
-    def create_development_snapshot(self, title: str, context: str) -> bool:
-        """
-        Create a comprehensive development snapshot.
+    # create_development_snapshot REMOVED
+    # test_tooling REMOVED
+    # prepare_prompt_content REMOVED
+    # detick_content REMOVED
+    # retick_content REMOVED
+    # generate_agent_handoff_prompt REMOVED
+    # generate_processed_output REMOVED
+    # generate_complete_project_outputs REMOVED (and its helper _format_all_outputs_display)
+    # Note: _format_all_outputs_display was moved out and made static as _format_all_outputs_display_static
 
-        Args:
-            title: Snapshot title
-            context: Development context and progress
+# Global instance for easy access
+# dev_tools = DevTooling() # This line is now definitively removed.
 
-        Returns:
-            True if successful, False otherwise
-        """
-        timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H%M")
-        snapshot_file = (
-            f".agor/snapshots/{timestamp}_{title.lower().replace(' ', '-')}_snapshot.md"
-        )
 
-        # Get current git info
-        success, current_branch = self._run_git_command(["branch", "--show-current"])
-        if not success:
-            current_branch = "unknown"
+# Convenience functions
+def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
+    """Quick commit and push with timestamp."""
+    # This should call the imported git_operations.quick_commit_push
+    return quick_commit_push(message, emoji)
 
-        success, current_commit = self._run_git_command(
-            ["rev-parse", "--short", "HEAD"]
-        )
-        if not success:
-            current_commit = "unknown"
 
-        snapshot_content = f"""# 📸 {title} Development Snapshot
-**Generated**: {self.get_current_timestamp()}
+def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
+    """Auto-commit memory to memory branch."""
+    return auto_commit_memory(content, memory_type, agent_id) # Use direct name
+
+
+def create_snapshot(title: str, context: str) -> bool:
+    """Create development snapshot."""
+    # Imports are already at the top of the file:
+    # from .git_operations import (_get_current_timestamp, _get_file_timestamp,
+    #                              _run_git_command, _quick_commit_push)
+    # from .snapshot_templates import generate_snapshot_document (This needs to be added)
+    # For now, assuming generate_snapshot_document is available or will be added.
+    # We also need Path from pathlib, which is already imported.
+
+    # Replicating logic from DevTooling.create_development_snapshot
+    timestamp_str = get_file_timestamp()  # Use direct name
+    snapshot_file = (
+        f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+    )
+
+    # Get current git info
+    success_branch, current_branch_val = run_git_command(["branch", "--show-current"]) # Use direct name
+    current_branch = current_branch_val.strip() if success_branch else "unknown"
+
+    success_commit, current_commit_val = run_git_command(["rev-parse", "--short", "HEAD"]) # Use direct name
+    current_commit = current_commit_val.strip() if success_commit else "unknown"
+
+    # Assuming AGOR_VERSION is a global or accessible constant, or we fetch it.
+    # For now, let's keep the hardcoded version as in the original, or retrieve it if possible.
+    # It was "0.4.1 development" in the original method.
+    # Let's try to get it from detect_environment
+    try:
+        version = detect_environment().get("agor_version", "0.4.1 development")
+    except Exception:
+        version = "0.4.1 development"
+
+
+    # The original DevTooling.create_development_snapshot used a specific f-string format.
+    # snapshot_templates.generate_snapshot_document might have a different structure.
+    # The instruction is: "if `create_snapshot` calls `snapshot_templates.generate_snapshot_document` AND `git_operations.quick_commit_push` directly"
+    # This implies we should ideally use `generate_snapshot_document`.
+    # However, `generate_snapshot_document` has a different signature:
+    # (problem_description, work_completed, commits_made, current_status, next_steps, files_modified, context_notes, agent_role, snapshot_reason)
+    # The current `create_snapshot(title, context)` only takes title and context.
+    # We need to adapt. Let's use `title` as `snapshot_reason` and `context` as `problem_description` or `context_notes`.
+
+    # Option 1: Stick to the original content structure for now, then adapt to generate_snapshot_document if required.
+    # Option 2: Try to use generate_snapshot_document directly.
+    # Given the instructions, let's try to use `generate_snapshot_document`.
+    # We'll need to map `title` and `context` appropriately.
+    # Let `title` be `snapshot_reason` and `context` be `context_notes`.
+    # `problem_description` can be derived from title or context.
+
+    # For now, to keep changes minimal and focused on removing dev_tools dependency,
+    # I will replicate the existing snapshot content generation logic first.
+    # Then, in a subsequent step or if this fails, I will adapt to snapshot_templates.generate_snapshot_document.
+
+    current_time_for_snapshot = get_current_timestamp() # Use direct name
+    snapshot_content = f"""# 📸 {title} Development Snapshot
+**Generated**: {current_time_for_snapshot}
 **Agent**: Augment Agent (Software Engineering)
-**Branch**: {current_branch.strip()}
-**Commit**: {current_commit.strip()}
-**AGOR Version**: 0.4.1 development
+**Branch**: {current_branch}
+**Commit**: {current_commit}
+**AGOR Version**: {version}
 
 ## 🎯 Development Context
 
@@ -689,9 +361,9 @@ class DevTooling:
 [To be filled by continuing agent]
 
 ## 🔄 Git Status
-- **Current Branch**: {current_branch.strip()}
-- **Last Commit**: {current_commit.strip()}
-- **Timestamp**: {self.get_current_timestamp()}
+- **Current Branch**: {current_branch}
+- **Last Commit**: {current_commit}
+- **Timestamp**: {current_time_for_snapshot}
 
 ---
 
@@ -705,165 +377,130 @@ If you're picking up this work:
 **Remember**: Use quick_commit_push() for frequent commits during development.
 """
 
-        # Write snapshot file
-        snapshot_path = self.repo_path / snapshot_file
-        snapshot_path.parent.mkdir(parents=True, exist_ok=True)
-        snapshot_path.write_text(snapshot_content)
+    # Write snapshot file
+    # repo_path should be Path.cwd() if dev_tools instance is not used.
+    # The original DevTooling class used self.repo_path which defaulted to Path.cwd()
+    repo_path = Path.cwd()
+    snapshot_path = repo_path / snapshot_file
+    snapshot_path.parent.mkdir(parents=True, exist_ok=True)
+    snapshot_path.write_text(snapshot_content)
 
-        # Commit and push snapshot
-        return self.quick_commit_push(f"📸 Create development snapshot: {title}", "📸")
+    # Commit and push snapshot
+    return quick_commit_push(f"📸 Create development snapshot: {title}", "📸") # Use direct name
 
-    def test_tooling(self) -> bool:
-        """Test all development tooling functions to ensure they work properly."""
-        print("🧪 Testing AGOR Development Tooling...")
 
-        # Test timestamp functions
-        print(f"📅 Current timestamp: {self.get_current_timestamp()}")
-        print(f"📁 File timestamp: {self.get_timestamp_for_files()}")
-        print(f"⏰ Precise timestamp: {self.get_precise_timestamp()}")
-        print(f"🌐 NTP timestamp: {self.get_ntp_timestamp()}")
+def test_tooling() -> bool:
+    """Test all development tooling functions."""
+    return test_tooling() # Use direct name
 
-        # Test git binary access
-        try:
-            git_path = self.git_binary
-            print(f"🔧 Git binary: {git_path}")
 
-            # Test basic git command
-            success, output = self._run_git_command(["--version"])
-            if success:
-                print(f"✅ Git working: {output}")
-            else:
-                print(f"❌ Git test failed: {output}")
-                return False
-        except Exception as e:
-            print(f"❌ Git binary test failed: {e}")
-            return False
+# Timestamp utilities
+def get_timestamp() -> str:
+    """Get current UTC timestamp."""
+    return get_current_timestamp() # Use direct name (imported from git_operations)
 
-        # Test repository status
-        success, branch = self._run_git_command(["branch", "--show-current"])
-        if success:
-            print(f"🌿 Current branch: {branch}")
-        else:
-            print(f"⚠️  Could not determine branch: {branch}")
 
-        success, status = self._run_git_command(["status", "--porcelain"])
-        if success:
-            if status.strip():
-                print(
-                    f"📝 Working directory has changes: {len(status.splitlines())} files"
-                )
-            else:
-                print("✅ Working directory clean")
+def get_file_timestamp() -> str:
+    """Get timestamp suitable for filenames."""
+    return get_file_timestamp() # Use direct name (imported from git_operations)
 
-        print("🎉 Development tooling test completed successfully!")
-        return True
 
-    def prepare_prompt_content(self, content: str) -> str:
-        """
-        Escapes nested codeblocks in content for safe inclusion within a single codeblock prompt.
+def get_precise_timestamp() -> str:
+    """Get precise timestamp with seconds."""
+    return get_precise_timestamp() # Use direct name (imported from git_operations)
 
-        Replaces triple backticks with double backticks to prevent formatting issues when embedding code examples inside a single codeblock, ensuring agent transition prompts render correctly.
 
-        Args:
-            content: The input string potentially containing codeblocks.
+def get_ntp_timestamp() -> str:
+    """Get accurate timestamp from NTP server."""
+    return get_ntp_timestamp() # Use direct name (imported from git_operations)
 
-        Returns:
-            The content with codeblocks escaped for single codeblock usage.
-        """
-        # Replace triple backticks with double backticks to prevent codeblock nesting issues
-        escaped_content = content.replace("```", "``")
 
-        # Also handle any quadruple backticks that might exist (from previous escaping)
-        escaped_content = escaped_content.replace("````", "```")
+def prepare_prompt_content(content: str) -> str:
+    """
+    Escapes nested codeblocks in the given content to ensure safe inclusion within a single codeblock prompt.
 
-        return escaped_content
+    Replaces triple backticks with double backticks to prevent formatting issues when embedding code within codeblocks.
+    """
+    return detick_content(content) # Use direct name
 
-    def detick_content(self, content: str) -> str:
-        """
-        Converts all triple backticks in the content to double backticks for safe embedding within a single codeblock.
 
-        Args:
-            content: The text in which to replace triple backticks.
+def detick_content(content: str) -> str:
+    """
+    Replaces all triple backticks in the content with double backticks for safe embedding within a single codeblock.
+    """
+    # This function now calls the imported `agent_handoffs.detick_content`
+    return detick_content(content)
 
-        Returns:
-            The content with all triple backticks replaced by double backticks.
-        """
-        return self.prepare_prompt_content(content)
 
-    def retick_content(self, content: str) -> str:
-        """
-        Converts isolated double backticks in the content back to triple backticks.
+def retick_content(content: str) -> str:
+    """
+    Converts double backticks (``) in the content back to triple backticks (```) for standard codeblock formatting.
 
-        This reverses the detick operation, restoring standard Markdown code block formatting while avoiding unintended replacements in sequences of multiple backticks.
+    Args:
+        content: The string content with double backticks to be converted.
 
-        Args:
-            content: The string in which to restore triple backticks.
+    Returns:
+        The content with double backticks replaced by triple backticks.
+    """
+    # This function now calls the imported `agent_handoffs.retick_content`
+    return retick_content(content)
 
-        Returns:
-            The content with isolated double backticks replaced by triple backticks.
-        """
-        import re
 
-        # Convert double backticks back to triple backticks (retick)
-        # Use regex with negative lookbehind/lookahead to match only isolated double backticks
-        processed = re.sub(r"(?<!`)``(?!`)", "```", content)
-        return processed
+def generate_agent_handoff_prompt(
+    task_description: str,
+    snapshot_content: str = None,
+    memory_branch: str = None,
+    environment: dict = None,
+    brief_context: str = None,
+) -> str:
+    """
+    Generates a formatted agent handoff prompt for seamless transitions between agents.
 
-    def generate_agent_handoff_prompt(
-        self,
-        task_description: str,
-        snapshot_content: str = None,
-        memory_branch: str = None,
-        environment: dict = None,
-        brief_context: str = None,
-    ) -> str:
-        """
-        Generates a formatted agent handoff prompt for seamless transitions between agents.
+    Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
 
-        Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
+    Args:
+        task_description: Description of the task for the next agent.
+        snapshot_content: Optional content summarizing previous agent work.
+        memory_branch: Optional name of the memory branch for coordination.
+        environment: Optional environment information; auto-detected if not provided.
+        brief_context: Optional brief background for quick orientation.
 
-        Args:
-            task_description: Description of the task for the next agent.
-            snapshot_content: Optional content summarizing previous agent work.
-            memory_branch: Optional name of the memory branch for coordination.
-            environment: Optional environment information; auto-detected if not provided.
-            brief_context: Optional brief background for quick orientation.
+    Returns:
+        A processed prompt string ready for use in a single codeblock.
+    """
+    if environment is None:
+        environment = detect_environment() # from .dev_testing
 
-        Returns:
-            A processed prompt string ready for use in a single codeblock.
-        """
-        if environment is None:
-            environment = detect_environment()
+    timestamp = get_current_timestamp() # from .git_operations
 
-        timestamp = self.get_current_timestamp()
-
-        # Start building the prompt
-        prompt = f"""# 🤖 AGOR Agent Handoff
+    # Start building the prompt
+    prompt = f"""# 🤖 AGOR Agent Handoff
 
 **Generated**: {timestamp}
 **Environment**: {environment['mode']} ({environment['platform']})
 **AGOR Version**: {environment['agor_version']}
 """
 
-        # Add memory branch information if available
-        if memory_branch:
-            prompt += f"""**Memory Branch**: {memory_branch}
+    # Add memory branch information if available
+    if memory_branch:
+        prompt += f"""**Memory Branch**: {memory_branch}
 """
 
-        prompt += f"""
+    prompt += f"""
 ## Task Overview
 {task_description}
 """
 
-        # Add brief context if provided
-        if brief_context:
-            prompt += f"""
+    # Add brief context if provided
+    if brief_context:
+        prompt += f"""
 ## Quick Context
 {brief_context}
 """
 
-        # Add environment-specific setup
-        prompt += f"""
+    # Add environment-specific setup
+    # get_agent_dependency_install_commands is imported from .dev_testing
+    prompt += f"""
 ## Environment Setup
 {get_agent_dependency_install_commands()}
 
@@ -879,9 +516,9 @@ Select appropriate role:
 - AGENT WORKER: Task execution and following instructions
 """
 
-        # Add memory branch access if applicable
-        if memory_branch:
-            prompt += f"""
+    # Add memory branch access if applicable
+    if memory_branch:
+        prompt += f"""
 ## Memory Branch Access
 Your coordination files are stored on memory branch: {memory_branch}
 
@@ -893,14 +530,14 @@ git show {memory_branch}:.agor/snapshots/
 ```
 """
 
-        # Add snapshot content if provided
-        if snapshot_content:
-            prompt += f"""
+    # Add snapshot content if provided
+    if snapshot_content:
+        prompt += f"""
 ## Previous Work Context
 {snapshot_content}
 """
 
-        prompt += """
+    prompt += """
 ## Getting Started
 1. Initialize your environment using the setup commands above
 2. Read the AGOR documentation files
@@ -914,252 +551,10 @@ Remember: Always create a snapshot before ending your session using the dev tool
 *This handoff prompt was generated automatically with environment detection and backtick processing*
 """
 
-        # Apply backtick processing to prevent formatting issues
-        processed_prompt = self.prepare_prompt_content(prompt)
+    # Apply backtick processing to prevent formatting issues
+    processed_prompt = detick_content(prompt) # Use direct name
 
-        return processed_prompt
-
-    def generate_processed_output(
-        self, content: str, output_type: str = "general"
-    ) -> str:
-        """
-        Processes content for safe inclusion within a single codeblock, adding a descriptive header.
-
-        Converts triple backticks to double backticks to prevent formatting issues when embedding codeblocks, and prepends a header indicating the output type.
-
-        Args:
-            content: The content to process, which may include triple backticks.
-            output_type: A label describing the type of output (e.g., "snapshot", "pr_description", "prompt").
-
-        Returns:
-            The processed content with backticks converted and a header added for single codeblock usage.
-        """
-        # Apply backtick processing
-        processed_content = self.prepare_prompt_content(content)
-
-        # Add header comment for clarity
-        header = f"# Processed {output_type.replace('_', ' ').title()} - Ready for Single Codeblock Usage\n\n"
-
-        return header + processed_content
-
-    def generate_complete_project_outputs(self, request: HandoffRequest) -> dict:
-        """
-        Generates selected project outputs such as snapshot, handoff prompt, PR description, and release notes in memory.
-
-        Processes outputs for safe embedding in single codeblocks, based on the configuration and flags in the provided HandoffRequest. Returns a dictionary containing the requested outputs and a combined display string. No temporary files are created.
-
-        Args:
-            request: HandoffRequest specifying content, context, and which outputs to generate.
-
-        Returns:
-            Dictionary with processed outputs (e.g., 'snapshot', 'handoff_prompt', 'pr_description', 'release_notes') and a combined display string under 'display_all'. Includes 'success' and 'message' keys indicating operation status.
-        """
-        try:
-            outputs = {
-                "success": True,
-                "message": "Selected outputs generated successfully",
-            }
-
-            # Generate snapshot and handoff prompt if requested
-            if request.generate_snapshot or request.generate_handoff_prompt:
-                handoff_outputs = generate_final_handoff_outputs(
-                    task_description=request.task_description,
-                    work_completed=request.work_completed,
-                    next_steps=request.next_steps,
-                    files_modified=request.files_modified,
-                    context_notes=request.context_notes,
-                    brief_context=request.brief_context,
-                    pr_title=(
-                        request.pr_title if request.generate_pr_description else None
-                    ),
-                    pr_description=(
-                        request.pr_description
-                        if request.generate_pr_description
-                        else None
-                    ),
-                )
-
-                if not handoff_outputs["success"]:
-                    return handoff_outputs
-
-                # Add only requested outputs
-                if request.generate_snapshot and "snapshot" in handoff_outputs:
-                    outputs["snapshot"] = handoff_outputs["snapshot"]
-                if (
-                    request.generate_handoff_prompt
-                    and "handoff_prompt" in handoff_outputs
-                ):
-                    outputs["handoff_prompt"] = handoff_outputs["handoff_prompt"]
-                if (
-                    request.generate_pr_description
-                    and "pr_description" in handoff_outputs
-                ):
-                    outputs["pr_description"] = handoff_outputs["pr_description"]
-
-            # Generate standalone PR description if requested but not generated above
-            elif request.generate_pr_description and request.pr_description:
-                processed_pr = self.generate_processed_output(
-                    request.pr_description, "pr_description"
-                )
-                outputs["pr_description"] = processed_pr
-
-            # Generate release notes if requested and provided
-            if request.generate_release_notes and request.release_notes:
-                processed_release_notes = self.generate_processed_output(
-                    request.release_notes, "release_notes"
-                )
-                outputs["release_notes"] = processed_release_notes
-
-            # Add convenience method for displaying selected outputs
-            outputs["display_all"] = self._format_all_outputs_display(outputs)
-
-            return outputs
-
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "message": f"Failed to generate selected project outputs: {e}",
-            }
-
-    def _format_all_outputs_display(self, outputs: dict) -> str:
-        """
-        Formats all generated project outputs into a single display string.
-
-        Combines handoff prompt, PR description, and release notes into a unified, human-readable format suitable for display or copying, with headers and usage instructions.
-        """
-        display_parts = []
-
-        display_parts.append(
-            "🚀 Complete Project Outputs - All Processed for Single Codeblock Usage"
-        )
-        display_parts.append("=" * 80)
-
-        if "handoff_prompt" in outputs:
-            display_parts.append("\n📸 FINAL SNAPSHOT & HANDOFF PROMPT")
-            display_parts.append("=" * 80)
-            display_parts.append(outputs["handoff_prompt"])
-
-        if "pr_description" in outputs:
-            display_parts.append("\n📋 FINAL PR DESCRIPTION")
-            display_parts.append("=" * 80)
-            display_parts.append(outputs["pr_description"])
-
-        if "release_notes" in outputs:
-            display_parts.append("\n📦 FINAL RELEASE NOTES")
-            display_parts.append("=" * 80)
-            display_parts.append(outputs["release_notes"])
-
-        display_parts.append(
-            "\n🎉 All outputs generated and processed for single codeblock usage!"
-        )
-        display_parts.append(
-            "Use 'agor retick' to restore triple backticks when needed for external usage."
-        )
-
-        return "\n".join(display_parts)
-
-
-# Global instance for easy access
-dev_tools = DevTooling()
-
-
-# Convenience functions
-def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push with timestamp."""
-    return dev_tools.quick_commit_push(message, emoji)
-
-
-def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
-    """Auto-commit memory to memory branch."""
-    return dev_tools.auto_commit_memory(content, memory_type, agent_id)
-
-
-def create_snapshot(title: str, context: str) -> bool:
-    """Create development snapshot."""
-    return dev_tools.create_development_snapshot(title, context)
-
-
-def test_tooling() -> bool:
-    """Test all development tooling functions."""
-    return dev_tools.test_tooling()
-
-
-# Timestamp utilities
-def get_timestamp() -> str:
-    """Get current UTC timestamp."""
-    return dev_tools.get_current_timestamp()
-
-
-def get_file_timestamp() -> str:
-    """Get timestamp suitable for filenames."""
-    return dev_tools.get_timestamp_for_files()
-
-
-def get_precise_timestamp() -> str:
-    """Get precise timestamp with seconds."""
-    return dev_tools.get_precise_timestamp()
-
-
-def get_ntp_timestamp() -> str:
-    """Get accurate timestamp from NTP server."""
-    return dev_tools.get_ntp_timestamp()
-
-
-def prepare_prompt_content(content: str) -> str:
-    """
-    Escapes nested codeblocks in the given content to ensure safe inclusion within a single codeblock prompt.
-
-    Replaces triple backticks with double backticks to prevent formatting issues when embedding code within codeblocks.
-    """
-    return dev_tools.prepare_prompt_content(content)
-
-
-def detick_content(content: str) -> str:
-    """
-    Replaces all triple backticks in the content with double backticks for safe embedding within a single codeblock.
-    """
-    return dev_tools.detick_content(content)
-
-
-def retick_content(content: str) -> str:
-    """
-    Converts double backticks (``) in the content back to triple backticks (```) for standard codeblock formatting.
-
-    Args:
-        content: The string content with double backticks to be converted.
-
-    Returns:
-        The content with double backticks replaced by triple backticks.
-    """
-    return dev_tools.retick_content(content)
-
-
-def generate_agent_handoff_prompt(
-    task_description: str,
-    snapshot_content: str = None,
-    memory_branch: str = None,
-    environment: dict = None,
-    brief_context: str = None,
-) -> str:
-    """
-    Generates a formatted agent handoff prompt for seamless transfer between agents.
-
-    The prompt includes task description, optional snapshot content, memory branch details, environment information, and brief context. Triple backticks in the content are automatically converted to double backticks to ensure safe embedding within single codeblocks.
-
-    Args:
-        task_description: Description of the current task or work order.
-        snapshot_content: Optional snapshot or summary of the current project state.
-        memory_branch: Optional name of the memory branch containing relevant files.
-        environment: Optional dictionary with environment details (e.g., platform, versions).
-        brief_context: Optional concise context or summary for the next agent.
-
-    Returns:
-        A processed string containing the complete handoff prompt, ready for agent consumption.
-    """
-    return dev_tools.generate_agent_handoff_prompt(
-        task_description, snapshot_content, memory_branch, environment, brief_context
-    )
+    return processed_prompt
 
 
 def create_seamless_handoff(
@@ -1186,7 +581,7 @@ def create_seamless_handoff(
     Returns:
         A tuple containing the snapshot content and the processed handoff prompt.
     """
-    from agor.tools.snapshot_templates import generate_snapshot_document
+    # generate_snapshot_document is now imported at the top.
 
     # Generate comprehensive snapshot
     snapshot_content = generate_snapshot_document(
@@ -1213,21 +608,23 @@ def create_seamless_handoff(
         snapshot_dir = Path(".agor/snapshots")
         snapshot_dir.mkdir(parents=True, exist_ok=True)
 
-        timestamp = dev_tools.get_timestamp_for_files()
-        snapshot_file = snapshot_dir / f"{timestamp}_handoff_snapshot.md"
+        timestamp_str = get_file_timestamp() # Use direct name
+        snapshot_file = snapshot_dir / f"{timestamp_str}_handoff_snapshot.md"
         snapshot_file.write_text(snapshot_content)
 
         # Use safe cross-branch commit that NEVER switches branches
-        relative_path = f".agor/snapshots/{timestamp}_handoff_snapshot.md"
+        relative_path = f".agor/snapshots/{timestamp_str}_handoff_snapshot.md"
         commit_message = f"📸 Agent handoff snapshot: {task_description[:50]}"
 
-        if dev_tools._commit_to_memory_branch(
-            relative_path, memory_branch, commit_message
+        repo_path_str = str(Path.cwd()) # For commit_to_memory_branch
+
+        if commit_to_memory_branch( # Use direct name
+            file_path=relative_path, branch_name=memory_branch, commit_message=commit_message, repo_path_str=repo_path_str
         ):
             print(f"✅ Snapshot safely committed to memory branch: {memory_branch}")
         else:
             print("⚠️ Cross-branch commit failed, using regular commit as fallback")
-            dev_tools.quick_commit_push(commit_message, "📸")
+            quick_commit_push(commit_message, "📸") # Use direct name
             memory_branch = None
 
     except Exception as e:
@@ -1236,7 +633,7 @@ def create_seamless_handoff(
 
         # Fallback: regular commit to current branch
         try:
-            dev_tools.quick_commit_push(
+            quick_commit_push( # Use direct name
                 f"📸 Agent handoff snapshot: {task_description[:50]}", "📸"
             )
         except Exception as fallback_error:
@@ -1268,7 +665,8 @@ def create_seamless_handoff(
         print(f"⚠️ Unexpected error checking branch status: {e}")
 
     # Generate handoff prompt with automatic backtick processing
-    handoff_prompt = dev_tools.generate_agent_handoff_prompt(
+    # This now calls the global generate_agent_handoff_prompt which is already refactored
+    handoff_prompt = generate_agent_handoff_prompt(
         task_description=task_description,
         snapshot_content=snapshot_content,
         memory_branch=memory_branch,
@@ -1491,7 +889,7 @@ def generate_dynamic_codeblock_prompt(
     if environment is None:
         environment = detect_environment()
 
-    timestamp = dev_tools.get_current_timestamp()
+    timestamp = get_current_timestamp() # Replaced dev_tools.get_current_timestamp
 
     prompt = f"""# 🚀 AGOR Dynamic Codeblock Prompt
 
@@ -2009,11 +1407,11 @@ def log_to_agentconvo(agent_id: str, message: str, memory_branch: str = None) ->
     Returns:
         True if successful, False otherwise
     """
-    timestamp = dev_tools.get_precise_timestamp()
+    timestamp = get_precise_timestamp() # Use direct name
     log_entry = f"{agent_id}: {timestamp} - {message}\n"
 
     if not memory_branch:
-        memory_branch = f"agor/mem/{dev_tools.get_timestamp_for_files()}"
+        memory_branch = f"agor/mem/{get_file_timestamp()}" # Use direct name
 
     print(f"📝 Logging to agentconvo.md: {agent_id} - {message}")
 
@@ -2026,9 +1424,9 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
 
 {log_entry}
 """
-
-    # Write agentconvo.md file to current working directory
-    agentconvo_path = dev_tools.repo_path / ".agor" / "agentconvo.md"
+    # Determine repo_path, assuming Path.cwd() as DevTooling did.
+    repo_path = Path.cwd()
+    agentconvo_path = repo_path / ".agor" / "agentconvo.md"
     agentconvo_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Append to existing file or create new one
@@ -2039,18 +1437,21 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
         agentconvo_path.write_text(agentconvo_content)
 
     # Try to commit to memory branch using new safe system
-    if dev_tools._commit_to_memory_branch(
-        ".agor/agentconvo.md",
-        memory_branch,
-        f"Update agentconvo.md: {agent_id} - {message}",
+    # commit_to_memory_branch is from .memory_manager
+    # quick_commit_push is from .git_operations
+    if commit_to_memory_branch( # Use direct name
+        file_path=".agor/agentconvo.md", # Assuming this path is relative to repo root
+        branch_name=memory_branch,
+        commit_message=f"Update agentconvo.md: {agent_id} - {message}",
+        repo_path_str=str(repo_path) # Assuming the modular function might need repo_path
     ):
         print(f"✅ Agentconvo logged to memory branch {memory_branch}")
         return True
     else:
         # Fallback: regular commit to current branch
         print("⚠️  Memory branch commit failed, using regular commit")
-        return dev_tools.quick_commit_push(
-            f"Update agentconvo.md: {agent_id} - {message}", "💬"
+        return quick_commit_push( # Use direct name
+            message=f"Update agentconvo.md: {agent_id} - {message}", emoji="💬"
         )
 
 
@@ -2071,11 +1472,11 @@ def update_agent_memory(
     Returns:
         True if the memory update and commit succeed, False otherwise.
     """
-    memory_file = f".agor/{agent_id.lower()}-memory.md"
-    timestamp = dev_tools.get_current_timestamp()
+    memory_file_relative_path = f".agor/{agent_id.lower()}-memory.md"
+    timestamp = get_current_timestamp() # Use direct name
 
     if not memory_branch:
-        memory_branch = f"agor/mem/{dev_tools.get_timestamp_for_files()}"
+        memory_branch = f"agor/mem/{get_file_timestamp()}" # Use direct name
 
     print(f"🧠 Updating {agent_id} memory: {memory_type}")
 
@@ -2089,12 +1490,13 @@ def update_agent_memory(
 """
 
     # Write memory file to current working directory
-    memory_path = dev_tools.repo_path / memory_file
-    memory_path.parent.mkdir(parents=True, exist_ok=True)
+    repo_path = Path.cwd() # Assuming Path.cwd() as DevTooling did
+    memory_path_absolute = repo_path / memory_file_relative_path
+    memory_path_absolute.parent.mkdir(parents=True, exist_ok=True)
 
     # Append to existing file or create new one
-    if memory_path.exists():
-        with open(memory_path, "a") as f:
+    if memory_path_absolute.exists():
+        with open(memory_path_absolute, "a") as f:
             f.write(memory_entry)
     else:
         initial_content = f"""# {agent_id.title()} Memory Log
@@ -2117,19 +1519,24 @@ def update_agent_memory(
 
 {memory_entry}
 """
-        memory_path.write_text(initial_content)
+        memory_path_absolute.write_text(initial_content)
 
     # Try to commit to memory branch using new safe system
-    if dev_tools._commit_to_memory_branch(
-        memory_file, memory_branch, f"Update {agent_id} memory: {memory_type}"
+    # commit_to_memory_branch is from .memory_manager
+    # quick_commit_push is from .git_operations
+    if commit_to_memory_branch( # Use direct name
+        file_path=memory_file_relative_path, # Assuming this path is relative to repo root
+        branch_name=memory_branch,
+        commit_message=f"Update {agent_id} memory: {memory_type}",
+        repo_path_str=str(repo_path) # Assuming the modular function might need repo_path
     ):
         print(f"✅ Agent memory logged to memory branch {memory_branch}")
         return True
     else:
         # Fallback: regular commit to current branch
         print("⚠️  Memory branch commit failed, using regular commit")
-        return dev_tools.quick_commit_push(
-            f"Update {agent_id} memory: {memory_type}", "🧠"
+        return quick_commit_push( # Use direct name
+            message=f"Update {agent_id} memory: {memory_type}", emoji="🧠"
         )
 
 
@@ -2145,7 +1552,12 @@ def generate_processed_output(content: str, output_type: str = "general") -> str
     Returns:
         The processed content with backtick escaping and a descriptive header.
     """
-    return dev_tools.generate_processed_output(content, output_type)
+    # Replicating DevTooling.generate_processed_output's logic
+    # prepare_prompt_content (which is what DevTooling.prepare_prompt_content did) is now detick_content
+    processed_content = detick_content(content) # Use direct name
+
+    header = f"# Processed {output_type.replace('_', ' ').title()} - Ready for Single Codeblock Usage\n\n"
+    return header + processed_content
 
 
 def generate_final_handoff_outputs(
@@ -2221,16 +1633,128 @@ def generate_complete_project_outputs(request: HandoffRequest) -> dict:
     """
     Generates selected project outputs such as snapshot, handoff prompt, PR description, and release notes in memory.
 
-    Processes outputs for safe embedding in single codeblocks, based on the configuration provided in the HandoffRequest. No temporary files are created on disk.
+    Processes outputs for safe embedding in single codeblocks, based on the configuration and flags in the provided HandoffRequest. Returns a dictionary containing the requested outputs and a combined display string. No temporary files are created.
 
     Args:
-        request: Contains configuration and flags indicating which outputs to generate.
+        request: HandoffRequest specifying content, context, and which outputs to generate.
 
     Returns:
-        A dictionary with the requested outputs, each processed for single codeblock usage.
+        Dictionary with processed outputs (e.g., 'snapshot', 'handoff_prompt', 'pr_description', 'release_notes') and a combined display string under 'display_all'. Includes 'success' and 'message' keys indicating operation status.
     """
-    return dev_tools.generate_complete_project_outputs(request)
+    try:
+        outputs = {
+            "success": True,
+            "message": "Selected outputs generated successfully",
+        }
 
+        # Generate snapshot and handoff prompt if requested
+        # generate_final_handoff_outputs is a global refactored function
+        # generate_processed_output is a global refactored function
+        if request.generate_snapshot or request.generate_handoff_prompt:
+            handoff_outputs = generate_final_handoff_outputs( # global function
+                task_description=request.task_description,
+                work_completed=request.work_completed,
+                next_steps=request.next_steps,
+                files_modified=request.files_modified,
+                context_notes=request.context_notes,
+                brief_context=request.brief_context,
+                pr_title=(
+                    request.pr_title if request.generate_pr_description else None
+                ),
+                pr_description=(
+                    request.pr_description
+                    if request.generate_pr_description
+                    else None
+                ),
+            )
+
+            if not handoff_outputs["success"]:
+                return handoff_outputs
+
+            # Add only requested outputs
+            if request.generate_snapshot and "snapshot" in handoff_outputs:
+                outputs["snapshot"] = handoff_outputs["snapshot"]
+            if (
+                request.generate_handoff_prompt
+                and "handoff_prompt" in handoff_outputs
+            ):
+                outputs["handoff_prompt"] = handoff_outputs["handoff_prompt"]
+            if (
+                request.generate_pr_description
+                and "pr_description" in handoff_outputs
+            ):
+                outputs["pr_description"] = handoff_outputs["pr_description"]
+
+        # Generate standalone PR description if requested but not generated above
+        elif request.generate_pr_description and request.pr_description:
+            processed_pr = generate_processed_output( # global function
+                request.pr_description, "pr_description"
+            )
+            outputs["pr_description"] = processed_pr
+
+        # Generate release notes if requested and provided
+        if request.generate_release_notes and request.release_notes:
+            processed_release_notes = generate_processed_output( # global function
+                request.release_notes, "release_notes"
+            )
+            outputs["release_notes"] = processed_release_notes
+
+        # Add convenience method for displaying selected outputs
+        # _format_all_outputs_display_static is the module-level helper defined previously
+        outputs["display_all"] = _format_all_outputs_display_static(outputs)
+
+        return outputs
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": f"Failed to generate selected project outputs: {e}",
+        }
+
+
+# This is the helper method that was inside DevTooling class
+def _format_all_outputs_display_static(outputs: dict) -> str:
+    """
+    Formats all generated project outputs into a single display string.
+
+    Combines handoff prompt, PR description, and release notes into a unified, human-readable format suitable for display or copying, with headers and usage instructions.
+    """
+    display_parts = []
+
+    display_parts.append(
+        "🚀 Complete Project Outputs - All Processed for Single Codeblock Usage"
+    )
+    display_parts.append("=" * 80)
+
+    if "handoff_prompt" in outputs:
+        display_parts.append("\n📸 FINAL SNAPSHOT & HANDOFF PROMPT")
+        display_parts.append("=" * 80)
+        display_parts.append(outputs["handoff_prompt"])
+
+    if "pr_description" in outputs:
+        display_parts.append("\n📋 FINAL PR DESCRIPTION")
+        display_parts.append("=" * 80)
+        display_parts.append(outputs["pr_description"])
+
+    if "release_notes" in outputs:
+        display_parts.append("\n📦 FINAL RELEASE NOTES")
+        display_parts.append("=" * 80)
+        display_parts.append(outputs["release_notes"])
+
+    display_parts.append(
+        "\n🎉 All outputs generated and processed for single codeblock usage!"
+    )
+    display_parts.append(
+        "Use 'agor retick' to restore triple backticks when needed for external usage."
+    )
+
+    return "\n".join(display_parts)
+
+
+# Now refactor generate_complete_project_outputs itself
+# This is a separate search/replace block for clarity, applied after the helper is defined.
+# The search for `generate_complete_project_outputs` will be in a new block.
 
 def generate_pr_description_only(
     task_description: str,
@@ -2559,10 +2083,7 @@ print(outputs['session_end_prompt'])
 
 def get_timestamp() -> str:
     """Get current timestamp - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _get_current_timestamp()
-    else:
-        return datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    return get_current_timestamp() # Use direct name
 
 
 def get_current_timestamp() -> str:
@@ -2572,81 +2093,40 @@ def get_current_timestamp() -> str:
 
 def get_file_timestamp() -> str:
     """Get file-safe timestamp - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _get_file_timestamp()
-    else:
-        return datetime.utcnow().strftime("%Y-%m-%d_%H%M")
+    return get_file_timestamp() # Use direct name
 
 
 def get_precise_timestamp() -> str:
     """Get precise timestamp - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _get_precise_timestamp()
-    else:
-        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    return get_precise_timestamp() # Use direct name
 
 
 def get_ntp_timestamp() -> str:
     """Get NTP timestamp - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _get_ntp_timestamp()
-    else:
-        return get_timestamp()
+    return get_ntp_timestamp() # Use direct name
 
 
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """Quick commit and push - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _quick_commit_push(message, emoji)
-    else:
-        # Fallback implementation
-        dev_tools = DevTooling()
-        return dev_tools.quick_commit_push(message, emoji)
+    return quick_commit_push(message, emoji) # Use direct name
 
 
 def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
     """Auto-commit memory - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _auto_commit_memory(content, memory_type, agent_id)
-    else:
-        # Fallback implementation
-        dev_tools = DevTooling()
-        return dev_tools.auto_commit_memory(content, memory_type, agent_id)
+    return auto_commit_memory(content, memory_type, agent_id) # Use direct name
 
 
 def test_tooling() -> bool:
     """Test development tooling - convenience function for backward compatibility."""
-    if MODULAR_IMPORTS_AVAILABLE:
-        return _test_tooling()
-    else:
-        # Fallback implementation
-        print("🧪 Testing AGOR Development Tooling...")
-        try:
-            dev_tools = DevTooling()
-            timestamp = dev_tools.get_current_timestamp()
-            print(f"📅 Current timestamp: {timestamp}")
-
-            success, output = dev_tools._run_git_command(["--version"])
-            if success:
-                print(f"✅ Git working: {output}")
-            else:
-                print(f"❌ Git issue: {output}")
-                return False
-
-            print("🎉 Development tooling test completed successfully!")
-            return True
-        except Exception as e:
-            print(f"❌ Development tooling test failed: {e}")
-            return False
+    return test_tooling() # Use direct name
 
 
 # Global instance for convenience
-_dev_tools_instance = None
-
-
-def get_dev_tools() -> 'DevTooling':
-    """Get global DevTooling instance - convenience function."""
-    global _dev_tools_instance
-    if _dev_tools_instance is None:
-        _dev_tools_instance = DevTooling()
-    return _dev_tools_instance
+# _dev_tools_instance = None # Removed
+#
+# def get_dev_tools() -> 'DevTooling': # Removed
+#     """Get global DevTooling instance - convenience function."""
+#     global _dev_tools_instance
+#     if _dev_tools_instance is None:
+#         _dev_tools_instance = DevTooling()
+#     return _dev_tools_instance

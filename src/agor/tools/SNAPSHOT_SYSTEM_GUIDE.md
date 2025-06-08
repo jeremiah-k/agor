@@ -31,7 +31,7 @@ The snapshot system is AGOR's core mechanism for:
 **Generated**: 2024-01-27 14:30:00
 **From Agent Role**: [Your Role]
 **Snapshot Reason**: [End of session/Handoff/Blocker/etc.]
-**AGOR Version**: 0.3.5
+**AGOR Version**: 0.4.4
 
 ## 🔧 Environment Context
 
@@ -142,6 +142,8 @@ load_snapshot
 ```
 
 ## 📁 Snapshot Storage
+
+**Important:** The `.agor/snapshots` directory and its contents are stored on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`), not typically on your main working branch. This is managed by AGOR's dev tooling and Memory Synchronization System.
 
 Snapshots are stored in:
 

@@ -4,7 +4,7 @@
 
 _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
 
-Welcome to AGOR v0.4.1. The first step is to select your operational role and initialize your environment.
+Welcome to AGOR v0.4.4. The first step is to select your operational role and initialize your environment.
 
 ## 🚀 INITIALIZATION PROTOCOL
 
@@ -115,9 +115,11 @@ Based on your environment detection:
 
 **Development Tools**:
 
-- `src/agor/tools/dev_tooling.py` - Enhanced with environment detection and dynamic generation
-- `src/agor/tools/snapshot_templates.py` - Snapshot generation system
-- `src/agor/memory_sync.py` - Memory branch management
+- `src/agor/tools/dev_tooling.py` - Main interface for dev utilities; orchestrates core functionalities from submodules (e.g., `git_operations.py`, `memory_manager.py`).
+- `src/agor/tools/git_operations.py` - Core Git commands and safety checks.
+- `src/agor/tools/memory_manager.py` - Core functions for committing to memory branches.
+- `src/agor/tools/snapshot_templates.py` - Snapshot generation system.
+- `src/agor/memory_sync.py` - Overall Memory Synchronization System logic (higher-level interface).
 
 ---
 

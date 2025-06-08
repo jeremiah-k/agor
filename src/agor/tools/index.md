@@ -76,8 +76,8 @@
 
 ### "I need memory management"
 
-- **[../memory_sync.py](../memory_sync.py)** - Memory synchronization system
-- **[README_ai.md](README_ai.md)** Lines 590-662 - Memory system documentation
+- **[src/agor/tools/memory_manager.py](memory_manager.py)** - Low-level memory branch commit logic. For overall system, see Memory Synchronization System in `AGOR_INSTRUCTIONS.md` (Section 6.1) and potentially `src/agor/memory_sync.py` (if it's the higher-level interface).
+- **[README_ai.md](README_ai.md)** Lines 590-662 - Memory system documentation (refers to overall system)
 
 ### "I need hotkey commands reference"
 
@@ -125,13 +125,18 @@
 
 ### Technical Tools (src/agor/tools/)
 
-| File                                                     | Purpose             | Key Functions                                | Lines |
-| -------------------------------------------------------- | ------------------- | -------------------------------------------- | ----- |
-| **[code_exploration.py](code_exploration.py)**           | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
-| **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation  | Function reference, examples                 | 179   |
-| **[snapshot_templates.py](snapshot_templates.py)**       | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
+| File                                                     | Purpose                                                                                               | Key Functions                                                                      | Lines |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----- |
+| **[dev_tooling.py](dev_tooling.py)**                     | Main interface for dev utilities                                                                      | Orchestrates functionalities from submodules (git_operations, memory_manager etc.) | ~1000+ |
+| **[git_operations.py](git_operations.py)**               | Handles core Git command execution, safety checks (safe_git_push), and timestamp utilities.           | run_git_command, safe_git_push, get_current_timestamp                            | ~200  |
+| **[memory_manager.py](memory_manager.py)**               | Manages memory branch creation and commits (commit_to_memory_branch) ensuring clean separation.       | commit_to_memory_branch, auto_commit_memory                                      | ~300  |
+| **[agent_handoffs.py](agent_handoffs.py)**               | Provides utilities for agent coordination, including prompt generation and backtick processing.     | generate_handoff_prompt_only, detick_content                                     | ~150  |
+| **[dev_testing.py](dev_testing.py)**                     | Contains environment detection logic and test functions for AGOR tooling.                             | detect_environment, test_tooling                                                 | ~100  |
+| **[code_exploration.py](code_exploration.py)**           | Codebase analysis                                                                                     | bfs_find, grep, tree, analyze_file_structure                                     | ~300  |
+| **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation                                                                                    | Function reference, examples                                                       | 179   |
+| **[snapshot_templates.py](snapshot_templates.py)**       | Snapshot generation                                                                                   | generate_snapshot_document, git_context                                          | ~400  |
 
-| **[agent_prompt_templates.py](agent_prompt_templates.py)** | Role prompts | Specialized agent prompts | ~200 |
+| **[agent_prompt_templates.py](agent_prompt_templates.py)** | Role prompts                                                                                          | Specialized agent prompts                                                          | ~200  |
 | **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates | ~300 |
 | **[strategy_protocols.py](strategy_protocols.py)** | Strategy execution | Concrete implementation protocols | ~600 |
 | **[agent_coordination.py](agent_coordination.py)** | Agent coordination | Role discovery, status checking | ~400 |
