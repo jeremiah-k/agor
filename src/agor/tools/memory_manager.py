@@ -20,13 +20,12 @@ from agor.tools.git_operations import run_git_command, safe_git_push, get_file_t
 
 def get_empty_tree_hash() -> str:
     """
-    Get the empty tree hash for the current repository.
-
-    This function computes the empty tree hash dynamically to support
-    both SHA-1 and SHA-256 repositories in a cross-platform way.
-
+    Returns the empty tree hash for the current Git repository.
+    
+    Attempts to compute the empty tree hash dynamically to support both SHA-1 and SHA-256 repositories. Falls back to the known SHA-1 empty tree hash if dynamic computation fails.
+    
     Returns:
-        Empty tree hash as string
+        The empty tree hash as a string.
     """
     # Method 1: Create empty tree using write-tree with empty index
     temp_index_fd, temp_index_path = tempfile.mkstemp(suffix=".index", prefix="empty_tree_")
@@ -67,19 +66,18 @@ def commit_to_memory_branch(
     commit_message: Optional[str] = None,
 ) -> bool:
     """
-    Commit content to a memory branch without switching from current branch.
+    Commits content to a dedicated memory branch in the current Git repository without switching branches.
     
-    This function creates memory branches 1 commit behind HEAD (not orphan branches)
-    for easier navigation and merge prevention.
+    Creates or updates a memory branch, storing the provided file content under the `.agor/` directory. If the branch does not exist, it is initialized with an empty tree. The function ensures the user's working branch remains unchanged and cleans up all temporary files and indexes after the operation.
     
     Args:
-        file_content: Content to commit
-        file_name: Name of file to create/update
-        branch_name: Target memory branch (auto-generated if None)
-        commit_message: Commit message (auto-generated if None)
+        file_content: The content to be committed to the memory branch.
+        file_name: The name of the file to create or update within the `.agor/` directory.
+        branch_name: The target memory branch name. If not provided, a name is auto-generated.
+        commit_message: The commit message. If not provided, a default message is generated.
     
     Returns:
-        True if successful, False otherwise
+        True if the commit operation succeeds, False otherwise.
     """
     print("🛡️  Safe memory commit: staying on current branch")
     
