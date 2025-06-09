@@ -234,10 +234,7 @@ def workspace_health_check() -> dict:
 
 def display_workspace_health() -> str:
     """
-    Display formatted workspace health check.
-
-    Returns:
-        Formatted health check string.
+    Returns a formatted markdown string summarizing the current workspace health, including status, timestamp, environment details, and any detected issues or warnings.
     """
     health = workspace_health_check()
 
@@ -281,16 +278,18 @@ def generate_meta_feedback_hotkey(
     component: str = "general"
 ) -> str:
     """
-    Hotkey wrapper for generating meta feedback about AGOR.
-
+    Generates formatted meta feedback about AGOR for quick submission.
+    
+    If feedback content is not provided, a default prompt is used. Returns an error message string if feedback generation fails.
+    
     Args:
-        feedback_type: Type of feedback (bug, enhancement, workflow_issue, success_story, etc.)
-        feedback_content: Main feedback content
-        severity: Severity level (low, medium, high, critical)
-        component: AGOR component affected
-
+        feedback_type: The type of feedback (e.g., bug, enhancement, workflow_issue, success_story).
+        feedback_content: The main content of the feedback.
+        severity: The severity level (low, medium, high, critical).
+        component: The AGOR component affected.
+    
     Returns:
-        Formatted meta feedback ready for submission
+        A formatted meta feedback string, or an error message if generation fails.
     """
     try:
         from agor.tools.agent_handoffs import generate_meta_feedback
@@ -310,10 +309,9 @@ def generate_meta_feedback_hotkey(
 
 def system_health_check_hotkey() -> str:
     """
-    Comprehensive system health check hotkey.
-
-    Returns:
-        Detailed system health report
+    Performs a comprehensive system health check and returns a detailed markdown report.
+    
+    The report includes workspace health, project status, development tooling status, memory system status, environment detection, lists of issues and warnings, and actionable recommendations. If any step fails, returns an error message describing the failure.
     """
     try:
         # Get workspace health
@@ -406,14 +404,14 @@ Based on the health check:
 
 def quick_meta_feedback_bug(bug_description: str, component: str = "general") -> str:
     """
-    Quick hotkey for reporting bugs.
-
+    Generates a formatted bug report for quick feedback submission.
+    
     Args:
-        bug_description: Description of the bug
-        component: Component where bug was found
-
+        bug_description: Description of the bug encountered.
+        component: The component where the bug was found.
+    
     Returns:
-        Formatted bug report
+        A formatted string representing the bug report.
     """
     return generate_meta_feedback_hotkey(
         feedback_type="bug",
@@ -425,14 +423,14 @@ def quick_meta_feedback_bug(bug_description: str, component: str = "general") ->
 
 def quick_meta_feedback_enhancement(enhancement_idea: str, component: str = "general") -> str:
     """
-    Quick hotkey for suggesting enhancements.
-
+    Generates a formatted enhancement suggestion for AGOR workflow feedback.
+    
     Args:
-        enhancement_idea: Description of the enhancement
-        component: Component to enhance
-
+        enhancement_idea: Description of the proposed enhancement.
+        component: The component related to the enhancement.
+    
     Returns:
-        Formatted enhancement suggestion
+        A formatted string representing the enhancement suggestion.
     """
     return generate_meta_feedback_hotkey(
         feedback_type="enhancement",
@@ -444,14 +442,14 @@ def quick_meta_feedback_enhancement(enhancement_idea: str, component: str = "gen
 
 def quick_meta_feedback_success(success_story: str, component: str = "general") -> str:
     """
-    Quick hotkey for reporting successful workflows.
-
+    Generates a formatted success story feedback report for a specified component.
+    
     Args:
-        success_story: Description of what worked well
-        component: Component that worked well
-
+        success_story: Description of the successful workflow or outcome.
+        component: The component associated with the success story.
+    
     Returns:
-        Formatted success story
+        A formatted string containing the success story feedback.
     """
     return generate_meta_feedback_hotkey(
         feedback_type="success_story",

@@ -69,19 +69,18 @@ def commit_to_memory_branch(
     commit_message: Optional[str] = None,
 ) -> bool:
     """
-    Commit content to a memory branch without switching from current branch.
-
-    This function creates memory branches 1 commit behind HEAD (not orphan branches)
-    for easier navigation and merge prevention.
-
+    Commits content to a memory branch without switching from the current branch.
+    
+    Creates or updates a memory branch, ensuring it is one commit behind HEAD for safe navigation and merge prevention. If the branch does not exist, it is initialized with an empty tree. The specified content is written to a file under `.agor/` in the memory branch, and a new commit is created. The branch is updated and optionally pushed. Returns `True` if the operation succeeds, or `False` on any failure.
+    
     Args:
-        file_content: Content to commit
-        file_name: Name of file to create/update
-        branch_name: Target memory branch (auto-generated if None)
-        commit_message: Commit message (auto-generated if None)
-
+        file_content: The content to be committed to the memory branch.
+        file_name: The name of the file to create or update in the memory branch.
+        branch_name: The target memory branch name. If `None`, a name is auto-generated.
+        commit_message: The commit message. If `None`, a message is auto-generated.
+    
     Returns:
-        True if successful, False otherwise
+        True if the commit to the memory branch was successful, False otherwise.
     """
     print("🛡️  Safe memory commit: staying on current branch")
 
@@ -356,13 +355,15 @@ def read_from_memory_branch(
 
 def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
     """
-    List all memory branches without switching branches.
-
+    Lists all memory branches in the repository without switching branches.
+    
+    If available, uses the MemorySync class to retrieve both local and remote memory branches, combining and sorting them. Falls back to parsing Git branch output if MemorySync is unavailable or fails.
+    
     Args:
-        repo_path: Optional repository path (defaults to current directory)
-
+        repo_path: Optional path to the Git repository. Defaults to the current directory.
+    
     Returns:
-        List of memory branch names
+        A sorted list of memory branch names, or an empty list if none are found or an error occurs.
     """
     if repo_path is None:
         repo_path = Path.cwd()
