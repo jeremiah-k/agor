@@ -137,32 +137,32 @@ def generate_project_handoff_prompt(
 
 def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
     """Quick commit and push wrapper."""
-    return quick_commit_push_wrapper(message, emoji)
+    return quick_commit_push(message, emoji)
 
 
 def commit_memory_to_branch(content: str, memory_type: str, agent_id: str = "dev") -> bool:
     """Auto-commit memory wrapper."""
-    return auto_commit_memory_wrapper(content, memory_type, agent_id)
+    return auto_commit_memory(content, memory_type, agent_id)
 
 
 def test_development_tooling() -> bool:
     """Test development tooling wrapper."""
-    return test_tooling_wrapper()
+    return test_tooling()
 
 
 def get_current_timestamp_formatted() -> str:
     """Get formatted timestamp wrapper."""
-    return get_timestamp()
+    return get_current_timestamp()
 
 
 def process_content_for_codeblock(content: str) -> str:
     """Process content for safe codeblock embedding."""
-    return detick_content_wrapper(content)
+    return detick_content(content)
 
 
 def restore_content_from_codeblock(content: str) -> str:
     """Restore content from codeblock processing."""
-    return retick_content_wrapper(content)
+    return retick_content(content)
 
 
 # Status and Health Check Functions
@@ -349,18 +349,3 @@ def detect_current_environment() -> dict:
 def test_all_tooling() -> bool:
     """Test all development tooling components."""
     return test_tooling()
-
-
-# Legacy compatibility functions (deprecated - use new modular functions)
-# ======================================================================
-
-def quick_commit_push_legacy(message: str, emoji: str = "🔧") -> bool:
-    """Legacy wrapper - use quick_commit_and_push instead."""
-    print("⚠️ Using legacy function - consider using quick_commit_and_push")
-    return quick_commit_and_push(message, emoji)
-
-
-def auto_commit_memory_legacy(content: str, memory_type: str, agent_id: str = "dev") -> bool:
-    """Legacy wrapper - use commit_memory_to_branch instead."""
-    print("⚠️ Using legacy function - consider using commit_memory_to_branch")
-    return commit_memory_to_branch(content, memory_type, agent_id)
