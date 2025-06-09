@@ -24,9 +24,9 @@ This section provides detailed setup instructions for initializing AGOR agents o
 agor bundle your-project -f zip
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
-# - SOLO DEVELOPER: For code analysis and implementation
-# - PROJECT COORDINATOR: For planning and strategy
-# - AGENT WORKER: For following specific instructions
+# - Solo Developer: For code analysis and implementation
+# - Project Coordinator: For planning and strategy
+# - Worker Agent: For following specific instructions
 # All roles work with copy-paste workflow
 ```
 
@@ -93,9 +93,8 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
 
 2. **Select Your Role**: Choose based on the task:
-   - **Solo Developer**: Code analysis, implementation, debugging
+   - **Worker Agent**: Code analysis, implementation, debugging, task execution
    - **Project Coordinator**: Planning, architecture, multi-agent coordination
-   - **Agent Worker**: Executing specific assigned tasks
 
 3. **Use AGOR Development Tooling**: Import and use functions from `src/agor/tools/dev_tooling.py`:
    - `create_development_snapshot()` for work snapshots
@@ -116,7 +115,7 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - `src/agor/tools/README_ai.md` (role selection)
    - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive guide)
 
-2. Select your role (Solo Developer, Project Coordinator, or Agent Worker)
+2. Select your role (Worker Agent or Project Coordinator)
 
 3. Use AGOR development tooling for snapshots, PR descriptions, and handoffs
 
@@ -184,13 +183,12 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
 
 2. **Install Dependencies**: Install only what's needed for dev tooling:
    ```bash
-   python3 -m pip install pydantic pydantic-settings platformdirs
+   python3 -m pip install -r src/agor/tools/agent-requirements.txt
    ```
 
 3. **Select Your Role**: Choose based on the task:
-   - **Solo Developer**: Code analysis, implementation, debugging
+   - **Worker Agent**: Code analysis, implementation, debugging, task execution
    - **Project Coordinator**: Planning, architecture, multi-agent coordination
-   - **Agent Worker**: Executing specific assigned tasks
 
 4. **Use AGOR Development Tooling**: Import and use functions from dev_tooling.py:
    - `create_development_snapshot()` for work snapshots
@@ -204,6 +202,10 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
    - "Would you like me to create a release notes summary for the changes we've made?"
    - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
+
+7. **Meta Feedback**: Offer to create feedback when encountering issues or successes:
+   - "I ran into some rough spots with [specific issue]. Would you like me to generate meta feedback for the AGOR team?"
+   - "This workflow went really well! Would you like me to create positive feedback about what worked?"
 
 ```
 
@@ -379,7 +381,7 @@ agor bundle https://github.com/your-username/your-project
 
 ## 🎭 Role Selection Deep Dive
 
-### 🔍 SOLO DEVELOPER
+### 🔍 Solo Developer
 
 **Primary Purpose:** Deep codebase analysis and implementation
 

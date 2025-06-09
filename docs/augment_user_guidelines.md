@@ -28,26 +28,20 @@ MANDATORY: Read these files from workspace sources before starting any developme
 
 Choose your AGOR role based on the task:
 
-**🔍 SOLO DEVELOPER** - For:
+**🔍 Worker Agent** - For:
 
 - Codebase analysis and exploration
 - Feature implementation and debugging
 - Technical documentation and code explanation
 - Direct development work
+- Task execution and completion
 
-**📋 PROJECT COORDINATOR** - For:
+**📋 Project Coordinator** - For:
 
 - Strategic planning and architecture design
 - Multi-agent workflow coordination
 - Project breakdown and task assignment
 - Team management and strategy selection
-
-**🤖 AGENT WORKER** - For:
-
-- Executing specific assigned tasks
-- Following coordinator instructions
-- Participating in multi-agent workflows
-- Task completion and reporting
 
 ### Step 3: Environment Detection
 
