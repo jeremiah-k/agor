@@ -293,5 +293,115 @@ def auto_commit_memory(content: str, memory_type: str, agent_id: str) -> bool:
     )
 
 
-# Import memory branch utilities from dev_tooling to avoid code duplication
-from agor.tools.dev_tooling import read_from_memory_branch, list_memory_branches
+def read_from_memory_branch(
+    file_path: str, branch_name: str, repo_path: Optional[Path] = None
+) -> Optional[str]:
+    """
+    SAFE memory branch read - NEVER switches branches.
+
+    Reads file content from memory branch without changing current working branch.
+
+    Args:
+        file_path: Path to file to read (relative to repo root)
+        branch_name: Source memory branch
+        repo_path: Optional repository path (defaults to current directory)
+
+    Returns:
+        File content as string if successful, None otherwise
+    """
+    if repo_path is None:
+        repo_path = Path.cwd()
+
+    try:
+        from agor.tools.git_operations import run_git_command
+
+        success, current_branch = run_git_command(["branch", "--show-current"])
+        if not success:
+            print(
+                "⚠️  Cannot determine current branch - aborting memory read for safety"
+            )
+            return None
+
+        original_branch = current_branch.strip()
+
+        # Check if memory branch exists
+        success, _ = run_git_command(
+            ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
+        )
+        if not success:
+            print(f"⚠️  Memory branch {branch_name} does not exist")
+            return None
+
+        # Read file from memory branch using git show
+        success, content = run_git_command(["show", f"{branch_name}:{file_path}"])
+        if not success:
+            print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
+            return None
+
+        # Verify we're still on the original branch
+        success, check_branch = run_git_command(["branch", "--show-current"])
+        if success and check_branch.strip() != original_branch:
+            print(
+                f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
+            )
+            return None
+
+        print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
+        return content
+
+    except Exception as e:
+        print(f"❌ Memory branch read failed: {e}")
+        return None
+
+
+def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
+    """
+    List all memory branches without switching branches.
+
+    Args:
+        repo_path: Optional repository path (defaults to current directory)
+
+    Returns:
+        List of memory branch names
+    """
+    if repo_path is None:
+        repo_path = Path.cwd()
+
+    try:
+        from agor.memory_sync import MemorySync
+
+        # Create MemorySync instance with current repo path
+        memory_sync = MemorySync(repo_path=str(repo_path))
+
+        # Get both local and remote memory branches
+        local_branches = memory_sync.list_memory_branches(remote=False)
+        remote_branches = memory_sync.list_memory_branches(remote=True)
+
+        # Combine and deduplicate
+        all_branches = list(set(local_branches + remote_branches))
+        return sorted(all_branches)
+
+    except Exception as e:
+        print(f"❌ Failed to list memory branches: {e}")
+        # Fallback to simple implementation if memory_sync fails
+        try:
+            from agor.tools.git_operations import run_git_command
+
+            success, branches_output = run_git_command(["branch", "-a"])
+            if not success:
+                return []
+
+            memory_branches = []
+            for line in branches_output.split("\n"):
+                line = line.strip()
+                if line.startswith("*"):
+                    line = line[1:].strip()
+                if line.startswith("remotes/origin/"):
+                    line = line.replace("remotes/origin/", "")
+
+                if line.startswith("agor/mem/"):
+                    memory_branches.append(line)
+
+            return memory_branches
+        except Exception:
+            return []
