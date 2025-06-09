@@ -389,6 +389,12 @@ agor bundle https://github.com/your-username/your-project
 # Agent works within bundle, you handle git operations
 ```
 
+## 🎯 NEW USERS: Start with Workflow Optimization
+
+**ESSENTIAL READING**: After setup, read [Agent Workflow Optimization Guide](agent-workflow-optimization.md) to learn proven strategies for maintaining seamless agent coordination. This guide contains real-world examples and troubleshooting that will save you time and improve your AGOR experience significantly.
+
+**Why this matters**: AGOR's power comes from seamless agent coordination. The workflow optimization guide teaches you how to structure prompts, maintain context, and avoid common coordination breakdowns that can frustrate new users.
+
 ## 🎭 Role Selection Deep Dive
 
 ### 🔍 Worker Agent

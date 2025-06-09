@@ -76,7 +76,7 @@
 
 ### "I need memory management"
 
-- **[src/agor/tools/memory_manager.py](memory_manager.py)** - Low-level memory branch commit logic. For overall system, see Memory Synchronization System in `AGOR_INSTRUCTIONS.md` (Section 6.1) and potentially `src/agor/memory_sync.py` (if it's the higher-level interface).
+- **[src/agor/tools/memory_manager.py](memory_manager.py)** - Low-level memory branch commit logic. For the overall system, see Memory Synchronization System in `AGOR_INSTRUCTIONS.md` (Section 6.1) and potentially `src/agor/memory_sync.py` (if it's the higher-level interface).
 - **[README_ai.md](README_ai.md)** Lines 590-662 - Memory system documentation (refers to overall system)
 
 ### "I need hotkey commands reference"

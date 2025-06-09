@@ -234,10 +234,9 @@ def workspace_health_check() -> dict:
 
 def display_workspace_health() -> str:
     """
-    Display formatted workspace health check.
-
-    Returns:
-        Formatted health check string.
+    Returns a formatted markdown summary of the current workspace health.
+    
+    The summary includes overall status, timestamp, environment details, issues, warnings, and a message if all systems are operational.
     """
     health = workspace_health_check()
 
@@ -272,3 +271,182 @@ def display_workspace_health() -> str:
         display += "\n## 🎉 All Systems Operational\nWorkspace is healthy and ready for development.\n"
 
     return display
+
+
+def generate_meta_feedback_hotkey(
+    feedback_type: str = "workflow_issue",
+    feedback_content: str = "",
+    severity: str = "medium",
+    component: str = "general"
+) -> str:
+    """
+    Generates formatted meta feedback about AGOR for quick submission.
+    
+    If no feedback content is provided, a default prompt is used. Returns an error message if feedback generation fails.
+    """
+    try:
+        from agor.tools.agent_handoffs import generate_meta_feedback
+
+        if not feedback_content:
+            feedback_content = "Please provide specific feedback about AGOR functionality, workflow, or user experience."
+
+        return generate_meta_feedback(
+            feedback_type=feedback_type,
+            feedback_content=feedback_content,
+            severity=severity,
+            component=component
+        )
+    except Exception as e:
+        return f"❌ Failed to generate meta feedback: {e}"
+
+
+def system_health_check_hotkey() -> str:
+    """
+    Performs a comprehensive system health check and returns a detailed markdown report.
+    
+    The report summarizes workspace health, project status, development tooling, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
+    """
+    try:
+        # Get workspace health
+        workspace_health = workspace_health_check()
+
+        # Get project status
+        project_status = get_project_status()
+
+        # Check dev tooling
+        tooling_status = "✅ Available"
+        try:
+            test_result = test_tooling()
+            if not test_result:
+                tooling_status = "⚠️ Some issues detected"
+        except Exception:
+            tooling_status = "❌ Failed to test"
+
+        # Check memory system
+        memory_status = "✅ Available"
+        try:
+            from agor.tools.memory_manager import list_memory_branches
+            branches = list_memory_branches()
+            memory_status = f"✅ Available ({len(branches)} memory branches)"
+        except Exception:
+            memory_status = "❌ Failed to access"
+
+        # Generate comprehensive report
+        health_report = f"""# 🏥 AGOR System Health Check
+
+**Timestamp**: {get_current_timestamp()}
+**Overall Status**: {workspace_health['overall_status'].title()}
+
+## 📊 Component Status
+
+### Git & Workspace
+- **Current Branch**: {project_status.get('current_branch', 'unknown')}
+- **Current Commit**: {project_status.get('current_commit', 'unknown')}
+- **Uncommitted Changes**: {'Yes' if project_status.get('has_changes', False) else 'No'}
+- **Branch Safety**: {'✅ Safe' if workspace_health.get('branch_safe', True) else '⚠️ Potentially unsafe'}
+
+### Environment
+- **Mode**: {project_status.get('mode', 'unknown')}
+- **Platform**: {project_status.get('platform', 'unknown')}
+- **AGOR Version**: {project_status.get('agor_version', 'unknown')}
+
+### Development Tools
+- **Dev Tooling**: {tooling_status}
+- **Memory System**: {memory_status}
+- **Environment Detection**: {'✅ Working' if 'environment_error' not in project_status else '❌ Failed'}
+
+## 🚨 Issues & Warnings
+
+"""
+
+        if workspace_health.get('issues'):
+            health_report += "### Issues\n"
+            for issue in workspace_health['issues']:
+                health_report += f"- ❌ {issue}\n"
+            health_report += "\n"
+
+        if workspace_health.get('warnings'):
+            health_report += "### Warnings\n"
+            for warning in workspace_health['warnings']:
+                health_report += f"- ⚠️ {warning}\n"
+            health_report += "\n"
+
+        if not workspace_health.get('issues') and not workspace_health.get('warnings'):
+            health_report += "✅ No issues or warnings detected\n\n"
+
+        health_report += """## 💡 Recommendations
+
+Based on the health check:
+
+1. **Regular Commits**: Commit work frequently to prevent data loss
+2. **Branch Management**: Use feature branches for development work
+3. **Memory Sync**: Ensure memory branches are accessible for coordination
+4. **Environment Monitoring**: Keep development environment stable
+5. **Tool Maintenance**: Test dev tooling regularly for reliability
+
+---
+
+**System health checks help maintain optimal AGOR performance.**
+"""
+
+        return health_report
+
+    except Exception as e:
+        return f"❌ System health check failed: {e}"
+
+
+def quick_meta_feedback_bug(bug_description: str, component: str = "general") -> str:
+    """
+    Generates a formatted bug report meta feedback entry with medium severity.
+    
+    Args:
+        bug_description: Description of the bug to report.
+        component: The component where the bug was found.
+    
+    Returns:
+        A formatted string representing the bug report feedback.
+    """
+    return generate_meta_feedback_hotkey(
+        feedback_type="bug",
+        feedback_content=bug_description,
+        severity="medium",
+        component=component
+    )
+
+
+def quick_meta_feedback_enhancement(enhancement_idea: str, component: str = "general") -> str:
+    """
+    Submits a quick enhancement suggestion as meta feedback.
+    
+    Args:
+        enhancement_idea: Description of the proposed enhancement.
+        component: The component or area related to the enhancement.
+    
+    Returns:
+        A formatted string containing the enhancement suggestion feedback.
+    """
+    return generate_meta_feedback_hotkey(
+        feedback_type="enhancement",
+        feedback_content=enhancement_idea,
+        severity="medium",
+        component=component
+    )
+
+
+def quick_meta_feedback_success(success_story: str, component: str = "general") -> str:
+    """
+    Generates a formatted success story meta feedback report for AGOR.
+    
+    Args:
+        success_story: Description of the successful workflow or outcome.
+        component: The component associated with the success story.
+    
+    Returns:
+        A formatted string containing the success story feedback.
+    """
+    return generate_meta_feedback_hotkey(
+        feedback_type="success_story",
+        feedback_content=success_story,
+        severity="low",
+        component=component
+    )

@@ -69,19 +69,18 @@ def commit_to_memory_branch(
     commit_message: Optional[str] = None,
 ) -> bool:
     """
-    Commit content to a memory branch without switching from current branch.
-
-    This function creates memory branches 1 commit behind HEAD (not orphan branches)
-    for easier navigation and merge prevention.
-
+    Commits content to a memory branch without switching from the current branch.
+    
+    Creates or updates a memory branch, storing the provided file content under the `.agor/` directory. If the memory branch does not exist, it is initialized with an empty commit. The function ensures the current working branch remains unchanged and attempts to push the memory branch after committing.
+    
     Args:
-        file_content: Content to commit
-        file_name: Name of file to create/update
-        branch_name: Target memory branch (auto-generated if None)
-        commit_message: Commit message (auto-generated if None)
-
+        file_content: The content to be committed to the memory branch.
+        file_name: The name of the file to create or update within the `.agor/` directory.
+        branch_name: The target memory branch name. If None, a name is auto-generated.
+        commit_message: The commit message. If None, a message is auto-generated.
+    
     Returns:
-        True if successful, False otherwise
+        True if the commit operation succeeds, False otherwise.
     """
     print("🛡️  Safe memory commit: staying on current branch")
 
@@ -163,11 +162,7 @@ def commit_to_memory_branch(
             success, tree_hash = run_git_command(
                 ["rev-parse", f"{branch_name}^{{tree}}"]
             )
-            if not success:
-                # If branch has no commits, use the computed empty tree hash
-                tree_hash = empty_tree_hash
-            else:
-                tree_hash = tree_hash.strip()
+            tree_hash = get_empty_tree_hash() if not success else tree_hash.strip()
 
             # Step 5: Create new tree with our file
             # Create a temporary index file
@@ -360,15 +355,16 @@ def read_from_memory_branch(
 
 def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
     """
-    List all memory branches without switching branches.
-
-    Uses the existing memory_sync.py implementation to avoid code duplication.
-
+    Lists all memory branches in the repository without switching the current branch.
+    
+    If available, uses the MemorySync class to retrieve both local and remote memory branches.
+    Falls back to parsing Git branch output if MemorySync is unavailable or fails.
+    
     Args:
-        repo_path: Optional repository path (defaults to current directory)
-
+        repo_path: Optional path to the repository. Defaults to the current working directory.
+    
     Returns:
-        List of memory branch names
+        A sorted list of memory branch names, or an empty list if none are found or on failure.
     """
     if repo_path is None:
         repo_path = Path.cwd()
