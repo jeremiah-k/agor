@@ -108,175 +108,124 @@ class HandoffRequest:
             self.brief_context = ""
 
 
-class DevTooling:
-    """Development utilities for AGOR development workflow."""
+def read_from_memory_branch(
+    file_path: str, branch_name: str, repo_path: Optional[Path] = None
+) -> Optional[str]:
+    """
+    SAFE memory branch read - NEVER switches branches.
 
-    def __init__(self, repo_path: Optional[Path] = None):
-        """Initialize development tooling."""
-        self.repo_path = repo_path if repo_path else Path.cwd()
-        # self.git_binary = git_manager.get_git_binary() # Removed
+    Reads file content from memory branch without changing current working branch.
 
-    # _run_git_command REMOVED
-    # get_current_timestamp REMOVED
-    # get_timestamp_for_files REMOVED
-    # get_precise_timestamp REMOVED
-    # get_ntp_timestamp REMOVED
-    # safe_git_push REMOVED
-    # quick_commit_push REMOVED
-    # auto_commit_memory REMOVED
-    # _commit_to_memory_branch REMOVED
+    Args:
+        file_path: Path to file to read (relative to repo root)
+        branch_name: Source memory branch
+        repo_path: Optional repository path (defaults to current directory)
 
-    def _read_from_memory_branch(
-        self, file_path: str, branch_name: str
-    ) -> Optional[str]:
-        """
-        SAFE memory branch read - NEVER switches branches.
+    Returns:
+        File content as string if successful, None otherwise
+    """
+    if repo_path is None:
+        repo_path = Path.cwd()
 
-        Reads file content from memory branch without changing current working branch.
+    try:
 
-        Args:
-            file_path: Path to file to read (relative to repo root)
-            branch_name: Source memory branch
-
-        Returns:
-            File content as string if successful, None otherwise
-        """
-        try:
-            # SAFETY CHECK: Verify we're not switching branches
-            # This method will need to use the global _run_git_command if it's to remain
-            # after _run_git_command is removed from the class.
-            # For now, let's assume _run_git_command is available globally or this method is refactored/removed.
-            # If DevTooling class is mostly removed, this method might need to live elsewhere or be refactored.
-            # For this step, we are just removing methods from the class.
-            # The original _run_git_command was on self. If this class instance is gone, this call will fail.
-            # This will be handled in Step 4/6, for now, we assume it works or will be fixed.
-            # To make it work temporarily if this method is called before full class removal:
-            # It would need to call the global _run_git_command.
-            # Let's assume for now that this method will be refactored or the class will still exist in some form.
-            # The instruction is to "leave _read_from_memory_branch ... in the class if they are still used".
-            # This method uses self._run_git_command. If that's removed from class, this breaks.
-            #
-            # Re-evaluating: The instruction is to REMOVE self._run_git_command.
-            # This means self._read_from_memory_branch MUST be refactored if it is to survive.
-            # It should use the global `_run_git_command` from `git_operations.py`.
-            #
-            # Temporarily, to make the diff cleaner for *just removing methods*, I will leave the body as is,
-            # acknowledging it will break if `self._run_git_command` is removed and this isn't fixed.
-            # The subtask implies these methods might be removed later or refactored if the class becomes empty.
-            #
-            # For now, the focus is on *deleting* the listed methods.
-            # The internal consistency of remaining methods like _read_from_memory_branch will be addressed
-            # when we decide the fate of the DevTooling class itself.
-            #
-            # Let's assume the methods that use other removed methods (like self._run_git_command)
-            # will either be removed too, or refactored in a later step.
-            # For now, I will just remove the specified list.
-            # The methods _read_from_memory_branch and list_memory_branches are stated to be kept "for now".
-            # This means their dependency on self._run_git_command needs to be fixed.
-            #
-            # I will preemptively change self._run_git_command to _run_git_command (the global one)
-            # within _read_from_memory_branch and list_memory_branches to ensure they don't break immediately.
-
-            success, current_branch = run_git_command( # Changed from self._run_git_command
-                ["branch", "--show-current"]
+        success, current_branch = run_git_command(
+            ["branch", "--show-current"]
+        )
+        if not success:
+            print(
+                "⚠️  Cannot determine current branch - aborting memory read for safety"
             )
-            if not success:
-                print(
-                    "⚠️  Cannot determine current branch - aborting memory read for safety"
-                )
-                return None
-
-            original_branch = current_branch.strip()
-
-            # Check if memory branch exists
-            success, _ = run_git_command( # Changed from self._run_git_command
-                ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
-            )
-            if not success:
-                print(f"⚠️  Memory branch {branch_name} does not exist")
-                return None
-
-            # Read file from memory branch using git show
-            success, content = run_git_command( # Changed from self._run_git_command
-                ["show", f"{branch_name}:{file_path}"]
-            )
-            if not success:
-                print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
-                return None
-
-            # Verify we're still on the original branch
-            success, check_branch = run_git_command(["branch", "--show-current"]) # Changed from self._run_git_command
-            if success and check_branch.strip() != original_branch:
-                print(
-                    f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
-                )
-                return None
-
-            print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
-            return content
-
-        except Exception as e:
-            print(f"❌ Memory branch read failed: {e}")
             return None
 
-    def list_memory_branches(self) -> list[str]:
-        """
-        List all memory branches without switching branches.
+        original_branch = current_branch.strip()
 
-        Uses the existing memory_sync.py implementation to avoid code duplication.
+        # Check if memory branch exists
+        success, _ = run_git_command(
+            ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
+        )
+        if not success:
+            print(f"⚠️  Memory branch {branch_name} does not exist")
+            return None
 
-        Returns:
-            List of memory branch names
-        """
+        # Read file from memory branch using git show
+        success, content = run_git_command(
+            ["show", f"{branch_name}:{file_path}"]
+        )
+        if not success:
+            print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
+            return None
+
+        # Verify we're still on the original branch
+        success, check_branch = run_git_command(["branch", "--show-current"])
+        if success and check_branch.strip() != original_branch:
+            print(
+                f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
+            )
+            return None
+
+        print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
+        return content
+
+    except Exception as e:
+        print(f"❌ Memory branch read failed: {e}")
+        return None
+
+
+def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
+    """
+    List all memory branches without switching branches.
+
+    Uses the existing memory_sync.py implementation to avoid code duplication.
+
+    Args:
+        repo_path: Optional repository path (defaults to current directory)
+
+    Returns:
+        List of memory branch names
+    """
+    if repo_path is None:
+        repo_path = Path.cwd()
+
+    try:
+        from agor.memory_sync import MemorySync
+
+        # Create MemorySync instance with current repo path
+        memory_sync = MemorySync(repo_path=str(repo_path))
+
+        # Get both local and remote memory branches
+        local_branches = memory_sync.list_memory_branches(remote=False)
+        remote_branches = memory_sync.list_memory_branches(remote=True)
+
+        # Combine and deduplicate
+        all_branches = list(set(local_branches + remote_branches))
+        return sorted(all_branches)
+
+    except Exception as e:
+        print(f"❌ Failed to list memory branches: {e}")
+        # Fallback to simple implementation if memory_sync fails
         try:
-            from agor.memory_sync import MemorySync
-
-            # Create MemorySync instance with current repo path
-            memory_sync = MemorySync(repo_path=str(self.repo_path))
-
-            # Get both local and remote memory branches
-            local_branches = memory_sync.list_memory_branches(remote=False)
-            remote_branches = memory_sync.list_memory_branches(remote=True)
-
-            # Combine and deduplicate
-            all_branches = list(set(local_branches + remote_branches))
-            return sorted(all_branches)
-
-        except Exception as e:
-            print(f"❌ Failed to list memory branches: {e}")
-            # Fallback to simple implementation if memory_sync fails
-            try:
-                success, branches_output = run_git_command(["branch", "-a"]) # Changed from self._run_git_command
-                if not success:
-                    return []
-
-                memory_branches = []
-                for line in branches_output.split("\n"):
-                    line = line.strip()
-                    if line.startswith("*"):
-                        line = line[1:].strip()
-                    if line.startswith("remotes/origin/"):
-                        line = line.replace("remotes/origin/", "")
-
-                    if line.startswith("agor/mem/"):
-                        memory_branches.append(line)
-
-                return memory_branches
-            except Exception:
+            success, branches_output = run_git_command(["branch", "-a"])
+            if not success:
                 return []
 
-    # create_development_snapshot REMOVED
-    # test_tooling REMOVED
-    # prepare_prompt_content REMOVED
-    # detick_content REMOVED
-    # retick_content REMOVED
-    # generate_agent_handoff_prompt REMOVED
-    # generate_processed_output REMOVED
-    # generate_complete_project_outputs REMOVED (and its helper _format_all_outputs_display)
-    # Note: _format_all_outputs_display was moved out and made static as _format_all_outputs_display_static
+            memory_branches = []
+            for line in branches_output.split("\n"):
+                line = line.strip()
+                if line.startswith("*"):
+                    line = line[1:].strip()
+                if line.startswith("remotes/origin/"):
+                    line = line.replace("remotes/origin/", "")
 
-# Global instance for easy access
-# dev_tools = DevTooling() # This line is now definitively removed.
+                if line.startswith("agor/mem/"):
+                    memory_branches.append(line)
+
+            return memory_branches
+        except Exception:
+            return []
+
+# DevTooling class has been removed and converted to standalone functions
+# All methods are now available as module-level functions
 
 
 # Convenience functions
@@ -1922,7 +1871,7 @@ Your feedback helps improve AGOR by:
 """
 
         # Process the content for single codeblock usage
-        processed_content = prepare_prompt_content(feedback_content)
+        processed_content = detick_content(feedback_content)
 
         return {
             'success': True,
@@ -2056,7 +2005,7 @@ print(outputs['session_end_prompt'])
 """
 
         # Process the content for single codeblock usage
-        processed_content = prepare_prompt_content(session_end_content)
+        processed_content = detick_content(session_end_content)
 
         return {
             'success': True,
@@ -2080,39 +2029,7 @@ def get_timestamp() -> str:
     return get_current_timestamp() # Use direct name
 
 
-def get_current_timestamp() -> str:
-    """Get current timestamp - convenience function for backward compatibility."""
-    return get_timestamp()
-
-
-def get_file_timestamp() -> str:
-    """Get file-safe timestamp - convenience function for backward compatibility."""
-    return get_file_timestamp() # Use direct name
-
-
-def get_precise_timestamp() -> str:
-    """Get precise timestamp - convenience function for backward compatibility."""
-    return get_precise_timestamp() # Use direct name
-
-
-def get_ntp_timestamp() -> str:
-    """Get NTP timestamp - convenience function for backward compatibility."""
-    return get_ntp_timestamp() # Use direct name
-
-
-def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push - convenience function for backward compatibility."""
-    return quick_commit_push(message, emoji) # Use direct name
-
-
-def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
-    """Auto-commit memory - convenience function for backward compatibility."""
-    return auto_commit_memory(content, memory_type, agent_id) # Use direct name
-
-
-def test_tooling() -> bool:
-    """Test development tooling - convenience function for backward compatibility."""
-    return test_tooling() # Use direct name
+# Removed recursive convenience functions - use the imported functions directly
 
 
 # Global instance for convenience

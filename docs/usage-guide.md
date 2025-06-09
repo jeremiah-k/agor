@@ -137,15 +137,14 @@ You are operating in **AugmentCode Local Agent** environment with:
 
 ## 🛠️ AGOR Workflow Protocols
 
-### Core Hotkeys (Use These Frequently)
+### Core Development Tools (Use These Frequently)
 - `a` - Comprehensive codebase analysis
 - `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
 - `commit` - Save changes with descriptive messages
 - `snapshot` - Create work snapshot (MANDATORY before ending sessions)
 - `status` - Check coordination and project status
-- `sp` - Strategic planning (for coordinators)
-- `bp` - Break down project into tasks
+- `meta` - Provide feedback on AGOR itself
+- Use dev tooling functions for all coordination outputs
 
 ### Snapshot Requirements (CRITICAL)
 **EVERY session MUST end with a snapshot in a single codeblock:**
@@ -310,7 +309,6 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 ## 🚀 Initialization Protocol
 
 ### Step 1: Read AGOR Documentation
-```
 
 MANDATORY: Read these files from workspace sources before starting any development work:
 
@@ -318,8 +316,6 @@ MANDATORY: Read these files from workspace sources before starting any developme
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
-
-```
 
 ### Step 2: Role Selection
 Choose your AGOR role based on the task:
@@ -351,15 +347,14 @@ You are operating in **AugmentCode Remote Agent** environment with:
 
 ## 🛠️ AGOR Workflow Protocols
 
-### Core Hotkeys (Use These Frequently)
+### Core Development Tools (Use These Frequently)
 - `a` - Comprehensive codebase analysis
 - `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
 - `commit` - Save changes with descriptive messages
 - `snapshot` - Create work snapshot (MANDATORY before ending sessions)
 - `status` - Check coordination and project status
-- `sp` - Strategic planning (for coordinators)
-- `bp` - Break down project into tasks
+- `meta` - Provide feedback on AGOR itself
+- Use dev tooling functions for all coordination outputs
 
 ### Snapshot Requirements (CRITICAL)
 **EVERY session MUST end with a snapshot in a single codeblock:**
@@ -781,39 +776,43 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 3. Execute assigned work
 4. Report completion and create a new snapshot (`complete`, `snapshot`)
 
-## 🎼 Multi-Agent Coordination Strategies
+## 🛠️ AGOR Development Tooling
 
-### When to Use Each Strategy
+### Core Development Functions
 
-**🔄 Parallel Divergent** - Multiple independent solutions
+AGOR provides powerful development tooling that agents use for coordination, memory management, and output generation. All outputs are automatically formatted for copy-paste with stripped backticks.
 
-- **Use for**: Feature design, architecture decisions, creative problem-solving
-- **Roles**: Multiple SOLO DEVELOPER agents working independently
-- **Outcome**: Best ideas synthesized into final solution
+**📝 Snapshot Generation**
+- `generate_handoff_snapshot()` - Create comprehensive work snapshots
+- `generate_mandatory_session_end_prompt()` - End-of-session summaries
+- All snapshots automatically saved to memory branches
 
-**⚡ Pipeline** - Sequential work via snapshots with specialization
+**🔄 Memory Management**
+- `auto_commit_memory()` - Save agent state to memory branches
+- `read_from_memory_branch()` - Access previous work context
+- `list_memory_branches()` - View available memory branches
 
-- **Use for**: Complex features requiring different expertise
-- **Roles**: Specialized agents (Backend → Frontend → Testing → DevOps)
-- **Outcome**: Polished, well-integrated solution
+**📋 Output Generation**
+- `generate_meta_feedback()` - Provide feedback on AGOR itself
+- `detick_content()` - Strip triple backticks for copy-paste
+- All outputs formatted in single codeblocks
 
-**🐝 Swarm** - Dynamic task assignment
+**⚙️ Git Operations**
+- `quick_commit_push()` - Fast commit and push operations
+- `run_git_command()` - Safe git command execution
+- Branch-safe operations that never leave users on memory branches
 
-- **Use for**: Large projects with many independent tasks
-- **Roles**: Multiple AGENT WORKER agents pulling from task queue
-- **Outcome**: Maximum parallelism and efficiency
+### Multi-Agent Coordination (Experimental)
 
-**⚔️ Red Team** - Adversarial build/break cycles
+AGOR includes experimental multi-agent strategies that are being refined based on real-world usage:
 
-- **Use for**: Security-critical features, robust system design
-- **Roles**: Builder agents vs. Breaker agents
-- **Outcome**: Highly robust, security-tested solution
+- **Parallel Divergent** - Independent exploration then synthesis
+- **Pipeline** - Sequential snapshots with specialization
+- **Swarm** - Dynamic task assignment from queue
+- **Red Team** - Adversarial build/break cycles
+- **Mob Programming** - Collaborative coding
 
-**👥 Mob Programming** - Collaborative coding
-
-- **Use for**: Complex algorithms, learning scenarios, critical code
-- **Roles**: Rotating Driver, Navigator, Observers, Researcher
-- **Outcome**: High-quality, well-understood code
+**Note**: These strategies are experimental. We encourage using the `meta` hotkey to provide feedback on coordination experiences.
 
 ## 🚀 Getting Started Recommendations
 
