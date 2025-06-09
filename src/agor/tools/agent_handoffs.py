@@ -346,41 +346,8 @@ This feedback should be:
     return detick_content(meta_content)
 
 
-@dataclass
-class HandoffRequest:
-    """Configuration object for handoff operations to reduce parameter count."""
-
-    task_description: str
-    work_completed: list = None
-    next_steps: list = None
-    files_modified: list = None
-    context_notes: str = None
-    brief_context: str = None
-    pr_title: str = None
-    pr_description: str = None
-    release_notes: str = None
-    # Output selection flags for flexible generation
-    generate_snapshot: bool = True
-    generate_handoff_prompt: bool = True
-    generate_pr_description: bool = True
-    generate_release_notes: bool = True
-
-    def __post_init__(self):
-        """
-        Ensures all optional fields are initialized to empty lists or strings if not provided.
-
-        This method sets default empty values for fields that may be None after dataclass initialization, preventing issues with mutable defaults.
-        """
-        if self.work_completed is None:
-            self.work_completed = []
-        if self.next_steps is None:
-            self.next_steps = []
-        if self.files_modified is None:
-            self.files_modified = []
-        if self.context_notes is None:
-            self.context_notes = ""
-        if self.brief_context is None:
-            self.brief_context = ""
+# Import HandoffRequest from snapshots to avoid code duplication
+from agor.tools.snapshots import HandoffRequest
 
 
 def generate_agent_handoff_prompt_extended(

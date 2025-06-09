@@ -39,7 +39,7 @@ Each entry includes:
   - `snapshots.py` (~400 LOC) - Snapshot creation and agent handoff functionality
   - `hotkeys.py` (~300 LOC) - Hotkey helpers and workflow convenience functions
   - `checklist.py` (~300 LOC) - Checklist generation and workflow validation
-  - `dev_tooling.py` (351 LOC) - Clean API interface under guideline
+  - `dev_tooling.py` (351 LOC) - Clean API under guideline
 - **Critical Runtime Fixes**: Fixed function call errors and duplicate definitions
   - Corrected quick_commit_push function calls with proper positional arguments
   - Removed duplicate get_timestamp() function definitions
