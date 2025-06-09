@@ -412,3 +412,80 @@ def generate_mandatory_session_end_prompt(
     )
 
     return handoff_prompt
+
+
+def create_snapshot_legacy(title: str, context: str) -> bool:
+    """
+    Create development snapshot using legacy format.
+
+    This function maintains compatibility with older snapshot creation patterns
+    while using the new modular architecture.
+
+    Args:
+        title: Snapshot title
+        context: Snapshot context
+
+    Returns:
+        True if successful, False otherwise
+    """
+    from agor.tools.git_operations import get_file_timestamp, get_current_timestamp, run_git_command, quick_commit_push
+    from agor.tools.dev_testing import detect_environment
+
+    timestamp_str = get_file_timestamp()
+    snapshot_file = (
+        f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+    )
+
+    # Get current git info
+    success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
+    current_branch = current_branch_val.strip() if success_branch else "unknown"
+
+    success_commit, current_commit_val = run_git_command(["rev-parse", "--short", "HEAD"])
+    current_commit = current_commit_val.strip() if success_commit else "unknown"
+
+    # Get version from environment
+    try:
+        version = detect_environment().get("agor_version", "0.4.4 development")
+    except Exception:
+        version = "0.4.4 development"
+
+    current_time_for_snapshot = get_current_timestamp()
+    snapshot_content = f"""# 📸 {title} Development Snapshot
+**Generated**: {current_time_for_snapshot}
+**Agent**: Augment Agent (Software Engineering)
+**Branch**: {current_branch}
+**Commit**: {current_commit}
+**AGOR Version**: {version}
+
+## 🎯 Development Context
+
+{context}
+
+## 📋 Next Steps
+[To be filled by continuing agent]
+
+## 🔄 Git Status
+- **Current Branch**: {current_branch}
+- **Last Commit**: {current_commit}
+- **Timestamp**: {current_time_for_snapshot}
+
+---
+
+## 🎼 **For Continuation Agent**
+
+If you're picking up this work:
+1. Review this snapshot and current progress
+2. Check git status and recent commits
+3. Continue from the next steps outlined above
+
+**Remember**: Use quick_commit_push() for frequent commits during development.
+"""
+
+    # Write snapshot file
+    repo_path = Path.cwd()
+    snapshot_path = repo_path / snapshot_file
+    snapshot_path.parent.mkdir(parents=True, exist_ok=True)
+    snapshot_path.write_text(snapshot_content)
+
+    # Commit and push snapshot
+    return quick_commit_push(f"📸 Create development snapshot: {title}", "📸")
