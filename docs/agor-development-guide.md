@@ -43,12 +43,12 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 **Agent Protocol Hotkeys** (in agent instructions):
 
-- **Hotkeys**: `a`, `f`, `co`, `da`, `m`, `bfs`, `grep`, `tree`, `edit`, `commit`, etc.
+- **Hotkeys**: e.g., `a` (analyze), `f` (full files), `edit`, `commit`, `snapshot`. For comprehensive, role-specific lists, see `src/agor/tools/AGOR_INSTRUCTIONS.md` or `src/agor/tools/README_ai.md`.
 - These are menu options/verbal commands in agent workflow instructions
-- They are implemented as Python functions in `src/agor/tools/`
+- They are implemented as Python functions in `src/agor/tools/` (many orchestrated by `dev_tooling.py`)
 - They are NOT CLI commands - they're protocol directives
 - They work within agent coordination workflows and `.agor/` files
-- They are documented in `README_ai.md` as workflow options
+- They are documented in `README_ai.md` and `AGOR_INSTRUCTIONS.md` as workflow options
 
 **KEY RULE**: CLI commands with [CLI] prefix don't appear in agent hotkey menus. Agent hotkeys are not CLI commands.
 
@@ -129,7 +129,14 @@ This guide ensures consistency, quality, and proper protocol management when dev
 ### �📁 Key Directories and Their Purposes
 
 - **`src/agor/`**: Core AGOR package code
-- **`src/agor/tools/`**: Agent coordination tools and templates
+- **`src/agor/tools/`**: Agent coordination tools and templates. This directory now includes:
+  - `dev_tooling.py`: Main interface for development utilities.
+  - `git_operations.py`: Handles core Git command execution and safety.
+  - `memory_manager.py`: Manages memory branch operations.
+  - `agent_handoffs.py`: Utilities for agent coordination and prompt generation.
+  - `dev_testing.py`: Environment detection and test functions for AGOR tooling.
+  - `snapshot_templates.py`: Generates various snapshot documents.
+  - Other specialized scripts and templates.
 - **`src/agor/tools/strategies/`**: Multi-agent strategy implementations
 - **`.agor/`**: Project coordination directory (created by agents)
 - **`.agor/snapshots/`**: Agent snapshot documents.
@@ -158,7 +165,7 @@ git add . && git commit -m "🔧 Descriptive message" && git push
 
 **🛠️ Development Tooling Available**:
 
-For streamlined development, use the new dev tooling functions in `src/agor/tools/dev_tooling.py`:
+For streamlined development, use the new dev tooling functions in `src/agor/tools/dev_tooling.py`. These functions in `dev_tooling.py` now primarily act as interfaces to specialized modules like `git_operations.py` and `memory_manager.py`.
 
 ```python
 from agor.tools.dev_tooling import quick_commit_push, auto_commit_memory, create_snapshot
@@ -290,7 +297,7 @@ print(f"Session started at: {get_timestamp()}")
 
 ## 📊 Implementation Status Tracking
 
-**Last Updated**: 2024-12-19 17:15 UTC | **AGOR Version**: 0.2.5 | **Protocol Version**: 0.4.0 | **Latest**: Elegant refresh protocols - added smooth navigation and reorientation mechanisms for longer AGOR sessions.
+**Last Updated**: 2024-07-16 | **AGOR Version**: 0.4.4 | **Protocol Version**: 0.4.0 | **Latest**: Elegant refresh protocols - added smooth navigation and reorientation mechanisms for longer AGOR sessions. (Updated 2024-07-16)
 
 > **🕐 Getting Current Date/Time Programmatically:**
 >
@@ -312,7 +319,7 @@ print(f"Session started at: {get_timestamp()}")
 | Feature                 | Hotkey                                        | Implementation                                             | Status                 |
 | ----------------------- | --------------------------------------------- | ---------------------------------------------------------- | ---------------------- |
 | **Code Analysis**       | `a`, `f`, `co`, `tree`, `grep`                | code_exploration.py                                        | ✅ Complete            |
-| **Snapshot System**     | `snapshot`, `load_snapshot`, `list_snapshots` | handoff_templates.py (generates snapshots)                 | ✅ Complete            |
+| **Snapshot System**     | `snapshot`, `load_snapshot`, `list_snapshots` | snapshot_templates.py (generates snapshots)                | ✅ Complete            |
 | **SQLite Memory**       | Internal system only                          | sqlite_memory.py                                           | ✅ Complete (Internal) |
 | **Parallel Divergent**  | `pd`                                          | strategies/parallel_divergent.py                           | ✅ Complete            |
 | **Pipeline Strategy**   | `pl`                                          | strategies/multi_agent_strategies.py                       | ✅ Complete            |
@@ -419,7 +426,7 @@ Based on comprehensive audit findings, the following documentation improvements 
 
 - **Target**: `src/agor/tools/README_ai.md` (Hotkey Actions section)
 - **Issue**: Some hotkeys lack clear behavior descriptions and parameter details (ensure descriptions reflect snapshot terminology where applicable).
-- **Examples**: PC `init`, Solo Developer `m`/`commit`/`diff`, Agent Worker `ch`/`task`/`complete`/`log`/`report`. Hotkeys like `da` (detailed analysis/snapshot), `hp` (snapshot prompts), and `handoff` (create snapshot) are key.
+- **Examples**: Project Coordinator `init`, Worker Agent development tooling functions. Development functions like snapshot creation, handoff prompts, and release notes generation are key.
 - **Action**: ✅ Enhanced all hotkey descriptions with detailed behavior, parameters, and usage examples, reflecting snapshot terminology.
 
 #### 2. Undocumented Hotkey Functionality ✅ COMPLETED
@@ -473,7 +480,7 @@ Based on comprehensive audit findings, the following documentation improvements 
 
 ### ✅ Completed Audit Items
 
-- ✅ **Clear Role Definitions**: SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER
+- ✅ **Clear Role Definitions**: Worker Agent, Project Coordinator
 - ✅ **Excellent Agent Documentation**: Comprehensive `README_ai.md`
 - ✅ **Robust Git Integration**: Direct binary usage with clear instructions
 - ✅ **Structured Communication**: Well-defined `.agor/` directory protocols
@@ -761,6 +768,7 @@ agor git-config               # Set up git configuration
 ### Multi-Agent Coordination Testing
 
 #### 2025-06-06 - Agent Coordination System Test (work-0.4.3-2)
+
 - ✅ **Strategic Improvements**: 2-role system, meta mode, session end prompts
 - ✅ **Documentation**: Created comprehensive multi-agent-protocols.md
 - ❌ **Coordination Failures**: Agents not generating proper return prompts

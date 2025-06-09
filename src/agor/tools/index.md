@@ -30,7 +30,7 @@
 ### "I need to understand roles and initialization"
 
 - **[README_ai.md](README_ai.md)** - Complete AI protocol (563 lines)
-  - Lines 18-40: Role selection (SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER)
+  - Lines 18-40: Role selection (Worker Agent, Project Coordinator)
   - Lines 120-220: Role-specific hotkey menus
   - Lines 450-550: Snapshot procedures and meta-development
 
@@ -76,15 +76,15 @@
 
 ### "I need memory management"
 
-- **[../memory_sync.py](../memory_sync.py)** - Memory synchronization system
-- **[README_ai.md](README_ai.md)** Lines 590-662 - Memory system documentation
+- **[src/agor/tools/memory_manager.py](memory_manager.py)** - Low-level memory branch commit logic. For overall system, see Memory Synchronization System in `AGOR_INSTRUCTIONS.md` (Section 6.1) and potentially `src/agor/memory_sync.py` (if it's the higher-level interface).
+- **[README_ai.md](README_ai.md)** Lines 590-662 - Memory system documentation (refers to overall system)
 
 ### "I need hotkey commands reference"
 
 - **[README_ai.md](README_ai.md)** Lines 120-220 - Role-specific menus
   - PROJECT COORDINATOR: sp, bp, ar, ss, pd, pl, sw, rt, mb, ct, tm, hp
   - ANALYST/SOLO DEV: a, f, co, da, bfs, grep, tree, edit, commit, diff
-  - AGENT WORKER: status, sync, ch, log, msg, report, task, complete, snapshot
+  - Worker Agent: Development tooling functions for analysis and implementation
 
 ### "I need to provide feedback on AGOR"
 
@@ -100,19 +100,19 @@
 
 ### Core Documentation (docs/)
 
-| File                                                                                   | Purpose                                    | Key Sections                                    | Lines |
-| -------------------------------------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- | ----- |
-| **[../../../docs/README.md](../../../docs/README.md)**                                 | Documentation overview                     | Navigation map, quick links                     | 60    |
-| **[agent-start-here.md](agent-start-here.md)**                                         | **Agent entry point**                      | **Immediate guidance, discovery commands**      | ~100  |
-| **[../../../docs/quick-start.md](../../../docs/quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup          | ~200  |
-| **[../../../docs/bundle-mode.md](../../../docs/bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting          | ~300  |
-| **[../../../docs/google-ai-studio.md](../../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting         | ~300  |
-| **[../../../docs/standalone-mode.md](../../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access   | ~250  |
-| **[../../../docs/strategies.md](../../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix     | ~400  |
-| **[../../../docs/multi-agent-protocols.md](../../../docs/multi-agent-protocols.md)**   | **COMPREHENSIVE coordination protocols**  | **Implementation protocols, session management** | ~300  |
-| **[../../../docs/snapshots.md](../../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits | ~550+ |
-| **[coordination-example.md](coordination-example.md)**                                 | Strategy implementation                    | Complete example, before/after comparison       | ~300  |
-| **[../../../docs/agor-development-guide.md](../../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself               | ~400  |
+| File                                                                                   | Purpose                                    | Key Sections                                     | Lines |
+| -------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------ | ----- |
+| **[../../../docs/README.md](../../../docs/README.md)**                                 | Documentation overview                     | Navigation map, quick links                      | 60    |
+| **[agent-start-here.md](agent-start-here.md)**                                         | **Agent entry point**                      | **Immediate guidance, discovery commands**       | ~100  |
+| **[../../../docs/quick-start.md](../../../docs/quick-start.md)**                       | 5-minute setup guide                       | Installation, bundling, platform setup           | ~200  |
+| **[../../../docs/bundle-mode.md](../../../docs/bundle-mode.md)**                       | Complete Bundle Mode guide                 | All platforms, models, troubleshooting           | ~300  |
+| **[../../../docs/google-ai-studio.md](../../../docs/google-ai-studio.md)**             | Google AI Studio guide                     | Function Calling setup, troubleshooting          | ~300  |
+| **[../../../docs/standalone-mode.md](../../../docs/standalone-mode.md)**               | Standalone Mode Guide                      | Setup, usage, advantages of direct git access    | ~250  |
+| **[../../../docs/strategies.md](../../../docs/strategies.md)**                         | Multi-agent coordination                   | 5 strategies with examples, decision matrix      | ~400  |
+| **[../../../docs/multi-agent-protocols.md](../../../docs/multi-agent-protocols.md)**   | **COMPREHENSIVE coordination protocols**   | **Implementation protocols, session management** | ~300  |
+| **[../../../docs/snapshots.md](../../../docs/snapshots.md)**                           | Agent state snapshots & context management | Snapshot creation, receiving, solo use benefits  | ~550+ |
+| **[coordination-example.md](coordination-example.md)**                                 | Strategy implementation                    | Complete example, before/after comparison        | ~300  |
+| **[../../../docs/agor-development-guide.md](../../../docs/agor-development-guide.md)** | Development checklist                      | For agents working on AGOR itself                | ~400  |
 
 ### AI Instructions (src/agor/tools/)
 
@@ -125,11 +125,16 @@
 
 ### Technical Tools (src/agor/tools/)
 
-| File                                                     | Purpose             | Key Functions                                | Lines |
-| -------------------------------------------------------- | ------------------- | -------------------------------------------- | ----- |
-| **[code_exploration.py](code_exploration.py)**           | Codebase analysis   | bfs_find, grep, tree, analyze_file_structure | ~300  |
-| **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation  | Function reference, examples                 | 179   |
-| **[snapshot_templates.py](snapshot_templates.py)**       | Snapshot generation | generate_snapshot_document, git_context      | ~400  |
+| File                                                     | Purpose                                                                                         | Key Functions                                                                      | Lines  |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------ |
+| **[dev_tooling.py](dev_tooling.py)**                     | Main interface for dev utilities                                                                | Orchestrates functionalities from submodules (git_operations, memory_manager etc.) | ~1000+ |
+| **[git_operations.py](git_operations.py)**               | Handles core Git command execution, safety checks (safe_git_push), and timestamp utilities.     | run_git_command, safe_git_push, get_current_timestamp                              | ~200   |
+| **[memory_manager.py](memory_manager.py)**               | Manages memory branch creation and commits (commit_to_memory_branch) ensuring clean separation. | commit_to_memory_branch, auto_commit_memory                                        | ~300   |
+| **[agent_handoffs.py](agent_handoffs.py)**               | Provides utilities for agent coordination, including prompt generation and backtick processing. | generate_handoff_prompt_only, detick_content                                       | ~150   |
+| **[dev_testing.py](dev_testing.py)**                     | Contains environment detection logic and test functions for AGOR tooling.                       | detect_environment, test_tooling                                                   | ~100   |
+| **[code_exploration.py](code_exploration.py)**           | Codebase analysis                                                                               | bfs_find, grep, tree, analyze_file_structure                                       | ~300   |
+| **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation                                                                              | Function reference, examples                                                       | 179    |
+| **[snapshot_templates.py](snapshot_templates.py)**       | Snapshot generation                                                                             | generate_snapshot_document, git_context                                            | ~400   |
 
 | **[agent_prompt_templates.py](agent_prompt_templates.py)** | Role prompts | Specialized agent prompts | ~200 |
 | **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates | ~300 |
@@ -149,8 +154,7 @@
 ### Role-Based Workflows
 
 - **PROJECT COORDINATOR**: Strategic planning, team coordination, strategy selection
-- **SOLO DEVELOPER**: Codebase analysis, implementation, technical deep-dives
-- **AGENT WORKER**: Task execution, snapshots, coordination communication
+- **Worker Agent**: Codebase analysis, implementation, technical deep-dives
 
 ### Platform-Specific Information
 

@@ -6,7 +6,7 @@ These prompts are designed to be used at the beginning of a session, followed by
 
 ---
 
-## 📦 Google AI Studio Pro (Free Tier)
+## 📦 Google AI Studio Pro
 
 **Copy this prompt when uploading your AGOR bundle to Google AI Studio:**
 
@@ -24,9 +24,8 @@ Please start by reading these key files to understand the system:
 3. Read src/agor/tools/index.md for quick reference lookup
 
 After reading these files, help me select the appropriate role:
-- SOLO DEVELOPER: For code analysis, implementation, and technical work
-- PROJECT COORDINATOR: For planning and multi-agent coordination
-- AGENT WORKER: For executing specific tasks and following instructions
+- Worker Agent: For code analysis, implementation, and technical work
+- Project Coordinator: For planning and multi-agent coordination
 
 Environment: Google AI Studio Pro with Function Calling enabled
 Bundle Format: .zip
@@ -55,9 +54,8 @@ Please start by reading these key files to understand the system:
 3. Read src/agor/tools/index.md for quick reference lookup
 
 After reading these files, help me select the appropriate role:
-- SOLO DEVELOPER: For code analysis, implementation, and technical work
-- PROJECT COORDINATOR: For planning and multi-agent coordination
-- AGENT WORKER: For executing specific tasks and following instructions
+- Worker Agent: For code analysis, implementation, and technical work
+- Project Coordinator: For planning and multi-agent coordination
 
 Environment: ChatGPT (classic interface, not Codex)
 Bundle Format: .tar.gz
@@ -74,12 +72,12 @@ Mode: Bundle Mode (copy-paste workflow)
 
 ### Setup (One-time)
 
-1. Clone AGOR repository locally: `git clone https://github.com/jeremiah-k/agor.git ~/agor`
-2. Add `~/agor` to your AugmentCode workspace sources
+1. Clone AGOR repository locally: `git clone https://github.com/jeremiah-k/agor.git [your-preferred-directory]`
+2. Add the AGOR directory to your AugmentCode workspace sources
 3. Add this to your User Guidelines:
 
 ```
-When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Solo Developer, Project Coordinator, or Agent Worker) and follow the appropriate workflows and hotkeys for efficient development.
+When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Worker Agent or Project Coordinator) and follow the appropriate workflows and development tooling for efficient development.
 ```
 
 ### Session Initialization Prompt
@@ -93,9 +91,8 @@ AGOR is available in your workspace sources. Please:
 3. Check my User Guidelines for any project-specific AGOR preferences
 
 After reading these files, help me select the appropriate role:
-- SOLO DEVELOPER: For code analysis, implementation, and technical work
-- PROJECT COORDINATOR: For planning and multi-agent coordination
-- AGENT WORKER: For executing specific tasks and following instructions
+- Worker Agent: For code analysis, implementation, and technical work
+- Project Coordinator: For planning and multi-agent coordination
 
 Environment: AugmentCode Local Agent (VS Code extension)
 Mode: Local Integration (direct file access, persistent guidelines)
@@ -153,9 +150,8 @@ print(f'Session started at: {get_timestamp()}')
 cat src/agor/tools/agent-start-here.md
 
 After initialization, help me select the appropriate role:
-- SOLO DEVELOPER: For code analysis, implementation, and technical work
-- PROJECT COORDINATOR: For planning and multi-agent coordination
-- AGENT WORKER: For executing specific tasks and following instructions
+- Worker Agent: For code analysis, implementation, and technical work
+- Project Coordinator: For planning and multi-agent coordination
 
 Environment: AugmentCode Remote Agent
 Mode: Standalone Mode (direct git access)
@@ -179,9 +175,8 @@ Please read these key files to understand the system:
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
 
 After reading these files, help me select the appropriate role:
-- SOLO DEVELOPER: For code analysis, implementation, and technical work
-- PROJECT COORDINATOR: For planning and multi-agent coordination
-- AGENT WORKER: For executing specific tasks and following instructions
+- Worker Agent: For code analysis, implementation, and technical work
+- Project Coordinator: For planning and multi-agent coordination
 
 Environment: Jules by Google
 Mode: Standalone Mode (direct URL access to files)

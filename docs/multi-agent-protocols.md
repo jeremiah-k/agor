@@ -5,6 +5,7 @@
 ## 🎯 Protocol Overview
 
 AGOR supports structured multi-agent coordination through:
+
 - **5 Core Strategies** with specific implementation protocols
 - **Mandatory Communication Patterns** for agent coordination
 - **Session Management** with automatic handoff generation
@@ -15,6 +16,7 @@ AGOR supports structured multi-agent coordination through:
 ### Universal Agent Requirements
 
 **Every agent MUST:**
+
 1. **Read Documentation First**: README_ai.md, AGOR_INSTRUCTIONS.md, agent-start-here.md
 2. **Select Appropriate Role**: Worker Agent or Project Coordinator
 3. **Use Dev Tooling**: All coordination via our backtick processing functions
@@ -26,12 +28,14 @@ AGOR supports structured multi-agent coordination through:
 **IMPORTANT**: The `.agor` directory does NOT exist on main or feature branches. It only exists on dedicated memory branches and is accessed exclusively through our dev tooling functions.
 
 **Memory Branch System**:
+
 - **Memory branches**: Created automatically by dev tooling (e.g., `agor/mem/2025-06-07_1300`)
 - **Cross-branch commits**: Dev tooling commits to memory branches without switching your working branch
 - **Coordination files**: Stored on memory branches, accessed via dev tooling functions
 - **No direct file access**: Never manually create/edit `.agor` files
 
 **Coordination Through Dev Tooling**:
+
 ```python
 # Create snapshots and memories (auto-commits to memory branches)
 auto_commit_memory(content, "session_progress", "agent_id")
@@ -42,6 +46,7 @@ generate_mandatory_session_end_prompt(work_completed, status, instructions, cont
 ```
 
 **Required Functions**:
+
 ```python
 # Mandatory session end
 generate_mandatory_session_end_prompt(
@@ -71,6 +76,7 @@ generate_meta_feedback(
 **Coordination Level**: Medium
 
 **Implementation Protocol**:
+
 ```python
 # Coordinator initializes
 from agor.tools.dev_tooling import generate_handoff_prompt_only
@@ -81,7 +87,7 @@ outputs = generate_handoff_prompt_only(
     work_completed=['Strategy initialized', 'Agent assignments created'],
     next_steps=[
         'Agent 1: Approach A on branch solution-agent1',
-        'Agent 2: Approach B on branch solution-agent2', 
+        'Agent 2: Approach B on branch solution-agent2',
         'Agent 3: Approach C on branch solution-agent3',
         'NO coordination until all complete'
     ],
@@ -93,6 +99,7 @@ outputs = generate_handoff_prompt_only(
 ```
 
 **Agent Workflow**:
+
 1. **Divergent Phase**: Work independently on assigned branch
 2. **Signal Completion**: Use `auto_commit_memory()` to record "PHASE1_COMPLETE" status
 3. **Review Phase**: Use dev tooling to access other agents' progress from memory branches
@@ -105,6 +112,7 @@ outputs = generate_handoff_prompt_only(
 **Coordination Level**: High
 
 **Implementation Protocol**:
+
 ```python
 # Sequential handoffs with snapshots
 # Agent 1 → Snapshot → Agent 2 → Snapshot → Agent 3
@@ -125,6 +133,7 @@ generate_mandatory_session_end_prompt(
 **Coordination Level**: Low
 
 **Implementation Protocol**:
+
 ```python
 # Task queue management
 # Agents pick tasks dynamically from shared queue
@@ -146,6 +155,7 @@ generate_handoff_prompt_only(
 **Coordination Level**: High
 
 **Implementation Protocol**:
+
 ```python
 # Blue Team builds, Red Team attacks
 # Iterative cycles with coordination between teams
@@ -174,6 +184,7 @@ generate_mandatory_session_end_prompt(
 **Coordination Level**: Very High
 
 **Implementation Protocol**:
+
 ```python
 # Rotating roles: Driver, Navigator, Observers
 # Continuous coordination and knowledge sharing
@@ -192,6 +203,7 @@ generate_handoff_prompt_only(
 ### Session Initialization
 
 **Every agent session MUST start with**:
+
 1. `git pull origin [branch-name]` - Get latest changes
 2. Use dev tooling to check for previous session memories and coordination status
 3. Install dependencies: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
@@ -200,6 +212,7 @@ generate_handoff_prompt_only(
 ### Session Termination
 
 **Every agent session MUST end with**:
+
 1. Commit all changes with descriptive messages using `quick_commit_push()`
 2. Generate session end prompt using `generate_mandatory_session_end_prompt()`
 3. Create memory entry using `auto_commit_memory()` with session summary
@@ -208,6 +221,7 @@ generate_handoff_prompt_only(
 ### Handoff Generation
 
 **Use our dev tooling functions**:
+
 - `generate_handoff_prompt_only()` - Quick handoffs
 - `generate_mandatory_session_end_prompt()` - Full session end
 - `generate_complete_project_outputs()` - Comprehensive outputs
@@ -217,6 +231,7 @@ generate_handoff_prompt_only(
 **If you must create temporary files for dev tooling execution**:
 
 1. **Chain commands** to minimize tool calls:
+
 ```bash
 # Good: One-shot execution with cleanup
 python temp_script.py && rm temp_script.py
@@ -240,12 +255,14 @@ quick_commit_push('Your message', '🔧')
 ### Worker Agent Protocols
 
 **Responsibilities**:
+
 - Execute assigned tasks
 - Follow strategy protocols
 - Generate progress reports
 - Create handoff prompts
 
 **Required Actions**:
+
 - Select "Worker Agent" role during initialization
 - Use session-end hotkey before ending sessions
 - Test new features (meta mode, 2-role system)
@@ -256,6 +273,7 @@ quick_commit_push('Your message', '🔧')
 **Core Philosophy**: The Project Coordinator is a **strategic overseer and delegator**, not a direct executor. Focus on high-level planning, task delegation, progress tracking, quality assurance, and code review.
 
 **Primary Responsibilities**:
+
 - **Strategic Oversight**: High-level planning, architecture decisions, and project direction
 - **Task Delegation**: Breaking down work and assigning to appropriate Worker Agents
 - **Progress Tracking**: Monitoring agent progress and coordination across the team
@@ -264,6 +282,7 @@ quick_commit_push('Your message', '🔧')
 - **Course Correction**: Providing guidance when agents get off track or need redirection
 
 **Delegation Model**:
+
 - **Assign Tasks**: Delegate specific work to Worker Agents with clear instructions
 - **Review Results**: Examine completed work for quality and integration
 - **Provide Feedback**: Guide agents on improvements and next steps
@@ -271,6 +290,7 @@ quick_commit_push('Your message', '🔧')
 - **Avoid Direct Execution**: Focus on coordination rather than hands-on coding
 
 **Required Actions**:
+
 - Select "Project Coordinator" role during initialization
 - Initialize strategies using appropriate functions
 - Create work orders and snapshots for Worker Agents
@@ -284,6 +304,7 @@ quick_commit_push('Your message', '🔧')
 ### Dev Tooling Integration
 
 **All coordination MUST use our dev tooling**:
+
 ```python
 # Import dev tooling
 import sys
@@ -302,13 +323,15 @@ from agor.tools.dev_tooling import (
 ### Backtick Processing
 
 **Critical**: All generated prompts automatically process backticks:
-- Triple backticks (```) → Double backticks (``)
+
+- Triple backticks (``) → Double backticks (`)
 - Ensures single codeblock format for agent handoffs
 - Prevents broken coordination due to formatting issues
 
 ### Memory Branch Management
 
 **Coordination files saved to memory branches**:
+
 - Snapshots automatically saved to adjacent memory branches
 - Working branch remains clean
 - Memory sync handles cross-branch coordination
@@ -334,17 +357,20 @@ from agor.tools.dev_tooling import (
 ## 🚀 Quick Reference
 
 ### Essential Hotkeys
+
 - `meta` - Generate AGOR feedback
 - `session-end` - Mandatory session end prompt
 - `handoff` - Generate handoff prompt
 - `outputs` - Complete project outputs
 
 ### Essential Functions
+
 - `generate_mandatory_session_end_prompt()` - Required before ending
 - `generate_handoff_prompt_only()` - Quick coordination
 - `generate_meta_feedback()` - AGOR improvement feedback
 
 ### Essential Files
+
 - `src/agor/tools/README_ai.md` - Role selection and initialization
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` - Operational guide with hotkeys
 - `docs/strategies.md` - Strategy decision matrix and examples

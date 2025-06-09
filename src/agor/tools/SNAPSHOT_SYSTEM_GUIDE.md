@@ -4,12 +4,12 @@
 
 ## 🎯 What is the Snapshot System?
 
-The snapshot system is AGOR's core mechanism for:
+The snapshot system is AGOR's core mechanism for seamless agent transitions with minimal user intervention:
 
-- **Context preservation** - Maintaining work state across sessions
-- **Agent transitions** - Seamless handoffs between agents
-- **Progress tracking** - Comprehensive documentation of work completed
-- **Session management** - Ensuring no work is lost when sessions end
+- **Context Preservation** - Complete work state maintained across agent transitions
+- **Automatic Handoffs** - Generated prompts eliminate manual context re-entry
+- **Session Continuity** - Agents resume exactly where previous agents left off
+- **Primary Use Case** - Context limit handoffs when agents reach capacity
 
 ## 🚨 MANDATORY: End-of-Session Snapshot
 
@@ -17,11 +17,10 @@ The snapshot system is AGOR's core mechanism for:
 
 ### When to Create Snapshots:
 
-- **End of work session** (REQUIRED)
-- **Before major changes** (recommended)
-- **When handing off to another agent** (required)
-- **When hitting blockers** (recommended)
-- **At natural stopping points** (recommended)
+- **End of work session** (REQUIRED - ensures continuity)
+- **Context limit reached** (PRIMARY USE CASE - seamless handoff)
+- **Task completion** (for documentation and review)
+- **Session progress checkpoints** (for planning and tracking)
 
 ### Snapshot Format (Single Codeblock):
 
@@ -31,7 +30,7 @@ The snapshot system is AGOR's core mechanism for:
 **Generated**: 2024-01-27 14:30:00
 **From Agent Role**: [Your Role]
 **Snapshot Reason**: [End of session/Handoff/Blocker/etc.]
-**AGOR Version**: 0.3.5
+**AGOR Version**: 0.4.4
 
 ## 🔧 Environment Context
 
@@ -142,6 +141,8 @@ load_snapshot
 ```
 
 ## 📁 Snapshot Storage
+
+**Important:** The `.agor/snapshots` directory and its contents are stored on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`), not typically on your main working branch. This is managed by AGOR's dev tooling and Memory Synchronization System.
 
 Snapshots are stored in:
 

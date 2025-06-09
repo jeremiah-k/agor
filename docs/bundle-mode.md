@@ -15,7 +15,7 @@ agor bundle /path/to/your/project           # ChatGPT (.tar.gz)
 
 ## 🤖 Platform-Specific Setup
 
-### Google AI Studio (Recommended - Free)
+### Google AI Studio
 
 **Best Model**: **Gemini 2.5 Pro** - Latest flagship model with advanced reasoning
 
@@ -38,7 +38,7 @@ agor bundle /path/to/your/project -f zip
 
 - ✅ **Function Calling** - Essential for real git command execution
 - ✅ **Code Execution** - Python code generation and execution
-- ✅ **No subscription required** - Access to Pro models for free
+- ✅ **Pro model access** - Access to advanced Gemini models
 - ✅ **Large file uploads** - Handles substantial project bundles
 
 **Common Issues & Solutions**:
@@ -208,11 +208,11 @@ After uploading and initializing, AGOR will prompt for role selection:
 - Multi-agent strategy selection (`ss`, `pd`, `pl`, `sw`)
 - Team design and workflow orchestration (`ct`, `tm`)
 
-### 🔍 SOLO DEVELOPER
+### 🔍 Worker Agent
 
 **Best for**: Code analysis, implementation, solo work
 
-- Comprehensive codebase analysis (`a`, `f`, `co`)
+- Comprehensive codebase analysis and exploration
 - Code exploration and investigation
 - Implementation and development work
 

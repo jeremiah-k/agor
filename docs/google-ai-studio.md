@@ -1,13 +1,13 @@
-# 🆓 Google AI Studio Guide
+# 🤖 Google AI Studio Guide
 
-Google AI Studio provides access to AGOR with Pro models - no subscription required! This guide will get you set up and running smoothly.
+Google AI Studio provides access to AGOR with Pro models. This guide will get you set up and running smoothly.
 
 ## 🎯 Why Google AI Studio?
 
-- **✅ No subscription required** - Access to powerful models like Gemini 2.5 Pro
+- **✅ Access to powerful models** like Gemini 2.5 Pro
 - **✅ Function Calling support** (essential for AGOR)
 - **✅ File upload capability** for bundles
-- **✅ No usage limits** for basic use
+- **✅ Comprehensive model features** for development workflows
 
 ## 🚀 Quick Setup
 
@@ -38,9 +38,8 @@ agor bundle /path/to/your/project -f zip
 1. **Upload your .zip bundle** using the file attachment button
 2. **Copy and paste the generated prompt** (AGOR creates this automatically)
 3. **Select your role** when prompted:
-   - **SOLO DEVELOPER** - Deep codebase analysis and implementation _(Single Agent)_
-   - **PROJECT COORDINATOR** - Strategic planning and team coordination _(Multi-Agent)_
-   - **AGENT WORKER** - Task execution and processing work snapshots _(Multi-Agent)_
+   - **Worker Agent** - Deep codebase analysis and implementation
+   - **Project Coordinator** - Strategic planning and team coordination
 
 ## 🔧 Critical Configuration
 
@@ -82,7 +81,7 @@ When AGOR initializes, it will ask you to choose a role. Here's how to decide:
 - Multi-agent strategy selection
 - Workflow design capabilities
 
-### 🔍 SOLO DEVELOPER
+### 🔍 Worker Agent
 
 **Choose this when:**
 
@@ -93,7 +92,7 @@ When AGOR initializes, it will ask you to choose a role. Here's how to decide:
 
 **You'll get:**
 
-- Comprehensive codebase analysis
+- Comprehensive codebase analysis and exploration
 - Code exploration tools
 - Implementation-focused hotkeys
 - Technical deep-dive capabilities

@@ -2,9 +2,9 @@
 
 One of AGOR's most powerful features is seamless agent transitions. Whether you're switching roles, passing work to a specialist, or need to step away mid-task, AGOR's snapshot system ensures no context is lost.
 
-## 💡 Snapshots for Everyone (Including Solo Developers!)
+## 💡 Snapshots for Everyone (Including Individual Developers!)
 
-While the concept of a "snapshot" naturally brings to mind passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **solo developers**. Think of it as creating a comprehensive "snapshot" of your current work:
+While the concept of a "snapshot" naturally brings to mind passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **individual developers**. Think of it as creating a comprehensive "snapshot" of your current work:
 
 - **Context Preservation Across Sessions**: If you're stepping away from a task and want to ensure you can pick it up seamlessly later (perhaps hours, days, or even weeks later), creating a snapshot to your "future self" captures all relevant code changes, analysis, decisions, and next steps.
 - **Managing AI Context Limits**: Large language models have context windows. If a task is complex and requires more back-and-forth than a single session can hold, creating a snapshot allows you to effectively "reset" the context for the AI while providing it with a structured, detailed summary of everything it needs to continue. You can then start a new conversation with the AI, provide the snapshot document, and carry on.
@@ -24,35 +24,36 @@ In traditional development, context switching is expensive. When one developer h
 
 AGOR's snapshot system solves this by capturing **complete context** in a structured, actionable format.
 
-## 🔄 Snapshot Scenarios
+## 🔄 Core Snapshot Types
 
-### 1. Role Switching
+AGOR's snapshot system focuses on three essential scenarios that align with the platform's core purpose: seamless agent transitions with minimal user intervention.
 
-```
-PROJECT COORDINATOR → SOLO DEVELOPER
-"I've planned the architecture, now I need someone to implement it"
-```
-
-### 2. Specialization Snapshot
+### 1. Transition Snapshot (Primary Use Case)
 
 ```
-SOLO DEVELOPER → AGENT WORKER (Security Specialist)
-"I've built the feature, now I need security review and hardening"
+AGENT → NEW AGENT (Context Limit Reached)
+"I'm approaching my context limit, here's everything needed to continue seamlessly"
 ```
 
-### 3. Time-Based Transitions
+**When to use**: When an agent reaches context limits and needs to hand off work to continue without losing progress.
+
+### 2. Progress Report Snapshot
 
 ```
-AGENT WORKER → AGENT WORKER (Different Shift)
-"I'm ending my work session, here's where I left off"
+AGENT → SAME AGENT (Session Progress)
+"Here's what I've accomplished and what's planned next"
 ```
 
-### 4. Escalation Snapshots
+**When to use**: For documenting session progress, planning next steps, or creating checkpoints during long tasks.
+
+### 3. Completion Report Snapshot
 
 ```
-AGENT WORKER → PROJECT COORDINATOR
-"I've hit a blocker that needs architectural decision"
+AGENT → USER/PROJECT COORDINATOR (Task Complete)
+"Task completed successfully, here's the summary and deliverables"
 ```
+
+**When to use**: When a task or project phase is complete and needs to be documented for review or next phase planning.
 
 ## 🛠️ How It Works
 
@@ -290,41 +291,19 @@ git checkout v0.2.0  # Use version from snapshot
 - Check for protocol changes in release notes
 - Consider using exact version match for critical snapshots
 
-## 🔧 Advanced Snapshot Patterns
+## 🎯 Snapshot Best Practices
 
-### Multi-Agent Snapshots
+### Focus on Continuity
 
-When work needs to go to multiple agents:
+The primary goal of AGOR snapshots is **seamless continuity**. Every snapshot should enable the next agent (or the same agent in a future session) to continue work without missing context or requiring manual re-explanation.
 
-```
-COORDINATOR creates snapshot for parallel work:
-├── Agent A: Frontend implementation
-├── Agent B: Backend API
-└── Agent C: Database schema
-```
+### Automatic Prompt Generation
 
-### Iterative Snapshots
+AGOR snapshots automatically generate the prompts needed for agent transitions, eliminating the need for users to manually craft context-heavy instructions for each handoff.
 
-For complex features requiring multiple passes:
+### Minimal User Intervention
 
-```
-Round 1: ANALYST → Basic implementation
-Round 2: SECURITY AGENT → Security hardening
-Round 3: PERFORMANCE AGENT → Optimization
-Round 4: INTEGRATION AGENT → System integration
-```
-
-### Emergency Snapshots
-
-When urgent issues arise:
-
-```
-CURRENT AGENT creates emergency snapshot:
-- Immediate problem description
-- Current debugging state
-- Attempted solutions
-- Escalation path
-```
+The snapshot system is designed to work with minimal user involvement - agents create comprehensive snapshots that include all necessary context for continuation.
 
 ## 📊 Snapshot Quality Metrics
 
@@ -346,15 +325,14 @@ CURRENT AGENT creates emergency snapshot:
 - ❌ No technical context
 - ❌ No verification procedures
 
-## 🎯 Integration with AGOR Strategies
+## 🎯 Core AGOR Integration
 
-Snapshots work seamlessly with all AGOR strategies:
+Snapshots are the foundation of AGOR's seamless agent coordination:
 
-**Parallel Divergent**: Snapshots between exploration and synthesis phases
-**Pipeline**: Structured snapshots between pipeline stages
-**Swarm**: Dynamic snapshots as agents complete tasks
-**Red Team**: Snapshots between build and break phases
-**Mob Programming**: Snapshots during role rotations
+**Context Preservation**: Maintains complete work state across agent transitions
+**Automatic Handoffs**: Generates prompts automatically for continuing agents
+**Session Continuity**: Enables agents to resume work exactly where previous agents left off
+**Minimal User Input**: Reduces need for manual context re-entry between agent sessions
 
 ## 🔄 Snapshot Lifecycle
 

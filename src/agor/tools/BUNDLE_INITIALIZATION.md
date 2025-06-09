@@ -10,9 +10,8 @@ This is a streamlined initialization guide specifically for bundle mode. Follow 
 
 You should have already selected your role from README_ai.md:
 
-- **Role A**: SOLO DEVELOPER
-- **Role B**: PROJECT COORDINATOR
-- **Role C**: AGENT WORKER
+- **Role A**: Worker Agent
+- **Role B**: Project Coordinator
 
 ## 🔧 Step 2: Bundle Mode Setup
 
@@ -94,14 +93,14 @@ You should have already selected your role from README_ai.md:
 
 ## 📊 Step 3: Role-Specific Initialization
 
-### For SOLO DEVELOPER (Role A)
+### For Worker Agent (Role A)
 
 1. **Perform codebase analysis** using the loaded tools
 2. **Present analysis results** to the user
-3. **Display the SOLO DEVELOPER menu** (and ONLY this menu):
+3. **Display the Worker Agent menu** (and ONLY this menu):
 
 ```
-🎼 SOLO DEVELOPER - Ready for Action
+🎼 Worker Agent - Ready for Action
 
 **📊 Analysis & Display:**
 a ) analyze codebase    f ) full files         co) changes only

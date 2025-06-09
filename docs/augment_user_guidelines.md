@@ -28,26 +28,20 @@ MANDATORY: Read these files from workspace sources before starting any developme
 
 Choose your AGOR role based on the task:
 
-**🔍 SOLO DEVELOPER** - For:
+**🔍 Worker Agent** - For:
 
 - Codebase analysis and exploration
 - Feature implementation and debugging
 - Technical documentation and code explanation
 - Direct development work
+- Task execution and completion
 
-**📋 PROJECT COORDINATOR** - For:
+**📋 Project Coordinator** - For:
 
 - Strategic planning and architecture design
 - Multi-agent workflow coordination
 - Project breakdown and task assignment
 - Team management and strategy selection
-
-**🤖 AGENT WORKER** - For:
-
-- Executing specific assigned tasks
-- Following coordinator instructions
-- Participating in multi-agent workflows
-- Task completion and reporting
 
 ### Step 3: Environment Detection
 
@@ -58,18 +52,30 @@ You are operating in **AugmentCode Local Agent** environment with:
 - Persistent User Guidelines across sessions
 - Enhanced memory through Augment system
 
-## 🛠️ AGOR Workflow Protocols
+## 🛠️ AGOR Development Tooling
 
-### Core Hotkeys (Use These Frequently)
+### Available Functions
 
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
-- `commit` - Save changes with descriptive messages
-- `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
-- `sp` - Strategic planning (for coordinators)
-- `bp` - Break down project into tasks
+AGOR provides powerful development functions through Python imports:
+
+- `create_development_snapshot()` - Create comprehensive work snapshots
+- `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
+- `generate_pr_description_snapshot()` - Create PR descriptions for completed work
+- `quick_commit_and_push()` - Commit and push changes with descriptive messages
+- `get_workspace_status()` - Check project and git status
+- `create_development_checklist()` - Generate task-specific checklists
+
+**CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content_wrapper()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
+
+### Agent Workflow Guidance
+
+Agents should proactively offer to generate deliverables as work nears completion:
+
+**End each response with suggestions like:**
+
+- "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
+- "Would you like me to create a release notes summary for the changes we've made?"
+- "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
 
 ### Snapshot Requirements (CRITICAL)
 

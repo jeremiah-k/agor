@@ -29,9 +29,9 @@ After reading these files, help me initialize AGOR for this project and select t
 ```
 I need help with solo development work using AGOR's structured approach.
 
-Please read README_ai.md and select Role A: Solo Developer, then read the Solo Developer sections of AGOR_INSTRUCTIONS.md and SNAPSHOT_SYSTEM_GUIDE.md.
+Please read README_ai.md and select Role A: Worker Agent, then read the Worker Agent sections of AGOR_INSTRUCTIONS.md and SNAPSHOT_SYSTEM_GUIDE.md.
 
-Initialize as Solo Developer and help me with codebase analysis and development tasks.
+Initialize as Worker Agent and help me with codebase analysis and development tasks.
 
 IMPORTANT: You MUST provide a comprehensive snapshot in a single codeblock before ending this session.
 
@@ -59,9 +59,9 @@ IMPORTANT: You MUST provide a comprehensive snapshot in a single codeblock befor
 ```
 I need comprehensive code review and analysis using AGOR's structured approach.
 
-Please read README_ai.md (select Solo Developer) and AGOR_INSTRUCTIONS.md (focus on analysis hotkeys: `a`, `f`, `co`, `da`).
+Please read README_ai.md (select Worker Agent) and AGOR_INSTRUCTIONS.md (focus on development tooling functions).
 
-Initialize as Solo Developer and help me analyze the codebase for quality, structure, and improvement opportunities.
+Initialize as Worker Agent and help me analyze the codebase for quality, structure, and improvement opportunities.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -135,9 +135,9 @@ Initialize team coordination and help me establish the development workflow.
 ```
 I need to generate comprehensive documentation using AGOR's structured approach.
 
-Please read README_ai.md (select Solo Developer) and AGOR_INSTRUCTIONS.md (focus on documentation hotkeys: `doc`, `comment`, `explain`).
+Please read README_ai.md (select Worker Agent) and AGOR_INSTRUCTIONS.md (focus on development tooling functions).
 
-Initialize as Solo Developer and help me create thorough documentation for the codebase.
+Initialize as Worker Agent and help me create thorough documentation for the codebase.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```

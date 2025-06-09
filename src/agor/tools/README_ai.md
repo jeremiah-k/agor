@@ -4,7 +4,7 @@
 
 _Enhanced fork of the original [AgentGrunt](https://github.com/nikvdp/agentgrunt) by [@nikvdp](https://github.com/nikvdp)_
 
-Welcome to AGOR v0.4.1. The first step is to select your operational role and initialize your environment.
+Welcome to AGOR v0.4.4. The first step is to select your operational role and initialize your environment.
 
 ## 🚀 INITIALIZATION PROTOCOL
 
@@ -104,20 +104,24 @@ Based on your environment detection:
 - `index.md` - Documentation index for efficient lookup
 - `SNAPSHOT_SYSTEM_GUIDE.md` - Snapshot requirements and templates
 
-**Core Hotkeys**:
+**Core Development Functions**:
 
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
-- `commit` - Save changes with descriptive messages
-- `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
+- `create_development_snapshot()` - Create comprehensive work snapshots
+- `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
+- `generate_pr_description_snapshot()` - Create PR descriptions for completed work
+- `quick_commit_and_push()` - Commit and push changes with descriptive messages
+- `get_workspace_status()` - Check project and git status
+- `create_development_checklist()` - Generate task-specific checklists
+
+**Agent Workflow Guidance**: End responses with suggestions like "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
 
 **Development Tools**:
 
-- `src/agor/tools/dev_tooling.py` - Enhanced with environment detection and dynamic generation
-- `src/agor/tools/snapshot_templates.py` - Snapshot generation system
-- `src/agor/memory_sync.py` - Memory branch management
+- `src/agor/tools/dev_tooling.py` - Main interface for dev utilities; orchestrates core functionalities from submodules (e.g., `git_operations.py`, `memory_manager.py`).
+- `src/agor/tools/git_operations.py` - Core Git commands and safety checks.
+- `src/agor/tools/memory_manager.py` - Core functions for committing to memory branches.
+- `src/agor/tools/snapshot_templates.py` - Snapshot generation system.
+- `src/agor/memory_sync.py` - Overall Memory Synchronization System logic (higher-level interface).
 
 ---
 

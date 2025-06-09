@@ -47,7 +47,7 @@ The AI will ask you to choose your primary role:
 
 **🔹 Single Agent Mode:**
 
-**a) 🔍 SOLO DEVELOPER** - Analyze, edit, and answer questions about the codebase
+**a) 🔍 Worker Agent** - Analyze, edit, and answer questions about the codebase
 
 - Focus on detailed codebase analysis and direct code work
 - Emphasizes code exploration tools and editing capabilities
@@ -61,9 +61,6 @@ The AI will ask you to choose your primary role:
 - Emphasizes planning tools and multi-agent strategies
 - Best for: Project planning, team design, workflow orchestration
 
-**c) 🤖 AGENT WORKER** - Ready to receive specific tasks from project coordinator
-
-- Minimal initialization, waits for coordinator instructions
 - Focus on executing specific tasks and coordination
 - Best for: Specialized development tasks, following coordinator plans
 

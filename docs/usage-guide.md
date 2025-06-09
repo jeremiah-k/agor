@@ -7,9 +7,9 @@
 This section provides detailed setup instructions for initializing AGOR agents on different platforms. Choose the platform that matches your environment.
 
 <details>
-<summary><b>Google AI Studio Pro (Free Tier)</b></summary>
+<summary><b>Google AI Studio Pro</b></summary>
 
-### Google AI Studio Pro (Free Tier)
+### Google AI Studio Pro
 
 **Setup:**
 
@@ -24,9 +24,8 @@ This section provides detailed setup instructions for initializing AGOR agents o
 agor bundle your-project -f zip
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
-# - SOLO DEVELOPER: For code analysis and implementation
-# - PROJECT COORDINATOR: For planning and strategy
-# - AGENT WORKER: For following specific instructions
+# - Worker Agent: For code analysis and implementation
+# - Project Coordinator: For planning and strategy
 # All roles work with copy-paste workflow
 ```
 
@@ -79,172 +78,50 @@ _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 - `src/agor/tools/agent-start-here.md` (quick startup guide)
 - `src/agor/tools/index.md` (documentation index for efficient lookup)
 
-**Complete User Guidelines for AugmentCode (Copy & Paste):**
+**Agent Instructions for AugmentCode Local (Copy & Paste):**
 
 ```
-# AGOR (AgentOrchestrator) User Guidelines for AugmentCode Local Agent
+# AGOR Agent Instructions for AugmentCode Local
 
-*These guidelines enable the AugmentCode Local Agent to effectively utilize the AGOR multi-agent development coordination platform. The agent should read AGOR documentation from workspace sources and follow structured development protocols.*
+You are working with the AGOR (AgentOrchestrator) development coordination platform. Your core responsibilities:
 
-## 🎯 Core AGOR Principles
+## 🎯 Essential Requirements
 
-When working on development tasks, you are operating within the **AGOR (AgentOrchestrator)** framework - a sophisticated multi-agent development coordination platform. Your primary responsibilities:
+1. **Read AGOR Documentation First**: Always start by reading these files from workspace sources:
+   - `src/agor/tools/README_ai.md` (role selection and initialization)
+   - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
 
-1. **Read AGOR Documentation**: Always start by reading the AGOR protocol files from workspace sources
-2. **Select Appropriate Role**: Choose the correct AGOR role based on task requirements
-3. **Follow AGOR Protocols**: Use structured workflows, hotkeys, and coordination methods
-4. **Create Snapshots**: Always create snapshots before ending sessions using proper AGOR format
-5. **Maintain Context**: Use AGOR's memory and coordination systems for session continuity
+2. **Select Your Role**: Choose based on the task:
+   - **Worker Agent**: Code analysis, implementation, debugging, task execution
+   - **Project Coordinator**: Planning, architecture, multi-agent coordination
 
-## 🚀 Initialization Protocol
+3. **Use AGOR Development Tooling**: Import and use functions from `src/agor/tools/dev_tooling.py`:
+   - `create_development_snapshot()` for work snapshots
+   - `generate_session_end_prompt()` for agent transitions
+   - `generate_pr_description_snapshot()` for PR descriptions
+   - `quick_commit_and_push()` for git operations
 
-### Step 1: Read AGOR Documentation
+4. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content_wrapper()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
 
-MANDATORY: Read these files from workspace sources before starting any development work:
+5. **End Sessions Properly**: Always create snapshots before ending sessions using `generate_session_end_prompt()`
 
-- src/agor/tools/README_ai.md (role selection and initialization)
-- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
-- src/agor/tools/agent-start-here.md (quick startup guide)
-- src/agor/tools/index.md (documentation index for efficient lookup)
+5. **Proactive Assistance**: End responses with helpful suggestions:
+   - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
+   - "Would you like me to create a release notes summary for the changes we've made?"
+   - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
 
-### Step 2: Role Selection
-Choose your AGOR role based on the task:
+## 🚀 Quick Start
 
-**🔍 SOLO DEVELOPER** - For:
-- Codebase analysis and exploration
-- Feature implementation and debugging
-- Technical documentation and code explanation
-- Direct development work
+1. Read AGOR documentation from workspace sources:
+   - `src/agor/tools/README_ai.md` (role selection)
+   - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive guide)
 
-**📋 PROJECT COORDINATOR** - For:
-- Strategic planning and architecture design
-- Multi-agent workflow coordination
-- Project breakdown and task assignment
-- Team management and strategy selection
+2. Select your role (Worker Agent or Project Coordinator)
 
-**🤖 AGENT WORKER** - For:
-- Executing specific assigned tasks
-- Following coordinator instructions
-- Participating in multi-agent workflows
-- Task completion and reporting
+3. Use AGOR development tooling for snapshots, PR descriptions, and handoffs
 
-### Step 3: Environment Detection
-You are operating in **AugmentCode Local Agent** environment with:
-- Direct workspace access to AGOR documentation
-- Full file system access without upload limitations
-- Persistent User Guidelines across sessions
-- Enhanced memory through Augment system
+4. Always end sessions with proper snapshots for continuity
 
-## 🛠️ AGOR Workflow Protocols
-
-### Core Hotkeys (Use These Frequently)
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
-- `commit` - Save changes with descriptive messages
-- `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
-- `sp` - Strategic planning (for coordinators)
-- `bp` - Break down project into tasks
-
-### Snapshot Requirements (CRITICAL)
-**EVERY session MUST end with a snapshot in a single codeblock:**
-
-1. **Check Current Date**: Use `date` command to get correct date
-2. **Use AGOR Tools**: Use snapshot_templates.py for proper format
-3. **Save to Correct Location**: .agor/snapshots/ directory only
-4. **Single Codeblock Format**: Required for processing
-5. **Complete Context**: Include all work, commits, and next steps
-
-### Memory and Coordination
-- Use `.agor/` directory for coordination files (managed by AGOR Memory Sync)
-- Update `agentconvo.md` for multi-agent communication
-- Maintain agent memory files for session continuity
-- Follow structured communication protocols
-
-## 🎼 Multi-Agent Coordination
-
-### When Working with Multiple Agents
-1. **Initialize Coordination**: Use `init` hotkey to set up .agor/ structure
-2. **Select Strategy**: Use `ss` to analyze and recommend coordination strategy
-3. **Communicate**: Update agentconvo.md with status and findings
-4. **Sync Regularly**: Use `sync` hotkey to stay coordinated
-5. **Create Snapshots**: For seamless agent transitions
-
-### Available Strategies
-- **Parallel Divergent** (`pd`) - Independent exploration → synthesis
-- **Pipeline** (`pl`) - Sequential snapshots with specialization
-- **Swarm** (`sw`) - Dynamic task assignment from queue
-- **Red Team** (`rt`) - Adversarial build/break cycles
-- **Mob Programming** (`mb`) - Collaborative coding
-
-## 🔧 Technical Requirements
-
-### Git Operations
-- Use real git commands (not simulated)
-- Commit frequently with descriptive messages
-- Push changes regularly for backup and collaboration
-- Follow pattern: `git add . && git commit -m "message" && git push`
-
-### File Management
-- Keep files under 500 lines when creating new projects
-- Use modular, testable code structure
-- No hard-coded environment variables
-- Maintain clean separation of concerns
-
-### Code Quality
-- Write comprehensive tests using TDD approach
-- Document code with clear comments and docstrings
-- Follow security best practices
-- Optimize for maintainability and extensibility
-
-## 📚 Documentation Access
-
-### Quick Reference Paths
-- **Role Selection**: src/agor/tools/README_ai.md
-- **Complete Guide**: src/agor/tools/AGOR_INSTRUCTIONS.md
-- **Documentation Index**: src/agor/tools/index.md
-- **Snapshot Guide**: src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md
-- **Strategy Guide**: docs/strategies.md
-- **Development Guide**: docs/agor-development-guide.md (when working on AGOR itself)
-
-### Platform-Specific Information
-- **Bundle Mode**: docs/bundle-mode.md
-- **Standalone Mode**: docs/standalone-mode.md
-- **Usage Guide**: docs/usage-guide.md
-- **Quick Start**: docs/quick-start.md
-
-## ⚠️ Critical Reminders
-
-1. **NEVER end a session without creating a snapshot** - This is mandatory
-2. **Always use correct dates** - Check with `date` command
-3. **Save snapshots to .agor/snapshots/** - Never to root directory
-4. **Follow AGOR protocols precisely** - Read documentation thoroughly
-5. **Use single codeblock format** - For snapshot processing
-6. **Commit and push frequently** - Prevent work loss
-7. **Test your work** - Verify functionality before completion
-
-## 🎯 Success Criteria
-
-You are successfully using AGOR when you:
-- ✅ Read AGOR documentation before starting work
-- ✅ Select and announce your role clearly
-- ✅ Use AGOR hotkeys and workflows consistently
-- ✅ Create proper snapshots with correct dates and locations
-- ✅ Maintain coordination files and communication protocols
-- ✅ Follow structured development practices
-- ✅ Provide comprehensive context for continuation
-
-## 🔄 Continuous Improvement
-
-- Use `meta` hotkey to provide feedback on AGOR itself
-- Suggest improvements to workflows and documentation
-- Report issues or exceptional scenarios
-- Help evolve AGOR protocols based on real-world usage
-
----
-
-**Remember**: AGOR transforms AI assistants into sophisticated development coordinators. Your adherence to these protocols ensures effective coordination, context preservation, and successful project outcomes.
 ```
 
 **Step 5: Agent Initialization Prompt**
@@ -260,7 +137,7 @@ Please read these key files from the workspace sources to understand the system:
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker) based on the task requirements.
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator) based on the task requirements.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -290,218 +167,54 @@ After reading these files, help me initialize AGOR for this project and select t
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
 
-**User Guidelines (Copy and paste this into your agent prompt):**
+**Agent Instructions for AugmentCode Remote (Copy & Paste):**
+
+````
+# AGOR Agent Instructions for AugmentCode Remote
+
+You are working with the AGOR (AgentOrchestrator) development coordination platform. Your core responsibilities:
+
+## 🎯 Essential Requirements
+
+1. **Clone and Read AGOR Documentation**: Start by cloning AGOR and reading key files:
+   ```bash
+   cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+   cat src/agor/tools/README_ai.md && cat src/agor/tools/AGOR_INSTRUCTIONS.md
+````
+
+2. **Install Dependencies**: Install only what's needed for dev tooling:
+
+   ```bash
+   python3 -m pip install -r src/agor/tools/agent-requirements.txt
+   ```
+
+3. **Select Your Role**: Choose based on the task:
+
+   - **Worker Agent**: Code analysis, implementation, debugging, task execution
+   - **Project Coordinator**: Planning, architecture, multi-agent coordination
+
+4. **Use AGOR Development Tooling**: Import and use functions from dev_tooling.py:
+
+   - `create_development_snapshot()` for work snapshots
+   - `generate_session_end_prompt()` for agent transitions
+   - `generate_pr_description_snapshot()` for PR descriptions
+   - `quick_commit_and_push()` for git operations
+
+5. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content_wrapper()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
+
+6. **End Sessions Properly**: Always create snapshots before ending sessions
+
+7. **Proactive Assistance**: End responses with helpful suggestions:
+
+   - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
+   - "Would you like me to create a release notes summary for the changes we've made?"
+   - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
+
+8. **Meta Feedback**: Offer to create feedback when encountering issues or successes:
+   - "I ran into some rough spots with [specific issue]. Would you like me to generate meta feedback for the AGOR team?"
+   - "This workflow went really well! Would you like me to create positive feedback about what worked?"
 
 ```
-# AGOR (AgentOrchestrator) User Guidelines for AugmentCode Remote Agents
-
-*These guidelines enable the AugmentCode Remote Agent to effectively utilize the AGOR multi-agent development coordination platform. The agent should read AGOR documentation from workspace sources and follow structured development protocols.*
-
-## 🎯 Core AGOR Principles
-
-When working on development tasks, you are operating within the **AGOR (AgentOrchestrator)** framework - a sophisticated multi-agent development coordination platform. Your primary responsibilities:
-
-1. **Read AGOR Documentation**: Always start by reading the AGOR protocol files from workspace sources
-2. **Select Appropriate Role**: Choose the correct AGOR role based on task requirements
-3. **Follow AGOR Protocols**: Use structured workflows, hotkeys, and coordination methods
-4. **Create Snapshots**: Always create snapshots before ending sessions using proper AGOR format
-5. **Maintain Context**: Use AGOR's memory and coordination systems for session continuity
-
-## 🚀 Initialization Protocol
-
-### Step 1: Read AGOR Documentation
-```
-
-MANDATORY: Read these files from workspace sources before starting any development work:
-
-- src/agor/tools/README_ai.md (role selection and initialization)
-- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
-- src/agor/tools/agent-start-here.md (quick startup guide)
-- src/agor/tools/index.md (documentation index for efficient lookup)
-
-```
-
-### Step 2: Role Selection
-Choose your AGOR role based on the task:
-
-**🔍 SOLO DEVELOPER** - For:
-- Codebase analysis and exploration
-- Feature implementation and debugging
-- Technical documentation and code explanation
-- Direct development work
-
-**📋 PROJECT COORDINATOR** - For:
-- Strategic planning and architecture design
-- Multi-agent workflow coordination
-- Project breakdown and task assignment
-- Team management and strategy selection
-
-**🤖 AGENT WORKER** - For:
-- Executing specific assigned tasks
-- Following coordinator instructions
-- Participating in multi-agent workflows
-- Task completion and reporting
-
-### Step 3: Environment Detection
-You are operating in **AugmentCode Remote Agent** environment with:
-- Direct git access to repositories
-- Full development environment capabilities
-- Real-time collaboration possible
-- Enhanced memory through cloud infrastructure
-
-## 🛠️ AGOR Workflow Protocols
-
-### Core Hotkeys (Use These Frequently)
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
-- `commit` - Save changes with descriptive messages
-- `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
-- `sp` - Strategic planning (for coordinators)
-- `bp` - Break down project into tasks
-
-### Snapshot Requirements (CRITICAL)
-**EVERY session MUST end with a snapshot in a single codeblock:**
-
-1. **Check Current Date**: Use `date` command to get correct date
-2. **Use AGOR Tools**: Use snapshot_templates.py for proper format
-3. **Save to Correct Location**: .agor/snapshots/ directory only
-4. **Single Codeblock Format**: Required for processing
-5. **Complete Context**: Include all work, commits, and next steps
-
-### Memory and Coordination
-- Use `.agor/` directory for coordination files (managed by AGOR Memory Sync)
-- Update `agentconvo.md` for multi-agent communication
-- Maintain agent memory files for session continuity
-- Follow structured communication protocols
-
-## 🎼 Multi-Agent Coordination
-
-### When Working with Multiple Agents
-1. **Initialize Coordination**: Use `init` hotkey to set up .agor/ structure
-2. **Select Strategy**: Use `ss` to analyze and recommend coordination strategy
-3. **Communicate**: Update agentconvo.md with status and findings
-4. **Sync Regularly**: Use `sync` hotkey to stay coordinated
-5. **Create Snapshots**: For seamless agent transitions
-
-### Available Strategies
-- **Parallel Divergent** (`pd`) - Independent exploration → synthesis
-- **Pipeline** (`pl`) - Sequential snapshots with specialization
-- **Swarm** (`sw`) - Dynamic task assignment from queue
-- **Red Team** (`rt`) - Adversarial build/break cycles
-- **Mob Programming** (`mb`) - Collaborative coding
-
-## 🔧 Technical Requirements
-
-### Git Operations
-- Use real git commands (not simulated)
-- Commit frequently with descriptive messages
-- Push changes regularly for backup and collaboration
-- Follow pattern: `git add . && git commit -m "message" && git push`
-
-### File Management
-- Keep files under 500 lines when creating new projects
-- Use modular, testable code structure
-- No hard-coded environment variables
-- Maintain clean separation of concerns
-
-### Code Quality
-- Write comprehensive tests using TDD approach
-- Document code with clear comments and docstrings
-- Follow security best practices
-- Optimize for maintainability and extensibility
-
-## 📚 Documentation Access
-
-### Quick Reference Paths
-- **Role Selection**: src/agor/tools/README_ai.md
-- **Complete Guide**: src/agor/tools/AGOR_INSTRUCTIONS.md
-- **Documentation Index**: src/agor/tools/index.md
-- **Snapshot Guide**: src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md
-- **Strategy Guide**: docs/strategies.md
-- **Development Guide**: docs/agor-development-guide.md (when working on AGOR itself)
-
-### Platform-Specific Information
-- **Bundle Mode**: docs/bundle-mode.md
-- **Standalone Mode**: docs/standalone-mode.md
-- **Usage Guide**: docs/usage-guide.md
-- **Quick Start**: docs/quick-start.md
-
-## ⚠️ Critical Reminders
-
-1. **NEVER end a session without creating a snapshot** - This is mandatory
-2. **Always use correct dates** - Check with `date` command
-3. **Save snapshots to .agor/snapshots/** - Never to root directory
-4. **Follow AGOR protocols precisely** - Read documentation thoroughly
-5. **Use single codeblock format** - For snapshot processing
-6. **Commit and push frequently** - Prevent work loss
-7. **Test your work** - Verify functionality before completion
-
-## 🎯 Success Criteria
-
-You are successfully using AGOR when you:
-- ✅ Read AGOR documentation before starting work
-- ✅ Select and announce your role clearly
-- ✅ Use AGOR hotkeys and workflows consistently
-- ✅ Create proper snapshots with correct dates and locations
-- ✅ Maintain coordination files and communication protocols
-- ✅ Follow structured development practices
-- ✅ Provide comprehensive context for continuation
-
-## 🔄 Continuous Improvement
-
-- Use `meta` hotkey to provide feedback on AGOR itself
-- Suggest improvements to workflows and documentation
-- Report issues or exceptional scenarios
-- Help evolve AGOR protocols based on real-world usage
-
----
-
-**Remember**: AGOR transforms AI assistants into sophisticated development coordinators. Your adherence to these protocols ensures effective coordination, context preservation, and successful project outcomes.
-```
-
-**Agent should execute:**
-
-```bash
-# Clone AGOR to temporary location
-cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
-
-# Load protocol and return to project
-cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
-
-# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
-python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-    else
-        echo "❌ No .pyenv directory found, creating virtual environment"
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-    fi
-    # Install dependencies after environment is ready
-    python3 -m pip install -r src/agor/tools/agent-requirements.txt
-}
-
-# Test AGOR development tooling
-python3 -c "
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling, get_timestamp
-
-# Verify tooling works
-test_tooling()
-print(f'Session started at: {get_timestamp()}')
-"
-
-# Review agent startup guide
-cat src/agor/tools/agent-start-here.md
-
-# Now return to your project's directory with AGOR initialized
-```
-
-**Note**: Remote agents should also have the User Guidelines configured in their system for consistent behavior.
 
 </details>
 
@@ -515,17 +228,20 @@ cat src/agor/tools/agent-start-here.md
 Use this initialization prompt with Jules:
 
 ```
+
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
 Please read these key files to understand the system:
+
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator).
 
 # <--- Add your detailed step-by-step instructions below --->
-```
+
+````
 
 **Note:** Jules cannot clone repositories that weren't selected during environment creation, so direct URL access to documentation is required.
 
@@ -549,7 +265,7 @@ After reading these files, help me initialize AGOR for this project and select t
 agor bundle your-project -f tar.gz
 # Upload to ChatGPT
 # Select appropriate role based on your needs
-```
+````
 
 </details>
 
@@ -675,7 +391,7 @@ agor bundle https://github.com/your-username/your-project
 
 ## 🎭 Role Selection Deep Dive
 
-### 🔍 SOLO DEVELOPER
+### 🔍 Worker Agent
 
 **Primary Purpose:** Deep codebase analysis and implementation
 
@@ -699,21 +415,21 @@ agor bundle https://github.com/your-username/your-project
 
 **Key Capabilities:**
 
-- Comprehensive codebase analysis (`a`)
-- Code exploration and investigation (`f`, `co`)
+- Comprehensive codebase analysis and exploration
 - Implementation and development work
 - Technical documentation and explanation
+- Development tooling for snapshots and handoffs
 
 **Typical Workflow:**
 
-1. Perform comprehensive analysis (`a`)
-2. Explore specific code areas (`f`, `co`)
+1. Analyze codebase using detailed prompts and context
+2. Explore specific code areas based on requirements
 3. Implement changes or provide detailed explanations
-4. Document findings and decisions
+4. Use development tooling for snapshots and documentation
 
-**Why Use AGOR as a Solo Developer?**
+**Why Use AGOR as a Worker Agent?**
 
-While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for solo developers:
+While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for individual development work:
 
 - **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)snapshots can bring clarity to complex projects.
 - **Context Preservation**: AI assistants often have context window limits. Using AGOR's `snapshot` hotkey (even if you're creating a snapshot for yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
@@ -788,7 +504,7 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 **🔄 Parallel Divergent** - Multiple independent solutions
 
 - **Use for**: Feature design, architecture decisions, creative problem-solving
-- **Roles**: Multiple SOLO DEVELOPER agents working independently
+- **Roles**: Multiple Worker Agent agents working independently
 - **Outcome**: Best ideas synthesized into final solution
 
 **⚡ Pipeline** - Sequential work via snapshots with specialization
@@ -821,9 +537,8 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 
 1. **Start with Bundled Mode** using Google AI Studio Pro (free)
 2. **Choose any role** based on what you want to do:
-   - **SOLO DEVELOPER**: For code analysis and implementation
-   - **PROJECT COORDINATOR**: For planning and strategy
-   - **AGENT WORKER**: For following specific instructions
+   - **Worker Agent**: For code analysis and implementation
+   - **Project Coordinator**: For planning and strategy
 3. **Use basic hotkeys**: `a` (analyze), `f` (full files), `status`
 4. **Practice with small projects** before attempting multi-agent workflows
 

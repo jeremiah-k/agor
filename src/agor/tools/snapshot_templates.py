@@ -6,56 +6,60 @@ with complete context, including problem definition, progress made, commits, and
 """
 
 import datetime
-import subprocess
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Dict, List
 
+from agor.tools.git_operations import run_git_command
+
 
 def get_git_context() -> Dict[str, str]:
     """Get current git context including branch, status, and recent commits."""
+    context = {
+        "branch": "unknown",
+        "current_commit": "unknown",
+        "status": "git not available",
+        "recent_commits": "git not available",
+        "uncommitted_changes": [],
+        "staged_changes": [],
+    }
     try:
         # Get current branch
-        branch = subprocess.check_output(
-            ["git", "branch", "--show-current"], text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        success, branch_out = run_git_command(["branch", "--show-current"])
+        if success:
+            context["branch"] = branch_out.strip()
 
         # Get git status
-        status = subprocess.check_output(
-            ["git", "status", "--porcelain"], text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        success, status_out = run_git_command(["status", "--porcelain"])
+        if success:
+            context["status"] = status_out.strip()
 
         # Get recent commits
-        recent_commits = subprocess.check_output(
-            ["git", "log", "--oneline", "-10"], text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        success, commits_out = run_git_command(["log", "--oneline", "-10"])
+        if success:
+            context["recent_commits"] = commits_out.strip()
 
         # Get current commit hash
-        current_commit = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        success, commit_hash_out = run_git_command(["rev-parse", "HEAD"])
+        if success:
+            context["current_commit"] = commit_hash_out.strip()
 
         # Get uncommitted changes
-        uncommitted = subprocess.check_output(
-            ["git", "diff", "--name-only"], text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        success, uncommitted_out = run_git_command(["diff", "--name-only"])
+        if success:
+            context["uncommitted_changes"] = (
+                uncommitted_out.strip().split("\n") if uncommitted_out.strip() else []
+            )
 
         # Get staged changes
-        staged = subprocess.check_output(
-            ["git", "diff", "--cached", "--name-only"],
-            text=True,
-            stderr=subprocess.DEVNULL,
-        ).strip()
+        success, staged_out = run_git_command(["diff", "--cached", "--name-only"])
+        if success:
+            context["staged_changes"] = (
+                staged_out.strip().split("\n") if staged_out.strip() else []
+            )
 
-        return {
-            "branch": branch,
-            "current_commit": current_commit,
-            "status": status,
-            "recent_commits": recent_commits,
-            "uncommitted_changes": uncommitted.split("\n") if uncommitted else [],
-            "staged_changes": staged.split("\n") if staged else [],
-        }
-    except subprocess.CalledProcessError:
+        return context
+    except Exception:  # Broad exception to catch any issue during git operations
         return {
             "branch": "unknown",
             "current_commit": "unknown",
@@ -74,13 +78,11 @@ def get_agor_version() -> str:
     except (PackageNotFoundError, Exception):
         try:
             # Try to get version from git tag
-            version = subprocess.check_output(
-                ["git", "describe", "--tags", "--abbrev=0"],
-                text=True,
-                stderr=subprocess.DEVNULL,
-            ).strip()
-            return version
-        except subprocess.CalledProcessError:
+            success, version_out = run_git_command(["describe", "--tags", "--abbrev=0"])
+            if success:
+                return version_out.strip()
+            return "development"  # Fallback if git describe fails
+        except Exception:  # Broad exception for any other issue
             return "development"
 
 

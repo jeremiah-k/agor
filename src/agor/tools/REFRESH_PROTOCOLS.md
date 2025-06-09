@@ -25,7 +25,7 @@ During longer AGOR sessions, both users and agents can:
 🎼 AGOR Quick Reference
 
 **Your Current Context:**
-• Role: SOLO DEVELOPER
+• Role: Worker Agent
 • Mode: Bundle Mode
 • Project: [project-name]
 • Last Action: [last-action]

@@ -12,6 +12,7 @@ Functions:
 """
 
 import re
+from dataclasses import dataclass
 from typing import List
 
 from agor.tools.git_operations import get_current_timestamp, run_git_command
@@ -29,47 +30,48 @@ def get_agor_version() -> str:
     """Get current AGOR version."""
     try:
         import agor
-        return getattr(agor, '__version__', '0.4.3+')
+
+        return getattr(agor, "__version__", "0.4.3+")
     except ImportError:
-        return '0.4.3+'
+        return "0.4.3+"
 
 
 def detick_content(content: str) -> str:
     """
     Convert triple backticks (```) to double backticks (``) for clean codeblock rendering.
-    
+
     This prevents codeblocks from jumping in and out when content is used in prompts.
     Essential for agent-to-agent communication via snapshots and handoffs.
-    
+
     Args:
         content: Content with potential triple backticks
-    
+
     Returns:
         Content with triple backticks converted to double backticks
     """
     # Use regex to avoid runaway replacements
     # Only replace ``` that are not preceded or followed by another backtick
-    pattern = r'(?<!`)```(?!`)'
-    return re.sub(pattern, '``', content)
+    pattern = r"(?<!`)```(?!`)"
+    return re.sub(pattern, "``", content)
 
 
 def retick_content(content: str) -> str:
     """
     Convert double backticks (``) back to triple backticks (```) for normal rendering.
-    
+
     Reverses the detick_content operation when content needs to be restored
     to normal markdown format.
-    
+
     Args:
         content: Content with double backticks
-    
+
     Returns:
         Content with double backticks converted to triple backticks
     """
     # Use regex to avoid runaway replacements
     # Only replace `` that are not preceded or followed by another backtick
-    pattern = r'(?<!`)``(?!`)'
-    return re.sub(pattern, '```', content)
+    pattern = r"(?<!`)``(?!`)"
+    return re.sub(pattern, "```", content)
 
 
 def _format_feedback_list(items: List[str], empty_message: str) -> str:
@@ -84,21 +86,21 @@ def generate_handoff_prompt_only(
     current_status: str,
     next_agent_instructions: List[str],
     critical_context: str,
-    files_modified: List[str] = None
+    files_modified: List[str] = None,
 ) -> str:
     """
     Generate a handoff prompt for agent coordination using dev tooling.
-    
+
     This function creates properly formatted prompts with deticked content
     for seamless agent-to-agent communication.
-    
+
     Args:
         work_completed: List of completed work items
         current_status: Current project status
         next_agent_instructions: Instructions for next agent
         critical_context: Critical context to preserve
         files_modified: List of modified files
-    
+
     Returns:
         Formatted handoff prompt with deticked content
     """
@@ -195,7 +197,7 @@ print(outputs)
 
 This ensures seamless coordination between agents and preserves all critical context.
 """
-    
+
     # Apply detick processing for clean codeblock rendering
     return detick_content(prompt_content)
 
@@ -205,27 +207,27 @@ def generate_mandatory_session_end_prompt(
     current_status: str,
     next_agent_instructions: List[str],
     critical_context: str,
-    files_modified: List[str] = None
+    files_modified: List[str] = None,
 ) -> str:
     """
     Generate mandatory session end prompt for agent coordination.
-    
+
     This function creates the required session end documentation with
     deticked content for proper codeblock rendering in agent handoffs.
-    
+
     Args:
         work_completed: List of completed work items
         current_status: Current project status
         next_agent_instructions: Instructions for next agent
         critical_context: Critical context to preserve
         files_modified: List of modified files
-    
+
     Returns:
         Formatted session end prompt with deticked content
     """
     if files_modified is None:
         files_modified = []
-    
+
     timestamp = get_current_timestamp()
     current_branch = get_current_branch()
     agor_version = get_agor_version()
@@ -278,30 +280,28 @@ The next agent should:
 
 **This report ensures seamless agent-to-agent coordination and prevents work duplication.**
 """
-    
+
     # Apply detick processing for clean codeblock rendering
     return detick_content(session_end_content)
 
 
 def generate_meta_feedback(
-    feedback_type: str,
-    feedback_content: str,
-    suggestions: List[str] = None
+    feedback_type: str, feedback_content: str, suggestions: List[str] = None
 ) -> str:
     """
     Generate meta feedback about AGOR itself for continuous improvement.
-    
+
     Args:
         feedback_type: Type of feedback (bug, enhancement, workflow, etc.)
         feedback_content: Main feedback content
         suggestions: List of improvement suggestions
-    
+
     Returns:
         Formatted meta feedback with deticked content
     """
     if suggestions is None:
         suggestions = []
-    
+
     timestamp = get_current_timestamp()
     agor_version = get_agor_version()
 
@@ -341,6 +341,158 @@ This feedback should be:
 
 **Meta feedback helps evolve AGOR into a more effective coordination platform.**
 """
-    
+
     # Apply detick processing for clean codeblock rendering
     return detick_content(meta_content)
+
+
+@dataclass
+class HandoffRequest:
+    """Configuration object for handoff operations to reduce parameter count."""
+
+    task_description: str
+    work_completed: list = None
+    next_steps: list = None
+    files_modified: list = None
+    context_notes: str = None
+    brief_context: str = None
+    pr_title: str = None
+    pr_description: str = None
+    release_notes: str = None
+    # Output selection flags for flexible generation
+    generate_snapshot: bool = True
+    generate_handoff_prompt: bool = True
+    generate_pr_description: bool = True
+    generate_release_notes: bool = True
+
+    def __post_init__(self):
+        """
+        Ensures all optional fields are initialized to empty lists or strings if not provided.
+
+        This method sets default empty values for fields that may be None after dataclass initialization, preventing issues with mutable defaults.
+        """
+        if self.work_completed is None:
+            self.work_completed = []
+        if self.next_steps is None:
+            self.next_steps = []
+        if self.files_modified is None:
+            self.files_modified = []
+        if self.context_notes is None:
+            self.context_notes = ""
+        if self.brief_context is None:
+            self.brief_context = ""
+
+
+def generate_agent_handoff_prompt_extended(
+    task_description: str,
+    snapshot_content: str = None,
+    memory_branch: str = None,
+    environment: dict = None,
+    brief_context: str = None,
+) -> str:
+    """
+    Generates a formatted agent handoff prompt for seamless transitions between agents.
+
+    Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
+
+    Args:
+        task_description: Description of the task for the next agent.
+        snapshot_content: Optional content summarizing previous agent work.
+        memory_branch: Optional name of the memory branch for coordination.
+        environment: Optional environment information; auto-detected if not provided.
+        brief_context: Optional brief background for quick orientation.
+
+    Returns:
+        A processed prompt string ready for use in a single codeblock.
+    """
+    if environment is None:
+        from agor.tools.dev_testing import detect_environment
+
+        environment = detect_environment()
+
+    from agor.tools.git_operations import get_current_timestamp
+
+    timestamp = get_current_timestamp()
+
+    # Start building the prompt
+    prompt = f"""# 🤖 AGOR Agent Handoff
+
+**Generated**: {timestamp}
+**Environment**: {environment.get('mode', 'unknown')} ({environment.get('platform', 'unknown')})
+**AGOR Version**: {environment.get('agor_version', 'unknown')}
+"""
+
+    # Add memory branch information if available
+    if memory_branch:
+        prompt += f"""**Memory Branch**: {memory_branch}
+"""
+
+    prompt += f"""
+## Task Overview
+{task_description}
+"""
+
+    # Add brief context if provided
+    if brief_context:
+        prompt += f"""
+## Quick Context
+{brief_context}
+"""
+
+    # Add environment-specific setup
+    from agor.tools.dev_testing import get_agent_dependency_install_commands
+
+    prompt += f"""
+## Environment Setup
+{get_agent_dependency_install_commands()}
+
+## AGOR Initialization
+Read these files to understand the system:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (operational guide)
+- src/agor/tools/index.md (documentation index)
+
+Select appropriate role:
+- Worker Agent: Code analysis, implementation, technical work
+- Project Coordinator: Planning and multi-agent coordination
+"""
+
+    # Add memory branch access if applicable
+    if memory_branch:
+        prompt += f"""
+## Memory Branch Access
+Your coordination files are stored on memory branch: {memory_branch}
+
+Access previous work context:
+```bash
+# View memory branch contents
+git show {memory_branch}:.agor/
+git show {memory_branch}:.agor/snapshots/
+```
+"""
+
+    # Add snapshot content if provided
+    if snapshot_content:
+        prompt += f"""
+## Previous Work Context
+{snapshot_content}
+"""
+
+    prompt += """
+## Getting Started
+1. Initialize your environment using the setup commands above
+2. Read the AGOR documentation files
+3. Select your role based on the task requirements
+4. Review any previous work context provided
+5. Begin work following AGOR protocols
+
+Remember: Always create a snapshot before ending your session using the dev tooling.
+
+---
+*This handoff prompt was generated automatically with environment detection and backtick processing*
+"""
+
+    # Apply backtick processing to prevent formatting issues
+    processed_prompt = detick_content(prompt)
+
+    return processed_prompt

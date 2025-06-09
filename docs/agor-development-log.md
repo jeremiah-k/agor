@@ -29,7 +29,145 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
-### 19. 2025-06-07 | v0.4.3 | Comprehensive AGOR Refactoring and Safety Improvements
+### 20. 2025-06-09 | v0.4.3 | Dev Tooling Modularization and Critical Fixes
+
+**Technical Focus**: Complete modularization of dev_tooling.py to meet ≤500 LOC guidelines, fix runtime errors, and align snapshot system with core AGOR purpose.
+
+**Implementation Details**:
+
+- **Dev Tooling Modularization**: Successfully split massive 1600+ LOC dev_tooling.py into focused modules
+  - `snapshots.py` (~400 LOC) - Snapshot creation and agent handoff functionality
+  - `hotkeys.py` (~300 LOC) - Hotkey helpers and workflow convenience functions
+  - `checklist.py` (~300 LOC) - Checklist generation and workflow validation
+  - `dev_tooling.py` (351 LOC) - Clean API interface under guideline
+- **Critical Runtime Fixes**: Fixed function call errors and duplicate definitions
+  - Corrected quick_commit_push function calls with proper positional arguments
+  - Removed duplicate get_timestamp() function definitions
+  - Fixed all import issues with absolute imports (agor.tools.\*)
+- **Snapshot System Alignment**: Simplified snapshot types to core AGOR purpose
+  - **Transition Snapshot**: For context limit handoffs (primary use case)
+  - **Progress Report Snapshot**: For session progress and planning
+  - **Completion Report Snapshot**: For task/project completion
+  - Removed overcomplicated role switching scenarios
+- **Documentation Cleanup**: Fixed chronological order in development log
+  - Corrected entry ordering to proper reverse chronological sequence
+  - Removed Google AI Studio "free" references (no longer accurate)
+  - Fixed broken nested codeblock in AugmentCode Remote Agents section
+  - Restored platform deployment instructions (already present from main branch)
+- **Role Name Consistency Audit**: Comprehensive search revealed extensive inconsistencies
+  - **18 files** with "Solo Developer" references (outdated role)
+  - **19 files** with ALL-CAPS role inconsistencies (AGENT WORKER, PROJECT COORDINATOR)
+  - **Critical impact**: Agent confusion, inconsistent user experience, outdated training materials
+  - **Systematic cleanup required**: All agent docs, user docs, templates, and initialization files
+
+**Rationale**:
+
+- 1600+ LOC dev_tooling.py violated ≤500 LOC guideline and was unmaintainable
+- Runtime errors from incorrect function calls needed immediate fixing
+- AGOR's core purpose is seamless agent transitions, not complex role management
+- Snapshot system was overcomplicated with unnecessary specialization types
+- Documentation inconsistencies needed resolution for clarity
+
+**Impact**:
+
+- **Maintainable Codebase**: All modules now under 500 LOC with focused responsibilities
+- **Improved Performance**: Faster imports and static analysis with modular structure
+- **Runtime Reliability**: Fixed all function call errors preventing system failures
+- **Aligned Purpose**: Snapshot system now reflects core AGOR use case
+- **Better Documentation**: Consistent, properly ordered development history
+
+**Lessons Learned**:
+
+- Large files benefit significantly from modular organization
+- Absolute imports prevent E0402 errors across execution contexts
+- Core use cases should drive feature design, not theoretical scenarios
+- Chronological documentation order is critical for development tracking
+- Modularization improves both maintainability and performance
+
+**Next Steps**:
+
+- Complete comprehensive testing of modular architecture
+- Validate snapshot system alignment with real workflows
+- Test seamless agent handoff functionality
+- Gather feedback on simplified snapshot types vs. complex scenarios
+
+**Files Modified**:
+
+- `src/agor/tools/dev_tooling.py` - Reduced from 1600+ to 351 LOC
+- `src/agor/tools/snapshots.py` (NEW) - Snapshot and handoff functionality
+- `src/agor/tools/hotkeys.py` (NEW) - Workflow and status helpers
+- `src/agor/tools/checklist.py` (NEW) - Validation and progress tracking
+- `docs/snapshots.md` - Simplified snapshot scenarios to 3 core types
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md` - Aligned with core purpose
+- `docs/usage-guide.md` - Fixed broken nested codeblock
+- `docs/google-ai-studio.md` - Removed "free tier" emphasis
+- `docs/bundle-mode.md` - Updated platform positioning
+- `README.md` - Positioned ChatGPT as primary bundle mode service
+- `docs/agor-development-log.md` - Fixed chronological order and comprehensive updates
+
+### 19. 2025-01-28 | v0.4.3 | Strategic Focus Shift - Dev Tooling and Agent Handoffs Priority
+
+**Technical Focus**: Strategic pivot to prioritize dev tooling, agent-to-agent handoffs, and seamless AGOR protocol integration over experimental strategies.
+
+**Implementation Details**:
+
+- **Memory Branch Strategy Optimization**: Moving from one memory branch per memory to unified memory branch strategy
+  - One memory branch per feature or session to reduce branch proliferation
+  - Cleaner memory management with consolidated snapshots and coordination
+  - Reduced git overhead and improved navigation
+- **Dev Tooling Promotion**: Elevating dev tooling to top priority in documentation and user guides
+  - Agent-to-agent handoff prompts as primary feature
+  - Seamless AGOR protocol loading and integration
+  - Snapshot generation and coordination tools
+- **Dependency Management Enhancement**: Ensuring agent-requirements.txt is properly installed
+  - Adding httpx to agent-requirements.txt if needed for dev tooling functions
+  - Including pip install instructions in all initialization prompts
+  - Environment-specific dependency handling
+- **Documentation Restructuring**: Updating usage guide to prioritize practical capabilities
+  - Moving dev tooling to top sections
+  - De-emphasizing experimental strategies
+  - Focusing on proven agent coordination features
+
+**Rationale**:
+
+- Users are more interested in practical agent handoff and protocol integration than experimental strategies
+- Memory branch proliferation (one per memory) creates unnecessary complexity
+- Dev tooling provides immediate value for agent coordination and productivity
+- Missing dependencies (like httpx) prevent dev tooling functions from working properly
+- Documentation should reflect actual user priorities and proven capabilities
+
+**Impact**:
+
+- **Clearer User Focus**: Documentation emphasizes proven, practical features
+- **Reduced Complexity**: Unified memory branch strategy simplifies git operations
+- **Better Reliability**: Proper dependency management ensures dev tooling works consistently
+- **Enhanced Adoption**: Prioritizing practical features over experimental ones
+- **Improved Workflows**: Agent handoffs and protocol integration become primary use cases
+
+**Lessons Learned**:
+
+- User adoption follows practical value, not experimental features
+- Memory management should be simple and consolidated, not fragmented
+- Dependency management is critical for reliable dev tooling operation
+- Documentation structure should reflect actual user priorities
+- Agent coordination tools provide more immediate value than strategy frameworks
+
+**Next Steps**:
+
+- Update usage guide to prioritize dev tooling and agent handoffs
+- Implement unified memory branch strategy guidance
+- Ensure all required dependencies are documented and installed
+- Focus development efforts on proven agent coordination capabilities
+- Gather feedback on practical features vs experimental strategies
+
+**Files to Modify**:
+
+- `docs/usage-guide.md` - Restructure to prioritize dev tooling
+- `src/agor/tools/agent-requirements.txt` - Add missing dependencies
+- Memory management guidance - Recommend unified memory branch strategy
+- Initialization prompts - Include dependency installation instructions
+
+### 18. 2025-06-07 | v0.4.3 | Comprehensive AGOR Refactoring and Safety Improvements
 
 **Technical Focus**: Major refactoring addressing review findings with focus on git safety, memory branch architecture, role system enhancement, and dev tooling modularization.
 
