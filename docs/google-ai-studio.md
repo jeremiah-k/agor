@@ -1,13 +1,13 @@
-# 🆓 Google AI Studio Guide
+# 🤖 Google AI Studio Guide
 
-Google AI Studio provides access to AGOR with Pro models - no subscription required! This guide will get you set up and running smoothly.
+Google AI Studio provides access to AGOR with Pro models. This guide will get you set up and running smoothly.
 
 ## 🎯 Why Google AI Studio?
 
-- **✅ No subscription required** - Access to powerful models like Gemini 2.5 Pro
+- **✅ Access to powerful models** like Gemini 2.5 Pro
 - **✅ Function Calling support** (essential for AGOR)
 - **✅ File upload capability** for bundles
-- **✅ No usage limits** for basic use
+- **✅ Comprehensive model features** for development workflows
 
 ## 🚀 Quick Setup
 

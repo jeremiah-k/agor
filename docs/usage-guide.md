@@ -7,9 +7,9 @@
 This section provides detailed setup instructions for initializing AGOR agents on different platforms. Choose the platform that matches your environment.
 
 <details>
-<summary><b>Google AI Studio Pro (Free Tier)</b></summary>
+<summary><b>Google AI Studio Pro</b></summary>
 
-### Google AI Studio Pro (Free Tier)
+### Google AI Studio Pro
 
 **Setup:**
 

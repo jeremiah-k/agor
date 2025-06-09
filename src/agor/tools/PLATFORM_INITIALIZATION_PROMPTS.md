@@ -6,7 +6,7 @@ These prompts are designed to be used at the beginning of a session, followed by
 
 ---
 
-## 📦 Google AI Studio Pro (Free Tier)
+## 📦 Google AI Studio Pro
 
 **Copy this prompt when uploading your AGOR bundle to Google AI Studio:**
 
