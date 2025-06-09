@@ -14,7 +14,12 @@ from agor.tools.git_operations import run_git_command
 
 
 def get_git_context() -> Dict[str, str]:
-    """Get current git context including branch, status, and recent commits."""
+    """
+    Retrieves the current Git repository context including branch, commit hash, status, recent commits, and file changes.
+    
+    Returns:
+        A dictionary containing the current branch name, latest commit hash, repository status, recent commits, lists of uncommitted and staged changes. If Git is unavailable or an error occurs, default values are provided.
+    """
     context = {
         "branch": "unknown",
         "current_commit": "unknown",
@@ -71,7 +76,12 @@ def get_git_context() -> Dict[str, str]:
 
 
 def get_agor_version() -> str:
-    """Get AGOR version from package or git tag."""
+    """
+    Retrieves the current AGOR version from the installed package or the latest Git tag.
+    
+    Returns:
+        The AGOR version as a string, or "development" if unavailable.
+    """
     try:
         # Try to get version from package using importlib.metadata
         return version("agor")

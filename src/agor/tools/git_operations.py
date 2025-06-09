@@ -53,14 +53,14 @@ def get_ntp_timestamp() -> str:
 
 def run_git_command(command: list, env: Optional[dict] = None) -> Tuple[bool, str]:
     """
-    Execute a git command and return success status and output.
-
+    Executes a git command with optional environment variables and returns the result.
+    
     Args:
-        command: List of git command arguments (without 'git')
-        env: Optional environment variables to pass to git command
-
+        command: List of git command arguments, excluding the 'git' binary.
+        env: Optional dictionary of environment variables for the git command.
+    
     Returns:
-        Tuple of (success: bool, output: str)
+        A tuple containing a boolean indicating success and the command's output or error message.
     """
     try:
         # Detect git binary using shutil.which for better cross-platform compatibility
@@ -92,21 +92,17 @@ def safe_git_push(
     branch_name: Optional[str] = None, force: bool = False, explicit_force: bool = False
 ) -> bool:
     """
-    Safe git push with upstream checking and protected branch validation.
-
-    This function implements safety checks to prevent dangerous git operations:
-    - Always pulls before pushing to check for upstream changes
-    - Prevents force pushes to protected branches (main, master, develop)
-    - Requires explicit confirmation for force pushes
-    - Fails safely if upstream changes require merge/rebase
-
+    Safely pushes the current or specified branch to the remote repository with multiple safety checks.
+    
+    Prevents force pushes to protected branches, requires explicit confirmation for force pushes, and checks for upstream changes before pushing. Aborts if the remote branch has new commits not present locally (unless force is explicitly enabled). Adds `--set-upstream` if pushing to a new remote branch.
+    
     Args:
-        branch_name: Target branch (default: current branch)
-        force: Whether to force push (requires explicit_force=True for safety)
-        explicit_force: Must be True to enable force push (safety check)
-
+        branch_name: The branch to push. If not provided, uses the current branch.
+        force: If True, attempts a force push (only allowed with explicit_force).
+        explicit_force: Must be True to allow force pushing; prevents accidental destructive operations.
+    
     Returns:
-        True if successful, False otherwise
+        True if the push succeeds, False otherwise.
     """
     print("🛡️  Safe git push: performing safety checks...")
 
@@ -186,21 +182,16 @@ def safe_git_push(
 
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """
-    Quick commit and push with timestamp and safety checks.
-
-    NOTE: For snapshots, agents should use commit_to_memory_branch() instead
-    of this function to ensure proper cross-branch memory system operation.
-
-    IMPORTANT: PR descriptions, handoff prompts, release notes, etc. all need to be
-    run through dev tooling to remove triple backticks in codeblocks and then
-    WRAPPED into a single codeblock so the user can copy & paste.
-
+    Performs a quick commit and push of all changes with a timestamped, emoji-prefixed message.
+    
+    This function stages all changes, commits them with a message that includes an emoji and the current UTC timestamp, and then safely pushes the commit to the remote repository. If there are no changes to commit, it returns success. For agent snapshots, use `commit_to_memory_branch()` instead to ensure proper memory system operation across branches.
+    
     Args:
-        message: Commit message
-        emoji: Emoji prefix for commit
-
+        message: The commit message to use.
+        emoji: An emoji to prefix the commit message.
+    
     Returns:
-        True if successful, False otherwise
+        True if the commit and push succeed or if there are no changes to commit; False otherwise.
     """
     timestamp = get_current_timestamp()
     full_message = f"{emoji} {message} - {timestamp}"

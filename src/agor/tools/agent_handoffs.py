@@ -27,7 +27,12 @@ def get_current_branch() -> str:
 
 
 def get_agor_version() -> str:
-    """Get current AGOR version."""
+    """
+    Retrieves the current AGOR version string.
+    
+    Returns:
+        The AGOR package version if available; otherwise, a default version string.
+    """
     try:
         import agor
 
@@ -38,16 +43,13 @@ def get_agor_version() -> str:
 
 def detick_content(content: str) -> str:
     """
-    Convert triple backticks (```) to double backticks (``) for clean codeblock rendering.
-
-    This prevents codeblocks from jumping in and out when content is used in prompts.
-    Essential for agent-to-agent communication via snapshots and handoffs.
-
+    Converts triple backticks (```) in the input content to double backticks (``) to prevent codeblock rendering issues during agent communication.
+    
     Args:
-        content: Content with potential triple backticks
-
+        content: The input string potentially containing triple backticks.
+    
     Returns:
-        Content with triple backticks converted to double backticks
+        The content with all standalone triple backticks replaced by double backticks.
     """
     # Use regex to avoid runaway replacements
     # Only replace ``` that are not preceded or followed by another backtick
@@ -57,16 +59,13 @@ def detick_content(content: str) -> str:
 
 def retick_content(content: str) -> str:
     """
-    Convert double backticks (``) back to triple backticks (```) for normal rendering.
-
-    Reverses the detick_content operation when content needs to be restored
-    to normal markdown format.
-
+    Converts double backticks (``) in the input content back to triple backticks (```) to restore standard markdown codeblock formatting.
+    
     Args:
-        content: Content with double backticks
-
+        content: The string containing double backticks to be converted.
+    
     Returns:
-        Content with double backticks converted to triple backticks
+        The content with all double backticks replaced by triple backticks.
     """
     # Use regex to avoid runaway replacements
     # Only replace `` that are not preceded or followed by another backtick
@@ -75,7 +74,11 @@ def retick_content(content: str) -> str:
 
 
 def _format_feedback_list(items: List[str], empty_message: str) -> str:
-    """Format a list of items for feedback display."""
+    """
+    Formats a list of strings as a markdown bullet list for feedback display.
+    
+    If the list is empty, returns a single bullet with the provided empty message.
+    """
     if not items:
         return f"- {empty_message}"
     return "\n".join(f"- {item}" for item in items)
@@ -89,20 +92,19 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generate a handoff prompt for agent coordination using dev tooling.
-
-    This function creates properly formatted prompts with deticked content
-    for seamless agent-to-agent communication.
-
+    Generates a formatted agent handoff prompt summarizing completed work, current status, instructions for the next agent, critical context, and files modified.
+    
+    The prompt includes environment setup steps, coordination protocol, and critical requirements for seamless multi-agent workflows. All content is processed to replace triple backticks with double backticks for safe embedding in codeblocks.
+    
     Args:
-        work_completed: List of completed work items
-        current_status: Current project status
-        next_agent_instructions: Instructions for next agent
-        critical_context: Critical context to preserve
-        files_modified: List of modified files
-
+        work_completed: List of completed work items for the session.
+        current_status: Description of the current project status.
+        next_agent_instructions: Actionable instructions for the next agent or session.
+        critical_context: Essential context that must be preserved for continuity.
+        files_modified: List of files modified during the session.
+    
     Returns:
-        Formatted handoff prompt with deticked content
+        A deticked, markdown-formatted handoff prompt string for agent coordination.
     """
     # Validate required inputs
     if not isinstance(work_completed, list):
@@ -210,20 +212,19 @@ def generate_mandatory_session_end_prompt(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generate mandatory session end prompt for agent coordination.
-
-    This function creates the required session end documentation with
-    deticked content for proper codeblock rendering in agent handoffs.
-
+    Generates a mandatory session end report summarizing completed work, project status, files modified, next agent instructions, and critical context for agent coordination.
+    
+    The report includes handoff requirements and immediate next steps, formatted for seamless agent-to-agent workflow. Content is processed to prevent codeblock rendering issues during handoff.
+    
     Args:
-        work_completed: List of completed work items
-        current_status: Current project status
-        next_agent_instructions: Instructions for next agent
-        critical_context: Critical context to preserve
-        files_modified: List of modified files
-
+        work_completed: List of completed work items for the session.
+        current_status: Description of the current project status.
+        next_agent_instructions: Instructions for the next agent to follow.
+        critical_context: Essential context that must be preserved for continuation.
+        files_modified: List of files modified during the session.
+    
     Returns:
-        Formatted session end prompt with deticked content
+        A formatted session end prompt string with deticked content for safe embedding in agent handoff workflows.
     """
     if files_modified is None:
         files_modified = []
@@ -289,15 +290,15 @@ def generate_meta_feedback(
     feedback_type: str, feedback_content: str, suggestions: List[str] = None
 ) -> str:
     """
-    Generate meta feedback about AGOR itself for continuous improvement.
-
+    Generates a formatted meta feedback report for AGOR, including feedback type, content, improvement suggestions, recommended actions, and submission instructions.
+    
     Args:
-        feedback_type: Type of feedback (bug, enhancement, workflow, etc.)
-        feedback_content: Main feedback content
-        suggestions: List of improvement suggestions
-
+        feedback_type: The category of feedback (e.g., bug, enhancement, workflow).
+        feedback_content: The main feedback message.
+        suggestions: Optional list of improvement suggestions.
+    
     Returns:
-        Formatted meta feedback with deticked content
+        A deticked markdown-formatted string containing the meta feedback report.
     """
     if suggestions is None:
         suggestions = []
@@ -367,9 +368,9 @@ class HandoffRequest:
 
     def __post_init__(self):
         """
-        Ensures all optional fields are initialized to empty lists or strings if not provided.
-
-        This method sets default empty values for fields that may be None after dataclass initialization, preventing issues with mutable defaults.
+        Initializes optional fields to empty lists or strings if they are None after dataclass creation.
+        
+        Prevents mutable default argument issues by ensuring all list and string fields have safe default values.
         """
         if self.work_completed is None:
             self.work_completed = []
@@ -391,19 +392,19 @@ def generate_agent_handoff_prompt_extended(
     brief_context: str = None,
 ) -> str:
     """
-    Generates a formatted agent handoff prompt for seamless transitions between agents.
-
-    Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
-
+    Generates a comprehensive agent handoff prompt with environment details, setup instructions, memory branch access, task overview, and optional context.
+    
+    The prompt includes metadata such as generation timestamp, detected environment, AGOR version, and memory branch if provided. It outlines environment setup steps, AGOR initialization guidance, and instructions for accessing previous work context. Optional brief context and snapshot content are included when supplied. The output is processed to replace triple backticks with double backticks for safe embedding in single codeblocks.
+    
     Args:
         task_description: Description of the task for the next agent.
-        snapshot_content: Optional content summarizing previous agent work.
+        snapshot_content: Optional summary of previous agent work.
         memory_branch: Optional name of the memory branch for coordination.
         environment: Optional environment information; auto-detected if not provided.
         brief_context: Optional brief background for quick orientation.
-
+    
     Returns:
-        A processed prompt string ready for use in a single codeblock.
+        A formatted and deticked prompt string ready for use in a single codeblock.
     """
     if environment is None:
         from agor.tools.dev_testing import detect_environment
