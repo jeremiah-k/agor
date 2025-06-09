@@ -503,7 +503,7 @@ You will have succeeded when:
     return prompt_template
 
 
-def validate_workflow_completion(
+def validate_agor_workflow_completion(
     work_completed: list,
     files_modified: list,
     has_snapshot: bool = False,
@@ -623,7 +623,7 @@ prompt = generate_workflow_prompt_template(
 )
 
 # Validate completion
-validation = validate_workflow_completion(
+validation = validate_agor_workflow_completion(
     work_completed=["item1", "item2"],
     files_modified=["file1.py", "file2.md"],
     has_snapshot=True,

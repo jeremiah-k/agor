@@ -163,7 +163,7 @@ def commit_to_memory_branch(
             success, tree_hash = run_git_command(
                 ["rev-parse", f"{branch_name}^{{tree}}"]
             )
-            tree_hash = empty_tree_hash if not success else tree_hash.strip()
+            tree_hash = get_empty_tree_hash() if not success else tree_hash.strip()
 
             # Step 5: Create new tree with our file
             # Create a temporary index file

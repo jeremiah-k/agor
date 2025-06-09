@@ -284,7 +284,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 **MANDATORY FOR ALL GENERATED CONTENT**: PR descriptions, handoff prompts, release notes, meta feedback, session summaries, etc. MUST ALWAYS follow this exact process:
 
 1. **Generate the content** (PR notes, handoff prompt, release notes, etc.)
-2. **Process through dev tooling** using `detick_content_wrapper()` to remove triple backticks
+2. **Process through dev tooling** using `detick_content()` to remove triple backticks
 3. **Wrap the deticked content in a single codeblock** using triple backticks for copy-paste
 
 **EXAMPLE WORKFLOW**:
@@ -293,7 +293,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 # Generate content
 content = generate_pr_description_snapshot(...)
 # Process through dev tooling (detick)
-processed_content = detick_content_wrapper(content)
+processed_content = detick_content(content)
 # Present in single codeblock for copy-paste
 print("```")
 print(processed_content)

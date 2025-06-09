@@ -154,36 +154,33 @@ def validate_feedback_input(
     return validation
 
 
-def create_github_issue_content(
-    feedback_type: str,
-    feedback_content: str,
-    suggestions: List[str] = None,
-    severity: str = "medium",
-    component: str = "general",
-    reproduction_steps: List[str] = None,
-    expected_behavior: str = None,
+@dataclass
+class GitHubIssueConfig:
+    """Configuration for GitHub issue creation."""
+    feedback_type: str
+    feedback_content: str
+    suggestions: List[str] = None
+    severity: str = "medium"
+    component: str = "general"
+    reproduction_steps: List[str] = None
+    expected_behavior: str = None
     actual_behavior: str = None
-) -> str:
+
+
+def create_github_issue_content(config: GitHubIssueConfig) -> str:
     """
     Create GitHub issue content from meta feedback.
 
     Args:
-        feedback_type: Type of feedback
-        feedback_content: Main feedback content
-        suggestions: List of improvement suggestions
-        severity: Severity level
-        component: Component affected
-        reproduction_steps: Steps to reproduce (for bugs)
-        expected_behavior: Expected behavior (for bugs)
-        actual_behavior: Actual behavior (for bugs)
+        config: GitHubIssueConfig containing all issue parameters
 
     Returns:
         Formatted GitHub issue content
     """
-    if suggestions is None:
-        suggestions = []
-    if reproduction_steps is None:
-        reproduction_steps = []
+    if config.suggestions is None:
+        config.suggestions = []
+    if config.reproduction_steps is None:
+        config.reproduction_steps = []
 
     # Map feedback types to GitHub labels
     type_labels = {
@@ -203,48 +200,48 @@ def create_github_issue_content(
         "critical": "priority: critical"
     }
 
-    issue_content = f"""## {feedback_type.replace('_', ' ').title()}
+    issue_content = f"""## {config.feedback_type.replace('_', ' ').title()}
 
-**Component**: {component}
-**Severity**: {severity}
+**Component**: {config.component}
+**Severity**: {config.severity}
 
 ### Description
 
-{feedback_content}"""
+{config.feedback_content}"""
 
-    if feedback_type == "bug":
-        if reproduction_steps:
+    if config.feedback_type == "bug":
+        if config.reproduction_steps:
             issue_content += f"""
 
 ### Reproduction Steps
 
-{_format_feedback_list(reproduction_steps, 'No reproduction steps provided')}"""
+{_format_feedback_list(config.reproduction_steps, 'No reproduction steps provided')}"""
 
-        if expected_behavior:
+        if config.expected_behavior:
             issue_content += f"""
 
 ### Expected Behavior
 
-{expected_behavior}"""
+{config.expected_behavior}"""
 
-        if actual_behavior:
+        if config.actual_behavior:
             issue_content += f"""
 
 ### Actual Behavior
 
-{actual_behavior}"""
+{config.actual_behavior}"""
 
-    if suggestions:
+    if config.suggestions:
         issue_content += f"""
 
 ### Suggested Solutions
 
-{_format_feedback_list(suggestions, 'No suggestions provided')}"""
+{_format_feedback_list(config.suggestions, 'No suggestions provided')}"""
 
     # Add labels section
-    labels = [type_labels.get(feedback_type, "feedback"), severity_labels.get(severity, "priority: medium")]
-    if component != "general":
-        labels.append(f"component: {component}")
+    labels = [type_labels.get(config.feedback_type, "feedback"), severity_labels.get(config.severity, "priority: medium")]
+    if config.component != "general":
+        labels.append(f"component: {config.component}")
 
     issue_content += f"""
 
@@ -268,7 +265,7 @@ def get_feedback_statistics() -> dict:
         Dictionary with feedback statistics
     """
     try:
-        from agor.tools.memory_manager import list_memory_branches, read_from_memory_branch
+        from agor.tools.memory_manager import list_memory_branches
 
         stats = {
             "total_feedback_items": 0,
