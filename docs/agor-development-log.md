@@ -43,7 +43,7 @@ Each entry includes:
 - **Critical Runtime Fixes**: Fixed function call errors and duplicate definitions
   - Corrected quick_commit_push function calls with proper positional arguments
   - Removed duplicate get_timestamp() function definitions
-  - Fixed all import issues with absolute imports (agor.tools.*)
+  - Fixed all import issues with absolute imports (agor.tools.\*)
 - **Snapshot System Alignment**: Simplified snapshot types to core AGOR purpose
   - **Transition Snapshot**: For context limit handoffs (primary use case)
   - **Progress Report Snapshot**: For session progress and planning

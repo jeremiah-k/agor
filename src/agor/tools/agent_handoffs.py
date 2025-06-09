@@ -30,47 +30,48 @@ def get_agor_version() -> str:
     """Get current AGOR version."""
     try:
         import agor
-        return getattr(agor, '__version__', '0.4.3+')
+
+        return getattr(agor, "__version__", "0.4.3+")
     except ImportError:
-        return '0.4.3+'
+        return "0.4.3+"
 
 
 def detick_content(content: str) -> str:
     """
     Convert triple backticks (```) to double backticks (``) for clean codeblock rendering.
-    
+
     This prevents codeblocks from jumping in and out when content is used in prompts.
     Essential for agent-to-agent communication via snapshots and handoffs.
-    
+
     Args:
         content: Content with potential triple backticks
-    
+
     Returns:
         Content with triple backticks converted to double backticks
     """
     # Use regex to avoid runaway replacements
     # Only replace ``` that are not preceded or followed by another backtick
-    pattern = r'(?<!`)```(?!`)'
-    return re.sub(pattern, '``', content)
+    pattern = r"(?<!`)```(?!`)"
+    return re.sub(pattern, "``", content)
 
 
 def retick_content(content: str) -> str:
     """
     Convert double backticks (``) back to triple backticks (```) for normal rendering.
-    
+
     Reverses the detick_content operation when content needs to be restored
     to normal markdown format.
-    
+
     Args:
         content: Content with double backticks
-    
+
     Returns:
         Content with double backticks converted to triple backticks
     """
     # Use regex to avoid runaway replacements
     # Only replace `` that are not preceded or followed by another backtick
-    pattern = r'(?<!`)``(?!`)'
-    return re.sub(pattern, '```', content)
+    pattern = r"(?<!`)``(?!`)"
+    return re.sub(pattern, "```", content)
 
 
 def _format_feedback_list(items: List[str], empty_message: str) -> str:
@@ -85,21 +86,21 @@ def generate_handoff_prompt_only(
     current_status: str,
     next_agent_instructions: List[str],
     critical_context: str,
-    files_modified: List[str] = None
+    files_modified: List[str] = None,
 ) -> str:
     """
     Generate a handoff prompt for agent coordination using dev tooling.
-    
+
     This function creates properly formatted prompts with deticked content
     for seamless agent-to-agent communication.
-    
+
     Args:
         work_completed: List of completed work items
         current_status: Current project status
         next_agent_instructions: Instructions for next agent
         critical_context: Critical context to preserve
         files_modified: List of modified files
-    
+
     Returns:
         Formatted handoff prompt with deticked content
     """
@@ -196,7 +197,7 @@ print(outputs)
 
 This ensures seamless coordination between agents and preserves all critical context.
 """
-    
+
     # Apply detick processing for clean codeblock rendering
     return detick_content(prompt_content)
 
@@ -206,27 +207,27 @@ def generate_mandatory_session_end_prompt(
     current_status: str,
     next_agent_instructions: List[str],
     critical_context: str,
-    files_modified: List[str] = None
+    files_modified: List[str] = None,
 ) -> str:
     """
     Generate mandatory session end prompt for agent coordination.
-    
+
     This function creates the required session end documentation with
     deticked content for proper codeblock rendering in agent handoffs.
-    
+
     Args:
         work_completed: List of completed work items
         current_status: Current project status
         next_agent_instructions: Instructions for next agent
         critical_context: Critical context to preserve
         files_modified: List of modified files
-    
+
     Returns:
         Formatted session end prompt with deticked content
     """
     if files_modified is None:
         files_modified = []
-    
+
     timestamp = get_current_timestamp()
     current_branch = get_current_branch()
     agor_version = get_agor_version()
@@ -279,30 +280,28 @@ The next agent should:
 
 **This report ensures seamless agent-to-agent coordination and prevents work duplication.**
 """
-    
+
     # Apply detick processing for clean codeblock rendering
     return detick_content(session_end_content)
 
 
 def generate_meta_feedback(
-    feedback_type: str,
-    feedback_content: str,
-    suggestions: List[str] = None
+    feedback_type: str, feedback_content: str, suggestions: List[str] = None
 ) -> str:
     """
     Generate meta feedback about AGOR itself for continuous improvement.
-    
+
     Args:
         feedback_type: Type of feedback (bug, enhancement, workflow, etc.)
         feedback_content: Main feedback content
         suggestions: List of improvement suggestions
-    
+
     Returns:
         Formatted meta feedback with deticked content
     """
     if suggestions is None:
         suggestions = []
-    
+
     timestamp = get_current_timestamp()
     agor_version = get_agor_version()
 
@@ -342,7 +341,7 @@ This feedback should be:
 
 **Meta feedback helps evolve AGOR into a more effective coordination platform.**
 """
-    
+
     # Apply detick processing for clean codeblock rendering
     return detick_content(meta_content)
 
@@ -408,9 +407,11 @@ def generate_agent_handoff_prompt_extended(
     """
     if environment is None:
         from agor.tools.dev_testing import detect_environment
+
         environment = detect_environment()
 
     from agor.tools.git_operations import get_current_timestamp
+
     timestamp = get_current_timestamp()
 
     # Start building the prompt
@@ -440,6 +441,7 @@ def generate_agent_handoff_prompt_extended(
 
     # Add environment-specific setup
     from agor.tools.dev_testing import get_agent_dependency_install_commands
+
     prompt += f"""
 ## Environment Setup
 {get_agent_dependency_install_commands()}

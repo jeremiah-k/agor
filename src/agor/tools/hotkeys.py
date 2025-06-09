@@ -9,15 +9,16 @@ All functions use absolute imports for better reliability.
 
 from pathlib import Path
 
+from agor.tools.agent_handoffs import detick_content, retick_content
+from agor.tools.dev_testing import detect_environment, test_tooling
+
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
-    run_git_command,
     quick_commit_push,
+    run_git_command,
 )
 from agor.tools.memory_manager import auto_commit_memory
-from agor.tools.agent_handoffs import detick_content, retick_content
-from agor.tools.dev_testing import test_tooling, detect_environment
 
 
 def quick_commit_push_wrapper(message: str, emoji: str = "🔧") -> bool:
@@ -25,7 +26,9 @@ def quick_commit_push_wrapper(message: str, emoji: str = "🔧") -> bool:
     return quick_commit_push(message, emoji)
 
 
-def auto_commit_memory_wrapper(content: str, memory_type: str, agent_id: str = "dev") -> bool:
+def auto_commit_memory_wrapper(
+    content: str, memory_type: str, agent_id: str = "dev"
+) -> bool:
     """Auto-commit memory to memory branch."""
     return auto_commit_memory(content, memory_type, agent_id)
 
@@ -68,30 +71,36 @@ def get_project_status() -> dict:
         Dictionary containing project status details.
     """
     status = {}
-    
+
     # Get current branch
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
-    status["current_branch"] = current_branch_val.strip() if success_branch else "unknown"
-    
+    status["current_branch"] = (
+        current_branch_val.strip() if success_branch else "unknown"
+    )
+
     # Get current commit
-    success_commit, current_commit_val = run_git_command(["rev-parse", "--short", "HEAD"])
-    status["current_commit"] = current_commit_val.strip() if success_commit else "unknown"
-    
+    success_commit, current_commit_val = run_git_command(
+        ["rev-parse", "--short", "HEAD"]
+    )
+    status["current_commit"] = (
+        current_commit_val.strip() if success_commit else "unknown"
+    )
+
     # Get git status
     success_status, git_status_val = run_git_command(["status", "--porcelain"])
     status["has_changes"] = bool(git_status_val.strip()) if success_status else False
     status["git_status"] = git_status_val.strip() if success_status else ""
-    
+
     # Get environment info
     try:
         env_info = detect_environment()
         status.update(env_info)
     except Exception as e:
         status["environment_error"] = str(e)
-    
+
     # Get timestamp
     status["timestamp"] = get_current_timestamp()
-    
+
     return status
 
 
@@ -103,7 +112,7 @@ def display_project_status() -> str:
         Formatted status string ready for display.
     """
     status = get_project_status()
-    
+
     status_display = f"""# 📊 Project Status
 
 **Timestamp**: {status.get('timestamp', 'unknown')}
@@ -114,8 +123,8 @@ def display_project_status() -> str:
 
 ## Git Status
 """
-    
-    if status.get('has_changes', False):
+
+    if status.get("has_changes", False):
         status_display += f"""**Changes Detected**: Yes
 ```
 {status.get('git_status', 'No details available')}
@@ -123,10 +132,12 @@ def display_project_status() -> str:
 """
     else:
         status_display += "**Changes Detected**: No uncommitted changes\n"
-    
-    if 'environment_error' in status:
-        status_display += f"\n**Environment Error**: {status.get('environment_error', 'unknown')}\n"
-    
+
+    if "environment_error" in status:
+        status_display += (
+            f"\n**Environment Error**: {status.get('environment_error', 'unknown')}\n"
+        )
+
     return status_display
 
 
@@ -138,7 +149,7 @@ def quick_status_check() -> str:
         Brief status summary.
     """
     status = get_project_status()
-    
+
     return f"Branch: {status.get('current_branch', 'unknown')} | Commit: {status.get('current_commit', 'unknown')} | Changes: {'Yes' if status.get('has_changes', False) else 'No'}"
 
 
@@ -165,13 +176,13 @@ def safe_branch_check() -> tuple[bool, str]:
     success, current_branch_val = run_git_command(["branch", "--show-current"])
     if not success:
         return False, "unknown"
-    
+
     current_branch = current_branch_val.strip()
-    
+
     # Consider main/master branches as potentially unsafe for direct work
     unsafe_branches = ["main", "master", "production", "prod"]
     is_safe = current_branch not in unsafe_branches
-    
+
     return is_safe, current_branch
 
 
@@ -186,19 +197,19 @@ def workspace_health_check() -> dict:
         "timestamp": get_current_timestamp(),
         "overall_status": "healthy",
         "issues": [],
-        "warnings": []
+        "warnings": [],
     }
-    
+
     # Check git status
     is_safe, branch = safe_branch_check()
     if not is_safe:
         health["warnings"].append(f"Working on potentially unsafe branch: {branch}")
-    
+
     # Check for uncommitted changes
     status = get_project_status()
-    if status.get('has_changes', False):
+    if status.get("has_changes", False):
         health["warnings"].append("Uncommitted changes detected")
-    
+
     # Check environment
     try:
         env_info = detect_environment()
@@ -206,18 +217,18 @@ def workspace_health_check() -> dict:
     except Exception as e:
         health["issues"].append(f"Environment detection failed: {e}")
         health["overall_status"] = "degraded"
-    
+
     # Check AGOR directory structure
     agor_dir = Path.cwd() / ".agor"
     if not agor_dir.exists():
         health["warnings"].append("No .agor directory found - may need initialization")
-    
+
     # Set overall status based on issues
     if health["issues"]:
         health["overall_status"] = "unhealthy"
     elif health["warnings"]:
         health["overall_status"] = "warning"
-    
+
     return health
 
 
@@ -229,35 +240,35 @@ def display_workspace_health() -> str:
         Formatted health check string.
     """
     health = workspace_health_check()
-    
+
     status_emoji = {
         "healthy": "✅",
         "warning": "⚠️",
         "degraded": "🔶",
-        "unhealthy": "❌"
+        "unhealthy": "❌",
     }
-    
+
     display = f"""# {status_emoji.get(health['overall_status'], '❓')} Workspace Health Check
 
 **Status**: {health['overall_status'].title()}
 **Timestamp**: {health['timestamp']}
 """
-    
-    if health.get('environment'):
-        env = health['environment']
+
+    if health.get("environment"):
+        env = health["environment"]
         display += f"**Environment**: {env.get('mode', 'unknown')} ({env.get('platform', 'unknown')})\n"
-    
-    if health['issues']:
+
+    if health["issues"]:
         display += "\n## 🚨 Issues\n"
-        for issue in health['issues']:
+        for issue in health["issues"]:
             display += f"- {issue}\n"
-    
-    if health['warnings']:
+
+    if health["warnings"]:
         display += "\n## ⚠️ Warnings\n"
-        for warning in health['warnings']:
+        for warning in health["warnings"]:
             display += f"- {warning}\n"
-    
-    if health['overall_status'] == 'healthy' and not health['warnings']:
+
+    if health["overall_status"] == "healthy" and not health["warnings"]:
         display += "\n## 🎉 All Systems Operational\nWorkspace is healthy and ready for development.\n"
-    
+
     return display

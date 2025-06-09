@@ -7,15 +7,10 @@ utilities for AGOR development workflows.
 All functions use absolute imports for better reliability.
 """
 
-from pathlib import Path
-from typing import List, Dict, Optional
+from typing import Dict, List
 
 # Use absolute imports to prevent E0402 errors
-from agor.tools.git_operations import (
-    get_current_timestamp,
-    run_git_command
-)
-from agor.tools.dev_testing import detect_environment
+from agor.tools.git_operations import get_current_timestamp, run_git_command
 
 
 def generate_development_checklist(task_type: str = "general") -> str:
@@ -29,7 +24,7 @@ def generate_development_checklist(task_type: str = "general") -> str:
         Formatted checklist string.
     """
     timestamp = get_current_timestamp()
-    
+
     base_checklist = f"""# 📋 Development Checklist - {task_type.title()}
 
 **Generated**: {timestamp}
@@ -104,7 +99,7 @@ def generate_handoff_checklist() -> str:
         Formatted handoff checklist string.
     """
     timestamp = get_current_timestamp()
-    
+
     return f"""# 🤖 Agent Handoff Checklist
 
 **Generated**: {timestamp}
@@ -163,9 +158,9 @@ def validate_workflow_completion(checklist_items: List[str]) -> Dict[str, any]:
         "completed_items": 0,
         "completion_percentage": 0,
         "missing_items": [],
-        "status": "incomplete"
+        "status": "incomplete",
     }
-    
+
     # Simple validation - in practice, this would check actual conditions
     # For now, we'll assume items marked with [x] are completed
     for item in checklist_items:
@@ -173,12 +168,12 @@ def validate_workflow_completion(checklist_items: List[str]) -> Dict[str, any]:
             validation["completed_items"] += 1
         else:
             validation["missing_items"].append(item.strip())
-    
+
     if validation["total_items"] > 0:
         validation["completion_percentage"] = (
             validation["completed_items"] / validation["total_items"]
         ) * 100
-    
+
     # Determine status
     if validation["completion_percentage"] == 100:
         validation["status"] = "complete"
@@ -188,7 +183,7 @@ def validate_workflow_completion(checklist_items: List[str]) -> Dict[str, any]:
         validation["status"] = "in_progress"
     else:
         validation["status"] = "incomplete"
-    
+
     return validation
 
 
@@ -207,9 +202,9 @@ def generate_progress_report(validation_results: Dict[str, any]) -> str:
         "complete": "✅",
         "mostly_complete": "🟡",
         "in_progress": "🔄",
-        "incomplete": "❌"
+        "incomplete": "❌",
     }
-    
+
     report = f"""# 📊 Workflow Progress Report
 
 **Generated**: {results['timestamp']}
@@ -221,19 +216,23 @@ def generate_progress_report(validation_results: Dict[str, any]) -> str:
 - **Completion Rate**: {results['completion_percentage']:.1f}%
 
 """
-    
-    if results['missing_items']:
+
+    if results["missing_items"]:
         report += "## 📋 Remaining Items\n"
-        for item in results['missing_items']:
+        for item in results["missing_items"]:
             report += f"- {item}\n"
-    
-    if results['status'] == 'complete':
-        report += "\n## 🎉 Workflow Complete!\nAll checklist items have been completed.\n"
-    elif results['status'] == 'mostly_complete':
-        report += "\n## 🎯 Nearly Complete\nMost items completed, review remaining items.\n"
+
+    if results["status"] == "complete":
+        report += (
+            "\n## 🎉 Workflow Complete!\nAll checklist items have been completed.\n"
+        )
+    elif results["status"] == "mostly_complete":
+        report += (
+            "\n## 🎯 Nearly Complete\nMost items completed, review remaining items.\n"
+        )
     else:
         report += "\n## 🔄 Continue Working\nSignificant work remains to complete the workflow.\n"
-    
+
     return report
 
 
@@ -250,9 +249,9 @@ def check_git_workflow_status() -> Dict[str, any]:
         "changes_committed": False,
         "pushed_to_remote": False,
         "issues": [],
-        "recommendations": []
+        "recommendations": [],
     }
-    
+
     # Check current branch
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
     if success_branch:
@@ -261,42 +260,46 @@ def check_git_workflow_status() -> Dict[str, any]:
         unsafe_branches = ["main", "master", "production", "prod"]
         status["branch_safe"] = current_branch not in unsafe_branches
         status["current_branch"] = current_branch
-        
+
         if not status["branch_safe"]:
-            status["issues"].append(f"Working on potentially unsafe branch: {current_branch}")
+            status["issues"].append(
+                f"Working on potentially unsafe branch: {current_branch}"
+            )
             status["recommendations"].append("Consider creating a feature branch")
     else:
         status["issues"].append("Could not determine current branch")
-    
+
     # Check for uncommitted changes
     success_status, git_status_val = run_git_command(["status", "--porcelain"])
     if success_status:
         has_changes = bool(git_status_val.strip())
         status["changes_committed"] = not has_changes
-        
+
         if has_changes:
             status["issues"].append("Uncommitted changes detected")
             status["recommendations"].append("Commit changes before proceeding")
     else:
         status["issues"].append("Could not check git status")
-    
+
     # Check if local branch is ahead of remote
     if success_branch:
-        success_ahead, ahead_output = run_git_command([
-            "rev-list", "--count", f"origin/{current_branch}..HEAD"
-        ])
+        success_ahead, ahead_output = run_git_command(
+            ["rev-list", "--count", f"origin/{current_branch}..HEAD"]
+        )
         if success_ahead:
-            ahead_count = int(ahead_output.strip()) if ahead_output.strip().isdigit() else 0
+            ahead_count = (
+                int(ahead_output.strip()) if ahead_output.strip().isdigit() else 0
+            )
             status["commits_ahead"] = ahead_count
             status["pushed_to_remote"] = ahead_count == 0
-            
+
             if ahead_count > 0:
                 status["issues"].append(f"{ahead_count} commits ahead of remote")
                 status["recommendations"].append("Push commits to remote repository")
         else:
             # Might be a new branch without remote tracking
             status["recommendations"].append("Verify remote tracking is set up")
-    
+
     return status
 
 
@@ -308,7 +311,7 @@ def generate_git_workflow_report() -> str:
         Formatted git workflow report string.
     """
     status = check_git_workflow_status()
-    
+
     report = f"""# 🔄 Git Workflow Status
 
 **Generated**: {status['timestamp']}
@@ -320,23 +323,23 @@ def generate_git_workflow_report() -> str:
 - **Pushed to Remote**: {'✅ Synced' if status['pushed_to_remote'] else '⚠️ Local commits ahead'}
 
 """
-    
-    if status.get('commits_ahead', 0) > 0:
+
+    if status.get("commits_ahead", 0) > 0:
         report += f"**Commits Ahead**: {status['commits_ahead']}\n\n"
-    
-    if status['issues']:
+
+    if status["issues"]:
         report += "## 🚨 Issues\n"
-        for issue in status['issues']:
+        for issue in status["issues"]:
             report += f"- {issue}\n"
         report += "\n"
-    
-    if status['recommendations']:
+
+    if status["recommendations"]:
         report += "## 💡 Recommendations\n"
-        for rec in status['recommendations']:
+        for rec in status["recommendations"]:
             report += f"- {rec}\n"
         report += "\n"
-    
-    if not status['issues']:
+
+    if not status["issues"]:
         report += "## 🎉 Git Workflow Clean\nNo issues detected with git workflow.\n"
-    
+
     return report

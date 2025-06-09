@@ -47,15 +47,19 @@ def get_git_context() -> Dict[str, str]:
         # Get uncommitted changes
         success, uncommitted_out = run_git_command(["diff", "--name-only"])
         if success:
-            context["uncommitted_changes"] = uncommitted_out.strip().split("\n") if uncommitted_out.strip() else []
+            context["uncommitted_changes"] = (
+                uncommitted_out.strip().split("\n") if uncommitted_out.strip() else []
+            )
 
         # Get staged changes
         success, staged_out = run_git_command(["diff", "--cached", "--name-only"])
         if success:
-            context["staged_changes"] = staged_out.strip().split("\n") if staged_out.strip() else []
+            context["staged_changes"] = (
+                staged_out.strip().split("\n") if staged_out.strip() else []
+            )
 
         return context
-    except Exception: # Broad exception to catch any issue during git operations
+    except Exception:  # Broad exception to catch any issue during git operations
         return {
             "branch": "unknown",
             "current_commit": "unknown",
@@ -77,8 +81,8 @@ def get_agor_version() -> str:
             success, version_out = run_git_command(["describe", "--tags", "--abbrev=0"])
             if success:
                 return version_out.strip()
-            return "development" # Fallback if git describe fails
-        except Exception: # Broad exception for any other issue
+            return "development"  # Fallback if git describe fails
+        except Exception:  # Broad exception for any other issue
             return "development"
 
 

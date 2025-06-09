@@ -12,8 +12,9 @@ from typing import Dict, List, Optional
 
 import yaml
 
-from .memory_sync import MemorySyncManager
 from agor.tools.git_operations import run_git_command
+
+from .memory_sync import MemorySyncManager
 
 
 class StrategyManager:

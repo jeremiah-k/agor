@@ -202,8 +202,6 @@ meta) provide feedback on AGOR itself
 
 **CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
-
-
 ---
 
 ## 3. Core AGOR Protocols and Workflows
@@ -281,7 +279,32 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`meta`**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
 - **`session-end`**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
 
-**IMPORTANT OUTPUT FORMATTING**: PR descriptions, handoff prompts, release notes, etc. all need to be run through dev tooling to remove triple backticks in codeblocks and then WRAPPED into a single codeblock so the user can copy & paste. Always create a snapshot before ending your session using the dev tooling.
+**CRITICAL OUTPUT FORMATTING REQUIREMENTS**:
+
+**MANDATORY FOR ALL GENERATED CONTENT**: PR descriptions, handoff prompts, release notes, meta feedback, session summaries, etc. MUST ALWAYS follow this exact process:
+
+1. **Generate the content** (PR notes, handoff prompt, release notes, etc.)
+2. **Process through dev tooling** using `detick_content_wrapper()` to remove triple backticks
+3. **Wrap the deticked content in a single codeblock** using triple backticks for copy-paste
+
+**EXAMPLE WORKFLOW**:
+
+````python
+# Generate content
+content = generate_pr_description_snapshot(...)
+# Process through dev tooling (detick)
+processed_content = detick_content_wrapper(content)
+# Present in single codeblock for copy-paste
+print("```")
+print(processed_content)
+print("```")
+````
+
+**NEVER**: Present raw content without deticking and wrapping
+**ALWAYS**: Detick first, then wrap in single codeblock
+**PURPOSE**: Enables seamless copy-paste workflow without formatting issues
+
+Always create a snapshot before ending your session using the dev tooling.
 
 **WORKER AGENT COORDINATION ACTIONS:**
 **Coordination:**

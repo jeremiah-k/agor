@@ -16,49 +16,41 @@ Provides a clean API interface while keeping individual modules under 500 LOC.
 """
 
 from pathlib import Path
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
+
+from agor.tools.agent_handoffs import detick_content, retick_content
+from agor.tools.checklist import (
+    check_git_workflow_status,
+    generate_development_checklist,
+    generate_git_workflow_report,
+    generate_handoff_checklist,
+    generate_progress_report,
+    validate_workflow_completion,
+)
+from agor.tools.dev_testing import detect_environment, test_tooling
 
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
-    get_file_timestamp,
+    quick_commit_push,
     run_git_command,
-    quick_commit_push
 )
-from agor.tools.memory_manager import commit_to_memory_branch, auto_commit_memory
-from agor.tools.agent_handoffs import detick_content, retick_content
-from agor.tools.dev_testing import detect_environment, test_tooling
+from agor.tools.hotkeys import (
+    display_project_status,
+    display_workspace_health,
+    emergency_commit,
+    get_project_status,
+    quick_status_check,
+    workspace_health_check,
+)
+from agor.tools.memory_manager import auto_commit_memory
 
 # Import from new modular components
 from agor.tools.snapshots import (
-    HandoffRequest,
+    create_seamless_handoff,
     create_snapshot,
     generate_agent_handoff_prompt,
-    create_seamless_handoff,
-    generate_handoff_snapshot,
-    generate_mandatory_session_end_prompt
-)
-from agor.tools.hotkeys import (
-    quick_commit_push_wrapper,
-    auto_commit_memory_wrapper,
-    test_tooling_wrapper,
-    get_timestamp,
-    detick_content_wrapper,
-    retick_content_wrapper,
-    get_project_status,
-    display_project_status,
-    quick_status_check,
-    emergency_commit,
-    workspace_health_check,
-    display_workspace_health
-)
-from agor.tools.checklist import (
-    generate_development_checklist,
-    generate_handoff_checklist,
-    validate_workflow_completion,
-    generate_progress_report,
-    check_git_workflow_status,
-    generate_git_workflow_report
+    generate_mandatory_session_end_prompt,
 )
 
 # Handle imports for both installed and development environments
@@ -83,6 +75,7 @@ except ImportError:
 # Main API Functions - Core Interface
 # ===================================
 
+
 def create_development_snapshot(title: str, context: str) -> bool:
     """Create development snapshot - main API function."""
     return create_snapshot(title, context)
@@ -103,7 +96,7 @@ def generate_seamless_agent_handoff(
         next_steps=next_steps,
         files_modified=files_modified,
         context_notes=context_notes,
-        brief_context=brief_context
+        brief_context=brief_context,
     )
 
 
@@ -128,19 +121,22 @@ def generate_project_handoff_prompt(
         snapshot_content=snapshot_content,
         memory_branch=memory_branch,
         environment=environment,
-        brief_context=brief_context
+        brief_context=brief_context,
     )
 
 
 # Convenience Functions - Wrapper API
 # ===================================
 
+
 def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
     """Quick commit and push wrapper."""
     return quick_commit_push(message, emoji)
 
 
-def commit_memory_to_branch(content: str, memory_type: str, agent_id: str = "dev") -> bool:
+def commit_memory_to_branch(
+    content: str, memory_type: str, agent_id: str = "dev"
+) -> bool:
     """Auto-commit memory wrapper."""
     return auto_commit_memory(content, memory_type, agent_id)
 
@@ -167,6 +163,7 @@ def restore_content_from_codeblock(content: str) -> str:
 
 # Status and Health Check Functions
 # =================================
+
 
 def get_workspace_status() -> dict:
     """Get comprehensive workspace status."""
@@ -201,6 +198,7 @@ def emergency_save(message: str = "Emergency commit - work in progress") -> bool
 # Checklist and Workflow Functions
 # ================================
 
+
 def create_development_checklist(task_type: str = "general") -> str:
     """Create development checklist for task type."""
     return generate_development_checklist(task_type)
@@ -233,6 +231,7 @@ def display_git_workflow_status() -> str:
 
 # Memory Management Functions
 # ===========================
+
 
 def list_memory_branches(repo_path: Optional[Path] = None) -> List[str]:
     """
@@ -307,13 +306,17 @@ def read_from_memory_branch(
     try:
         success, current_branch = run_git_command(["branch", "--show-current"])
         if not success:
-            print("⚠️  Cannot determine current branch - aborting memory read for safety")
+            print(
+                "⚠️  Cannot determine current branch - aborting memory read for safety"
+            )
             return None
 
         original_branch = current_branch.strip()
 
         # Check if memory branch exists
-        success, _ = run_git_command(["rev-parse", "--verify", f"refs/heads/{branch_name}"])
+        success, _ = run_git_command(
+            ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
+        )
         if not success:
             print(f"⚠️  Memory branch {branch_name} does not exist")
             return None
@@ -327,7 +330,9 @@ def read_from_memory_branch(
         # Verify we're still on the original branch
         success, check_branch = run_git_command(["branch", "--show-current"])
         if success and check_branch.strip() != original_branch:
-            print(f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}")
+            print(
+                f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
+            )
             return None
 
         print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
@@ -340,6 +345,7 @@ def read_from_memory_branch(
 
 # Utility Functions
 # =================
+
 
 def detect_current_environment() -> dict:
     """Detect current development environment."""

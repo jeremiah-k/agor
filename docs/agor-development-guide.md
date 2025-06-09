@@ -130,13 +130,13 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 - **`src/agor/`**: Core AGOR package code
 - **`src/agor/tools/`**: Agent coordination tools and templates. This directory now includes:
-    - `dev_tooling.py`: Main interface for development utilities.
-    - `git_operations.py`: Handles core Git command execution and safety.
-    - `memory_manager.py`: Manages memory branch operations.
-    - `agent_handoffs.py`: Utilities for agent coordination and prompt generation.
-    - `dev_testing.py`: Environment detection and test functions for AGOR tooling.
-    - `snapshot_templates.py`: Generates various snapshot documents.
-    - Other specialized scripts and templates.
+  - `dev_tooling.py`: Main interface for development utilities.
+  - `git_operations.py`: Handles core Git command execution and safety.
+  - `memory_manager.py`: Manages memory branch operations.
+  - `agent_handoffs.py`: Utilities for agent coordination and prompt generation.
+  - `dev_testing.py`: Environment detection and test functions for AGOR tooling.
+  - `snapshot_templates.py`: Generates various snapshot documents.
+  - Other specialized scripts and templates.
 - **`src/agor/tools/strategies/`**: Multi-agent strategy implementations
 - **`.agor/`**: Project coordination directory (created by agents)
 - **`.agor/snapshots/`**: Agent snapshot documents.
@@ -768,6 +768,7 @@ agor git-config               # Set up git configuration
 ### Multi-Agent Coordination Testing
 
 #### 2025-06-06 - Agent Coordination System Test (work-0.4.3-2)
+
 - ✅ **Strategic Improvements**: 2-role system, meta mode, session end prompts
 - ✅ **Documentation**: Created comprehensive multi-agent-protocols.md
 - ❌ **Coordination Failures**: Agents not generating proper return prompts

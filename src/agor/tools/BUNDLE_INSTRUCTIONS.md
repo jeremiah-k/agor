@@ -61,7 +61,6 @@ The AI will ask you to choose your primary role:
 - Emphasizes planning tools and multi-agent strategies
 - Best for: Project planning, team design, workflow orchestration
 
-
 - Focus on executing specific tasks and coordination
 - Best for: Specialized development tasks, following coordinator plans
 

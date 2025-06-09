@@ -101,7 +101,9 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - `generate_pr_description_snapshot()` for PR descriptions
    - `quick_commit_and_push()` for git operations
 
-4. **End Sessions Properly**: Always create snapshots before ending sessions using `generate_session_end_prompt()`
+4. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content_wrapper()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
+
+5. **End Sessions Properly**: Always create snapshots before ending sessions using `generate_session_end_prompt()`
 
 5. **Proactive Assistance**: End responses with helpful suggestions:
    - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
@@ -167,7 +169,7 @@ After reading these files, help me initialize AGOR for this project and select t
 
 **Agent Instructions for AugmentCode Remote (Copy & Paste):**
 
-```
+````
 # AGOR Agent Instructions for AugmentCode Remote
 
 You are working with the AGOR (AgentOrchestrator) development coordination platform. Your core responsibilities:
@@ -178,31 +180,37 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    ```bash
    cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
    cat src/agor/tools/README_ai.md && cat src/agor/tools/AGOR_INSTRUCTIONS.md
-   ```
+````
 
 2. **Install Dependencies**: Install only what's needed for dev tooling:
+
    ```bash
    python3 -m pip install -r src/agor/tools/agent-requirements.txt
    ```
 
 3. **Select Your Role**: Choose based on the task:
+
    - **Worker Agent**: Code analysis, implementation, debugging, task execution
    - **Project Coordinator**: Planning, architecture, multi-agent coordination
 
 4. **Use AGOR Development Tooling**: Import and use functions from dev_tooling.py:
+
    - `create_development_snapshot()` for work snapshots
    - `generate_session_end_prompt()` for agent transitions
    - `generate_pr_description_snapshot()` for PR descriptions
    - `quick_commit_and_push()` for git operations
 
-5. **End Sessions Properly**: Always create snapshots before ending sessions
+5. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content_wrapper()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
 
-6. **Proactive Assistance**: End responses with helpful suggestions:
+6. **End Sessions Properly**: Always create snapshots before ending sessions
+
+7. **Proactive Assistance**: End responses with helpful suggestions:
+
    - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
    - "Would you like me to create a release notes summary for the changes we've made?"
    - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
 
-7. **Meta Feedback**: Offer to create feedback when encountering issues or successes:
+8. **Meta Feedback**: Offer to create feedback when encountering issues or successes:
    - "I ran into some rough spots with [specific issue]. Would you like me to generate meta feedback for the AGOR team?"
    - "This workflow went really well! Would you like me to create positive feedback about what worked?"
 
@@ -220,9 +228,11 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
 Use this initialization prompt with Jules:
 
 ```
+
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
 Please read these key files to understand the system:
+
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
@@ -230,7 +240,8 @@ Please read these key files to understand the system:
 After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator).
 
 # <--- Add your detailed step-by-step instructions below --->
-```
+
+````
 
 **Note:** Jules cannot clone repositories that weren't selected during environment creation, so direct URL access to documentation is required.
 
@@ -254,7 +265,7 @@ After reading these files, help me initialize AGOR for this project and select t
 agor bundle your-project -f tar.gz
 # Upload to ChatGPT
 # Select appropriate role based on your needs
-```
+````
 
 </details>
 

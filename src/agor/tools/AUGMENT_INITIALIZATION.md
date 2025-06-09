@@ -73,8 +73,6 @@ Initialize as Project Coordinator and help me plan the development strategy and 
 # <--- Add your detailed step-by-step instructions below --->
 ```
 
-
-
 ## 🎯 Token-Efficient Chaining
 
 All prompts above end with the chainable instruction comment. This allows you to:

@@ -55,6 +55,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 ## 🛠️ AGOR Development Tooling
 
 ### Available Functions
+
 AGOR provides powerful development functions through Python imports:
 
 - `create_development_snapshot()` - Create comprehensive work snapshots
@@ -64,10 +65,14 @@ AGOR provides powerful development functions through Python imports:
 - `get_workspace_status()` - Check project and git status
 - `create_development_checklist()` - Generate task-specific checklists
 
+**CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content_wrapper()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
+
 ### Agent Workflow Guidance
+
 Agents should proactively offer to generate deliverables as work nears completion:
 
 **End each response with suggestions like:**
+
 - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
 - "Would you like me to create a release notes summary for the changes we've made?"
 - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."

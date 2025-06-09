@@ -13,6 +13,12 @@ All functions use absolute imports for better reliability.
 from dataclasses import dataclass
 from pathlib import Path
 
+from agor.tools.agent_handoffs import detick_content
+from agor.tools.dev_testing import (
+    detect_environment,
+    get_agent_dependency_install_commands,
+)
+
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
@@ -20,8 +26,6 @@ from agor.tools.git_operations import (
     run_git_command,
 )
 from agor.tools.memory_manager import commit_to_memory_branch
-from agor.tools.agent_handoffs import detick_content
-from agor.tools.dev_testing import detect_environment, get_agent_dependency_install_commands
 from agor.tools.snapshot_templates import generate_snapshot_document
 
 
@@ -73,7 +77,9 @@ def create_snapshot(title: str, context: str) -> bool:
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
     current_branch = current_branch_val.strip() if success_branch else "unknown"
 
-    success_commit, current_commit_val = run_git_command(["rev-parse", "--short", "HEAD"])
+    success_commit, current_commit_val = run_git_command(
+        ["rev-parse", "--short", "HEAD"]
+    )
     current_commit = current_commit_val.strip() if success_commit else "unknown"
 
     # Get AGOR version from environment
@@ -128,13 +134,13 @@ If you're picking up this work:
     success = commit_to_memory_branch(
         file_content=snapshot_content,
         file_name=f".agor/snapshots/{snapshot_filename}",
-        commit_message=commit_message
+        commit_message=commit_message,
     )
 
     if success:
         print(f"✅ Snapshot committed to memory branch: {snapshot_filename}")
     else:
-        print(f"❌ Failed to commit snapshot to memory branch")
+        print("❌ Failed to commit snapshot to memory branch")
 
     return success
 
@@ -295,7 +301,7 @@ def create_seamless_handoff(
         files_modified=files_modified,
         context_notes=context_notes,
         agent_role="SOLO DEVELOPER",
-        snapshot_reason="Agent handoff coordination"
+        snapshot_reason="Agent handoff coordination",
     )
 
     # Attempt to commit snapshot to memory branch
@@ -327,7 +333,7 @@ def create_seamless_handoff(
         task_description=task_description,
         snapshot_content=snapshot_content,
         memory_branch=memory_branch,
-        brief_context=brief_context
+        brief_context=brief_context,
     )
 
     return snapshot_content, handoff_prompt
@@ -373,7 +379,7 @@ def generate_handoff_snapshot(
         files_modified=files_modified,
         context_notes=context_notes,
         agent_role="SOLO DEVELOPER",
-        snapshot_reason="Agent coordination and handoff"
+        snapshot_reason="Agent coordination and handoff",
     )
 
     return snapshot_content
@@ -401,14 +407,14 @@ def generate_mandatory_session_end_prompt(
         task_description=task_description,
         work_completed=["Session work completed"],
         next_steps=["Review session output", "Continue with next tasks"],
-        context_notes=brief_context
+        context_notes=brief_context,
     )
 
     # Generate the handoff prompt
     handoff_prompt = generate_agent_handoff_prompt(
         task_description=f"Session End: {task_description}",
         snapshot_content=snapshot_content,
-        brief_context=brief_context
+        brief_context=brief_context,
     )
 
     return handoff_prompt
@@ -428,8 +434,13 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
     Returns:
         True if successful, False otherwise
     """
-    from agor.tools.git_operations import get_file_timestamp, get_current_timestamp, run_git_command, quick_commit_push
     from agor.tools.dev_testing import detect_environment
+    from agor.tools.git_operations import (
+        get_current_timestamp,
+        get_file_timestamp,
+        quick_commit_push,
+        run_git_command,
+    )
 
     timestamp_str = get_file_timestamp()
     snapshot_file = (
@@ -440,7 +451,9 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
     current_branch = current_branch_val.strip() if success_branch else "unknown"
 
-    success_commit, current_commit_val = run_git_command(["rev-parse", "--short", "HEAD"])
+    success_commit, current_commit_val = run_git_command(
+        ["rev-parse", "--short", "HEAD"]
+    )
     current_commit = current_commit_val.strip() if success_commit else "unknown"
 
     # Get version from environment
