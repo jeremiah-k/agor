@@ -1,0 +1,151 @@
+# 📸 Agent Snapshot Document
+
+**Generated**: {{ current_timestamp() }}
+**From Agent Role**: {{ agent_role }}
+**Snapshot Reason**: {{ snapshot_reason }}
+**AGOR Version**: {{ agor_version }}
+
+## 📚 MANDATORY: Documentation Reading Requirement
+
+**CRITICAL**: Before proceeding with any work, the receiving agent MUST read these core AGOR documentation files:
+
+### Required Reading (In Order):
+1. **`src/agor/tools/README_ai.md`** - Role selection and initialization protocol
+2. **`src/agor/tools/AGOR_INSTRUCTIONS.md`** - Comprehensive operational instructions and hotkey menus
+3. **`src/agor/tools/agent-start-here.md`** - Quick entry point for ongoing projects
+
+### Verification Checklist:
+- [ ] Read README_ai.md completely - understand role selection and initialization
+- [ ] Read AGOR_INSTRUCTIONS.md completely - understand hotkeys, protocols, and workflows
+- [ ] Read agent-start-here.md completely - understand project entry procedures
+- [ ] Understand current AGOR version: {{ agor_version }}
+- [ ] Understand snapshot system and coordination protocols
+- [ ] Ready to follow AGOR protocols consistently
+
+**No work should begin until all documentation is read and understood.**
+
+## 🔧 Environment Context
+
+**Git Branch**: `{{ git_context.branch }}`
+**Current Commit**: `{{ git_context.current_commit | truncate_commit }}`
+**Repository Status**: {{ 'Clean' if not git_context.status else 'Has uncommitted changes' }}
+
+## 🎯 Problem Definition
+
+{{ problem_description }}
+
+## 📊 Current Status
+
+**Overall Progress**: {{ current_status }}
+**Estimated Completion**: {{ estimated_completion }}
+
+## ✅ Work Completed
+
+{{ work_completed | format_list }}
+
+## 📝 Commits Made
+
+{{ commits_made | format_list("- `", "`") }}
+
+## 📁 Files Modified
+
+{{ files_modified | format_list("- `", "`") }}
+
+## 🔄 Next Steps
+
+{% for step in next_steps -%}
+{{ loop.index }}. {{ step }}
+{% endfor %}
+
+## 🧠 Context & Important Notes
+
+{{ context_notes }}
+
+## 🔧 Technical Context
+
+### Git Repository State
+**Branch**: `{{ git_context.branch }}`
+**Current Commit**: `{{ git_context.current_commit }}`
+
+### Repository Status
+```
+{{ git_context.status if git_context.status else 'Working directory clean' }}
+```
+
+### Uncommitted Changes
+{% if git_context.uncommitted_changes -%}
+{{ git_context.uncommitted_changes | format_list("- `", "`") }}
+{% else -%}
+- None
+{% endif %}
+
+### Staged Changes
+{% if git_context.staged_changes -%}
+{{ git_context.staged_changes | format_list("- `", "`") }}
+{% else -%}
+- None
+{% endif %}
+
+### Recent Commit History
+```
+{{ git_context.recent_commits }}
+```
+
+### Key Files to Review
+{% for file in files_modified[:5] -%}
+- `{{ file }}` - Review recent changes and understand current state
+{% endfor %}
+
+## 🎯 Snapshot Instructions for Receiving Agent (If Applicable)
+
+### 1. Environment Verification
+```bash
+# Verify you're on the correct branch
+git checkout {{ git_context.branch }}
+
+# Verify you're at the correct commit
+git log --oneline -1
+# Should show: {{ git_context.current_commit | truncate_commit }}
+
+# Check AGOR version compatibility
+# This snapshot was created with AGOR {{ agor_version }}
+```
+
+### 2. Context Loading
+```bash
+# Review the current state
+git status
+git log --oneline -10
+
+# Examine modified files
+{% for file in files_modified[:3] -%}
+# Review {{ file }}
+{% endfor %}
+```
+
+### 3. Verify Understanding
+- [ ] Read and understand the problem definition
+- [ ] Review all completed work items
+- [ ] Examine commits and understand changes made
+- [ ] Verify current status matches expectations
+- [ ] Understand the next steps planned
+- [ ] Verify AGOR version compatibility
+- [ ] Confirm you're on the correct git branch and commit
+
+### 4. Continue Work
+- [ ] Start with the first item in "Next Steps"
+- [ ] Update this snapshot document with your progress
+- [ ] Commit regularly with clear messages
+- [ ] Update `.agor/agentconvo.md` with your status
+
+### 5. Communication Protocol
+- Update `.agor/agentconvo.md` with snapshot received confirmation (if applicable)
+- Log major decisions and progress updates
+- Create new snapshot document if passing to another agent or for archival
+
+---
+
+**Receiving Agent**: Please confirm snapshot receipt (if applicable) by updating `.agor/agentconvo.md` with:
+```
+[AGENT-ID] [{{ current_timestamp() }}] - SNAPSHOT RECEIVED: {{ problem_description[:50] }}...
+```

@@ -1,0 +1,46 @@
+# 📋 MANDATORY SESSION END REPORT
+
+**Generated**: {{ current_timestamp() }}
+**Session Type**: {{ session_type | default('Work Session Complete') }}
+**AGOR Version**: {{ agor_version }}
+
+## ✅ WORK ACCOMPLISHED
+
+{{ work_completed | format_list }}
+
+## 📊 CURRENT PROJECT STATUS
+
+**Status**: {{ current_status }}
+
+## 📁 FILES MODIFIED THIS SESSION
+
+{{ files_modified | format_list }}
+
+## 🎯 NEXT AGENT INSTRUCTIONS
+
+{{ next_agent_instructions | format_list }}
+
+## 🧠 CRITICAL CONTEXT FOR CONTINUATION
+
+{{ critical_context }}
+
+## 🔄 HANDOFF REQUIREMENTS
+
+The next agent should:
+
+1. **Pull latest changes**: `git pull origin {{ git_context.branch }}`
+2. **Install dependencies**: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
+3. **Review this report**: Understand completed work and current status
+4. **Continue from current state**: Don't restart or duplicate work
+5. **Use dev tooling**: All coordination must use AGOR dev tooling functions
+6. **Create session end report**: Before ending their session
+
+## 🚀 IMMEDIATE NEXT STEPS
+
+{% for step in immediate_next_steps | default(['Review and understand all completed work', 'Continue development from current status', 'Make substantial progress on remaining tasks', 'Generate proper session end report before stopping']) -%}
+{{ loop.index }}. {{ step }}
+{% endfor %}
+
+---
+
+**This report ensures seamless agent-to-agent coordination and prevents work duplication.**
