@@ -15,40 +15,26 @@ to streamline development workflow and memory management.
 
 import os
 import subprocess
-import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional
 
 # Import from specialized modules for modular organization
 from .git_operations import (
     get_current_timestamp,
     get_file_timestamp,
     get_precise_timestamp,
-    get_ntp_timestamp,
     run_git_command,
     quick_commit_push
 )
 
-from .memory_manager import (
-    commit_to_memory_branch,
-    auto_commit_memory
-)
+from .memory_manager import commit_to_memory_branch
 
-from .agent_handoffs import (
-    detick_content, # Use direct name
-    retick_content, # Use direct name
-    generate_mandatory_session_end_prompt, # Use direct name
-    generate_meta_feedback # Use direct name
-)
+from .agent_handoffs import detick_content
 
-from .dev_testing import (
-    test_tooling, # Use direct name
-    detect_environment,
-    get_agent_dependency_install_commands,
-    generate_dynamic_installation_prompt
-)
+# Import dev_testing functions
+from .dev_testing import detect_environment, get_agent_dependency_install_commands
 
 from .snapshot_templates import generate_snapshot_document # Added for create_seamless_handoff
 
@@ -108,175 +94,124 @@ class HandoffRequest:
             self.brief_context = ""
 
 
-class DevTooling:
-    """Development utilities for AGOR development workflow."""
+def read_from_memory_branch(
+    file_path: str, branch_name: str, repo_path: Optional[Path] = None
+) -> Optional[str]:
+    """
+    SAFE memory branch read - NEVER switches branches.
 
-    def __init__(self, repo_path: Optional[Path] = None):
-        """Initialize development tooling."""
-        self.repo_path = repo_path if repo_path else Path.cwd()
-        # self.git_binary = git_manager.get_git_binary() # Removed
+    Reads file content from memory branch without changing current working branch.
 
-    # _run_git_command REMOVED
-    # get_current_timestamp REMOVED
-    # get_timestamp_for_files REMOVED
-    # get_precise_timestamp REMOVED
-    # get_ntp_timestamp REMOVED
-    # safe_git_push REMOVED
-    # quick_commit_push REMOVED
-    # auto_commit_memory REMOVED
-    # _commit_to_memory_branch REMOVED
+    Args:
+        file_path: Path to file to read (relative to repo root)
+        branch_name: Source memory branch
+        repo_path: Optional repository path (defaults to current directory)
 
-    def _read_from_memory_branch(
-        self, file_path: str, branch_name: str
-    ) -> Optional[str]:
-        """
-        SAFE memory branch read - NEVER switches branches.
+    Returns:
+        File content as string if successful, None otherwise
+    """
+    if repo_path is None:
+        repo_path = Path.cwd()
 
-        Reads file content from memory branch without changing current working branch.
+    try:
 
-        Args:
-            file_path: Path to file to read (relative to repo root)
-            branch_name: Source memory branch
-
-        Returns:
-            File content as string if successful, None otherwise
-        """
-        try:
-            # SAFETY CHECK: Verify we're not switching branches
-            # This method will need to use the global _run_git_command if it's to remain
-            # after _run_git_command is removed from the class.
-            # For now, let's assume _run_git_command is available globally or this method is refactored/removed.
-            # If DevTooling class is mostly removed, this method might need to live elsewhere or be refactored.
-            # For this step, we are just removing methods from the class.
-            # The original _run_git_command was on self. If this class instance is gone, this call will fail.
-            # This will be handled in Step 4/6, for now, we assume it works or will be fixed.
-            # To make it work temporarily if this method is called before full class removal:
-            # It would need to call the global _run_git_command.
-            # Let's assume for now that this method will be refactored or the class will still exist in some form.
-            # The instruction is to "leave _read_from_memory_branch ... in the class if they are still used".
-            # This method uses self._run_git_command. If that's removed from class, this breaks.
-            #
-            # Re-evaluating: The instruction is to REMOVE self._run_git_command.
-            # This means self._read_from_memory_branch MUST be refactored if it is to survive.
-            # It should use the global `_run_git_command` from `git_operations.py`.
-            #
-            # Temporarily, to make the diff cleaner for *just removing methods*, I will leave the body as is,
-            # acknowledging it will break if `self._run_git_command` is removed and this isn't fixed.
-            # The subtask implies these methods might be removed later or refactored if the class becomes empty.
-            #
-            # For now, the focus is on *deleting* the listed methods.
-            # The internal consistency of remaining methods like _read_from_memory_branch will be addressed
-            # when we decide the fate of the DevTooling class itself.
-            #
-            # Let's assume the methods that use other removed methods (like self._run_git_command)
-            # will either be removed too, or refactored in a later step.
-            # For now, I will just remove the specified list.
-            # The methods _read_from_memory_branch and list_memory_branches are stated to be kept "for now".
-            # This means their dependency on self._run_git_command needs to be fixed.
-            #
-            # I will preemptively change self._run_git_command to _run_git_command (the global one)
-            # within _read_from_memory_branch and list_memory_branches to ensure they don't break immediately.
-
-            success, current_branch = run_git_command( # Changed from self._run_git_command
-                ["branch", "--show-current"]
+        success, current_branch = run_git_command(
+            ["branch", "--show-current"]
+        )
+        if not success:
+            print(
+                "⚠️  Cannot determine current branch - aborting memory read for safety"
             )
-            if not success:
-                print(
-                    "⚠️  Cannot determine current branch - aborting memory read for safety"
-                )
-                return None
-
-            original_branch = current_branch.strip()
-
-            # Check if memory branch exists
-            success, _ = run_git_command( # Changed from self._run_git_command
-                ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
-            )
-            if not success:
-                print(f"⚠️  Memory branch {branch_name} does not exist")
-                return None
-
-            # Read file from memory branch using git show
-            success, content = run_git_command( # Changed from self._run_git_command
-                ["show", f"{branch_name}:{file_path}"]
-            )
-            if not success:
-                print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
-                return None
-
-            # Verify we're still on the original branch
-            success, check_branch = run_git_command(["branch", "--show-current"]) # Changed from self._run_git_command
-            if success and check_branch.strip() != original_branch:
-                print(
-                    f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
-                )
-                return None
-
-            print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
-            return content
-
-        except Exception as e:
-            print(f"❌ Memory branch read failed: {e}")
             return None
 
-    def list_memory_branches(self) -> list[str]:
-        """
-        List all memory branches without switching branches.
+        original_branch = current_branch.strip()
 
-        Uses the existing memory_sync.py implementation to avoid code duplication.
+        # Check if memory branch exists
+        success, _ = run_git_command(
+            ["rev-parse", "--verify", f"refs/heads/{branch_name}"]
+        )
+        if not success:
+            print(f"⚠️  Memory branch {branch_name} does not exist")
+            return None
 
-        Returns:
-            List of memory branch names
-        """
+        # Read file from memory branch using git show
+        success, content = run_git_command(
+            ["show", f"{branch_name}:{file_path}"]
+        )
+        if not success:
+            print(f"⚠️  File {file_path} not found in memory branch {branch_name}")
+            return None
+
+        # Verify we're still on the original branch
+        success, check_branch = run_git_command(["branch", "--show-current"])
+        if success and check_branch.strip() != original_branch:
+            print(
+                f"🚨 SAFETY VIOLATION: Branch changed from {original_branch} to {check_branch.strip()}"
+            )
+            return None
+
+        print(f"✅ Successfully read {file_path} from memory branch {branch_name}")
+        return content
+
+    except Exception as e:
+        print(f"❌ Memory branch read failed: {e}")
+        return None
+
+
+def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
+    """
+    List all memory branches without switching branches.
+
+    Uses the existing memory_sync.py implementation to avoid code duplication.
+
+    Args:
+        repo_path: Optional repository path (defaults to current directory)
+
+    Returns:
+        List of memory branch names
+    """
+    if repo_path is None:
+        repo_path = Path.cwd()
+
+    try:
+        from agor.memory_sync import MemorySync
+
+        # Create MemorySync instance with current repo path
+        memory_sync = MemorySync(repo_path=str(repo_path))
+
+        # Get both local and remote memory branches
+        local_branches = memory_sync.list_memory_branches(remote=False)
+        remote_branches = memory_sync.list_memory_branches(remote=True)
+
+        # Combine and deduplicate
+        all_branches = list(set(local_branches + remote_branches))
+        return sorted(all_branches)
+
+    except Exception as e:
+        print(f"❌ Failed to list memory branches: {e}")
+        # Fallback to simple implementation if memory_sync fails
         try:
-            from agor.memory_sync import MemorySync
-
-            # Create MemorySync instance with current repo path
-            memory_sync = MemorySync(repo_path=str(self.repo_path))
-
-            # Get both local and remote memory branches
-            local_branches = memory_sync.list_memory_branches(remote=False)
-            remote_branches = memory_sync.list_memory_branches(remote=True)
-
-            # Combine and deduplicate
-            all_branches = list(set(local_branches + remote_branches))
-            return sorted(all_branches)
-
-        except Exception as e:
-            print(f"❌ Failed to list memory branches: {e}")
-            # Fallback to simple implementation if memory_sync fails
-            try:
-                success, branches_output = run_git_command(["branch", "-a"]) # Changed from self._run_git_command
-                if not success:
-                    return []
-
-                memory_branches = []
-                for line in branches_output.split("\n"):
-                    line = line.strip()
-                    if line.startswith("*"):
-                        line = line[1:].strip()
-                    if line.startswith("remotes/origin/"):
-                        line = line.replace("remotes/origin/", "")
-
-                    if line.startswith("agor/mem/"):
-                        memory_branches.append(line)
-
-                return memory_branches
-            except Exception:
+            success, branches_output = run_git_command(["branch", "-a"])
+            if not success:
                 return []
 
-    # create_development_snapshot REMOVED
-    # test_tooling REMOVED
-    # prepare_prompt_content REMOVED
-    # detick_content REMOVED
-    # retick_content REMOVED
-    # generate_agent_handoff_prompt REMOVED
-    # generate_processed_output REMOVED
-    # generate_complete_project_outputs REMOVED (and its helper _format_all_outputs_display)
-    # Note: _format_all_outputs_display was moved out and made static as _format_all_outputs_display_static
+            memory_branches = []
+            for line in branches_output.split("\n"):
+                line = line.strip()
+                if line.startswith("*"):
+                    line = line[1:].strip()
+                if line.startswith("remotes/origin/"):
+                    line = line.replace("remotes/origin/", "")
 
-# Global instance for easy access
-# dev_tools = DevTooling() # This line is now definitively removed.
+                if line.startswith("agor/mem/"):
+                    memory_branches.append(line)
+
+            return memory_branches
+        except Exception:
+            return []
+
+# DevTooling class has been removed and converted to standalone functions
+# All methods are now available as module-level functions
 
 
 # Convenience functions
@@ -597,7 +532,6 @@ def create_seamless_handoff(
         snapshot_file.write_text(snapshot_content)
 
         # Use safe cross-branch commit that NEVER switches branches
-        relative_path = f".agor/snapshots/{timestamp_str}_handoff_snapshot.md"
         commit_message = f"📸 Agent handoff snapshot: {task_description[:50]}"
 
         # Read the snapshot content to commit to memory branch
@@ -664,200 +598,7 @@ def create_seamless_handoff(
     return snapshot_content, handoff_prompt
 
 
-def detect_environment() -> dict:
-    """
-    Detects the current AGOR environment and returns configuration details.
-
-    Returns:
-        A dictionary with keys for environment mode, platform, git and pyenv availability, AGOR version, and Python version.
-    """
-    environment = {
-        "mode": "unknown",
-        "platform": "unknown",
-        "has_git": False,
-        "has_pyenv": False,
-        "agor_version": "unknown",
-        "python_version": "unknown",
-    }
-
-    # Detect Python version
-    import sys
-
-    environment["python_version"] = (
-        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-    )
-
-    # Detect AGOR version
-    try:
-        from agor import __version__
-
-        environment["agor_version"] = __version__
-    except ImportError:
-        environment["agor_version"] = "development"
-
-    # Check for git
-    import shutil
-
-    if shutil.which("git"):
-        environment["has_git"] = True
-
-    # Check for .pyenv directory
-    if Path(".pyenv").exists():
-        environment["has_pyenv"] = True
-
-    # Detect environment mode - check env vars first to avoid misclassification in containers
-    if "AUGMENTCODE_LOCAL" in os.environ:
-        environment["mode"] = "augmentcode_local"
-        environment["platform"] = "augmentcode_local_agent"
-    elif "AUGMENTCODE_REMOTE" in os.environ:
-        environment["mode"] = "augmentcode_remote"
-        environment["platform"] = "augmentcode_remote_agent"
-    elif Path("src/agor/tools").exists():
-        environment["mode"] = "development"
-        environment["platform"] = "local_development"
-    elif Path("/tmp/agor").exists():
-        environment["mode"] = "standalone"
-        environment["platform"] = "remote_agent"
-    else:
-        environment["mode"] = "bundle"
-        environment["platform"] = "upload_based"
-
-    return environment
-
-
-def get_agent_dependency_install_commands() -> str:
-    """
-    Returns shell commands for installing agent development tooling dependencies, with automatic fallback to a `.pyenv` virtual environment if standard installation fails.
-    """
-    return """# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
-python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-        python3 -m pip install -r src/agor/tools/agent-requirements.txt
-    else
-        echo "❌ No .pyenv directory found, creating virtual environment"
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-        python3 -m pip install -r src/agor/tools/agent-requirements.txt
-    fi
-}"""
-
-
-def generate_dynamic_installation_prompt(environment: dict = None) -> str:
-    """
-    Generates installation instructions tailored to the detected AGOR environment.
-
-    If no environment dictionary is provided, the function detects the current environment and produces a Markdown-formatted setup guide. The instructions include environment details, mode-specific installation steps, and troubleshooting tips for common issues.
-
-    Args:
-        environment: Optional dictionary describing the current environment. If not provided, the environment is auto-detected.
-
-    Returns:
-        A Markdown string containing environment-specific installation and troubleshooting instructions.
-    """
-    if environment is None:
-        environment = detect_environment()
-
-    base_instructions = """# 🛠️ Environment-Specific AGOR Setup
-
-## Detected Environment
-"""
-
-    # Add environment details
-    base_instructions += f"""- **Mode**: {environment['mode']}
-- **Platform**: {environment['platform']}
-- **AGOR Version**: {environment['agor_version']}
-- **Python Version**: {environment['python_version']}
-- **Git Available**: {'✅' if environment['has_git'] else '❌'}
-- **Virtual Environment**: {'✅ .pyenv found' if environment['has_pyenv'] else '❌ No .pyenv'}
-
-## Installation Instructions
-
-"""
-
-    # Add mode-specific instructions
-    if environment["mode"] == "development":
-        dev_install_commands = get_agent_dependency_install_commands()
-        base_instructions += f"""### Development Mode Setup
-```bash
-# Install development dependencies
-python3 -m pip install -r requirements.txt
-
-{dev_install_commands}
-
-# Test development tooling
-python3 -c "
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling
-test_tooling()
-"
-```
-"""
-    elif environment["mode"] == "augmentcode_local":
-        local_install_commands = get_agent_dependency_install_commands()
-        base_instructions += f"""### AugmentCode Local Agent Setup
-```bash
-# Dependencies should be automatically available
-# Verify memory manager dependencies
-python3 -c "import pydantic, pydantic_settings; print('✅ Dependencies OK')"
-
-# If missing, install with fallback
-{local_install_commands}
-```
-"""
-    elif environment["mode"] == "standalone":
-        standalone_install_commands = get_agent_dependency_install_commands()
-        base_instructions += f"""### Standalone Mode Setup
-```bash
-# Install dependencies from requirements.txt
-python3 -m pip install -r requirements.txt
-
-{standalone_install_commands}
-
-# Test AGOR tooling
-python3 -c "
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling
-test_tooling()
-"
-```
-"""
-    else:
-        base_instructions += """### Standard Setup
-```bash
-# Install AGOR if not already installed
-pipx install agor
-
-# Verify installation
-agor --version
-```
-"""
-
-    # Add troubleshooting section
-    base_instructions += """
-## Troubleshooting
-
-### Memory Manager Issues
-If you encounter pydantic type errors:
-```bash
-pip install pydantic pydantic-settings --upgrade
-```
-
-### Git Issues
-If git commands fail:
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your@email.com"
-```
-
----
-*Generated dynamically based on environment detection*
-"""
-
-    return base_instructions
+# Removed redefined functions - use imports from specialized modules instead
 
 
 def generate_dynamic_codeblock_prompt(
@@ -874,10 +615,13 @@ def generate_dynamic_codeblock_prompt(
     Returns:
         A Markdown-formatted string suitable for use as a codeblock prompt, including environment and setup information.
     """
+    # Import locally to avoid redefinition conflicts
+    from .dev_testing import detect_environment, generate_dynamic_installation_prompt
+
     if environment is None:
         environment = detect_environment()
 
-    timestamp = get_current_timestamp() # Replaced dev_tools.get_current_timestamp
+    timestamp = get_current_timestamp()
 
     prompt = f"""# 🚀 AGOR Dynamic Codeblock Prompt
 
@@ -1840,235 +1584,7 @@ def generate_handoff_prompt_only(
     return generate_complete_project_outputs(request)
 
 
-def generate_meta_feedback(
-    current_project: str = None,
-    agor_issues_encountered: list = None,
-    suggested_improvements: list = None,
-    workflow_friction_points: list = None,
-    positive_experiences: list = None
-) -> dict:
-    """
-    Generate AGOR meta feedback for continuous improvement.
-
-    This function creates feedback about AGOR itself while working on other projects.
-    The output includes a link to submit feedback to the AGOR meta repository.
-
-    Args:
-        current_project: Name/description of the project you're working on
-        agor_issues_encountered: List of issues or problems with AGOR
-        suggested_improvements: List of suggestions for improving AGOR
-        workflow_friction_points: List of workflow friction points
-        positive_experiences: List of positive experiences with AGOR
-
-    Returns:
-        Dictionary with processed meta feedback ready for single codeblock usage
-    """
-    try:
-        from datetime import datetime
-
-        # Prepare meta feedback content
-        feedback_content = f"""# 🔄 AGOR Meta Feedback
-
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}
-**Current Project**: {current_project or 'Not specified'}
-**Feedback Type**: User Experience & Improvement Suggestions
-
-## 📋 AGOR Usage Context
-
-**Project Being Worked On**: {current_project or 'Not specified'}
-**AGOR Version**: 0.4.2+
-**Usage Pattern**: {detect_environment()['mode']}
-
-## 🎯 Issues Encountered
-
-{_format_feedback_list(agor_issues_encountered, 'No issues reported')}
-
-## 💡 Suggested Improvements
-
-{_format_feedback_list(suggested_improvements, 'No suggestions provided')}
-
-## 🚧 Workflow Friction Points
-
-{_format_feedback_list(workflow_friction_points, 'No friction points identified')}
-
-## ✅ Positive Experiences
-
-{_format_feedback_list(positive_experiences, 'No positive experiences noted')}
-
-## 🔗 Submit This Feedback
-
-**To submit this feedback for AGOR improvement:**
-
-1. **Copy this entire feedback** (it's already processed for single codeblock usage)
-2. **Visit**: https://github.com/jeremiah-k/agor-meta/issues/new
-3. **Paste the feedback** as the issue description
-4. **Add a descriptive title** like "AGOR Feedback: [Brief Description]"
-5. **Submit the issue** to help improve AGOR for everyone
-
-## 🎯 How This Helps
-
-Your feedback helps improve AGOR by:
-- Identifying real-world usage patterns and friction points
-- Gathering suggestions from actual users working on diverse projects
-- Building a knowledge base of common issues and solutions
-- Prioritizing development efforts based on user needs
-- Creating a community-driven improvement process
-
-**Thank you for helping make AGOR better!** 🚀
-
----
-*This meta feedback was generated automatically using AGOR's dev tooling*
-*Generated while working on: {current_project or 'unspecified project'}*
-"""
-
-        # Process the content for single codeblock usage
-        processed_content = prepare_prompt_content(feedback_content)
-
-        return {
-            'success': True,
-            'meta_feedback': processed_content,
-            'github_url': 'https://github.com/jeremiah-k/agor-meta/issues/new',
-            'instructions': 'Copy the meta_feedback content and paste it at the GitHub URL to submit feedback'
-        }
-
-    except Exception as e:
-        return {
-            'success': False,
-            'error': f'Failed to generate meta feedback: {str(e)}'
-        }
-
-
-def _format_feedback_list(items: list, default_message: str) -> str:
-    """Format a list of feedback items."""
-    if not items:
-        return f"- {default_message}"
-
-    return '\n'.join(f"- {item}" for item in items)
-
-
-def generate_mandatory_session_end_prompt(
-    work_completed: list,
-    current_status: str,
-    next_agent_instructions: list = None,
-    critical_context: str = None,
-    files_modified: list = None
-) -> dict:
-    """
-    Generate mandatory session end prompt for agent coordination.
-
-    This function MUST be called before ending any agent session to ensure
-    proper coordination and context preservation for the next agent or session.
-
-    Args:
-        work_completed: List of work items completed in this session
-        current_status: Current status of the project/task
-        next_agent_instructions: Specific instructions for the next agent
-        critical_context: Critical context that must be preserved
-        files_modified: List of files that were modified
-
-    Returns:
-        Dictionary with processed session end prompt ready for coordination
-    """
-    try:
-        from datetime import datetime
-
-        # Prepare session end content
-        session_end_content = f"""# 🔄 MANDATORY SESSION END - Agent Coordination Required
-
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}
-**Session Type**: Agent Handoff Required
-**AGOR Version**: 0.4.2+
-
-## 📋 WORK COMPLETED THIS SESSION
-
-{_format_feedback_list(work_completed, 'No work completed')}
-
-## 📊 CURRENT PROJECT STATUS
-
-**Status**: {current_status or 'Status not provided'}
-
-## 📁 FILES MODIFIED
-
-{_format_feedback_list(files_modified, 'No files modified')}
-
-## 🎯 INSTRUCTIONS FOR NEXT AGENT/SESSION
-
-{_format_feedback_list(next_agent_instructions, 'No specific instructions provided')}
-
-## 🧠 CRITICAL CONTEXT TO PRESERVE
-
-{critical_context or 'No critical context provided'}
-
-## 🔧 ENVIRONMENT SETUP FOR CONTINUATION
-
-# Pull latest changes
-git pull origin work-0.4.3-2
-
-# Install dependencies
-python3 -m pip install -r src/agor/tools/agent-requirements.txt
-
-# Read updated documentation
-- src/agor/tools/README_ai.md (2-role system)
-- src/agor/tools/AGOR_INSTRUCTIONS.md (meta mode hotkey)
-
-## ⚠️ CRITICAL REQUIREMENTS FOR NEXT SESSION
-
-1. **Review this session's work** - Understand what was completed
-2. **Continue from current status** - Don't restart or duplicate work
-3. **Use our dev tooling** - All coordination must use our backtick processing
-4. **Create return prompts** - Every session must end with coordination output
-5. **Focus on productivity** - Substantial progress, not just note-passing
-
-## 🚀 IMMEDIATE NEXT STEPS
-
-1. Review completed work and current status
-2. Continue development from where this session left off
-3. Make substantial progress on remaining tasks
-4. Generate return prompt using our dev tooling before ending
-
-## 📞 COORDINATION PROTOCOL
-
-**When you complete your work, you MUST run:**
-
-``python
-python3 -c "
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import generate_mandatory_session_end_prompt
-
-outputs = generate_mandatory_session_end_prompt(
-    work_completed=['List what you completed'],
-    current_status='Current project status',
-    next_agent_instructions=['Instructions for next agent'],
-    critical_context='Important context to preserve',
-    files_modified=['Files you modified']
-)
-print(outputs['session_end_prompt'])
-"
-``
-
-**This ensures continuous productivity and proper coordination!**
-
----
-
-*This session end prompt was generated automatically to ensure coordination*
-*Next agent: Continue productive work and generate your own session end prompt*
-"""
-
-        # Process the content for single codeblock usage
-        processed_content = prepare_prompt_content(session_end_content)
-
-        return {
-            'success': True,
-            'session_end_prompt': processed_content,
-            'instructions': 'Copy the session_end_prompt content for agent coordination'
-        }
-
-    except Exception as e:
-        return {
-            'success': False,
-            'error': f'Failed to generate session end prompt: {str(e)}'
-        }
+# Removed redefined functions - use imports from agent_handoffs.py instead
 
 
 # =============================================================================
@@ -2077,50 +1593,6 @@ print(outputs['session_end_prompt'])
 
 def get_timestamp() -> str:
     """Get current timestamp - convenience function for backward compatibility."""
-    return get_current_timestamp() # Use direct name
+    return get_current_timestamp()
 
-
-def get_current_timestamp() -> str:
-    """Get current timestamp - convenience function for backward compatibility."""
-    return get_timestamp()
-
-
-def get_file_timestamp() -> str:
-    """Get file-safe timestamp - convenience function for backward compatibility."""
-    return get_file_timestamp() # Use direct name
-
-
-def get_precise_timestamp() -> str:
-    """Get precise timestamp - convenience function for backward compatibility."""
-    return get_precise_timestamp() # Use direct name
-
-
-def get_ntp_timestamp() -> str:
-    """Get NTP timestamp - convenience function for backward compatibility."""
-    return get_ntp_timestamp() # Use direct name
-
-
-def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push - convenience function for backward compatibility."""
-    return quick_commit_push(message, emoji) # Use direct name
-
-
-def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
-    """Auto-commit memory - convenience function for backward compatibility."""
-    return auto_commit_memory(content, memory_type, agent_id) # Use direct name
-
-
-def test_tooling() -> bool:
-    """Test development tooling - convenience function for backward compatibility."""
-    return test_tooling() # Use direct name
-
-
-# Global instance for convenience
-# _dev_tools_instance = None # Removed
-#
-# def get_dev_tools() -> 'DevTooling': # Removed
-#     """Get global DevTooling instance - convenience function."""
-#     global _dev_tools_instance
-#     if _dev_tools_instance is None:
-#         _dev_tools_instance = DevTooling()
-#     return _dev_tools_instance
+# All other functions are imported from specialized modules to avoid redefinition conflicts
