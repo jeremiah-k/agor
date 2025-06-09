@@ -82,9 +82,9 @@ def create_snapshot(title: str, context: str) -> bool:
 
     # Get AGOR version from environment
     try:
-        version = detect_environment().get("agor_version", "0.4.3 development")
+        version = detect_environment().get("agor_version", "0.5.0 development")
     except Exception:
-        version = "0.4.3 development"
+        version = "0.5.0 development"
 
     current_time_for_snapshot = get_current_timestamp()
     snapshot_content = f"""# 📸 {title} Development Snapshot
@@ -118,14 +118,30 @@ If you're picking up this work:
 **Remember**: Use quick_commit_push() for frequent commits during development.
 """
 
-    # Write snapshot file
+    # Write snapshot file locally for reference
     repo_path = Path.cwd()
     snapshot_path = repo_path / snapshot_file
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
     snapshot_path.write_text(snapshot_content)
 
-    # Commit and push snapshot
-    return quick_commit_push(f"📸 Create development snapshot: {title}", "📸")
+    # Commit snapshot to memory branch using cross-branch commit (NEVER switches branches)
+    from agor.tools.memory_manager import commit_to_memory_branch
+
+    snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+    commit_message = f"📸 Create development snapshot: {title}"
+
+    success = commit_to_memory_branch(
+        file_content=snapshot_content,
+        file_name=f".agor/snapshots/{snapshot_filename}",
+        commit_message=commit_message
+    )
+
+    if success:
+        print(f"✅ Snapshot committed to memory branch: {snapshot_filename}")
+    else:
+        print(f"❌ Failed to commit snapshot to memory branch")
+
+    return success
 
 
 def generate_agent_handoff_prompt(

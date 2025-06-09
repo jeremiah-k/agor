@@ -30,7 +30,7 @@
 ### "I need to understand roles and initialization"
 
 - **[README_ai.md](README_ai.md)** - Complete AI protocol (563 lines)
-  - Lines 18-40: Role selection (SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER)
+  - Lines 18-40: Role selection (Worker Agent, Project Coordinator)
   - Lines 120-220: Role-specific hotkey menus
   - Lines 450-550: Snapshot procedures and meta-development
 
@@ -84,7 +84,7 @@
 - **[README_ai.md](README_ai.md)** Lines 120-220 - Role-specific menus
   - PROJECT COORDINATOR: sp, bp, ar, ss, pd, pl, sw, rt, mb, ct, tm, hp
   - ANALYST/SOLO DEV: a, f, co, da, bfs, grep, tree, edit, commit, diff
-  - AGENT WORKER: status, sync, ch, log, msg, report, task, complete, snapshot
+  - Worker Agent: Development tooling functions for analysis and implementation
 
 ### "I need to provide feedback on AGOR"
 
@@ -154,8 +154,7 @@
 ### Role-Based Workflows
 
 - **PROJECT COORDINATOR**: Strategic planning, team coordination, strategy selection
-- **SOLO DEVELOPER**: Codebase analysis, implementation, technical deep-dives
-- **AGENT WORKER**: Task execution, snapshots, coordination communication
+- **Worker Agent**: Codebase analysis, implementation, technical deep-dives
 
 ### Platform-Specific Information
 

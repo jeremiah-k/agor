@@ -72,8 +72,8 @@ Mode: Bundle Mode (copy-paste workflow)
 
 ### Setup (One-time)
 
-1. Clone AGOR repository locally: `git clone https://github.com/jeremiah-k/agor.git ~/agor`
-2. Add `~/agor` to your AugmentCode workspace sources
+1. Clone AGOR repository locally: `git clone https://github.com/jeremiah-k/agor.git [your-preferred-directory]`
+2. Add the AGOR directory to your AugmentCode workspace sources
 3. Add this to your User Guidelines:
 
 ```
