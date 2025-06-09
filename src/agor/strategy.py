@@ -116,7 +116,7 @@ class StrategyManager:
 
         try:
             # Pull latest changes
-            success, output = run_git_command(["pull"], cwd=str(self.project_root))
+            success, output = run_git_command(["pull"])
 
             if success:
                 print("✅ Git pull successful")
@@ -238,17 +238,14 @@ class StrategyManager:
             # We want to create if not exists, so if it fails because it exists, that's okay.
             # If it fails for other reasons, that might be an issue.
             # For now, mimic check=False by not strictly checking `success`.
-            run_git_command(
-                ["checkout", "-b", branch_name],
-                cwd=str(self.project_root) # run_git_command might need cwd as string
-            )
+            run_git_command(["checkout", "-b", branch_name])
             # Original code used try/except Exception: pass. This is similar.
 
         # Return to main branch
         # Try 'main' first, then 'master'
-        success_main, _ = run_git_command(["checkout", "main"], cwd=str(self.project_root))
+        success_main, _ = run_git_command(["checkout", "main"])
         if not success_main:
-            run_git_command(["checkout", "master"], cwd=str(self.project_root))
+            run_git_command(["checkout", "master"])
             # Ignoring success/failure of checkout master as per original logic
 
         return agent_branches

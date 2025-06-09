@@ -28,7 +28,6 @@ from .git_operations import (
     get_precise_timestamp,
     get_ntp_timestamp,
     run_git_command,
-    safe_git_push,
     quick_commit_push
 )
 
@@ -40,7 +39,6 @@ from .memory_manager import (
 from .agent_handoffs import (
     detick_content, # Use direct name
     retick_content, # Use direct name
-    generate_handoff_prompt_only, # Use direct name
     generate_mandatory_session_end_prompt, # Use direct name
     generate_meta_feedback # Use direct name
 )
@@ -282,15 +280,18 @@ class DevTooling:
 
 
 # Convenience functions
-def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
+def quick_commit_push_wrapper(message: str, emoji: str = "🔧") -> bool:
     """Quick commit and push with timestamp."""
-    # This should call the imported git_operations.quick_commit_push
-    return quick_commit_push(message, emoji)
+    # Import to avoid name collision
+    from agor.tools.git_operations import quick_commit_push as git_quick_commit_push
+    return git_quick_commit_push(message, emoji)
 
 
-def auto_commit_memory(content: str, memory_type: str, agent_id: str = "dev") -> bool:
+def auto_commit_memory_wrapper(content: str, memory_type: str, agent_id: str = "dev") -> bool:
     """Auto-commit memory to memory branch."""
-    return auto_commit_memory(content, memory_type, agent_id) # Use direct name
+    # Import to avoid name collision
+    from agor.tools.memory_manager import auto_commit_memory as memory_auto_commit
+    return memory_auto_commit(content, memory_type, agent_id)
 
 
 def create_snapshot(title: str, context: str) -> bool:
@@ -389,9 +390,11 @@ If you're picking up this work:
     return quick_commit_push(f"📸 Create development snapshot: {title}", "📸") # Use direct name
 
 
-def test_tooling() -> bool:
+def test_tooling_wrapper() -> bool:
     """Test all development tooling functions."""
-    return test_tooling() # Use direct name
+    # Import to avoid name collision
+    from agor.tools.dev_testing import test_tooling as dev_test_tooling
+    return dev_test_tooling()
 
 
 # Timestamp utilities
@@ -400,39 +403,19 @@ def get_timestamp() -> str:
     return get_current_timestamp() # Use direct name (imported from git_operations)
 
 
-def get_file_timestamp() -> str:
-    """Get timestamp suitable for filenames."""
-    return get_file_timestamp() # Use direct name (imported from git_operations)
 
 
-def get_precise_timestamp() -> str:
-    """Get precise timestamp with seconds."""
-    return get_precise_timestamp() # Use direct name (imported from git_operations)
 
-
-def get_ntp_timestamp() -> str:
-    """Get accurate timestamp from NTP server."""
-    return get_ntp_timestamp() # Use direct name (imported from git_operations)
-
-
-def prepare_prompt_content(content: str) -> str:
-    """
-    Escapes nested codeblocks in the given content to ensure safe inclusion within a single codeblock prompt.
-
-    Replaces triple backticks with double backticks to prevent formatting issues when embedding code within codeblocks.
-    """
-    return detick_content(content) # Use direct name
-
-
-def detick_content(content: str) -> str:
+def detick_content_wrapper(content: str) -> str:
     """
     Replaces all triple backticks in the content with double backticks for safe embedding within a single codeblock.
     """
-    # This function now calls the imported `agent_handoffs.detick_content`
-    return detick_content(content)
+    # Import to avoid name collision
+    from agor.tools.agent_handoffs import detick_content as handoff_detick_content
+    return handoff_detick_content(content)
 
 
-def retick_content(content: str) -> str:
+def retick_content_wrapper(content: str) -> str:
     """
     Converts double backticks (``) in the content back to triple backticks (```) for standard codeblock formatting.
 
@@ -442,8 +425,9 @@ def retick_content(content: str) -> str:
     Returns:
         The content with double backticks replaced by triple backticks.
     """
-    # This function now calls the imported `agent_handoffs.retick_content`
-    return retick_content(content)
+    # Import to avoid name collision
+    from agor.tools.agent_handoffs import retick_content as handoff_retick_content
+    return handoff_retick_content(content)
 
 
 def generate_agent_handoff_prompt(
@@ -616,10 +600,14 @@ def create_seamless_handoff(
         relative_path = f".agor/snapshots/{timestamp_str}_handoff_snapshot.md"
         commit_message = f"📸 Agent handoff snapshot: {task_description[:50]}"
 
-        repo_path_str = str(Path.cwd()) # For commit_to_memory_branch
+        # Read the snapshot content to commit to memory branch
+        snapshot_content_for_commit = snapshot_file.read_text()
 
         if commit_to_memory_branch( # Use direct name
-            file_path=relative_path, branch_name=memory_branch, commit_message=commit_message, repo_path_str=repo_path_str
+            file_content=snapshot_content_for_commit,
+            file_name=f"{timestamp_str}_handoff_snapshot.md",
+            branch_name=memory_branch,
+            commit_message=commit_message
         ):
             print(f"✅ Snapshot safely committed to memory branch: {memory_branch}")
         else:
@@ -1439,11 +1427,14 @@ Format: [AGENT-ID] [TIMESTAMP] - [STATUS/QUESTION/FINDING]
     # Try to commit to memory branch using new safe system
     # commit_to_memory_branch is from .memory_manager
     # quick_commit_push is from .git_operations
+    # Read the agentconvo content to commit to memory branch
+    agentconvo_content_for_commit = agentconvo_path.read_text()
+
     if commit_to_memory_branch( # Use direct name
-        file_path=".agor/agentconvo.md", # Assuming this path is relative to repo root
+        file_content=agentconvo_content_for_commit,
+        file_name="agentconvo.md",
         branch_name=memory_branch,
-        commit_message=f"Update agentconvo.md: {agent_id} - {message}",
-        repo_path_str=str(repo_path) # Assuming the modular function might need repo_path
+        commit_message=f"Update agentconvo.md: {agent_id} - {message}"
     ):
         print(f"✅ Agentconvo logged to memory branch {memory_branch}")
         return True
@@ -1524,11 +1515,14 @@ def update_agent_memory(
     # Try to commit to memory branch using new safe system
     # commit_to_memory_branch is from .memory_manager
     # quick_commit_push is from .git_operations
+    # Read the memory content to commit to memory branch
+    memory_content_for_commit = memory_path_absolute.read_text()
+
     if commit_to_memory_branch( # Use direct name
-        file_path=memory_file_relative_path, # Assuming this path is relative to repo root
+        file_content=memory_content_for_commit,
+        file_name=f"{agent_id.lower()}-memory.md",
         branch_name=memory_branch,
-        commit_message=f"Update {agent_id} memory: {memory_type}",
-        repo_path_str=str(repo_path) # Assuming the modular function might need repo_path
+        commit_message=f"Update {agent_id} memory: {memory_type}"
     ):
         print(f"✅ Agent memory logged to memory branch {memory_branch}")
         return True
