@@ -239,10 +239,10 @@ def display_git_workflow_status() -> str:
 
 def generate_agent_memory_branch() -> str:
     """
-    Generate unique memory branch for agent using timestamp-based hash.
-
+    Generates a unique agent memory branch name using a timestamp-based hash.
+    
     Returns:
-        String in format 'agor/mem/agent_{hash}' for unique agent identification
+        A string in the format 'agor/mem/agent_{hash}' for uniquely identifying an agent's memory branch.
     """
     import hashlib
     import time
@@ -255,13 +255,9 @@ def generate_agent_memory_branch() -> str:
 
 def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
     """
-    Create agent-specific memory branch for snapshot storage.
-
-    Args:
-        memory_branch: Optional specific branch name, generates one if not provided
-
-    Returns:
-        Tuple of (success: bool, branch_name: str)
+    Creates an agent-specific memory branch with an initial commit containing metadata and usage guidelines.
+    
+    If no branch name is provided, a unique one is generated. Returns a tuple indicating success and the branch name.
     """
     if memory_branch is None:
         memory_branch = generate_agent_memory_branch()
@@ -312,13 +308,15 @@ This memory branch stores:
 
 def validate_output_formatting(content: str) -> dict:
     """
-    Validate that content follows AGOR output formatting requirements.
-
+    Validates whether the provided content complies with AGOR output formatting standards.
+    
+    Checks for the presence of codeblocks, triple backticks, and proper codeblock wrapping. Identifies issues such as the need for deticking or incorrect formatting of handoff prompts, and provides suggestions for compliance.
+    
     Args:
-        content: Content to validate for formatting compliance
-
+        content: The content string to validate.
+    
     Returns:
-        Dictionary with validation results and suggestions
+        A dictionary containing compliance status, detected issues, suggestions for correction, and flags indicating codeblock and deticking requirements.
     """
     validation = {
         "is_compliant": True,
@@ -357,14 +355,9 @@ def validate_output_formatting(content: str) -> dict:
 
 def apply_output_formatting(content: str, content_type: str = "general") -> str:
     """
-    Apply proper AGOR output formatting to content.
-
-    Args:
-        content: Content to format
-        content_type: Type of content (handoff_prompt, snapshot, general)
-
-    Returns:
-        Properly formatted content ready for output
+    Formats content according to AGOR output standards for safe embedding and compliance.
+    
+    Deticks the input content to remove triple backticks and, for specific content types such as handoff prompts, snapshots, or meta feedback, wraps the result in double backtick codeblocks. Returns the formatted content ready for output.
     """
     # Process through detick to handle any triple backticks
     processed_content = detick_content(content)
@@ -388,7 +381,12 @@ def detect_current_environment() -> dict:
 
 
 def test_all_tooling() -> bool:
-    """Test all development tooling components."""
+    """
+    Runs comprehensive tests on all development tooling components.
+    
+    Returns:
+        True if all tests pass successfully, otherwise False.
+    """
     return test_tooling()
 
 
@@ -403,16 +401,18 @@ def generate_workflow_prompt_template(
     include_explicit_requirements: bool = True
 ) -> str:
     """
-    Generate optimized prompt template using proven workflow strategies.
-
+    Generates an optimized workflow prompt template for AGOR agent tasks.
+    
+    Creates a detailed prompt incorporating the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements (with example code), and success criteria. Supports options to include the bookend approach and explicit handoff requirements for seamless agent coordination.
+    
     Args:
-        task_description: Main task description
-        memory_branch: Agent memory branch for context continuity
-        include_bookend: Include bookend approach (start/end requirements)
-        include_explicit_requirements: Include explicit handoff requirements
-
+        task_description: Description of the agent's task.
+        memory_branch: Optional memory branch name for context continuity; generated if not provided.
+        include_bookend: Whether to include session start and end requirements.
+        include_explicit_requirements: Whether to include explicit handoff and formatting requirements.
+    
     Returns:
-        Optimized prompt template ready for agent use
+        A formatted prompt template string ready for agent use.
     """
     if memory_branch is None:
         memory_branch = generate_agent_memory_branch()
@@ -510,16 +510,9 @@ def validate_agor_workflow_completion(
     has_handoff_prompt: bool = False
 ) -> dict:
     """
-    Validate that workflow completion meets AGOR standards.
-
-    Args:
-        work_completed: List of completed work items
-        files_modified: List of modified files
-        has_snapshot: Whether development snapshot was created
-        has_handoff_prompt: Whether handoff prompt was generated
-
-    Returns:
-        Dictionary with validation results and recommendations
+    Validates workflow completion against AGOR standards and provides feedback.
+    
+    Checks for documentation of completed work, file modifications, development snapshot creation, and handoff prompt generation. Returns a dictionary with completeness status, score, identified issues, recommendations, and any missing requirements.
     """
     validation = {
         "is_complete": True,
@@ -576,10 +569,7 @@ def validate_agor_workflow_completion(
 
 def get_workflow_optimization_tips() -> str:
     """
-    Get workflow optimization tips based on current AGOR best practices.
-
-    Returns:
-        Formatted tips for improving agent workflow compliance
+    Returns formatted AGOR workflow optimization tips, including best practices, common issues with solutions, helper function usage examples, and success metrics to improve agent workflow compliance and coordination.
     """
     tips = f"""# 🎯 AGOR Workflow Optimization Tips
 
