@@ -8,14 +8,12 @@ All functions use absolute imports for better reliability.
 """
 
 from pathlib import Path
-from typing import Optional
 
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
-    get_file_timestamp,
     run_git_command,
-    quick_commit_push
+    quick_commit_push,
 )
 from agor.tools.memory_manager import auto_commit_memory
 from agor.tools.agent_handoffs import detick_content, retick_content
@@ -127,7 +125,7 @@ def display_project_status() -> str:
         status_display += "**Changes Detected**: No uncommitted changes\n"
     
     if 'environment_error' in status:
-        status_display += f"\n**Environment Error**: {status['environment_error']}\n"
+        status_display += f"\n**Environment Error**: {status.get('environment_error', 'unknown')}\n"
     
     return status_display
 

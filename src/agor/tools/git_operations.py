@@ -189,6 +189,10 @@ def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     NOTE: For snapshots, agents should use commit_to_memory_branch() instead
     of this function to ensure proper cross-branch memory system operation.
 
+    IMPORTANT: PR descriptions, handoff prompts, release notes, etc. all need to be
+    run through dev tooling to remove triple backticks in codeblocks and then
+    WRAPPED into a single codeblock so the user can copy & paste.
+
     Args:
         message: Commit message
         emoji: Emoji prefix for commit

@@ -281,6 +281,8 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **`meta`**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
 - **`session-end`**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
 
+**IMPORTANT OUTPUT FORMATTING**: PR descriptions, handoff prompts, release notes, etc. all need to be run through dev tooling to remove triple backticks in codeblocks and then WRAPPED into a single codeblock so the user can copy & paste. Always create a snapshot before ending your session using the dev tooling.
+
 **WORKER AGENT COORDINATION ACTIONS:**
 **Coordination:**
 

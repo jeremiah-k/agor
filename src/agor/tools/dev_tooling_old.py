@@ -396,8 +396,8 @@ def generate_agent_handoff_prompt(
     prompt = f"""# 🤖 AGOR Agent Handoff
 
 **Generated**: {timestamp}
-**Environment**: {environment['mode']} ({environment['platform']})
-**AGOR Version**: {environment['agor_version']}
+**Environment**: {environment.get('mode', 'unknown')} ({environment.get('platform', 'unknown')})
+**AGOR Version**: {environment.get('agor_version', 'unknown')}
 """
 
     # Add memory branch information if available
@@ -626,8 +626,8 @@ def generate_dynamic_codeblock_prompt(
     prompt = f"""# 🚀 AGOR Dynamic Codeblock Prompt
 
 **Generated**: {timestamp}
-**Environment**: {environment['mode']} ({environment['platform']})
-**AGOR Version**: {environment['agor_version']}
+**Environment**: {environment.get('mode', 'unknown')} ({environment.get('platform', 'unknown')})
+**AGOR Version**: {environment.get('agor_version', 'unknown')}
 
 ## Task Description
 {task_description}
@@ -1590,9 +1590,5 @@ def generate_handoff_prompt_only(
 # =============================================================================
 # CONVENIENCE FUNCTIONS FOR BACKWARD COMPATIBILITY AND EASY ACCESS
 # =============================================================================
-
-def get_timestamp() -> str:
-    """Get current timestamp - convenience function for backward compatibility."""
-    return get_current_timestamp()
 
 # All other functions are imported from specialized modules to avoid redefinition conflicts

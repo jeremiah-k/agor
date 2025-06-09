@@ -11,17 +11,13 @@ All functions use absolute imports for better reliability.
 """
 
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
     get_file_timestamp,
-    get_precise_timestamp,
     run_git_command,
-    quick_commit_push
 )
 from agor.tools.memory_manager import commit_to_memory_branch
 from agor.tools.agent_handoffs import detick_content
@@ -125,7 +121,6 @@ If you're picking up this work:
     snapshot_path.write_text(snapshot_content)
 
     # Commit snapshot to memory branch using cross-branch commit (NEVER switches branches)
-    from agor.tools.memory_manager import commit_to_memory_branch
 
     snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
     commit_message = f"📸 Create development snapshot: {title}"
@@ -175,8 +170,8 @@ def generate_agent_handoff_prompt(
     prompt = f"""# 🤖 AGOR Agent Handoff
 
 **Generated**: {timestamp}
-**Environment**: {environment['mode']} ({environment['platform']})
-**AGOR Version**: {environment['agor_version']}
+**Environment**: {environment.get('mode', 'unknown')} ({environment.get('platform', 'unknown')})
+**AGOR Version**: {environment.get('agor_version', 'unknown')}
 """
 
     # Add memory branch information if available
@@ -311,10 +306,10 @@ def create_seamless_handoff(
         memory_branch = f"agor/mem/{timestamp_str}_handoff"
 
         success = commit_to_memory_branch(
-            content=snapshot_content,
-            memory_type="handoff_snapshot",
-            agent_id="handoff_agent",
-            memory_branch=memory_branch
+            file_content=snapshot_content,
+            file_name=f".agor/snapshots/{timestamp_str}_handoff_snapshot.md",
+            commit_message="📸 Handoff snapshot",
+            memory_branch=memory_branch,
         )
 
         if success:
