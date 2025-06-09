@@ -167,6 +167,56 @@ After reading these files, help me initialize AGOR for this project and select t
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
 
+**Agent Initialization Prompt (Copy & Paste to Remote Agent):**
+
+```
+I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+Please execute these commands to initialize AGOR:
+
+# Clone AGOR to temporary location
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+
+# Load protocol and return to project
+cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
+
+# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
+python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
+    echo "⚠️ pip install failed, trying .pyenv venv fallback"
+    if [ -d ".pyenv" ]; then
+        source .pyenv/bin/activate
+    else
+        echo "❌ No .pyenv directory found, creating virtual environment"
+        python3 -m venv .pyenv
+        source .pyenv/bin/activate
+    fi
+    # Install dependencies after environment is ready
+    python3 -m pip install -r src/agor/tools/agent-requirements.txt
+}
+
+# Test AGOR development tooling
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling, get_current_timestamp_formatted
+
+# Verify tooling works
+test_tooling()
+print(f'Session started at: {get_current_timestamp_formatted()}')
+"
+
+# Review agent startup guide
+cat src/agor/tools/agent-start-here.md
+
+# Now return to your project's directory with AGOR initialized
+
+After initialization, select your role based on the task:
+- Worker Agent: Code analysis, implementation, debugging, task execution
+- Project Coordinator: Planning, architecture, multi-agent coordination
+
+# <--- Add your detailed step-by-step instructions below --->
+```
+
 **Agent Instructions for AugmentCode Remote (Copy & Paste):**
 
 ```
