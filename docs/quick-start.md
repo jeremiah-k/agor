@@ -152,7 +152,7 @@ Let's walk through a typical coordination session:
 
 ```
 1. Type: a
-   → Comprehensive codebase analysis
+   → Comprehensive codebase analysis and exploration
 
 2. Type: f src/main.py
    → Examine specific files

@@ -404,17 +404,17 @@ agor bundle https://github.com/your-username/your-project
 
 **Key Capabilities:**
 
-- Comprehensive codebase analysis (`a`)
-- Code exploration and investigation (`f`, `co`)
+- Comprehensive codebase analysis and exploration
 - Implementation and development work
 - Technical documentation and explanation
+- Development tooling for snapshots and handoffs
 
 **Typical Workflow:**
 
-1. Perform comprehensive analysis (`a`)
-2. Explore specific code areas (`f`, `co`)
+1. Analyze codebase using detailed prompts and context
+2. Explore specific code areas based on requirements
 3. Implement changes or provide detailed explanations
-4. Document findings and decisions
+4. Use development tooling for snapshots and documentation
 
 **Why Use AGOR as a Worker Agent?**
 

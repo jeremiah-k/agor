@@ -92,7 +92,7 @@ When AGOR initializes, it will ask you to choose a role. Here's how to decide:
 
 **You'll get:**
 
-- Comprehensive codebase analysis
+- Comprehensive codebase analysis and exploration
 - Code exploration tools
 - Implementation-focused hotkeys
 - Technical deep-dive capabilities

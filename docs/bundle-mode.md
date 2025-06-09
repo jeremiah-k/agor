@@ -212,7 +212,7 @@ After uploading and initializing, AGOR will prompt for role selection:
 
 **Best for**: Code analysis, implementation, solo work
 
-- Comprehensive codebase analysis (`a`, `f`, `co`)
+- Comprehensive codebase analysis and exploration
 - Code exploration and investigation
 - Implementation and development work
 

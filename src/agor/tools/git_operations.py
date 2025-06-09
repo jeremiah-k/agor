@@ -186,6 +186,9 @@ def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """
     Quick commit and push with timestamp and safety checks.
 
+    NOTE: For snapshots, agents should use commit_to_memory_branch() instead
+    of this function to ensure proper cross-branch memory system operation.
+
     Args:
         message: Commit message
         emoji: Emoji prefix for commit

@@ -33,7 +33,7 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 **Enhanced Agent Snapshot System** (`docs/snapshots.md`)
 
 - Complete context preservation for agent transitions
-- Self-snapshot capability for solo developers
+- Self-snapshot capability for individual developers
 - Structured snapshot templates with git context
 - Cross-session work continuity support
 
@@ -145,9 +145,8 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 **Role System**
 
-- Solo Developer (Role A)
+- Worker Agent (Role A)
 - Project Coordinator (Role B)
-- Agent Worker (Role C)
 
 **Development Strategies**
 

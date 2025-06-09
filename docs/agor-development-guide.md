@@ -426,7 +426,7 @@ Based on comprehensive audit findings, the following documentation improvements 
 
 - **Target**: `src/agor/tools/README_ai.md` (Hotkey Actions section)
 - **Issue**: Some hotkeys lack clear behavior descriptions and parameter details (ensure descriptions reflect snapshot terminology where applicable).
-- **Examples**: PC `init`, Solo Developer `m`/`commit`/`diff`, Agent Worker `ch`/`task`/`complete`/`log`/`report`. Hotkeys like `da` (detailed analysis/snapshot), `hp` (snapshot prompts), and `handoff` (create snapshot) are key.
+- **Examples**: Project Coordinator `init`, Worker Agent development tooling functions. Development functions like snapshot creation, handoff prompts, and release notes generation are key.
 - **Action**: ✅ Enhanced all hotkey descriptions with detailed behavior, parameters, and usage examples, reflecting snapshot terminology.
 
 #### 2. Undocumented Hotkey Functionality ✅ COMPLETED
@@ -480,7 +480,7 @@ Based on comprehensive audit findings, the following documentation improvements 
 
 ### ✅ Completed Audit Items
 
-- ✅ **Clear Role Definitions**: SOLO DEVELOPER, PROJECT COORDINATOR, AGENT WORKER
+- ✅ **Clear Role Definitions**: Worker Agent, Project Coordinator
 - ✅ **Excellent Agent Documentation**: Comprehensive `README_ai.md`
 - ✅ **Robust Git Integration**: Direct binary usage with clear instructions
 - ✅ **Structured Communication**: Well-defined `.agor/` directory protocols
