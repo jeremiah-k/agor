@@ -116,10 +116,10 @@ a) analyze codebase
 
 ## 🎼 Menu Templates by Role
 
-### SOLO DEVELOPER Menu Template
+### Worker Agent Menu Template
 
 ```
-🎼 SOLO DEVELOPER - Ready for Action
+🎼 Worker Agent - Ready for Action
 
 **📊 Analysis & Display:**
 a ) analyze codebase    f ) full files         co) changes only
