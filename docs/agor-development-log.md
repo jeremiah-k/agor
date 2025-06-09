@@ -52,7 +52,8 @@ Each entry includes:
 - **Documentation Cleanup**: Fixed chronological order in development log
   - Corrected entry ordering to proper reverse chronological sequence
   - Removed Google AI Studio "free" references (no longer accurate)
-  - Updated platform deployment instructions restoration
+  - Fixed broken nested codeblock in AugmentCode Remote Agents section
+  - Restored platform deployment instructions (already present from main branch)
 
 **Rationale**:
 
@@ -80,10 +81,10 @@ Each entry includes:
 
 **Next Steps**:
 
-- Restore platform deployment instructions from main branch
-- Remove Google AI Studio "free" references (no longer accurate)
 - Complete comprehensive testing of modular architecture
 - Validate snapshot system alignment with real workflows
+- Test seamless agent handoff functionality
+- Gather feedback on simplified snapshot types vs. complex scenarios
 
 **Files Modified**:
 
@@ -91,7 +92,13 @@ Each entry includes:
 - `src/agor/tools/snapshots.py` (NEW) - Snapshot and handoff functionality
 - `src/agor/tools/hotkeys.py` (NEW) - Workflow and status helpers
 - `src/agor/tools/checklist.py` (NEW) - Validation and progress tracking
-- `docs/agor-development-log.md` - Fixed chronological order
+- `docs/snapshots.md` - Simplified snapshot scenarios to 3 core types
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md` - Aligned with core purpose
+- `docs/usage-guide.md` - Fixed broken nested codeblock
+- `docs/google-ai-studio.md` - Removed "free tier" emphasis
+- `docs/bundle-mode.md` - Updated platform positioning
+- `README.md` - Positioned ChatGPT as primary bundle mode service
+- `docs/agor-development-log.md` - Fixed chronological order and comprehensive updates
 
 ### 19. 2025-01-28 | v0.4.3 | Strategic Focus Shift - Dev Tooling and Agent Handoffs Priority
 
