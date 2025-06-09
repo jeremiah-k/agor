@@ -75,7 +75,11 @@ def retick_content(content: str) -> str:
 
 
 def _format_feedback_list(items: List[str], empty_message: str) -> str:
-    """Format a list of items for feedback display."""
+    """
+    Formats a list of feedback items as a markdown bullet list.
+    
+    If the list is empty, returns a single bullet with the provided empty message.
+    """
     if not items:
         return f"- {empty_message}"
     return "\n".join(f"- {item}" for item in items)
@@ -88,16 +92,9 @@ def validate_feedback_input(
     component: str = "general"
 ) -> dict:
     """
-    Validate meta feedback input and provide suggestions for improvement.
-
-    Args:
-        feedback_type: Type of feedback
-        feedback_content: Main feedback content
-        severity: Severity level
-        component: Component affected
-
-    Returns:
-        Dictionary with validation results and suggestions
+    Validates meta feedback input for type, severity, content quality, and component.
+    
+    Checks if the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and suggests improvements based on feedback type. Returns a dictionary indicating validity, detected issues, suggestions for improvement, and normalized values for type, severity, and component.
     """
     validation = {
         "is_valid": True,
@@ -169,13 +166,9 @@ class GitHubIssueConfig:
 
 def create_github_issue_content(config: GitHubIssueConfig) -> str:
     """
-    Create GitHub issue content from meta feedback.
-
-    Args:
-        config: GitHubIssueConfig containing all issue parameters
-
-    Returns:
-        Formatted GitHub issue content
+    Generates formatted GitHub issue content from a GitHubIssueConfig instance.
+    
+    Creates a structured issue template including feedback type, component, severity, description, reproduction steps, expected and actual behavior (for bugs), suggested solutions, and appropriate labels. Designed for use with AGOR meta feedback submissions.
     """
     if config.suggestions is None:
         config.suggestions = []
@@ -259,10 +252,10 @@ def create_github_issue_content(config: GitHubIssueConfig) -> str:
 
 def get_feedback_statistics() -> dict:
     """
-    Get statistics about feedback usage and patterns.
-
+    Retrieves feedback usage statistics and system status.
+    
     Returns:
-        Dictionary with feedback statistics
+        A dictionary containing feedback statistics, including total items, breakdowns by type, severity, and component, recent feedback, timestamp, available memory branches, and system status. If an error occurs, returns error details and status.
     """
     try:
         from agor.tools.memory_manager import list_memory_branches
@@ -301,20 +294,19 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generate a handoff prompt for agent coordination using dev tooling.
-
-    This function creates properly formatted prompts with deticked content
-    for seamless agent-to-agent communication.
-
+    Generates a formatted handoff prompt for agent coordination in AGOR development sessions.
+    
+    Creates a structured prompt summarizing completed work, current status, instructions for the next agent, critical context, and files modified. Includes environment setup commands, coordination protocol instructions, and immediate next steps. Applies detick processing to ensure clean codeblock rendering for agent-to-agent communication.
+    
     Args:
-        work_completed: List of completed work items
-        current_status: Current project status
-        next_agent_instructions: Instructions for next agent
-        critical_context: Critical context to preserve
-        files_modified: List of modified files
-
+        work_completed: List of completed work items for the session.
+        current_status: Description of the current project status.
+        next_agent_instructions: Instructions or tasks for the next agent or session.
+        critical_context: Essential context that must be preserved for continuity.
+        files_modified: List of files modified during the session.
+    
     Returns:
-        Formatted handoff prompt with deticked content
+        A markdown-formatted handoff prompt with deticked content for seamless agent coordination.
     """
     # Validate required inputs
     if not isinstance(work_completed, list):
@@ -509,21 +501,9 @@ def generate_meta_feedback(
     environment_info: dict = None
 ) -> str:
     """
-    Generate enhanced meta feedback about AGOR itself for continuous improvement.
-
-    Args:
-        feedback_type: Type of feedback (bug, enhancement, workflow_issue, success_story, documentation, performance)
-        feedback_content: Main feedback content
-        suggestions: List of improvement suggestions
-        severity: Severity level (low, medium, high, critical)
-        component: AGOR component affected (dev_tooling, memory_system, hotkeys, coordination, documentation, etc.)
-        reproduction_steps: Steps to reproduce the issue (for bugs)
-        expected_behavior: What should happen (for bugs/issues)
-        actual_behavior: What actually happens (for bugs/issues)
-        environment_info: Environment details (auto-detected if not provided)
-
-    Returns:
-        Formatted meta feedback with deticked content and structured categories
+    Generates structured meta feedback for AGOR, including validation, environment details, and actionable recommendations.
+    
+    Creates a formatted feedback report with severity and type indicators, affected component, AGOR version, and environment context. For bug reports, includes sections for reproduction steps, expected and actual behavior. Lists improvement suggestions, tailored recommended actions based on feedback type, and metadata for tracking. Ensures clean markdown formatting for agent communication.
     """
     # Validate and set defaults
     if suggestions is None:
@@ -711,19 +691,19 @@ def generate_agent_handoff_prompt_extended(
     brief_context: str = None,
 ) -> str:
     """
-    Generates a formatted agent handoff prompt for seamless transitions between agents.
-
-    Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
-
+    Generates a comprehensive agent handoff prompt with environment, task, and context details.
+    
+    The prompt includes environment information, setup instructions, memory branch access commands, task overview, optional brief context, and previous work context if provided. It is formatted for seamless agent transitions and applies backtick processing to ensure safe embedding within single codeblocks.
+    
     Args:
         task_description: Description of the task for the next agent.
-        snapshot_content: Optional content summarizing previous agent work.
+        snapshot_content: Optional summary of previous agent work.
         memory_branch: Optional name of the memory branch for coordination.
-        environment: Optional environment information; auto-detected if not provided.
+        environment: Optional environment details; auto-detected if not provided.
         brief_context: Optional brief background for quick orientation.
-
+    
     Returns:
-        A processed prompt string ready for use in a single codeblock.
+        A formatted prompt string ready for use in a single codeblock.
     """
     if environment is None:
         from agor.tools.dev_testing import detect_environment
