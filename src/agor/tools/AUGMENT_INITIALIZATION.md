@@ -40,21 +40,21 @@ Please read these key files to understand the system:
 - ~/agor/src/agor/tools/README_ai.md (role selection)
 - ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator).
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
 
-### Solo Developer Focus
+### Worker Agent Focus
 
 ```
-I'm using AGOR for solo development work on this project.
+I'm using AGOR for development work on this project.
 
 Please read:
-- ~/agor/src/agor/tools/README_ai.md (select Role A: Solo Developer)
-- ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (focus on Solo Developer sections)
+- ~/agor/src/agor/tools/README_ai.md (select Role A: Worker Agent)
+- ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (focus on Worker Agent sections)
 
-Initialize as Solo Developer and help me analyze the codebase and plan development work.
+Initialize as Worker Agent and help me analyze the codebase and plan development work.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -102,10 +102,10 @@ All prompts above end with the chainable instruction comment. This allows you to
 I'm using AGOR for solo development work on this project.
 
 Please read:
-- ~/agor/src/agor/tools/README_ai.md (select Role A: Solo Developer)
-- ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (focus on Solo Developer sections)
+- ~/agor/src/agor/tools/README_ai.md (select Role A: Worker Agent)
+- ~/agor/src/agor/tools/AGOR_INSTRUCTIONS.md (focus on Worker Agent sections)
 
-Initialize as Solo Developer and help me analyze the codebase and plan development work.
+Initialize as Worker Agent and help me analyze the codebase and plan development work.
 
 # <--- Add your detailed step-by-step instructions below --->
 

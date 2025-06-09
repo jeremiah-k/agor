@@ -10,9 +10,8 @@ This guide is for agents that have cloned AGOR themselves and have direct access
 
 You should have already selected your role from README_ai.md:
 
-- **Role A**: SOLO DEVELOPER
-- **Role B**: PROJECT COORDINATOR
-- **Role C**: AGENT WORKER
+- **Role A**: Worker Agent
+- **Role B**: Project Coordinator
 
 ## 🔧 Step 2: Standalone Mode Setup
 
@@ -142,14 +141,14 @@ Before starting any work, familiarize yourself with AGOR's snapshot system:
 
 ## 📊 Step 3: Role-Specific Initialization
 
-### For SOLO DEVELOPER (Role A)
+### For Worker Agent (Role A)
 
 1. **Perform codebase analysis** using available tools
 2. **Present analysis results** to the user
-3. **Display the SOLO DEVELOPER menu**:
+3. **Display the Worker Agent menu**:
 
 ```
-🎼 SOLO DEVELOPER - Ready for Action
+🎼 Worker Agent - Ready for Action
 
 **📊 Analysis & Display:**
 a ) analyze codebase    f ) full files         co) changes only
