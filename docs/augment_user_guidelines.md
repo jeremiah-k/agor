@@ -58,18 +58,25 @@ You are operating in **AugmentCode Local Agent** environment with:
 - Persistent User Guidelines across sessions
 - Enhanced memory through Augment system
 
-## 🛠️ AGOR Workflow Protocols
+## 🛠️ AGOR Development Tooling
 
-### Core Hotkeys (Use These Frequently)
+### Available Functions
+AGOR provides powerful development functions through Python imports:
 
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
-- `commit` - Save changes with descriptive messages
-- `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
-- `sp` - Strategic planning (for coordinators)
-- `bp` - Break down project into tasks
+- `create_development_snapshot()` - Create comprehensive work snapshots
+- `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
+- `generate_pr_description_snapshot()` - Create PR descriptions for completed work
+- `quick_commit_and_push()` - Commit and push changes with descriptive messages
+- `get_workspace_status()` - Check project and git status
+- `create_development_checklist()` - Generate task-specific checklists
+
+### Agent Workflow Guidance
+Agents should proactively offer to generate deliverables as work nears completion:
+
+**End each response with suggestions like:**
+- "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
+- "Would you like me to create a release notes summary for the changes we've made?"
+- "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
 
 ### Snapshot Requirements (CRITICAL)
 

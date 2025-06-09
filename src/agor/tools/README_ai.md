@@ -104,14 +104,16 @@ Based on your environment detection:
 - `index.md` - Documentation index for efficient lookup
 - `SNAPSHOT_SYSTEM_GUIDE.md` - Snapshot requirements and templates
 
-**Core Hotkeys**:
+**Core Development Functions**:
 
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `edit` - Modify files with targeted changes
-- `commit` - Save changes with descriptive messages
-- `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
+- `create_development_snapshot()` - Create comprehensive work snapshots
+- `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
+- `generate_pr_description_snapshot()` - Create PR descriptions for completed work
+- `quick_commit_and_push()` - Commit and push changes with descriptive messages
+- `get_workspace_status()` - Check project and git status
+- `create_development_checklist()` - Generate task-specific checklists
+
+**Agent Workflow Guidance**: End responses with suggestions like "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
 
 **Development Tools**:
 
