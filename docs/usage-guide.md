@@ -2,6 +2,97 @@
 
 **Complete guide to understanding and using AgentOrchestrator effectively**
 
+## 🛠️ AGOR Development Tooling - Core Features
+
+**AGOR's primary value is seamless agent-to-agent coordination and development workflow automation.**
+
+### 🔄 Agent Handoff System
+
+**The most important AGOR feature** - enables seamless transitions between agents:
+
+- **Handoff Prompts**: Generate comprehensive context for agent transitions
+- **Work Snapshots**: Preserve complete work state across sessions
+- **Memory Branches**: Isolated storage for agent coordination and context
+- **Automatic Backtick Processing**: Clean formatting for copy-paste workflows
+
+**Key Functions:**
+- `create_seamless_handoff()` - Complete agent transition with snapshot + prompt
+- `generate_mandatory_session_end_prompt()` - End-of-session coordination
+- `generate_handoff_snapshot()` - Comprehensive work snapshots
+
+### 📝 Development Workflow Automation
+
+**Streamline development tasks with automated output generation:**
+
+- **PR Descriptions**: Auto-generate professional pull request descriptions
+- **Release Notes**: Create formatted release documentation
+- **Meta Feedback**: Provide structured feedback on AGOR itself
+- **Commit Automation**: Quick commit/push with timestamps
+
+**Key Functions:**
+- `generate_pr_description_only()` - Professional PR descriptions
+- `generate_release_notes_only()` - Formatted release notes
+- `generate_meta_feedback()` - AGOR improvement feedback
+- `quick_commit_push()` - Automated git operations
+
+### 🧠 Memory & Context Management
+
+**Preserve context across sessions and agents:**
+
+- **Cross-Session Context**: Resume work exactly where previous agent left off
+- **Multi-Agent Coordination**: Share context between multiple agents
+- **Memory Branch Strategy**: Use unified memory branches per feature (not per memory)
+  - **Recommended**: One memory branch per feature or session (e.g., `agor/mem/feature-name`)
+  - **Avoid**: Creating a new memory branch for every individual memory operation
+  - **Benefits**: Cleaner git history, easier navigation, consolidated snapshots
+- **Agent Continuity**: Seamless handoffs with complete context preservation
+
+**Key Functions:**
+- `auto_commit_memory()` - Save agent state to memory branches
+- `commit_to_memory_branch()` - Cross-branch memory operations
+- `list_memory_branches()` - View available memory branches
+
+**Memory Branch Best Practices:**
+- Use descriptive names: `agor/mem/refactor-dev-tooling` instead of `agor/mem/2025-01-28_1234`
+- Consolidate related work in the same memory branch
+- Clean up old memory branches when features are complete
+- Keep memory branches focused on specific features or sessions
+
+### ⚙️ Environment Setup & Dependencies
+
+**Ensure dev tooling works reliably:**
+
+```bash
+# Install ONLY the dependencies needed for agent dev tooling
+python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
+    echo "⚠️ pip install failed, trying .pyenv venv fallback"
+    if [ -d ".pyenv" ]; then
+        source .pyenv/bin/activate
+        python3 -m pip install -r src/agor/tools/agent-requirements.txt
+    else
+        echo "❌ No .pyenv directory found, creating virtual environment"
+        python3 -m venv .pyenv
+        source .pyenv/bin/activate
+        python3 -m pip install -r src/agor/tools/agent-requirements.txt
+    fi
+}
+
+# Test AGOR development tooling
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tooling import test_tooling, get_timestamp
+test_tooling()
+print(f'Session started at: {get_timestamp()}')
+"
+```
+
+**Required Dependencies:**
+- `pydantic>=2.0.0` - Data validation for dev tooling
+- `pydantic-settings>=2.0.0` - Settings management
+- `platformdirs>=3.0.0` - Cross-platform directory handling
+- `httpx>=0.24.0` - HTTP requests for version checking and NTP time
+
 ## 🚀 Installation & Platform Setup
 
 This section provides detailed setup instructions for initializing AGOR agents on different platforms. Choose the platform that matches your environment.
@@ -786,9 +877,9 @@ AGOR provides powerful development tooling that agents use for coordination, mem
 - `run_git_command()` - Safe git command execution
 - Branch-safe operations that never leave users on memory branches
 
-### Multi-Agent Coordination (Experimental)
+### Experimental Multi-Agent Strategies
 
-AGOR includes experimental multi-agent strategies that are being refined based on real-world usage:
+**Note**: These are experimental features being refined based on real-world usage. The core dev tooling and agent handoffs above are the proven, production-ready features.
 
 - **Parallel Divergent** - Independent exploration then synthesis
 - **Pipeline** - Sequential snapshots with specialization
@@ -796,7 +887,7 @@ AGOR includes experimental multi-agent strategies that are being refined based o
 - **Red Team** - Adversarial build/break cycles
 - **Mob Programming** - Collaborative coding
 
-**Note**: These strategies are experimental. We encourage using the `meta` hotkey to provide feedback on coordination experiences.
+**Feedback Encouraged**: Use the `meta` hotkey to provide feedback on coordination experiences.
 
 ## 🚀 Getting Started Recommendations
 
