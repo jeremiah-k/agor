@@ -15,13 +15,15 @@ from agor.tools.git_operations import get_current_timestamp, run_git_command
 
 def generate_development_checklist(task_type: str = "general") -> str:
     """
-    Generate a development checklist based on task type.
-
+    Generates a formatted development checklist tailored to the specified task type.
+    
+    The checklist includes sections for pre-development, development process, testing and validation, documentation, and completion. Additional task-specific checklist items are appended for 'feature', 'bugfix', or 'refactor' tasks. The checklist is timestamped and formatted as a markdown string.
+    
     Args:
-        task_type: Type of development task (general, feature, bugfix, refactor).
-
+        task_type: The type of development task. Supported values are 'general', 'feature', 'bugfix', and 'refactor'.
+    
     Returns:
-        Formatted checklist string.
+        A markdown-formatted checklist string for the specified development task type.
     """
     timestamp = get_current_timestamp()
 
@@ -93,10 +95,9 @@ def generate_development_checklist(task_type: str = "general") -> str:
 
 def generate_handoff_checklist() -> str:
     """
-    Generate a checklist for agent handoff procedures.
-
-    Returns:
-        Formatted handoff checklist string.
+    Generates a formatted checklist for agent handoff procedures.
+    
+    The checklist covers snapshot creation, memory management, handoff preparation, technical and documentation handoff, and final verification, with a generation timestamp included.
     """
     timestamp = get_current_timestamp()
 
@@ -144,13 +145,9 @@ def generate_handoff_checklist() -> str:
 
 def validate_workflow_completion(checklist_items: List[str]) -> Dict[str, any]:
     """
-    Validate workflow completion against a checklist.
-
-    Args:
-        checklist_items: List of checklist items to validate.
-
-    Returns:
-        Dictionary with validation results.
+    Analyzes a checklist to determine workflow completion status.
+    
+    Counts completed items based on checklist markers, calculates completion percentage, identifies missing items, and assigns an overall status category. Returns a dictionary with timestamp, totals, completion metrics, missing items, and status.
     """
     validation = {
         "timestamp": get_current_timestamp(),
@@ -189,13 +186,13 @@ def validate_workflow_completion(checklist_items: List[str]) -> Dict[str, any]:
 
 def generate_progress_report(validation_results: Dict[str, any]) -> str:
     """
-    Generate a formatted progress report from validation results.
-
+    Generates a formatted markdown progress report based on workflow validation results.
+    
     Args:
-        validation_results: Results from validate_workflow_completion.
-
+        validation_results: A dictionary containing workflow completion data, typically produced by `validate_workflow_completion`.
+    
     Returns:
-        Formatted progress report string.
+        A markdown-formatted string summarizing workflow status, completion metrics, remaining checklist items, and a concluding message.
     """
     results = validation_results
     status_emoji = {
@@ -238,10 +235,10 @@ def generate_progress_report(validation_results: Dict[str, any]) -> str:
 
 def check_git_workflow_status() -> Dict[str, any]:
     """
-    Check the status of git workflow requirements.
-
+    Checks the current git workflow status and identifies potential issues.
+    
     Returns:
-        Dictionary with git workflow status.
+        A dictionary containing the timestamp, branch safety, commit and push status, current branch name, number of commits ahead of remote, detected issues, and recommendations for maintaining a clean git workflow.
     """
     status = {
         "timestamp": get_current_timestamp(),
@@ -305,10 +302,9 @@ def check_git_workflow_status() -> Dict[str, any]:
 
 def generate_git_workflow_report() -> str:
     """
-    Generate a formatted git workflow status report.
-
-    Returns:
-        Formatted git workflow report string.
+    Generates a formatted markdown report summarizing the current git workflow status.
+    
+    The report includes branch safety, commit and push status, number of commits ahead, detected issues, and recommendations. If no issues are found, it indicates a clean git workflow.
     """
     status = check_git_workflow_status()
 

@@ -112,7 +112,11 @@ class StrategyManager:
         self._show_recent_activity()
 
     def sync_state(self) -> None:
-        """Pull latest changes and update coordination status."""
+        """
+        Synchronizes the coordination state by pulling the latest changes from the Git repository and updating the synchronization status.
+        
+        Updates the sync flags file with the current timestamp and logs the synchronization event. Prints status messages indicating success or failure.
+        """
         print("🔄 Syncing coordination state...")
 
         try:
@@ -224,7 +228,18 @@ class StrategyManager:
             memory_file.write_text(memory_content)
 
     def _create_agent_branches(self, task: str, agents: int) -> Dict[str, str]:
-        """Create git branches for each agent."""
+        """
+        Creates a separate Git branch for each agent based on the provided task.
+        
+        Each branch is named using the agent identifier and a slugified version of the task. After creating the branches, attempts to switch back to the 'main' branch, falling back to 'master' if necessary.
+        
+        Args:
+            task: The task description used to generate branch names.
+            agents: The number of agent branches to create.
+        
+        Returns:
+            A dictionary mapping agent IDs to their corresponding branch names.
+        """
         agent_branches = {}
         task_slug = task.lower().replace(" ", "-").replace("_", "-")[:20]
 

@@ -50,9 +50,9 @@ class HandoffRequest:
 
     def __post_init__(self):
         """
-        Ensures all optional fields are initialized to empty lists or strings if not provided.
-
-        This method sets default empty values for fields that may be None after dataclass initialization, preventing issues with mutable defaults.
+        Initializes optional fields to empty lists or strings if they are None.
+        
+        Prevents mutable default argument issues by ensuring all list and string fields are set to empty values after dataclass initialization.
         """
         if self.work_completed is None:
             self.work_completed = []
@@ -67,7 +67,18 @@ class HandoffRequest:
 
 
 def create_snapshot(title: str, context: str) -> bool:
-    """Create development snapshot."""
+    """
+    Creates a development snapshot file with metadata and context, then commits it to a dedicated memory branch.
+    
+    The snapshot includes the current git branch, commit, AGOR version, timestamp, and provided development context. The file is saved locally in the `.agor/snapshots/` directory and committed to a memory branch for agent continuity.
+    
+    Args:
+        title: The title of the snapshot, used in the filename and snapshot header.
+        context: Descriptive context for the development snapshot.
+    
+    Returns:
+        True if the snapshot was successfully committed to the memory branch, False otherwise.
+    """
     timestamp_str = get_file_timestamp()
     snapshot_file = (
         f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
@@ -153,19 +164,19 @@ def generate_agent_handoff_prompt(
     brief_context: str = None,
 ) -> str:
     """
-    Generates a formatted agent handoff prompt for seamless transitions between agents.
-
-    Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
-
+    Generates a detailed handoff prompt to facilitate smooth transitions between agents.
+    
+    The prompt includes environment details, setup instructions, memory branch access commands, task overview, brief context, and previous work context if provided. Backtick processing is applied to ensure safe embedding in single code blocks.
+    
     Args:
         task_description: Description of the task for the next agent.
-        snapshot_content: Optional content summarizing previous agent work.
+        snapshot_content: Optional summary of previous agent work.
         memory_branch: Optional name of the memory branch for coordination.
         environment: Optional environment information; auto-detected if not provided.
         brief_context: Optional brief background for quick orientation.
-
+    
     Returns:
-        A processed prompt string ready for use in a single codeblock.
+        A formatted prompt string ready for use in a single code block.
     """
     if environment is None:
         environment = detect_environment()
@@ -264,20 +275,20 @@ def create_seamless_handoff(
     brief_context: str = None,
 ) -> tuple[str, str]:
     """
-    Generates a comprehensive agent handoff by creating a project snapshot and a formatted handoff prompt.
-
-    This function automates the agent handoff process by generating a detailed snapshot of the current work, attempting to commit it to a dedicated memory branch with a safe fallback, and producing a ready-to-use handoff prompt with formatting safeguards. Both the snapshot content and the prompt are returned for immediate use.
-
+    Creates a seamless agent handoff by generating a detailed project snapshot and a formatted handoff prompt.
+    
+    Generates a comprehensive snapshot of the current work state, attempts to commit it to a dedicated memory branch with fallback handling, and produces a ready-to-use handoff prompt. Returns both the snapshot content and the handoff prompt for immediate use.
+    
     Args:
         task_description: Description of the task being handed off.
         work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
-        context_notes: Additional context notes.
-        brief_context: Brief verbal background for quick orientation.
-
+        next_steps: List of recommended next steps for the receiving agent.
+        files_modified: List of files that were modified during the session.
+        context_notes: Additional context or notes relevant to the handoff.
+        brief_context: Brief summary to orient the next agent.
+    
     Returns:
-        Tuple of (snapshot_content, handoff_prompt) both ready for immediate use.
+        A tuple containing the snapshot content and the formatted handoff prompt.
     """
     # Set defaults for optional parameters
     if work_completed is None:
@@ -347,17 +358,9 @@ def generate_handoff_snapshot(
     context_notes: str = None,
 ) -> str:
     """
-    Generate a comprehensive handoff snapshot using the snapshot template system.
-
-    Args:
-        task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
-        context_notes: Additional context notes.
-
-    Returns:
-        Formatted snapshot content ready for use.
+    Generates a formatted handoff snapshot summarizing task status and context for agent coordination.
+    
+    Creates a snapshot document using the provided task description, completed work, next steps, modified files, and additional context, formatted for seamless agent handoff.
     """
     # Set defaults for optional parameters
     if work_completed is None:
@@ -390,17 +393,12 @@ def generate_mandatory_session_end_prompt(
     brief_context: str = "Work session completed",
 ) -> str:
     """
-    Generate a mandatory session end prompt for agent coordination.
-
-    This function creates a standardized prompt that agents must use when ending sessions,
-    ensuring proper handoff and coordination protocols are followed.
-
-    Args:
-        task_description: Description of the completed task.
-        brief_context: Brief context about the session.
-
+    Generates a standardized session end prompt for agent coordination.
+    
+    Creates a session completion snapshot and formats a prompt to ensure agents follow proper handoff protocols at the end of a work session.
+    
     Returns:
-        Formatted session end prompt ready for use.
+        A formatted session end prompt string.
     """
     # Create a basic snapshot for the session
     snapshot_content = generate_handoff_snapshot(
@@ -422,17 +420,16 @@ def generate_mandatory_session_end_prompt(
 
 def create_snapshot_legacy(title: str, context: str) -> bool:
     """
-    Create development snapshot using legacy format.
-
-    This function maintains compatibility with older snapshot creation patterns
-    while using the new modular architecture.
-
+    Creates a development snapshot file using the legacy format for backward compatibility.
+    
+    Generates a markdown snapshot containing metadata such as timestamp, git branch, commit, AGOR version, and provided context. The snapshot is saved to the `.agor/snapshots/` directory and committed using the legacy quick commit and push method.
+    
     Args:
-        title: Snapshot title
-        context: Snapshot context
-
+        title: The title of the snapshot.
+        context: The development context to include in the snapshot.
+    
     Returns:
-        True if successful, False otherwise
+        True if the snapshot was successfully committed and pushed, False otherwise.
     """
     from agor.tools.dev_testing import detect_environment
     from agor.tools.git_operations import (
