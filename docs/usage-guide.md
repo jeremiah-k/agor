@@ -2,12 +2,6 @@
 
 **Complete guide to understanding and using AgentOrchestrator effectively**
 
-## 🎯 NEW USERS: Start with Workflow Optimization
-
-**ESSENTIAL READING**: Before diving into setup, read [Agent Workflow Optimization Guide](agent-workflow-optimization.md) to learn proven strategies for maintaining seamless agent coordination. This guide contains real-world examples and troubleshooting that will save you time and improve your AGOR experience significantly.
-
-**Why this matters**: AGOR's power comes from seamless agent coordination. The workflow optimization guide teaches you how to structure prompts, maintain context, and avoid common coordination breakdowns that can frustrate new users.
-
 ## 🚀 Installation & Platform Setup
 
 This section provides detailed setup instructions for initializing AGOR agents on different platforms. Choose the platform that matches your environment.
@@ -394,6 +388,12 @@ agor bundle https://github.com/your-username/your-project
 # Upload the generated bundle to your AI platform
 # Agent works within bundle, you handle git operations
 ```
+
+## 🎯 NEW USERS: Start with Workflow Optimization
+
+**ESSENTIAL READING**: After setup, read [Agent Workflow Optimization Guide](agent-workflow-optimization.md) to learn proven strategies for maintaining seamless agent coordination. This guide contains real-world examples and troubleshooting that will save you time and improve your AGOR experience significantly.
+
+**Why this matters**: AGOR's power comes from seamless agent coordination. The workflow optimization guide teaches you how to structure prompts, maintain context, and avoid common coordination breakdowns that can frustrate new users.
 
 ## 🎭 Role Selection Deep Dive
 
