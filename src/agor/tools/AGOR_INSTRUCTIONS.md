@@ -311,7 +311,7 @@ Every session MUST end with a handoff prompt that is:
 3. **Wrapped in a single codeblock with triple backticks**
 4. **Ready for immediate copy-paste by user**
 
-**MEMORY BRANCH UNDERSTANDING**: When dev tooling says "snapshot committed to memory branch X", that's where it went. Don't expect .agor files on your working branch - they're in .gitignore intentionally.
+**MEMORY BRANCH UNDERSTANDING**: When dev tooling says, "snapshot committed to memory branch X", that's where it went. Don't expect .agor files on your working branch - they're in .gitignore intentionally.
 
 Always create a snapshot before ending your session using the dev tooling.
 

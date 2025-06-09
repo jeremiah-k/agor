@@ -590,7 +590,7 @@ def generate_meta_feedback(
 
     # Add bug-specific sections
     if feedback_type == "bug" and (reproduction_steps or expected_behavior or actual_behavior):
-        meta_content += f"""
+        meta_content += """
 
 ## 🔍 BUG DETAILS"""
 
@@ -703,8 +703,7 @@ This feedback should be:
     return detick_content(meta_content)
 
 
-# Import HandoffRequest from snapshots to avoid code duplication
-from agor.tools.snapshots import HandoffRequest
+# HandoffRequest available from snapshots if needed
 
 
 def generate_agent_handoff_prompt_extended(

@@ -1,6 +1,6 @@
 # 🎯 AGOR Agent Workflow Optimization Guide
 
-**For Users: How to Maintain Seamless Agent Coordination**
+## For Users: How to Maintain Seamless Agent Coordination
 
 This guide provides practical strategies for optimizing your AGOR workflow based on real-world usage patterns and lessons learned from developing AGOR itself.
 

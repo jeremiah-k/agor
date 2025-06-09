@@ -125,7 +125,7 @@ Based on your environment detection:
 - **Separation enforced**: `.agor/` files are in `.gitignore` and will never appear on working branches
 
 ### Critical Understanding Points
-1. **When dev tooling says "snapshot committed to memory branch X"** - that's where it went, don't look for it on your working branch
+1. **When dev tooling says, "snapshot committed to memory branch X"** - that's where it went, don't look for it on your working branch
 2. **Memory branches are accessed via dev tooling functions** - not direct file operations
 3. **Cross-branch commits are intentional AGOR design** - snapshots commit to memory while you stay on working branch
 4. **If you try to create .agor files on working branch** - you're violating AGOR architecture

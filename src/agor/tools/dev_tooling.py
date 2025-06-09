@@ -234,7 +234,7 @@ def display_git_workflow_status() -> str:
 
 
 # Import memory branch utilities from memory_manager to avoid code duplication
-from agor.tools.memory_manager import read_from_memory_branch, list_memory_branches
+# Note: read_from_memory_branch and list_memory_branches available if needed
 
 
 def generate_agent_memory_branch() -> str:
@@ -341,18 +341,16 @@ def validate_output_formatting(content: str) -> dict:
             validation["suggestions"].append("Process through detick_content() before wrapping in codeblocks")
 
     # Check for proper codeblock wrapping indicators
-    if not content.startswith("``") or not content.endswith("``"):
-        if validation["has_codeblocks"]:
-            validation["is_compliant"] = False
-            validation["issues"].append("Content with codeblocks should be wrapped in double backticks")
-            validation["suggestions"].append("Wrap entire content in double backticks for copy-paste safety")
+    if (not content.startswith("``") or not content.endswith("``")) and validation["has_codeblocks"]:
+        validation["is_compliant"] = False
+        validation["issues"].append("Content with codeblocks should be wrapped in double backticks")
+        validation["suggestions"].append("Wrap entire content in double backticks for copy-paste safety")
 
     # Check for handoff prompt indicators
-    if "handoff" in content.lower() or "session end" in content.lower():
-        if not validation["has_codeblocks"] or validation["has_triple_backticks"]:
-            validation["is_compliant"] = False
-            validation["issues"].append("Handoff prompts must be deticked and wrapped in single codeblocks")
-            validation["suggestions"].append("Use detick_content() and wrap in double backticks")
+    if ("handoff" in content.lower() or "session end" in content.lower()) and (not validation["has_codeblocks"] or validation["has_triple_backticks"]):
+        validation["is_compliant"] = False
+        validation["issues"].append("Handoff prompts must be deticked and wrapped in single codeblocks")
+        validation["suggestions"].append("Use detick_content() and wrap in double backticks")
 
     return validation
 
