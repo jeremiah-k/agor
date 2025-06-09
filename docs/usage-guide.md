@@ -107,44 +107,28 @@ MANDATORY: Read these files from workspace sources before starting any developme
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
 
-### Step 2: Role Selection
-Choose your AGOR role based on the task:
+### Step 2: Utilize AGOR Tooling
 
-**🔍 SOLO DEVELOPER** - For:
-- Codebase analysis and exploration
-- Feature implementation and debugging
-- Technical documentation and code explanation
-- Direct development work
+**🔧 Development Tooling**
+- **Snapshots**: Create comprehensive work snapshots for agent-to-agent continuity
+- **Handoff Prompts**: Generate detailed context for seamless agent transitions
+- **PR Descriptions**: Auto-generate professional pull request descriptions
+- **Release Notes**: Create formatted release documentation
+- **Meta Feedback**: Provide structured feedback on AGOR itself
 
-**📋 PROJECT COORDINATOR** - For:
-- Strategic planning and architecture design
-- Multi-agent workflow coordination
-- Project breakdown and task assignment
-- Team management and strategy selection
+**🧠 Memory System**
+- **Agent Continuity**: Preserve context across sessions and agent switches
+- **Memory Branches**: Isolated storage for agent state and coordination
+- **Cross-Session Context**: Resume work exactly where previous agent left off
+- **Multi-Agent Coordination**: Share context between multiple agents
 
-**🤖 AGENT WORKER** - For:
-- Executing specific assigned tasks
-- Following coordinator instructions
-- Participating in multi-agent workflows
-- Task completion and reporting
+### Step 3: Essential Dev Tools
 
-### Step 3: Environment Detection
-You are operating in **AugmentCode Local Agent** environment with:
-- Direct workspace access to AGOR documentation
-- Full file system access without upload limitations
-- Persistent User Guidelines across sessions
-- Enhanced memory through Augment system
-
-## 🛠️ AGOR Workflow Protocols
-
-### Core Development Tools (Use These Frequently)
-- `a` - Comprehensive codebase analysis
-- `f` - Display complete files with formatting
-- `commit` - Save changes with descriptive messages
+**Core Functions (Available in all environments):**
 - `snapshot` - Create work snapshot (MANDATORY before ending sessions)
-- `status` - Check coordination and project status
 - `meta` - Provide feedback on AGOR itself
-- Use dev tooling functions for all coordination outputs
+- `commit` - Save changes with descriptive messages
+- `status` - Check coordination and project status
 
 ### Snapshot Requirements (CRITICAL)
 **EVERY session MUST end with a snapshot in a single codeblock:**
