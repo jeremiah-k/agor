@@ -29,9 +29,9 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
-### 21. 2025-06-09 | v0.5.0 | Agent Workflow Optimization and Seamless Handoff System Enhancement
+### 21. 2025-06-09 | v0.5.0 | Agent Workflow Optimization and Critical Architecture Understanding
 
-**Technical Focus**: Addressing critical gaps in agent coordination workflow where handoff prompts weren't automatically generated, creating user-facing optimization guide, and implementing better memory branch strategy for agent persistence.
+**Technical Focus**: Addressing critical gaps in agent coordination workflow, fundamental memory branch architecture misunderstandings, and implementing comprehensive agent education system for seamless handoffs.
 
 **Implementation Details**:
 
@@ -53,6 +53,10 @@ Each entry includes:
   - ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be deticked and wrapped in single codeblocks
   - Added explicit requirements to AGOR_INSTRUCTIONS.md, augment_user_guidelines.md, and usage-guide.md
   - Enables seamless copy-paste workflow without formatting issues
+- **Memory Branch Architecture Education**: Added comprehensive memory system understanding to README_ai.md
+  - Clarified that .agor files ONLY exist on memory branches, NEVER on working branches
+  - Explained cross-branch commit design and dev tooling output interpretation
+  - Addressed fundamental misunderstanding causing agents to violate AGOR architecture
 
 **Rationale**:
 

@@ -304,6 +304,15 @@ print("```")
 **ALWAYS**: Detick first, then wrap in single codeblock
 **PURPOSE**: Enables seamless copy-paste workflow without formatting issues
 
+**HANDOFF PROMPT FORMATTING - ABSOLUTELY MANDATORY**:
+Every session MUST end with a handoff prompt that is:
+1. **Generated using dev tooling functions**
+2. **Processed through detick_content() to remove triple backticks**
+3. **Wrapped in a single codeblock with triple backticks**
+4. **Ready for immediate copy-paste by user**
+
+**MEMORY BRANCH UNDERSTANDING**: When dev tooling says "snapshot committed to memory branch X", that's where it went. Don't expect .agor files on your working branch - they're in .gitignore intentionally.
+
 Always create a snapshot before ending your session using the dev tooling.
 
 **WORKER AGENT COORDINATION ACTIONS:**

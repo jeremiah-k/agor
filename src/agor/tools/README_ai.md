@@ -115,6 +115,27 @@ Based on your environment detection:
 
 **Agent Workflow Guidance**: End responses with suggestions like "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
 
+## 🧠 Memory System Understanding - CRITICAL ARCHITECTURE
+
+**FUNDAMENTAL RULE**: `.agor/` files ONLY exist on memory branches, NEVER on working branches
+
+### Memory Branch Architecture
+- **Memory branches** (e.g., `agor/mem/2025-06-09_1552`) store `.agor/` directory contents ONLY
+- **Working branches** (e.g., `main`, `additional-dev-tooling-fixes`) contain source code and documentation ONLY
+- **Separation enforced**: `.agor/` files are in `.gitignore` and will never appear on working branches
+
+### Critical Understanding Points
+1. **When dev tooling says "snapshot committed to memory branch X"** - that's where it went, don't look for it on your working branch
+2. **Memory branches are accessed via dev tooling functions** - not direct file operations
+3. **Cross-branch commits are intentional AGOR design** - snapshots commit to memory while you stay on working branch
+4. **If you try to create .agor files on working branch** - you're violating AGOR architecture
+
+### Reading Dev Tooling Output
+**ALWAYS read and understand what dev tooling tells you:**
+- "✅ Snapshot committed to memory branch: agor/mem/agent_abc123" means SUCCESS
+- "📁 Snapshot file: .agor/snapshots/filename.md" shows the memory branch location
+- Don't expect these files to appear on your current working branch
+
 **Development Tools**:
 
 - `src/agor/tools/dev_tooling.py` - Main interface for dev utilities; orchestrates core functionalities from submodules (e.g., `git_operations.py`, `memory_manager.py`).
