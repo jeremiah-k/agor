@@ -24,9 +24,8 @@ This section provides detailed setup instructions for initializing AGOR agents o
 agor bundle your-project -f zip
 # Upload to Google AI Studio Pro
 # Select role based on your needs:
-# - Solo Developer: For code analysis and implementation
+# - Worker Agent: For code analysis and implementation
 # - Project Coordinator: For planning and strategy
-# - Worker Agent: For following specific instructions
 # All roles work with copy-paste workflow
 ```
 
@@ -136,7 +135,7 @@ Please read these key files from the workspace sources to understand the system:
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker) based on the task requirements.
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator) based on the task requirements.
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -228,7 +227,7 @@ Please read these key files to understand the system:
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Solo Developer, Project Coordinator, or Agent Worker).
+After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator).
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -381,7 +380,7 @@ agor bundle https://github.com/your-username/your-project
 
 ## 🎭 Role Selection Deep Dive
 
-### 🔍 Solo Developer
+### 🔍 Worker Agent
 
 **Primary Purpose:** Deep codebase analysis and implementation
 
@@ -417,9 +416,9 @@ agor bundle https://github.com/your-username/your-project
 3. Implement changes or provide detailed explanations
 4. Document findings and decisions
 
-**Why Use AGOR as a Solo Developer?**
+**Why Use AGOR as a Worker Agent?**
 
-While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for solo developers:
+While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for individual development work:
 
 - **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)snapshots can bring clarity to complex projects.
 - **Context Preservation**: AI assistants often have context window limits. Using AGOR's `snapshot` hotkey (even if you're creating a snapshot for yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
@@ -494,7 +493,7 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 **🔄 Parallel Divergent** - Multiple independent solutions
 
 - **Use for**: Feature design, architecture decisions, creative problem-solving
-- **Roles**: Multiple SOLO DEVELOPER agents working independently
+- **Roles**: Multiple Worker Agent agents working independently
 - **Outcome**: Best ideas synthesized into final solution
 
 **⚡ Pipeline** - Sequential work via snapshots with specialization
@@ -527,9 +526,8 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 
 1. **Start with Bundled Mode** using Google AI Studio Pro (free)
 2. **Choose any role** based on what you want to do:
-   - **SOLO DEVELOPER**: For code analysis and implementation
-   - **PROJECT COORDINATOR**: For planning and strategy
-   - **AGENT WORKER**: For following specific instructions
+   - **Worker Agent**: For code analysis and implementation
+   - **Project Coordinator**: For planning and strategy
 3. **Use basic hotkeys**: `a` (analyze), `f` (full files), `status`
 4. **Practice with small projects** before attempting multi-agent workflows
 

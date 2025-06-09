@@ -65,7 +65,7 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 - **Platform flexibility**: Works with any AI platform that accepts file uploads
 - **Free tier compatible**: Excellent for Google AI Studio Pro (free)
 
-> **💡 Key Point**: All AGOR roles (Solo Developer, Project Coordinator, Agent Worker) function effectively in both Standalone and Bundled modes. The primary difference lies in how code changes are applied: direct Git commits are possible in Standalone Mode (if the agent has access), while Bundled Mode typically relies on a copy-paste workflow where the user handles the final commit.
+> **💡 Key Point**: All AGOR roles (Worker Agent, Project Coordinator) function effectively in both Standalone and Bundled modes. The primary difference lies in how code changes are applied: direct Git commits are possible in Standalone Mode (if the agent has access), while Bundled Mode typically relies on a copy-paste workflow where the user handles the final commit.
 
 ## 🎯 Core Capabilities & Features
 
@@ -73,7 +73,7 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 
 AGOR defines distinct roles to structure AI-driven development tasks. Each role is equipped with a specialized set of tools and designed for specific types of activities:
 
-**🔹 SOLO DEVELOPER**: Focuses on deep codebase analysis, implementation, and answering technical questions. Ideal for solo development tasks, feature implementation, and detailed debugging.
+**🔹 Worker Agent**: Focuses on deep codebase analysis, implementation, and answering technical questions. Ideal for solo development tasks, feature implementation, and detailed debugging.
 
 **🔹 PROJECT COORDINATOR**: Handles strategic planning, designs multi-agent workflows, and orchestrates team activities. Best suited for multi-agent project planning, strategy design, and overall team coordination.
 
