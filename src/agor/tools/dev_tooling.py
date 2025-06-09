@@ -237,6 +237,149 @@ def display_git_workflow_status() -> str:
 from agor.tools.memory_manager import read_from_memory_branch, list_memory_branches
 
 
+def generate_agent_memory_branch() -> str:
+    """
+    Generate unique memory branch for agent using timestamp-based hash.
+
+    Returns:
+        String in format 'agor/mem/agent_{hash}' for unique agent identification
+    """
+    import hashlib
+    import time
+
+    agent_id = hashlib.md5(f"agent_{time.time()}".encode()).hexdigest()[:8]
+    memory_branch = f"agor/mem/agent_{agent_id}"
+
+    return memory_branch
+
+
+def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
+    """
+    Create agent-specific memory branch for snapshot storage.
+
+    Args:
+        memory_branch: Optional specific branch name, generates one if not provided
+
+    Returns:
+        Tuple of (success: bool, branch_name: str)
+    """
+    if memory_branch is None:
+        memory_branch = generate_agent_memory_branch()
+
+    try:
+        from agor.tools.memory_manager import commit_to_memory_branch
+
+        # Create initial commit to establish the memory branch
+        initial_content = f"""# Agent Memory Branch: {memory_branch}
+
+**Created**: {get_current_timestamp()}
+**Purpose**: Dedicated memory space for agent coordination and snapshots
+
+## Branch Usage
+
+This memory branch stores:
+- Development snapshots
+- Agent coordination data
+- Session context and handoff information
+- Workflow state and progress tracking
+
+## Agent Guidelines
+
+- Use this branch for all snapshot commits
+- Reference this branch in handoff prompts
+- Maintain context continuity across sessions
+- Clean up when agent work is complete
+"""
+
+        success = commit_to_memory_branch(
+            content=initial_content,
+            memory_type="agent_initialization",
+            agent_id=memory_branch.split('_')[-1],  # Extract agent ID from branch name
+            memory_branch=memory_branch
+        )
+
+        if success:
+            print(f"✅ Created agent memory branch: {memory_branch}")
+        else:
+            print(f"❌ Failed to create agent memory branch: {memory_branch}")
+
+        return success, memory_branch
+
+    except Exception as e:
+        print(f"❌ Error creating agent memory branch: {e}")
+        return False, memory_branch
+
+
+def validate_output_formatting(content: str) -> dict:
+    """
+    Validate that content follows AGOR output formatting requirements.
+
+    Args:
+        content: Content to validate for formatting compliance
+
+    Returns:
+        Dictionary with validation results and suggestions
+    """
+    validation = {
+        "is_compliant": True,
+        "issues": [],
+        "suggestions": [],
+        "has_codeblocks": False,
+        "has_triple_backticks": False,
+        "detick_needed": False
+    }
+
+    # Check for codeblock presence
+    if "```" in content:
+        validation["has_codeblocks"] = True
+        validation["has_triple_backticks"] = True
+
+        # Check if content has triple backticks that need deticking
+        if content.count("```") > 0:
+            validation["detick_needed"] = True
+            validation["issues"].append("Content contains triple backticks that may break codeblock rendering")
+            validation["suggestions"].append("Process through detick_content() before wrapping in codeblocks")
+
+    # Check for proper codeblock wrapping indicators
+    if not content.startswith("``") or not content.endswith("``"):
+        if validation["has_codeblocks"]:
+            validation["is_compliant"] = False
+            validation["issues"].append("Content with codeblocks should be wrapped in double backticks")
+            validation["suggestions"].append("Wrap entire content in double backticks for copy-paste safety")
+
+    # Check for handoff prompt indicators
+    if "handoff" in content.lower() or "session end" in content.lower():
+        if not validation["has_codeblocks"] or validation["has_triple_backticks"]:
+            validation["is_compliant"] = False
+            validation["issues"].append("Handoff prompts must be deticked and wrapped in single codeblocks")
+            validation["suggestions"].append("Use detick_content() and wrap in double backticks")
+
+    return validation
+
+
+def apply_output_formatting(content: str, content_type: str = "general") -> str:
+    """
+    Apply proper AGOR output formatting to content.
+
+    Args:
+        content: Content to format
+        content_type: Type of content (handoff_prompt, snapshot, general)
+
+    Returns:
+        Properly formatted content ready for output
+    """
+    # Process through detick to handle any triple backticks
+    processed_content = detick_content(content)
+
+    # For handoff prompts and critical outputs, wrap in codeblock
+    if content_type in ["handoff_prompt", "snapshot", "meta_feedback"]:
+        formatted_content = f"``\n{processed_content}\n``"
+    else:
+        formatted_content = processed_content
+
+    return formatted_content
+
+
 # Utility Functions
 # =================
 
@@ -249,3 +392,267 @@ def detect_current_environment() -> dict:
 def test_all_tooling() -> bool:
     """Test all development tooling components."""
     return test_tooling()
+
+
+# Workflow Optimization Functions
+# ===============================
+
+
+def generate_workflow_prompt_template(
+    task_description: str,
+    memory_branch: str = None,
+    include_bookend: bool = True,
+    include_explicit_requirements: bool = True
+) -> str:
+    """
+    Generate optimized prompt template using proven workflow strategies.
+
+    Args:
+        task_description: Main task description
+        memory_branch: Agent memory branch for context continuity
+        include_bookend: Include bookend approach (start/end requirements)
+        include_explicit_requirements: Include explicit handoff requirements
+
+    Returns:
+        Optimized prompt template ready for agent use
+    """
+    if memory_branch is None:
+        memory_branch = generate_agent_memory_branch()
+
+    prompt_template = f"""# 🎯 AGOR Agent Task: {task_description}
+
+**Memory Branch**: {memory_branch}
+**Generated**: {get_current_timestamp()}
+
+## 📋 Task Description
+
+{task_description}
+
+"""
+
+    if include_bookend:
+        prompt_template += """## 🚀 Session Start Requirements
+
+Before starting work:
+1. Read AGOR documentation and understand the task
+2. Create a development plan and approach
+3. Set up your memory branch for snapshots
+
+"""
+
+    prompt_template += """## 🔧 Development Guidelines
+
+- Use quick_commit_and_push() frequently during work
+- Create progress snapshots for major milestones
+- Test your changes thoroughly
+- Document your implementation process
+
+"""
+
+    if include_explicit_requirements:
+        prompt_template += f"""## ⚠️ MANDATORY SESSION END REQUIREMENTS
+
+Your response MUST end with:
+
+1. **Development Snapshot**: Use create_development_snapshot()
+2. **Handoff Prompt**: Use generate_session_end_prompt()
+3. **Proper Formatting**: Process through detick_content() and wrap in codeblocks
+
+**Memory Branch Reference**: {memory_branch}
+
+```python
+# Required session end code:
+from agor.tools.dev_tooling import create_development_snapshot
+from agor.tools.agent_handoffs import generate_session_end_prompt, detick_content
+
+# Create snapshot
+create_development_snapshot(
+    title="Your work title",
+    context="Detailed description of what you accomplished"
+)
+
+# Generate handoff prompt
+handoff_prompt = generate_session_end_prompt(
+    work_completed=["List your accomplishments"],
+    current_status="Current project status",
+    next_agent_instructions=["Instructions for next agent"],
+    critical_context="Important context to preserve",
+    files_modified=["Files you modified"]
+)
+
+# Format and output
+processed_prompt = detick_content(handoff_prompt)
+print("``")
+print(processed_prompt)
+print("``")
+```
+
+"""
+
+    prompt_template += """## 🎯 Success Criteria
+
+You will have succeeded when:
+- All task objectives are completed
+- Changes are tested and working
+- Comprehensive snapshot is created
+- Handoff prompt is generated and properly formatted
+- Next agent has clear instructions to continue
+
+---
+
+**Remember**: AGOR's goal is seamless agent coordination. Your handoff prompt should enable the next agent to continue work without manual re-entry of context."""
+
+    return prompt_template
+
+
+def validate_workflow_completion(
+    work_completed: list,
+    files_modified: list,
+    has_snapshot: bool = False,
+    has_handoff_prompt: bool = False
+) -> dict:
+    """
+    Validate that workflow completion meets AGOR standards.
+
+    Args:
+        work_completed: List of completed work items
+        files_modified: List of modified files
+        has_snapshot: Whether development snapshot was created
+        has_handoff_prompt: Whether handoff prompt was generated
+
+    Returns:
+        Dictionary with validation results and recommendations
+    """
+    validation = {
+        "is_complete": True,
+        "score": 0,
+        "max_score": 10,
+        "issues": [],
+        "recommendations": [],
+        "missing_requirements": []
+    }
+
+    # Check work completion documentation
+    if work_completed and len(work_completed) > 0:
+        validation["score"] += 2
+    else:
+        validation["is_complete"] = False
+        validation["issues"].append("No work completion documented")
+        validation["missing_requirements"].append("Document completed work items")
+
+    # Check file modification tracking
+    if files_modified and len(files_modified) > 0:
+        validation["score"] += 2
+    else:
+        validation["issues"].append("No file modifications documented")
+        validation["recommendations"].append("Track and document all file changes")
+
+    # Check snapshot creation
+    if has_snapshot:
+        validation["score"] += 3
+    else:
+        validation["is_complete"] = False
+        validation["issues"].append("Development snapshot not created")
+        validation["missing_requirements"].append("Create development snapshot with create_development_snapshot()")
+
+    # Check handoff prompt generation
+    if has_handoff_prompt:
+        validation["score"] += 3
+    else:
+        validation["is_complete"] = False
+        validation["issues"].append("Handoff prompt not generated")
+        validation["missing_requirements"].append("Generate handoff prompt with generate_session_end_prompt()")
+
+    # Add recommendations based on score
+    if validation["score"] < 5:
+        validation["recommendations"].append("Review AGOR workflow optimization guide")
+        validation["recommendations"].append("Use workflow prompt templates for better compliance")
+    elif validation["score"] < 8:
+        validation["recommendations"].append("Improve documentation completeness")
+        validation["recommendations"].append("Ensure all requirements are met")
+    else:
+        validation["recommendations"].append("Excellent workflow compliance!")
+
+    return validation
+
+
+def get_workflow_optimization_tips() -> str:
+    """
+    Get workflow optimization tips based on current AGOR best practices.
+
+    Returns:
+        Formatted tips for improving agent workflow compliance
+    """
+    tips = f"""# 🎯 AGOR Workflow Optimization Tips
+
+**Generated**: {get_current_timestamp()}
+
+## 🔄 Proven Strategies
+
+### 1. The "Bookend" Approach
+- Start sessions with clear requirements
+- End sessions with mandatory deliverables
+- Include explicit handoff instructions
+
+### 2. Memory Branch Strategy
+- Generate unique agent memory branch: `{generate_agent_memory_branch()}`
+- Use for all snapshots and coordination
+- Reference in handoff prompts for continuity
+
+### 3. Output Formatting Compliance
+- ALL handoff prompts must be deticked and wrapped in codeblocks
+- Use `detick_content()` before wrapping in double backticks
+- Test formatting with `validate_output_formatting()`
+
+## 🚨 Common Issues to Avoid
+
+❌ **Agent doesn't create handoff prompt**
+✅ **Solution**: Include explicit requirements in prompt template
+
+❌ **Context lost between agents**
+✅ **Solution**: Always reference memory branches and previous work
+
+❌ **Formatting breaks codeblocks**
+✅ **Solution**: Use detick_content() and proper wrapping
+
+## 🛠️ Helper Functions
+
+```python
+# Generate optimized prompt
+prompt = generate_workflow_prompt_template(
+    task_description="Your task",
+    memory_branch="agor/mem/agent_12345678"
+)
+
+# Validate completion
+validation = validate_workflow_completion(
+    work_completed=["item1", "item2"],
+    files_modified=["file1.py", "file2.md"],
+    has_snapshot=True,
+    has_handoff_prompt=True
+)
+
+# Check output formatting
+formatting = validate_output_formatting(content)
+```
+
+## 🎯 Success Metrics
+
+**Green flags** (workflow working well):
+- Agents automatically create handoff prompts
+- Context flows seamlessly between agents
+- Minimal user intervention required
+- Work continues without manual re-entry
+
+**Red flags** (optimization needed):
+- Repeatedly reminding agents about handoffs
+- Context getting lost between sessions
+- Manual re-entry of requirements
+- Agents not following AGOR protocols
+
+---
+
+**Use these tips to maintain seamless AGOR coordination workflows.**
+"""
+
+    return tips
