@@ -33,7 +33,8 @@ from .memory_manager import commit_to_memory_branch
 
 from .agent_handoffs import detick_content
 
-# Note: dev_testing functions are imported locally where needed to avoid redefinition conflicts
+# Import dev_testing functions
+from .dev_testing import detect_environment, get_agent_dependency_install_commands
 
 from .snapshot_templates import generate_snapshot_document # Added for create_seamless_handoff
 
