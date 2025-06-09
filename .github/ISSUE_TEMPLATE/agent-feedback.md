@@ -8,7 +8,7 @@ assignees: []
 
 ## Agent Context
 
-**Role**: [PROJECT COORDINATOR / ANALYST/SOLO DEV / AGENT WORKER]
+**Role**: [Project Coordinator / Worker Agent]
 **Project Type**: [e.g., Python web app, React frontend, etc.]
 **Platform**: [Google AI Studio / ChatGPT / Other]
 **Bundle Format**: [.zip / .tar.gz]
@@ -80,7 +80,7 @@ assignees: []
 ### Who This Affects
 
 - [ ] All agents using AGOR
-- [ ] Specific role: [PROJECT COORDINATOR / ANALYST/SOLO DEV / AGENT WORKER]
+- [ ] Specific role: [Project Coordinator / Worker Agent]
 - [ ] Specific platform: [Google AI Studio / ChatGPT / Other]
 - [ ] Specific workflow: [describe]
 

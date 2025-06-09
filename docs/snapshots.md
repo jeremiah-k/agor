@@ -2,9 +2,9 @@
 
 One of AGOR's most powerful features is seamless agent transitions. Whether you're switching roles, passing work to a specialist, or need to step away mid-task, AGOR's snapshot system ensures no context is lost.
 
-## 💡 Snapshots for Everyone (Including Solo Developers!)
+## 💡 Snapshots for Everyone (Including Individual Developers!)
 
-While the concept of a "snapshot" naturally brings to mind passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **solo developers**. Think of it as creating a comprehensive "snapshot" of your current work:
+While the concept of a "snapshot" naturally brings to mind passing work between different agents or team members, AGOR's snapshot system is a powerful tool even for **individual developers**. Think of it as creating a comprehensive "snapshot" of your current work:
 
 - **Context Preservation Across Sessions**: If you're stepping away from a task and want to ensure you can pick it up seamlessly later (perhaps hours, days, or even weeks later), creating a snapshot to your "future self" captures all relevant code changes, analysis, decisions, and next steps.
 - **Managing AI Context Limits**: Large language models have context windows. If a task is complex and requires more back-and-forth than a single session can hold, creating a snapshot allows you to effectively "reset" the context for the AI while providing it with a structured, detailed summary of everything it needs to continue. You can then start a new conversation with the AI, provide the snapshot document, and carry on.

@@ -94,7 +94,7 @@ AGOR will ask you to choose a role. Pick based on what you want to do:
 - Team design and workflow orchestration
 - Multi-agent strategy selection
 
-### 🔍 SOLO DEVELOPER
+### 🔍 Worker Agent
 
 **"I want to analyze and work with code"**
 
@@ -148,7 +148,7 @@ Let's walk through a typical coordination session:
    → Designs team structure with specialized agents
 ```
 
-### Implementation Phase (SOLO DEVELOPER)
+### Implementation Phase (Worker Agent)
 
 ```
 1. Type: a

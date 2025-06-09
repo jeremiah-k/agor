@@ -208,7 +208,7 @@ After uploading and initializing, AGOR will prompt for role selection:
 - Multi-agent strategy selection (`ss`, `pd`, `pl`, `sw`)
 - Team design and workflow orchestration (`ct`, `tm`)
 
-### 🔍 SOLO DEVELOPER
+### 🔍 Worker Agent
 
 **Best for**: Code analysis, implementation, solo work
 
