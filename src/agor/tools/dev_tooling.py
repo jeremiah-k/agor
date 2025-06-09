@@ -15,6 +15,7 @@ to streamline development workflow and memory management.
 
 import os
 import subprocess
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
