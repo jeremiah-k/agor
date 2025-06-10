@@ -16,7 +16,7 @@ Provides a clean API interface while keeping individual modules under 500 LOC.
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from agor.tools.agent_handoffs import detick_content, retick_content
 from agor.tools.checklist import (
