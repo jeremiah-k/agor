@@ -20,6 +20,7 @@ from agor.tools.git_operations import get_current_timestamp, run_git_command
 # Import feedback manager for modularized feedback handling
 try:
     from .feedback_manager import FeedbackManager
+
     FEEDBACK_MANAGER_AVAILABLE = True
 except ImportError:
     FEEDBACK_MANAGER_AVAILABLE = False
@@ -84,7 +85,7 @@ def retick_content(content: str) -> str:
 def _format_feedback_list(items: List[str], empty_message: str) -> str:
     """
     Formats a list of feedback items as a markdown bullet list.
-    
+
     If the list is empty, returns a single bullet with the provided empty message.
     """
     if not items:
@@ -96,11 +97,11 @@ def validate_feedback_input(
     feedback_type: str,
     feedback_content: str,
     severity: str = "medium",
-    component: str = "general"
+    component: str = "general",
 ) -> dict:
     """
     Validates meta feedback input for type, severity, content quality, and component.
-    
+
     Checks if the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and suggests improvements based on feedback type. Returns a dictionary indicating validity, detected issues, suggestions for improvement, and normalized values for type, severity, and component.
     """
     validation = {
@@ -109,11 +110,19 @@ def validate_feedback_input(
         "suggestions": [],
         "normalized_type": feedback_type,
         "normalized_severity": severity,
-        "normalized_component": component
+        "normalized_component": component,
     }
 
     # Validate feedback type
-    valid_types = ["bug", "enhancement", "workflow_issue", "success_story", "documentation", "performance", "usability"]
+    valid_types = [
+        "bug",
+        "enhancement",
+        "workflow_issue",
+        "success_story",
+        "documentation",
+        "performance",
+        "usability",
+    ]
     if feedback_type not in valid_types:
         validation["issues"].append(f"Invalid feedback type: {feedback_type}")
         validation["suggestions"].append(f"Use one of: {', '.join(valid_types)}")
@@ -131,29 +140,47 @@ def validate_feedback_input(
     # Validate content length and quality
     if not feedback_content or len(feedback_content.strip()) < 10:
         validation["issues"].append("Feedback content is too short or empty")
-        validation["suggestions"].append("Provide at least 10 characters of meaningful feedback")
+        validation["suggestions"].append(
+            "Provide at least 10 characters of meaningful feedback"
+        )
         validation["is_valid"] = False
 
     if len(feedback_content) > 5000:
         validation["issues"].append("Feedback content is very long")
-        validation["suggestions"].append("Consider breaking into multiple feedback items")
+        validation["suggestions"].append(
+            "Consider breaking into multiple feedback items"
+        )
 
     # Validate component
     common_components = [
-        "dev_tooling", "memory_system", "hotkeys", "coordination", "documentation",
-        "git_operations", "agent_handoffs", "snapshots", "environment_detection",
-        "workflow", "user_interface", "performance", "general"
+        "dev_tooling",
+        "memory_system",
+        "hotkeys",
+        "coordination",
+        "documentation",
+        "git_operations",
+        "agent_handoffs",
+        "snapshots",
+        "environment_detection",
+        "workflow",
+        "user_interface",
+        "performance",
+        "general",
     ]
 
     if component not in common_components:
-        validation["suggestions"].append(f"Consider using a standard component: {', '.join(common_components[:5])}...")
+        validation["suggestions"].append(
+            f"Consider using a standard component: {', '.join(common_components[:5])}..."
+        )
 
     # Content quality suggestions
     if feedback_type == "bug" and "reproduce" not in feedback_content.lower():
         validation["suggestions"].append("For bugs, include reproduction steps")
 
     if feedback_type == "enhancement" and "benefit" not in feedback_content.lower():
-        validation["suggestions"].append("For enhancements, explain the expected benefits")
+        validation["suggestions"].append(
+            "For enhancements, explain the expected benefits"
+        )
 
     return validation
 
@@ -161,6 +188,7 @@ def validate_feedback_input(
 @dataclass
 class GitHubIssueConfig:
     """Configuration for GitHub issue creation."""
+
     feedback_type: str
     feedback_content: str
     suggestions: List[str] = None
@@ -174,7 +202,7 @@ class GitHubIssueConfig:
 def create_github_issue_content(config: GitHubIssueConfig) -> str:
     """
     Generates formatted GitHub issue content from a GitHubIssueConfig instance.
-    
+
     Creates a structured issue template including feedback type, component, severity, description, reproduction steps, expected and actual behavior (for bugs), suggested solutions, and appropriate labels. Designed for use with AGOR meta feedback submissions.
     """
     if config.suggestions is None:
@@ -190,14 +218,14 @@ def create_github_issue_content(config: GitHubIssueConfig) -> str:
         "success_story": "feedback",
         "documentation": "documentation",
         "performance": "performance",
-        "usability": "UX"
+        "usability": "UX",
     }
 
     severity_labels = {
         "low": "priority: low",
         "medium": "priority: medium",
         "high": "priority: high",
-        "critical": "priority: critical"
+        "critical": "priority: critical",
     }
 
     issue_content = f"""## {config.feedback_type.replace('_', ' ').title()}
@@ -239,7 +267,10 @@ def create_github_issue_content(config: GitHubIssueConfig) -> str:
 {_format_feedback_list(config.suggestions, 'No suggestions provided')}"""
 
     # Add labels section
-    labels = [type_labels.get(config.feedback_type, "feedback"), severity_labels.get(config.severity, "priority: medium")]
+    labels = [
+        type_labels.get(config.feedback_type, "feedback"),
+        severity_labels.get(config.severity, "priority: medium"),
+    ]
     if config.component != "general":
         labels.append(f"component: {config.component}")
 
@@ -260,7 +291,7 @@ def create_github_issue_content(config: GitHubIssueConfig) -> str:
 def get_feedback_statistics() -> dict:
     """
     Retrieves feedback usage statistics and system status.
-    
+
     Returns:
         A dictionary containing feedback statistics, including total items, breakdowns by type, severity, and component, recent feedback, timestamp, available memory branches, and system status. If an error occurs, returns error details and status.
     """
@@ -273,7 +304,7 @@ def get_feedback_statistics() -> dict:
             "feedback_by_severity": {},
             "feedback_by_component": {},
             "recent_feedback": [],
-            "timestamp": get_current_timestamp()
+            "timestamp": get_current_timestamp(),
         }
 
         # This is a placeholder implementation
@@ -289,7 +320,7 @@ def get_feedback_statistics() -> dict:
         return {
             "error": str(e),
             "feedback_system_status": "error",
-            "timestamp": get_current_timestamp()
+            "timestamp": get_current_timestamp(),
         }
 
 
@@ -302,16 +333,16 @@ def generate_handoff_prompt_only(
 ) -> str:
     """
     Generates a formatted handoff prompt for agent coordination in AGOR development sessions.
-    
+
     Creates a structured prompt summarizing completed work, current status, instructions for the next agent, critical context, and files modified. Includes environment setup commands, coordination protocol instructions, and immediate next steps. Applies detick processing to ensure clean codeblock rendering for agent-to-agent communication.
-    
+
     Args:
         work_completed: List of completed work items for the session.
         current_status: Description of the current project status.
         next_agent_instructions: Instructions or tasks for the next agent or session.
         critical_context: Essential context that must be preserved for continuity.
         files_modified: List of files modified during the session.
-    
+
     Returns:
         A markdown-formatted handoff prompt with deticked content for seamless agent coordination.
     """
@@ -505,11 +536,11 @@ def generate_meta_feedback(
     reproduction_steps: List[str] = None,
     expected_behavior: str = None,
     actual_behavior: str = None,
-    environment_info: dict = None
+    environment_info: dict = None,
 ) -> str:
     """
     Generates structured meta feedback for AGOR, including validation, environment details, and actionable recommendations.
-    
+
     Creates a formatted feedback report with severity and type indicators, affected component, AGOR version, and environment context. For bug reports, includes sections for reproduction steps, expected and actual behavior. Lists improvement suggestions, tailored recommended actions based on feedback type, and metadata for tracking. Ensures clean markdown formatting for agent communication.
     """
     # Validate and set defaults
@@ -519,7 +550,15 @@ def generate_meta_feedback(
         reproduction_steps = []
 
     # Validate feedback type
-    valid_types = ["bug", "enhancement", "workflow_issue", "success_story", "documentation", "performance", "usability"]
+    valid_types = [
+        "bug",
+        "enhancement",
+        "workflow_issue",
+        "success_story",
+        "documentation",
+        "performance",
+        "usability",
+    ]
     if feedback_type not in valid_types:
         feedback_type = "general"
 
@@ -532,6 +571,7 @@ def generate_meta_feedback(
     if environment_info is None:
         try:
             from agor.tools.dev_testing import detect_environment
+
             environment_info = detect_environment()
         except Exception:
             environment_info = {"mode": "unknown", "platform": "unknown"}
@@ -540,12 +580,7 @@ def generate_meta_feedback(
     agor_version = get_agor_version()
 
     # Get severity emoji
-    severity_emojis = {
-        "low": "🟢",
-        "medium": "🟡",
-        "high": "🟠",
-        "critical": "🔴"
-    }
+    severity_emojis = {"low": "🟢", "medium": "🟡", "high": "🟠", "critical": "🔴"}
 
     # Get type emoji
     type_emojis = {
@@ -556,7 +591,7 @@ def generate_meta_feedback(
         "documentation": "📚",
         "performance": "⚡",
         "usability": "🎯",
-        "general": "💭"
+        "general": "💭",
     }
 
     meta_content = f"""# {type_emojis.get(feedback_type, '💭')} AGOR Meta Feedback
@@ -573,7 +608,9 @@ def generate_meta_feedback(
 {feedback_content}"""
 
     # Add bug-specific sections
-    if feedback_type == "bug" and (reproduction_steps or expected_behavior or actual_behavior):
+    if feedback_type == "bug" and (
+        reproduction_steps or expected_behavior or actual_behavior
+    ):
         meta_content += """
 
 ## 🔍 BUG DETAILS"""
@@ -692,7 +729,7 @@ This feedback should be:
                 feedback_content=feedback_content,
                 suggestions=suggestions,
                 severity=severity,
-                component=component
+                component=component,
             )
         except Exception as e:
             print(f"⚠️ Feedback manager error, using fallback: {e}")
@@ -713,16 +750,16 @@ def generate_agent_handoff_prompt_extended(
 ) -> str:
     """
     Generates a comprehensive agent handoff prompt with environment, task, and context details.
-    
+
     The prompt includes environment information, setup instructions, memory branch access commands, task overview, optional brief context, and previous work context if provided. It is formatted for seamless agent transitions and applies backtick processing to ensure safe embedding within single codeblocks.
-    
+
     Args:
         task_description: Description of the task for the next agent.
         snapshot_content: Optional summary of previous agent work.
         memory_branch: Optional name of the memory branch for coordination.
         environment: Optional environment details; auto-detected if not provided.
         brief_context: Optional brief background for quick orientation.
-    
+
     Returns:
         A formatted prompt string ready for use in a single codeblock.
     """

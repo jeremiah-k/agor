@@ -15,8 +15,7 @@ It imports functionality from specialized modules for better organization:
 Provides a clean API interface while keeping individual modules under 500 LOC.
 """
 
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 from agor.tools.agent_handoffs import detick_content, retick_content
 from agor.tools.checklist import (
@@ -166,22 +165,22 @@ def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
     local_memory_branches = []
     remote_memory_branches = []
 
-    for line in branches_output.split('\n'):
+    for line in branches_output.split("\n"):
         line = line.strip()
         # Skip empty lines
         if not line:
             continue
 
         # Handle current branch marker
-        if line.startswith('*'):
+        if line.startswith("*"):
             line = line[1:].strip()
 
         # Process remote branches
-        if line.startswith('remotes/origin/agor/mem/'):
-            remote_branch = line[len('remotes/origin/'):]
+        if line.startswith("remotes/origin/agor/mem/"):
+            remote_branch = line[len("remotes/origin/") :]
             remote_memory_branches.append(remote_branch)
         # Process local branches
-        elif line.startswith('agor/mem/'):
+        elif line.startswith("agor/mem/"):
             local_memory_branches.append(line)
 
     return local_memory_branches, remote_memory_branches
@@ -194,10 +193,10 @@ def _delete_local_branches(branches: List[str], results: Dict) -> None:
         success, output = run_git_command(["branch", "-D", branch])
         if success:
             print(f"✅ Deleted local branch: {branch}")
-            results['deleted_local'].append(branch)
+            results["deleted_local"].append(branch)
         else:
             print(f"❌ Failed to delete local branch {branch}: {output}")
-            results['failed'].append(f"local:{branch}")
+            results["failed"].append(f"local:{branch}")
 
 
 def _delete_remote_branches(branches: List[str], results: Dict) -> None:
@@ -207,21 +206,23 @@ def _delete_remote_branches(branches: List[str], results: Dict) -> None:
         success, output = run_git_command(["push", "origin", "--delete", branch])
         if success:
             print(f"✅ Deleted remote branch: {branch}")
-            results['deleted_remote'].append(branch)
+            results["deleted_remote"].append(branch)
         else:
             # Check for common network/permission issues
             if "Permission denied" in output or "Authentication failed" in output:
                 print(f"🔒 Permission denied for remote branch {branch}: {output}")
-                results['failed'].append(f"remote:{branch}:permission_denied")
+                results["failed"].append(f"remote:{branch}:permission_denied")
             elif "Network" in output or "Connection" in output:
                 print(f"🌐 Network error deleting remote branch {branch}: {output}")
-                results['failed'].append(f"remote:{branch}:network_error")
+                results["failed"].append(f"remote:{branch}:network_error")
             else:
                 print(f"❌ Failed to delete remote branch {branch}: {output}")
-                results['failed'].append(f"remote:{branch}:unknown_error")
+                results["failed"].append(f"remote:{branch}:unknown_error")
 
 
-def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[str, List[str]]:
+def cleanup_memory_branches(
+    dry_run: bool = True, confirm: bool = True
+) -> Dict[str, List[str]]:
     """
     Safely cleanup all memory branches (local and remote).
 
@@ -235,13 +236,7 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
         Dictionary with 'deleted_local', 'deleted_remote', 'failed' lists
     """
 
-
-    results = {
-        'deleted_local': [],
-        'deleted_remote': [],
-        'failed': [],
-        'skipped': []
-    }
+    results = {"deleted_local": [], "deleted_remote": [], "failed": [], "skipped": []}
 
     print("🔍 Scanning for memory branches...")
 
@@ -259,7 +254,9 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
         print("✅ No memory branches found to cleanup")
         return results
 
-    print(f"📋 Found {len(local_memory_branches)} local and {len(remote_memory_branches)} remote memory branches")
+    print(
+        f"📋 Found {len(local_memory_branches)} local and {len(remote_memory_branches)} remote memory branches"
+    )
 
     if dry_run:
         print("\n🔍 DRY RUN - Would delete:")
@@ -267,7 +264,9 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
             print(f"  📍 Local: {branch}")
         for branch in remote_memory_branches:
             print(f"  🌐 Remote: {branch}")
-        print(f"\n💡 Run with dry_run=False to actually delete {total_branches} branches")
+        print(
+            f"\n💡 Run with dry_run=False to actually delete {total_branches} branches"
+        )
         return results
 
     if confirm:
@@ -278,9 +277,9 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
             print(f"  🌐 Remote: {branch}")
 
         response = input("\n❓ Continue with deletion? (yes/no): ").lower().strip()
-        if response not in ['yes', 'y']:
+        if response not in ["yes", "y"]:
             print("🚫 Cleanup cancelled by user")
-            results['skipped'] = local_memory_branches + remote_memory_branches
+            results["skipped"] = local_memory_branches + remote_memory_branches
             return results
 
     # Delete branches using helper functions
@@ -288,8 +287,8 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
     _delete_remote_branches(remote_memory_branches, results)
 
     # Summary
-    total_deleted = len(results['deleted_local']) + len(results['deleted_remote'])
-    total_failed = len(results['failed'])
+    total_deleted = len(results["deleted_local"]) + len(results["deleted_remote"])
+    total_failed = len(results["failed"])
 
     print("\n📊 Cleanup Summary:")
     print(f"✅ Successfully deleted: {total_deleted} branches")
@@ -380,7 +379,7 @@ def display_git_workflow_status() -> str:
 def generate_agent_memory_branch() -> str:
     """
     Generates a unique agent memory branch name using a timestamp-based hash.
-    
+
     Returns:
         A string in the format 'agor/mem/agent_{hash}' for uniquely identifying an agent's memory branch.
     """
@@ -396,7 +395,7 @@ def generate_agent_memory_branch() -> str:
 def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
     """
     Creates an agent-specific memory branch with an initial commit containing metadata and usage guidelines.
-    
+
     If no branch name is provided, a unique one is generated. Returns a tuple indicating success and the branch name.
     """
     if memory_branch is None:
@@ -430,8 +429,8 @@ This memory branch stores:
         success = commit_to_memory_branch(
             content=initial_content,
             memory_type="agent_initialization",
-            agent_id=memory_branch.split('_')[-1],  # Extract agent ID from branch name
-            memory_branch=memory_branch
+            agent_id=memory_branch.split("_")[-1],  # Extract agent ID from branch name
+            memory_branch=memory_branch,
         )
 
         if success:
@@ -449,12 +448,12 @@ This memory branch stores:
 def validate_output_formatting(content: str) -> dict:
     """
     Validates whether the provided content complies with AGOR output formatting standards.
-    
+
     Checks for the presence of codeblocks, triple backticks, and proper codeblock wrapping. Identifies issues such as the need for deticking or incorrect formatting of handoff prompts, and provides suggestions for compliance.
-    
+
     Args:
         content: The content string to validate.
-    
+
     Returns:
         A dictionary containing compliance status, detected issues, suggestions for correction, and flags indicating codeblock and deticking requirements.
     """
@@ -464,7 +463,7 @@ def validate_output_formatting(content: str) -> dict:
         "suggestions": [],
         "has_codeblocks": False,
         "has_triple_backticks": False,
-        "detick_needed": False
+        "detick_needed": False,
     }
 
     # Check for codeblock presence
@@ -475,20 +474,36 @@ def validate_output_formatting(content: str) -> dict:
         # Check if content has triple backticks that need deticking
         if content.count("```") > 0:
             validation["detick_needed"] = True
-            validation["issues"].append("Content contains triple backticks that may break codeblock rendering")
-            validation["suggestions"].append("Process through detick_content() before wrapping in codeblocks")
+            validation["issues"].append(
+                "Content contains triple backticks that may break codeblock rendering"
+            )
+            validation["suggestions"].append(
+                "Process through detick_content() before wrapping in codeblocks"
+            )
 
     # Check for proper codeblock wrapping indicators
-    if (not content.startswith("``") or not content.endswith("``")) and validation["has_codeblocks"]:
+    if (not content.startswith("``") or not content.endswith("``")) and validation[
+        "has_codeblocks"
+    ]:
         validation["is_compliant"] = False
-        validation["issues"].append("Content with codeblocks should be wrapped in double backticks")
-        validation["suggestions"].append("Wrap entire content in double backticks for copy-paste safety")
+        validation["issues"].append(
+            "Content with codeblocks should be wrapped in double backticks"
+        )
+        validation["suggestions"].append(
+            "Wrap entire content in double backticks for copy-paste safety"
+        )
 
     # Check for handoff prompt indicators
-    if ("handoff" in content.lower() or "session end" in content.lower()) and (not validation["has_codeblocks"] or validation["has_triple_backticks"]):
+    if ("handoff" in content.lower() or "session end" in content.lower()) and (
+        not validation["has_codeblocks"] or validation["has_triple_backticks"]
+    ):
         validation["is_compliant"] = False
-        validation["issues"].append("Handoff prompts must be deticked and wrapped in single codeblocks")
-        validation["suggestions"].append("Use detick_content() and wrap in double backticks")
+        validation["issues"].append(
+            "Handoff prompts must be deticked and wrapped in single codeblocks"
+        )
+        validation["suggestions"].append(
+            "Use detick_content() and wrap in double backticks"
+        )
 
     return validation
 
@@ -590,7 +605,7 @@ def detect_current_environment() -> dict:
 def test_all_tooling() -> bool:
     """
     Runs comprehensive tests on all development tooling components.
-    
+
     Returns:
         True if all tests pass successfully, otherwise False.
     """
@@ -605,19 +620,19 @@ def generate_workflow_prompt_template(
     task_description: str,
     memory_branch: str = None,
     include_bookend: bool = True,
-    include_explicit_requirements: bool = True
+    include_explicit_requirements: bool = True,
 ) -> str:
     """
     Generates an optimized workflow prompt template for AGOR agent tasks.
-    
+
     Creates a detailed prompt incorporating the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements (with example code), and success criteria. Supports options to include the bookend approach and explicit handoff requirements for seamless agent coordination.
-    
+
     Args:
         task_description: Description of the agent's task.
         memory_branch: Optional memory branch name for context continuity; generated if not provided.
         include_bookend: Whether to include session start and end requirements.
         include_explicit_requirements: Whether to include explicit handoff and formatting requirements.
-    
+
     Returns:
         A formatted prompt template string ready for agent use.
     """
@@ -714,11 +729,11 @@ def validate_agor_workflow_completion(
     work_completed: list,
     files_modified: list,
     has_snapshot: bool = False,
-    has_handoff_prompt: bool = False
+    has_handoff_prompt: bool = False,
 ) -> dict:
     """
     Validates workflow completion against AGOR standards and provides feedback.
-    
+
     Checks for documentation of completed work, file modifications, development snapshot creation, and handoff prompt generation. Returns a dictionary with completeness status, score, identified issues, recommendations, and any missing requirements.
     """
     validation = {
@@ -727,7 +742,7 @@ def validate_agor_workflow_completion(
         "max_score": 10,
         "issues": [],
         "recommendations": [],
-        "missing_requirements": []
+        "missing_requirements": [],
     }
 
     # Check work completion documentation
@@ -751,7 +766,9 @@ def validate_agor_workflow_completion(
     else:
         validation["is_complete"] = False
         validation["issues"].append("Development snapshot not created")
-        validation["missing_requirements"].append("Create development snapshot with create_development_snapshot()")
+        validation["missing_requirements"].append(
+            "Create development snapshot with create_development_snapshot()"
+        )
 
     # Check handoff prompt generation
     if has_handoff_prompt:
@@ -759,12 +776,16 @@ def validate_agor_workflow_completion(
     else:
         validation["is_complete"] = False
         validation["issues"].append("Handoff prompt not generated")
-        validation["missing_requirements"].append("Generate handoff prompt with generate_session_end_prompt()")
+        validation["missing_requirements"].append(
+            "Generate handoff prompt with generate_session_end_prompt()"
+        )
 
     # Add recommendations based on score
     if validation["score"] < 5:
         validation["recommendations"].append("Review AGOR workflow optimization guide")
-        validation["recommendations"].append("Use workflow prompt templates for better compliance")
+        validation["recommendations"].append(
+            "Use workflow prompt templates for better compliance"
+        )
     elif validation["score"] < 8:
         validation["recommendations"].append("Improve documentation completeness")
         validation["recommendations"].append("Ensure all requirements are met")
