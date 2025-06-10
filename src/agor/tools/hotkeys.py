@@ -43,11 +43,7 @@ def get_timestamp() -> str:
     return get_current_timestamp()
 
 
-def detick_content_wrapper(content: str) -> str:
-    """
-    Replaces all triple backticks in the content with double backticks for safe embedding within a single codeblock.
-    """
-    return detick_content(content)
+
 
 
 def retick_content_wrapper(content: str) -> str:

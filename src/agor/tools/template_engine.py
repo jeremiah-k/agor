@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 try:
-    from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
+    from jinja2 import Environment, FileSystemLoader, select_autoescape
     JINJA2_AVAILABLE = True
 except ImportError:
     JINJA2_AVAILABLE = False
@@ -156,14 +156,25 @@ class TemplateEngine:
             return template_string.format(**context)
     
     def _fallback_render(self, template_name: str, context: Dict[str, Any]) -> str:
-        """Fallback rendering using string formatting when Jinja2 is not available."""
+        """
+        Fallback rendering using string formatting when Jinja2 is not available.
+
+        Note: This fallback only supports simple variable substitution and will not
+        handle Jinja2 features like loops, conditionals, or filters.
+        """
         template_path = self.template_dir / template_name
         if template_path.exists():
             template_content = template_path.read_text()
             try:
+                # Warn about limitations
+                if any(pattern in template_content for pattern in ['{%', '|', '{#']):
+                    print(f"⚠️ Template '{template_name}' uses Jinja2 features not supported in fallback mode")
                 return template_content.format(**context)
             except KeyError as e:
                 print(f"⚠️ Template variable missing: {e}")
+                return template_content
+            except Exception as e:
+                print(f"⚠️ Fallback rendering failed: {e}")
                 return template_content
         else:
             return f"Template not found: {template_name}"

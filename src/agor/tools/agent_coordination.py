@@ -23,7 +23,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from .strategy_config import StrategyConfigManager
+from agor.tools.strategy_config import StrategyConfigManager
 
 
 class AgentCoordinationHelper:

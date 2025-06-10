@@ -19,7 +19,7 @@ from agor.tools.git_operations import get_current_timestamp, run_git_command
 
 # Import feedback manager for modularized feedback handling
 try:
-    from .feedback_manager import FeedbackManager, GitHubIssueConfig as FeedbackGitHubIssueConfig
+    from .feedback_manager import FeedbackManager
     FEEDBACK_MANAGER_AVAILABLE = True
 except ImportError:
     FEEDBACK_MANAGER_AVAILABLE = False

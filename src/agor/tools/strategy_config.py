@@ -66,6 +66,59 @@ class StrategyConfigManager:
         self.pattern_handlers: Dict[str, Callable] = {}
         self._load_configurations()
         self._register_default_handlers()
+
+    def _validate_config_structure(self, config_data: Dict[str, Any]) -> bool:
+        """
+        Validate that the configuration data has the expected structure.
+
+        Args:
+            config_data: Configuration data to validate
+
+        Returns:
+            True if valid, False otherwise
+        """
+        if not isinstance(config_data, dict):
+            return False
+
+        if "strategies" not in config_data:
+            return False
+
+        strategies = config_data["strategies"]
+        if not isinstance(strategies, dict):
+            return False
+
+        # Validate each strategy has required structure
+        for strategy_name, strategy_data in strategies.items():
+            if not isinstance(strategy_data, dict):
+                return False
+
+            # Check for required keys
+            if "patterns" not in strategy_data:
+                return False
+
+            patterns = strategy_data["patterns"]
+            if not isinstance(patterns, dict):
+                return False
+
+            # Check required pattern fields
+            required_pattern_fields = ["name", "detection_patterns", "parser_class"]
+            for field in required_pattern_fields:
+                if field not in patterns:
+                    return False
+
+            # Validate roles structure if present
+            if "roles" in strategy_data:
+                roles = strategy_data["roles"]
+                if not isinstance(roles, list):
+                    return False
+
+                for role in roles:
+                    if not isinstance(role, dict):
+                        return False
+                    if "role_name" not in role or "conditions" not in role or "actions" not in role:
+                        return False
+
+        return True
     
     def _load_configurations(self) -> None:
         """Load strategy configurations from file or create defaults."""
@@ -73,6 +126,13 @@ class StrategyConfigManager:
             try:
                 with open(self.config_path) as f:
                     config_data = json.load(f)
+
+                # Validate configuration structure
+                if not self._validate_config_structure(config_data):
+                    print("⚠️ Invalid configuration structure, using defaults")
+                    self._create_default_configurations()
+                    return
+
                 self._parse_configurations(config_data)
             except (json.JSONDecodeError, KeyError) as e:
                 print(f"⚠️ Error loading strategy config: {e}")
@@ -229,6 +289,8 @@ class StrategyConfigManager:
         }
         
         # Save default configuration
+        # Ensure parent directory exists
+        self.config_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.config_path, 'w') as f:
             json.dump(default_config, f, indent=2)
         

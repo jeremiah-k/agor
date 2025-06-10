@@ -158,7 +158,7 @@ class SubprocessManager:
         except subprocess.TimeoutExpired as e:
             error_msg = f"Command timed out after {timeout} seconds: {cmd_list}"
             logger.error(error_msg)
-            
+
             # Record timeout in history
             self.command_history.append({
                 'command': cmd_list,
@@ -168,16 +168,16 @@ class SubprocessManager:
                 'cwd': str(cwd) if cwd else None,
                 'timestamp': self._get_timestamp()
             })
-            
+
             if check:
-                raise SubprocessError(error_msg, cmd_list, -1)
-            
+                raise SubprocessError(error_msg, cmd_list, -1) from e
+
             return False, "", f"Timeout after {timeout} seconds", -1
             
         except FileNotFoundError as e:
             error_msg = f"Command not found: {cmd_list[0] if cmd_list else 'unknown'}"
             logger.error(error_msg)
-            
+
             # Record error in history
             self.command_history.append({
                 'command': cmd_list,
@@ -187,16 +187,16 @@ class SubprocessManager:
                 'cwd': str(cwd) if cwd else None,
                 'timestamp': self._get_timestamp()
             })
-            
+
             if check:
-                raise SubprocessError(error_msg, cmd_list, -2)
-            
+                raise SubprocessError(error_msg, cmd_list, -2) from e
+
             return False, "", error_msg, -2
             
         except Exception as e:
             error_msg = f"Unexpected error running command {cmd_list}: {str(e)}"
             logger.error(error_msg)
-            
+
             # Record error in history
             self.command_history.append({
                 'command': cmd_list,
@@ -206,10 +206,10 @@ class SubprocessManager:
                 'cwd': str(cwd) if cwd else None,
                 'timestamp': self._get_timestamp()
             })
-            
+
             if check:
-                raise SubprocessError(error_msg, cmd_list, -3)
-            
+                raise SubprocessError(error_msg, cmd_list, -3) from e
+
             return False, "", error_msg, -3
     
     def run_git_command(

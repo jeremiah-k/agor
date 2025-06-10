@@ -17,7 +17,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from .template_engine import TemplateEngine
+from agor.tools.template_engine import TemplateEngine
+
+# Define allowed severity levels
+ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
 
 
 @dataclass
@@ -83,6 +86,8 @@ class FeedbackManager:
                     self.feedback_history.append(entry)
             except (json.JSONDecodeError, TypeError) as e:
                 print(f"⚠️ Error loading feedback history: {e}")
+                # Create backup of corrupted file
+                self._backup_corrupted_file(history_file, e)
     
     def _save_feedback_history(self) -> None:
         """Save feedback history to storage."""
@@ -108,6 +113,31 @@ class FeedbackManager:
         
         with open(history_file, 'w') as f:
             json.dump(history_data, f, indent=2)
+
+    def _backup_corrupted_file(self, corrupted_file: Path, error: Exception) -> None:
+        """
+        Create a backup of corrupted feedback file for later inspection.
+
+        Args:
+            corrupted_file: Path to the corrupted file
+            error: The exception that occurred during parsing
+        """
+        try:
+            import datetime
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup_name = f"feedback_history_corrupted_{timestamp}.json"
+            backup_path = corrupted_file.parent / backup_name
+
+            # Copy corrupted file to backup location
+            import shutil
+            shutil.copy2(corrupted_file, backup_path)
+
+            print(f"📁 Corrupted feedback file backed up to: {backup_path}")
+            print(f"🔍 Error details: {error}")
+            print("💡 You can inspect the backup file to recover data manually")
+
+        except Exception as backup_error:
+            print(f"⚠️ Failed to backup corrupted file: {backup_error}")
     
     def collect_feedback(
         self,
@@ -139,7 +169,11 @@ class FeedbackManager:
             Created feedback entry
         """
         import datetime
-        
+
+        # Validate severity
+        if severity not in ALLOWED_SEVERITIES:
+            raise ValueError(f"Invalid severity '{severity}'. Must be one of: {', '.join(sorted(ALLOWED_SEVERITIES))}")
+
         entry = FeedbackEntry(
             feedback_type=feedback_type,
             feedback_content=feedback_content,
@@ -400,8 +434,8 @@ Priority: {{ severity }}
                     for entry in self.feedback_history
                 ]
             }, indent=2)
-        
-        elif format_type == "markdown":
+
+        if format_type == "markdown":
             lines = ["# AGOR Feedback Export\n"]
             for entry in self.feedback_history:
                 lines.append(f"## {entry.feedback_type.replace('_', ' ').title()}")
@@ -415,9 +449,8 @@ Priority: {{ severity }}
                         lines.append(f"- {suggestion}")
                 lines.append("\n---\n")
             return "\n".join(lines)
-        
-        else:
-            raise ValueError(f"Unsupported export format: {format_type}")
+
+        raise ValueError(f"Unsupported export format: {format_type}")
 
 
 # Global feedback manager instance
