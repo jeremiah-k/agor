@@ -65,11 +65,11 @@ AGOR provides powerful development functions through Python imports:
 - `get_workspace_status()` - Check project and git status
 - `create_development_checklist()` - Generate task-specific checklists
 
-**CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST use the proper dev tooling functions for formatting:
+**OUTPUT FORMATTING**: ALL generated outputs MUST use the proper dev tooling functions for formatting:
 
-- `generate_release_notes_output()` for release notes
-- `generate_pr_description_output()` for PR descriptions
-- `generate_handoff_prompt_output()` for handoff prompts
+- `generate_release_notes_output()` for **brief** release notes (keep concise to avoid processing errors)
+- `generate_pr_description_output()` for **brief** PR descriptions (keep concise to avoid processing errors)
+- `generate_handoff_prompt_output()` for handoff prompts (can be full length)
 - `generate_formatted_output()` for any other content
 
 These functions automatically handle deticking and codeblock wrapping. NEVER manually process or wrap content - ALWAYS use these functions.

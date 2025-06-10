@@ -101,10 +101,10 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - `generate_pr_description_snapshot()` for PR descriptions
    - `quick_commit_and_push()` for git operations
 
-4. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tooling functions:
-   - `generate_release_notes_output()` for release notes
-   - `generate_pr_description_output()` for PR descriptions
-   - `generate_handoff_prompt_output()` for handoff prompts
+4. **OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tooling functions:
+   - `generate_release_notes_output()` for **brief** release notes (keep concise to avoid processing errors)
+   - `generate_pr_description_output()` for **brief** PR descriptions (keep concise to avoid processing errors)
+   - `generate_handoff_prompt_output()` for handoff prompts (can be full length)
    - `generate_formatted_output()` for any other content
    These functions automatically handle deticking and codeblock wrapping.
 

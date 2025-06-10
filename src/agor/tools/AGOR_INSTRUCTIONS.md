@@ -286,17 +286,17 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 **CORRECT WORKFLOW - USE THESE FUNCTIONS**:
 
 ````python
-# For release notes
+# For release notes (KEEP BRIEF - long content causes processing errors)
 from agor.tools.dev_tooling import generate_release_notes_output
-formatted_output = generate_release_notes_output(release_notes_content)
+formatted_output = generate_release_notes_output(brief_release_notes_content)
 print(formatted_output)
 
-# For PR descriptions
+# For PR descriptions (KEEP BRIEF - long content causes processing errors)
 from agor.tools.dev_tooling import generate_pr_description_output
-formatted_output = generate_pr_description_output(pr_content)
+formatted_output = generate_pr_description_output(brief_pr_content)
 print(formatted_output)
 
-# For handoff prompts
+# For handoff prompts (can be full length)
 from agor.tools.dev_tooling import generate_handoff_prompt_output
 formatted_output = generate_handoff_prompt_output(handoff_content)
 print(formatted_output)

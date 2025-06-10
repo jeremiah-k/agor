@@ -510,8 +510,11 @@ def generate_release_notes_output(release_notes_content: str) -> str:
     """
     Generate properly formatted release notes for copy-paste.
 
+    NOTE: Keep release notes content BRIEF to avoid processing errors.
+    Long content can cause the formatting process to fail.
+
     Args:
-        release_notes_content: Raw release notes content
+        release_notes_content: Raw release notes content (keep brief)
 
     Returns:
         Formatted release notes wrapped in codeblock
@@ -523,8 +526,11 @@ def generate_pr_description_output(pr_content: str) -> str:
     """
     Generate properly formatted PR description for copy-paste.
 
+    NOTE: Keep PR description content BRIEF to avoid processing errors.
+    Long content can cause the formatting process to fail.
+
     Args:
-        pr_content: Raw PR description content
+        pr_content: Raw PR description content (keep brief)
 
     Returns:
         Formatted PR description wrapped in codeblock
