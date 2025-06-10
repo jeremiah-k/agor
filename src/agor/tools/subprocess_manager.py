@@ -13,9 +13,11 @@ Key Features:
 """
 
 import logging
+import shlex
 import subprocess
 import sys
 import tempfile
+from contextlib import suppress
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -84,10 +86,7 @@ class SubprocessManager:
         """
         # Normalize command to list
         if isinstance(command, str):
-            if shell:
-                cmd_list = command
-            else:
-                cmd_list = command.split()
+            cmd_list = command if shell else shlex.split(command)
         else:
             cmd_list = command
         
@@ -327,10 +326,8 @@ class SubprocessManager:
         
         finally:
             # Clean up temporary file
-            try:
+            with suppress(Exception):
                 Path(temp_file_path).unlink()
-            except Exception:
-                pass  # Ignore cleanup errors
     
     def get_command_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """

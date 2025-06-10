@@ -12,6 +12,7 @@ Key Features:
 """
 
 import datetime
+import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -39,7 +40,7 @@ class TemplateEngine:
             template_dir: Directory containing template files. Defaults to built-in templates.
         """
         self.template_dir = template_dir or Path(__file__).parent / "templates"
-        self.template_dir.mkdir(exist_ok=True)
+        self.template_dir.mkdir(parents=True, exist_ok=True)
         
         if JINJA2_AVAILABLE:
             self.env = Environment(
@@ -59,27 +60,31 @@ class TemplateEngine:
         """Register custom Jinja2 filters for AGOR templates."""
         if not self.env:
             return
-            
-        @self.env.filter('format_timestamp')
+
         def format_timestamp(timestamp: datetime.datetime, format_str: str = "%Y-%m-%d %H:%M:%S") -> str:
             """Format datetime timestamp."""
             return timestamp.strftime(format_str)
-        
-        @self.env.filter('truncate_commit')
+
         def truncate_commit(commit_hash: str, length: int = 8) -> str:
             """Truncate git commit hash."""
             return commit_hash[:length] + "..." if len(commit_hash) > length else commit_hash
-        
-        @self.env.filter('format_list')
+
         def format_list(items: List[str], prefix: str = "- ", join_str: str = "\n") -> str:
             """Format list items with prefix."""
             return join_str.join(f"{prefix}{item}" for item in items)
-        
-        @self.env.filter('safe_filename')
+
         def safe_filename(text: str, max_length: int = 30) -> str:
             """Create safe filename from text."""
             safe_text = "".join(c for c in text if c.isalnum() or c in "-_")
             return safe_text[:max_length]
+
+        # Register filters using the filters dictionary
+        self.env.filters.update({
+            'format_timestamp': format_timestamp,
+            'truncate_commit': truncate_commit,
+            'format_list': format_list,
+            'safe_filename': safe_filename
+        })
     
     def _register_custom_functions(self) -> None:
         """Register custom Jinja2 global functions."""
@@ -130,8 +135,8 @@ class TemplateEngine:
         try:
             template = self.env.get_template(template_name)
             return template.render(**context)
-        except Exception as e:
-            print(f"⚠️ Template rendering error: {e}")
+        except Exception:
+            logging.exception("Template rendering error while rendering %s", template_name)
             return self._fallback_render(template_name, context)
     
     def render_string(self, template_string: str, context: Dict[str, Any]) -> str:

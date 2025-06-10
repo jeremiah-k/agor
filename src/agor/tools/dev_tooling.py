@@ -161,6 +161,119 @@ def restore_content_from_codeblock(content: str) -> str:
     return retick_content(content)
 
 
+def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[str, List[str]]:
+    """
+    Safely cleanup all memory branches (local and remote).
+
+    SAFETY: Only removes branches matching 'agor/mem/' pattern.
+
+    Args:
+        dry_run: If True, only shows what would be deleted without actually deleting
+        confirm: If True, requires user confirmation before deletion
+
+    Returns:
+        Dictionary with 'deleted_local', 'deleted_remote', 'failed' lists
+    """
+    from agor.tools.git_operations import run_git_command
+
+    results = {
+        'deleted_local': [],
+        'deleted_remote': [],
+        'failed': [],
+        'skipped': []
+    }
+
+    print("🔍 Scanning for memory branches...")
+
+    # Get all branches (local and remote)
+    success, branches_output = run_git_command(["branch", "-a"])
+    if not success:
+        print("❌ Failed to list branches")
+        return results
+
+    local_memory_branches = []
+    remote_memory_branches = []
+
+    for line in branches_output.split('\n'):
+        line = line.strip()
+        if line.startswith('*'):
+            line = line[1:].strip()
+
+        # Safety check: only process agor/mem/ branches
+        if 'agor/mem/' in line:
+            if line.startswith('remotes/origin/'):
+                remote_branch = line.replace('remotes/origin/', '')
+                if remote_branch.startswith('agor/mem/'):
+                    remote_memory_branches.append(remote_branch)
+            elif line.startswith('agor/mem/'):
+                local_memory_branches.append(line)
+
+    total_branches = len(local_memory_branches) + len(remote_memory_branches)
+
+    if total_branches == 0:
+        print("✅ No memory branches found to cleanup")
+        return results
+
+    print(f"📋 Found {len(local_memory_branches)} local and {len(remote_memory_branches)} remote memory branches")
+
+    if dry_run:
+        print("\n🔍 DRY RUN - Would delete:")
+        for branch in local_memory_branches:
+            print(f"  📍 Local: {branch}")
+        for branch in remote_memory_branches:
+            print(f"  🌐 Remote: {branch}")
+        print(f"\n💡 Run with dry_run=False to actually delete {total_branches} branches")
+        return results
+
+    if confirm:
+        print(f"\n⚠️  About to delete {total_branches} memory branches:")
+        for branch in local_memory_branches:
+            print(f"  📍 Local: {branch}")
+        for branch in remote_memory_branches:
+            print(f"  🌐 Remote: {branch}")
+
+        response = input("\n❓ Continue with deletion? (yes/no): ").lower().strip()
+        if response not in ['yes', 'y']:
+            print("🚫 Cleanup cancelled by user")
+            results['skipped'] = local_memory_branches + remote_memory_branches
+            return results
+
+    # Delete local memory branches
+    print(f"\n🗑️  Deleting {len(local_memory_branches)} local memory branches...")
+    for branch in local_memory_branches:
+        success, output = run_git_command(["branch", "-D", branch])
+        if success:
+            print(f"✅ Deleted local branch: {branch}")
+            results['deleted_local'].append(branch)
+        else:
+            print(f"❌ Failed to delete local branch {branch}: {output}")
+            results['failed'].append(f"local:{branch}")
+
+    # Delete remote memory branches
+    print(f"\n🌐 Deleting {len(remote_memory_branches)} remote memory branches...")
+    for branch in remote_memory_branches:
+        success, output = run_git_command(["push", "origin", "--delete", branch])
+        if success:
+            print(f"✅ Deleted remote branch: {branch}")
+            results['deleted_remote'].append(branch)
+        else:
+            print(f"❌ Failed to delete remote branch {branch}: {output}")
+            results['failed'].append(f"remote:{branch}")
+
+    # Summary
+    total_deleted = len(results['deleted_local']) + len(results['deleted_remote'])
+    total_failed = len(results['failed'])
+
+    print(f"\n📊 Cleanup Summary:")
+    print(f"✅ Successfully deleted: {total_deleted} branches")
+    print(f"❌ Failed to delete: {total_failed} branches")
+
+    if total_failed == 0:
+        print("🎉 All memory branches cleaned up successfully!")
+
+    return results
+
+
 # Status and Health Check Functions
 # =================================
 
@@ -263,7 +376,7 @@ def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
         memory_branch = generate_agent_memory_branch()
 
     try:
-        from agor.tools.memory_manager import commit_to_memory_branch
+        from agor.tools.memory_manager import commit_to_memory_branch, list_memory_branches
 
         # Create initial commit to establish the memory branch
         initial_content = f"""# Agent Memory Branch: {memory_branch}

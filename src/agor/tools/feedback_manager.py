@@ -12,7 +12,9 @@ Key Features:
 - Feedback validation and processing
 """
 
+import datetime
 import json
+import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -123,7 +125,6 @@ class FeedbackManager:
             error: The exception that occurred during parsing
         """
         try:
-            import datetime
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             backup_name = f"feedback_history_corrupted_{timestamp}.json"
             backup_path = corrupted_file.parent / backup_name
@@ -168,8 +169,6 @@ class FeedbackManager:
         Returns:
             Created feedback entry
         """
-        import datetime
-
         # Validate severity
         if severity not in ALLOWED_SEVERITIES:
             raise ValueError(f"Invalid severity '{severity}'. Must be one of: {', '.join(sorted(ALLOWED_SEVERITIES))}")
