@@ -78,7 +78,7 @@ _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 - `src/agor/tools/agent-start-here.md` (quick startup guide)
 - `src/agor/tools/index.md` (documentation index for efficient lookup)
 
-**Agent Instructions for AugmentCode Local (Copy & Paste):**
+**"User Guidelines" (agent instructions) for AugmentCode Local (Copy & Paste):**
 
 ```
 # AGOR Agent Instructions for AugmentCode Local
@@ -171,6 +171,8 @@ After reading these files, help me initialize AGOR for this project and select t
 - Full multi-agent capabilities available
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
+
+**Note: First copy and paste the "User Guidelines" section from "Local Agents" setup into your AugmentCode extension, if you have not already, then proceed with the rest.**
 
 **Agent Initialization Prompt (Copy & Paste to Remote Agent):**
 
