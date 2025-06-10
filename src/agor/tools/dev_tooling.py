@@ -174,7 +174,7 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
     Returns:
         Dictionary with 'deleted_local', 'deleted_remote', 'failed' lists
     """
-    from agor.tools.git_operations import run_git_command
+
 
     results = {
         'deleted_local': [],
@@ -264,7 +264,7 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
     total_deleted = len(results['deleted_local']) + len(results['deleted_remote'])
     total_failed = len(results['failed'])
 
-    print(f"\n📊 Cleanup Summary:")
+    print("\n📊 Cleanup Summary:")
     print(f"✅ Successfully deleted: {total_deleted} branches")
     print(f"❌ Failed to delete: {total_failed} branches")
 
@@ -376,7 +376,7 @@ def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
         memory_branch = generate_agent_memory_branch()
 
     try:
-        from agor.tools.memory_manager import commit_to_memory_branch, list_memory_branches
+        from agor.tools.memory_manager import commit_to_memory_branch
 
         # Create initial commit to establish the memory branch
         initial_content = f"""# Agent Memory Branch: {memory_branch}

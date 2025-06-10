@@ -130,7 +130,6 @@ class FeedbackManager:
             backup_path = corrupted_file.parent / backup_name
 
             # Copy corrupted file to backup location
-            import shutil
             shutil.copy2(corrupted_file, backup_path)
 
             print(f"📁 Corrupted feedback file backed up to: {backup_path}")

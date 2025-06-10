@@ -9,7 +9,7 @@ All functions use absolute imports for better reliability.
 
 from pathlib import Path
 
-from agor.tools.agent_handoffs import retick_content
+
 from agor.tools.dev_testing import detect_environment, test_tooling
 
 # Use absolute imports to prevent E0402 errors

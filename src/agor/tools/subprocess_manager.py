@@ -257,10 +257,7 @@ class SubprocessManager:
         Returns:
             Tuple of (success, stdout, stderr, returncode)
         """
-        if use_current_python:
-            python_cmd = sys.executable
-        else:
-            python_cmd = 'python3'
+        python_cmd = sys.executable if use_current_python else 'python3'
         
         command = [python_cmd] + python_args
         return self.run_command(command, cwd=cwd, timeout=timeout)
