@@ -101,7 +101,12 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - `generate_pr_description_snapshot()` for PR descriptions
    - `quick_commit_and_push()` for git operations
 
-4. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs (PR descriptions, handoff prompts, release notes, meta feedback) MUST be processed through `detick_content()` and then wrapped in a single codeblock for copy-paste. NEVER present raw content - ALWAYS detick first, then wrap in codeblock.
+4. **CRITICAL OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tooling functions:
+   - `generate_release_notes_output()` for release notes
+   - `generate_pr_description_output()` for PR descriptions
+   - `generate_handoff_prompt_output()` for handoff prompts
+   - `generate_formatted_output()` for any other content
+   These functions automatically handle deticking and codeblock wrapping.
 
 5. **End Sessions Properly**: Always create snapshots before ending sessions using `generate_session_end_prompt()`
 

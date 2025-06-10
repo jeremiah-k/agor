@@ -469,19 +469,80 @@ def validate_output_formatting(content: str) -> dict:
 def apply_output_formatting(content: str, content_type: str = "general") -> str:
     """
     Formats content according to AGOR output standards for safe embedding and compliance.
-    
-    Deticks the input content to remove triple backticks and, for specific content types such as handoff prompts, snapshots, or meta feedback, wraps the result in double backtick codeblocks. Returns the formatted content ready for output.
+
+    Deticks the input content to remove triple backticks and wraps the result in double backtick
+    codeblocks for ALL content types to ensure consistent copy-paste workflow.
+
+    Args:
+        content: Raw content to format
+        content_type: Type of content (for logging/debugging purposes)
+
+    Returns:
+        Formatted content wrapped in double backticks ready for copy-paste
     """
     # Process through detick to handle any triple backticks
     processed_content = detick_content(content)
 
-    # For handoff prompts and critical outputs, wrap in codeblock
-    if content_type in ["handoff_prompt", "snapshot", "meta_feedback"]:
-        formatted_content = f"``\n{processed_content}\n``"
-    else:
-        formatted_content = processed_content
+    # ALWAYS wrap in codeblock for copy-paste workflow
+    formatted_content = f"``\n{processed_content}\n``"
 
     return formatted_content
+
+
+def generate_formatted_output(content: str, content_type: str = "general") -> str:
+    """
+    Generate properly formatted output for user copy-paste.
+
+    This is the main function that should be used for ALL generated outputs
+    that need to be presented to users for copy-paste.
+
+    Args:
+        content: Raw content to format
+        content_type: Type of content being formatted
+
+    Returns:
+        Properly formatted content ready for copy-paste
+    """
+    return apply_output_formatting(content, content_type)
+
+
+def generate_release_notes_output(release_notes_content: str) -> str:
+    """
+    Generate properly formatted release notes for copy-paste.
+
+    Args:
+        release_notes_content: Raw release notes content
+
+    Returns:
+        Formatted release notes wrapped in codeblock
+    """
+    return generate_formatted_output(release_notes_content, "release_notes")
+
+
+def generate_pr_description_output(pr_content: str) -> str:
+    """
+    Generate properly formatted PR description for copy-paste.
+
+    Args:
+        pr_content: Raw PR description content
+
+    Returns:
+        Formatted PR description wrapped in codeblock
+    """
+    return generate_formatted_output(pr_content, "pr_description")
+
+
+def generate_handoff_prompt_output(handoff_content: str) -> str:
+    """
+    Generate properly formatted handoff prompt for copy-paste.
+
+    Args:
+        handoff_content: Raw handoff prompt content
+
+    Returns:
+        Formatted handoff prompt wrapped in codeblock
+    """
+    return generate_formatted_output(handoff_content, "handoff_prompt")
 
 
 # Utility Functions
