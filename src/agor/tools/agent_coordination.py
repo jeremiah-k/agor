@@ -340,11 +340,13 @@ class AgentCoordinationHelper:
             "has_assignment": self._check_agent_assignment(strategy_info, agent_id),
             "stage_available": self._check_stage_availability(strategy_info),
             "available_tasks": self._get_available_task_count(strategy_info),
-            "claimed": agent_id and agent_id.lower() in self._get_claimed_agents()
+            "claimed": agent_id and agent_id.lower() in self._get_claimed_agents(),
         }
 
         # Use the new strategy configuration manager
-        return self.strategy_manager.get_role_for_agent(strategy_info, agent_id, context)
+        return self.strategy_manager.get_role_for_agent(
+            strategy_info, agent_id, context
+        )
 
     def _get_claimed_agents(self, pattern: str = r"(agent\d+): .+ - CLAIMING") -> set:
         """
@@ -366,7 +368,9 @@ class AgentCoordinationHelper:
 
         return claimed_agents
 
-    def _check_agent_assignment(self, strategy_info: Dict, agent_id: Optional[str]) -> bool:
+    def _check_agent_assignment(
+        self, strategy_info: Dict, agent_id: Optional[str]
+    ) -> bool:
         """Check if agent has an assignment in the strategy."""
         if not agent_id:
             return False

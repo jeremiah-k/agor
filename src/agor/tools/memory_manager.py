@@ -70,15 +70,15 @@ def commit_to_memory_branch(
 ) -> bool:
     """
     Commits content to a memory branch without switching from the current branch.
-    
+
     Creates or updates a memory branch, storing the provided file content under the `.agor/` directory. If the memory branch does not exist, it is initialized with an empty commit. The function ensures the current working branch remains unchanged and attempts to push the memory branch after committing.
-    
+
     Args:
         file_content: The content to be committed to the memory branch.
         file_name: The name of the file to create or update within the `.agor/` directory.
         branch_name: The target memory branch name. If None, a name is auto-generated.
         commit_message: The commit message. If None, a message is auto-generated.
-    
+
     Returns:
         True if the commit operation succeeds, False otherwise.
     """
@@ -357,13 +357,13 @@ def read_from_memory_branch(
 def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
     """
     Lists all memory branches in the repository without switching the current branch.
-    
+
     If available, uses the MemorySync class to retrieve both local and remote memory branches.
     Falls back to parsing Git branch output if MemorySync is unavailable or fails.
-    
+
     Args:
         repo_path: Optional path to the repository. Defaults to the current working directory.
-    
+
     Returns:
         A sorted list of memory branch names, or an empty list if none are found or on failure.
     """

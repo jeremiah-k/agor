@@ -244,11 +244,14 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 ### Step 1: Read AGOR Documentation
 
 ```
+
 MANDATORY: Read these files from workspace sources before starting any development work:
+
 - src/agor/tools/README_ai.md (role selection and initialization)
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
+
 ```
 
 ### Step 2: Role Selection
@@ -431,7 +434,7 @@ After reading these files, help me initialize AGOR for this project and select t
 
 # <--- Add your detailed step-by-step instructions below --->
 
-````
+```
 
 **Note:** Jules cannot clone repositories that weren't selected during environment creation, so direct URL access to documentation is required.
 
@@ -455,7 +458,7 @@ After reading these files, help me initialize AGOR for this project and select t
 agor bundle your-project -f tar.gz
 # Upload to ChatGPT
 # Select appropriate role based on your needs
-````
+```
 
 </details>
 

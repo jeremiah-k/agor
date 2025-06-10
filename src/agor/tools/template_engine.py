@@ -18,6 +18,7 @@ from typing import Any, Dict, List, Optional
 
 try:
     from jinja2 import Environment, FileSystemLoader, select_autoescape
+
     JINJA2_AVAILABLE = True
 except ImportError:
     JINJA2_AVAILABLE = False
@@ -27,49 +28,57 @@ except ImportError:
 class TemplateEngine:
     """
     Jinja2-based template engine for AGOR content generation.
-    
+
     Provides template rendering with custom filters and functions
     for generating snapshots, handoff prompts, and other content.
     """
-    
+
     def __init__(self, template_dir: Optional[Path] = None):
         """
         Initialize the template engine.
-        
+
         Args:
             template_dir: Directory containing template files. Defaults to built-in templates.
         """
         self.template_dir = template_dir or Path(__file__).parent / "templates"
         self.template_dir.mkdir(parents=True, exist_ok=True)
-        
+
         if JINJA2_AVAILABLE:
             self.env = Environment(
                 loader=FileSystemLoader(str(self.template_dir)),
-                autoescape=select_autoescape(['html', 'xml']),
+                autoescape=select_autoescape(["html", "xml"]),
                 trim_blocks=True,
-                lstrip_blocks=True
+                lstrip_blocks=True,
             )
             self._register_custom_filters()
             self._register_custom_functions()
         else:
             self.env = None
-        
+
         self._ensure_default_templates()
-    
+
     def _register_custom_filters(self) -> None:
         """Register custom Jinja2 filters for AGOR templates."""
         if not self.env:
             return
 
-        def format_timestamp(timestamp: datetime.datetime, format_str: str = "%Y-%m-%d %H:%M:%S") -> str:
+        def format_timestamp(
+            timestamp: datetime.datetime, format_str: str = "%Y-%m-%d %H:%M:%S"
+        ) -> str:
             """Format datetime timestamp."""
             return timestamp.strftime(format_str)
 
         def truncate_commit(commit_hash: str, length: int = 8) -> str:
             """Truncate git commit hash."""
-            return commit_hash[:length] + "..." if len(commit_hash) > length else commit_hash
+            return (
+                commit_hash[:length] + "..."
+                if len(commit_hash) > length
+                else commit_hash
+            )
 
-        def format_list(items: List[str], prefix: str = "- ", join_str: str = "\n") -> str:
+        def format_list(
+            items: List[str], prefix: str = "- ", join_str: str = "\n"
+        ) -> str:
             """Format list items with prefix."""
             return join_str.join(f"{prefix}{item}" for item in items)
 
@@ -79,87 +88,90 @@ class TemplateEngine:
             return safe_text[:max_length]
 
         # Register filters using the filters dictionary
-        self.env.filters.update({
-            'format_timestamp': format_timestamp,
-            'truncate_commit': truncate_commit,
-            'format_list': format_list,
-            'safe_filename': safe_filename
-        })
-    
+        self.env.filters.update(
+            {
+                "format_timestamp": format_timestamp,
+                "truncate_commit": truncate_commit,
+                "format_list": format_list,
+                "safe_filename": safe_filename,
+            }
+        )
+
     def _register_custom_functions(self) -> None:
         """Register custom Jinja2 global functions."""
         if not self.env:
             return
-            
+
         def current_timestamp(format_str: str = "%Y-%m-%d %H:%M:%S") -> str:
             """Get current timestamp."""
             return datetime.datetime.now().strftime(format_str)
-        
+
         def enumerate_items(items: List[str], start: int = 1) -> List[tuple]:
             """Enumerate items with custom start."""
             return list(enumerate(items, start))
-        
-        self.env.globals.update({
-            'current_timestamp': current_timestamp,
-            'enumerate_items': enumerate_items
-        })
-    
+
+        self.env.globals.update(
+            {"current_timestamp": current_timestamp, "enumerate_items": enumerate_items}
+        )
+
     def _ensure_default_templates(self) -> None:
         """Create default templates if they don't exist."""
         templates = {
-            'snapshot.md.j2': self._get_snapshot_template(),
-            'handoff_prompt.md.j2': self._get_handoff_template(),
-            'completion_report.md.j2': self._get_completion_template(),
-            'pr_description.md.j2': self._get_pr_description_template()
+            "snapshot.md.j2": self._get_snapshot_template(),
+            "handoff_prompt.md.j2": self._get_handoff_template(),
+            "completion_report.md.j2": self._get_completion_template(),
+            "pr_description.md.j2": self._get_pr_description_template(),
         }
-        
+
         for template_name, template_content in templates.items():
             template_path = self.template_dir / template_name
             if not template_path.exists():
                 template_path.write_text(template_content)
-    
+
     def render_template(self, template_name: str, context: Dict[str, Any]) -> str:
         """
         Render a template with the given context.
-        
+
         Args:
             template_name: Name of the template file
             context: Template context variables
-            
+
         Returns:
             Rendered template content
         """
         if not JINJA2_AVAILABLE:
             return self._fallback_render(template_name, context)
-        
+
         try:
             template = self.env.get_template(template_name)
             return template.render(**context)
         except Exception:
-            logging.exception("Template rendering error while rendering %s", template_name)
+            logging.exception(
+                "Template rendering error while rendering %s", template_name
+            )
             return self._fallback_render(template_name, context)
-    
+
     def render_string(self, template_string: str, context: Dict[str, Any]) -> str:
         """
         Render a template string with the given context.
-        
+
         Args:
             template_string: Template content as string
             context: Template context variables
-            
+
         Returns:
             Rendered template content
         """
         if not JINJA2_AVAILABLE:
             return template_string.format(**context)
-        
+
         try:
             template = self.env.from_string(template_string)
             return template.render(**context)
         except Exception as e:
             print(f"⚠️ String template rendering error: {e}")
             return template_string.format(**context)
-    
+
     def _fallback_render(self, template_name: str, context: Dict[str, Any]) -> str:
         """
         Fallback rendering using string formatting when Jinja2 is not available.
@@ -172,8 +184,10 @@ class TemplateEngine:
             template_content = template_path.read_text()
             try:
                 # Warn about limitations
-                if any(pattern in template_content for pattern in ['{%', '|', '{#']):
-                    print(f"⚠️ Template '{template_name}' uses Jinja2 features not supported in fallback mode")
+                if any(pattern in template_content for pattern in ["{%", "|", "{#"]):
+                    print(
+                        f"⚠️ Template '{template_name}' uses Jinja2 features not supported in fallback mode"
+                    )
                 return template_content.format(**context)
             except KeyError as e:
                 print(f"⚠️ Template variable missing: {e}")
@@ -183,7 +197,7 @@ class TemplateEngine:
                 return template_content
         else:
             return f"Template not found: {template_name}"
-    
+
     def _get_snapshot_template(self) -> str:
         """Get the default snapshot template."""
         return """# 📸 Agent Snapshot Document
@@ -337,7 +351,7 @@ git log --oneline -10
 ```
 [AGENT-ID] [{{ current_timestamp() }}] - SNAPSHOT RECEIVED: {{ problem_description[:50] }}...
 ```"""
-    
+
     def _get_handoff_template(self) -> str:
         """Get the default handoff prompt template."""
         return """# 📋 MANDATORY SESSION END REPORT
@@ -386,7 +400,7 @@ The next agent should:
 ---
 
 **This report ensures seamless agent-to-agent coordination and prevents work duplication.**"""
-    
+
     def _get_completion_template(self) -> str:
         """Get the default completion report template."""
         return """# 📦 AGOR Snapshot: Task Completion Report
@@ -442,7 +456,7 @@ Task completion report for: {{ original_task }}
 ## Technical Context
 **Git Branch**: `{{ git_context.branch }}`
 **Current Commit**: `{{ git_context.current_commit }}`"""
-    
+
     def _get_pr_description_template(self) -> str:
         """Get the default PR description template."""
         return """## 🎯 Summary
@@ -478,16 +492,16 @@ Task completion report for: {{ original_task }}
 def render_snapshot_template(context: Dict[str, Any]) -> str:
     """Render snapshot template with given context."""
     engine = TemplateEngine()
-    return engine.render_template('snapshot.md.j2', context)
+    return engine.render_template("snapshot.md.j2", context)
 
 
 def render_handoff_template(context: Dict[str, Any]) -> str:
     """Render handoff prompt template with given context."""
     engine = TemplateEngine()
-    return engine.render_template('handoff_prompt.md.j2', context)
+    return engine.render_template("handoff_prompt.md.j2", context)
 
 
 def render_completion_template(context: Dict[str, Any]) -> str:
     """Render completion report template with given context."""
     engine = TemplateEngine()
-    return engine.render_template('completion_report.md.j2', context)
+    return engine.render_template("completion_report.md.j2", context)

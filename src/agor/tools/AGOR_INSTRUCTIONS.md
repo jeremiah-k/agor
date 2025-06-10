@@ -285,7 +285,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 **CORRECT WORKFLOW - USE THESE FUNCTIONS**:
 
-````python
+```python
 # For release notes (KEEP BRIEF - long content causes processing errors)
 from agor.tools.dev_tooling import generate_release_notes_output
 formatted_output = generate_release_notes_output(brief_release_notes_content)
@@ -305,7 +305,7 @@ print(formatted_output)
 from agor.tools.dev_tooling import generate_formatted_output
 formatted_output = generate_formatted_output(content, "content_type")
 print(formatted_output)
-````
+```
 
 **NEVER**: Manually use detick_content() and manual wrapping
 **ALWAYS**: Use the proper dev tooling output functions above
@@ -313,6 +313,7 @@ print(formatted_output)
 
 **HANDOFF PROMPT FORMATTING - ABSOLUTELY MANDATORY**:
 Every session MUST end with a handoff prompt that is:
+
 1. **Generated using dev tooling functions**
 2. **Processed through detick_content() to remove triple backticks**
 3. **Wrapped in a single codeblock with triple backticks**

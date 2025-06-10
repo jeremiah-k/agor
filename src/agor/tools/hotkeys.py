@@ -9,7 +9,6 @@ All functions use absolute imports for better reliability.
 
 from pathlib import Path
 
-
 from agor.tools.dev_testing import detect_environment, test_tooling
 
 # Use absolute imports to prevent E0402 errors
@@ -41,12 +40,6 @@ def test_tooling_wrapper() -> bool:
 def get_timestamp() -> str:
     """Get current UTC timestamp."""
     return get_current_timestamp()
-
-
-
-
-
-
 
 
 def get_project_status() -> dict:
@@ -221,7 +214,7 @@ def workspace_health_check() -> dict:
 def display_workspace_health() -> str:
     """
     Returns a formatted markdown summary of the current workspace health.
-    
+
     The summary includes overall status, timestamp, environment details, issues, warnings, and a message if all systems are operational.
     """
     health = workspace_health_check()
@@ -263,11 +256,11 @@ def generate_meta_feedback_hotkey(
     feedback_type: str = "workflow_issue",
     feedback_content: str = "",
     severity: str = "medium",
-    component: str = "general"
+    component: str = "general",
 ) -> str:
     """
     Generates formatted meta feedback about AGOR for quick submission.
-    
+
     If no feedback content is provided, a default prompt is used. Returns an error message if feedback generation fails.
     """
     try:
@@ -280,7 +273,7 @@ def generate_meta_feedback_hotkey(
             feedback_type=feedback_type,
             feedback_content=feedback_content,
             severity=severity,
-            component=component
+            component=component,
         )
     except Exception as e:
         return f"❌ Failed to generate meta feedback: {e}"
@@ -289,7 +282,7 @@ def generate_meta_feedback_hotkey(
 def system_health_check_hotkey() -> str:
     """
     Performs a comprehensive system health check and returns a detailed markdown report.
-    
+
     The report summarizes workspace health, project status, development tooling, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
     """
     try:
@@ -312,6 +305,7 @@ def system_health_check_hotkey() -> str:
         memory_status = "✅ Available"
         try:
             from agor.tools.memory_manager import list_memory_branches
+
             branches = list_memory_branches()
             memory_status = f"✅ Available ({len(branches)} memory branches)"
         except Exception:
@@ -345,19 +339,19 @@ def system_health_check_hotkey() -> str:
 
 """
 
-        if workspace_health.get('issues'):
+        if workspace_health.get("issues"):
             health_report += "### Issues\n"
-            for issue in workspace_health['issues']:
+            for issue in workspace_health["issues"]:
                 health_report += f"- ❌ {issue}\n"
             health_report += "\n"
 
-        if workspace_health.get('warnings'):
+        if workspace_health.get("warnings"):
             health_report += "### Warnings\n"
-            for warning in workspace_health['warnings']:
+            for warning in workspace_health["warnings"]:
                 health_report += f"- ⚠️ {warning}\n"
             health_report += "\n"
 
-        if not workspace_health.get('issues') and not workspace_health.get('warnings'):
+        if not workspace_health.get("issues") and not workspace_health.get("warnings"):
             health_report += "✅ No issues or warnings detected\n\n"
 
         health_report += """## 💡 Recommendations
@@ -384,11 +378,11 @@ Based on the health check:
 def quick_meta_feedback_bug(bug_description: str, component: str = "general") -> str:
     """
     Generates a formatted bug report meta feedback entry with medium severity.
-    
+
     Args:
         bug_description: Description of the bug to report.
         component: The component where the bug was found.
-    
+
     Returns:
         A formatted string representing the bug report feedback.
     """
@@ -396,18 +390,20 @@ def quick_meta_feedback_bug(bug_description: str, component: str = "general") ->
         feedback_type="bug",
         feedback_content=bug_description,
         severity="medium",
-        component=component
+        component=component,
     )
 
 
-def quick_meta_feedback_enhancement(enhancement_idea: str, component: str = "general") -> str:
+def quick_meta_feedback_enhancement(
+    enhancement_idea: str, component: str = "general"
+) -> str:
     """
     Submits a quick enhancement suggestion as meta feedback.
-    
+
     Args:
         enhancement_idea: Description of the proposed enhancement.
         component: The component or area related to the enhancement.
-    
+
     Returns:
         A formatted string containing the enhancement suggestion feedback.
     """
@@ -415,18 +411,18 @@ def quick_meta_feedback_enhancement(enhancement_idea: str, component: str = "gen
         feedback_type="enhancement",
         feedback_content=enhancement_idea,
         severity="medium",
-        component=component
+        component=component,
     )
 
 
 def quick_meta_feedback_success(success_story: str, component: str = "general") -> str:
     """
     Generates a formatted success story meta feedback report for AGOR.
-    
+
     Args:
         success_story: Description of the successful workflow or outcome.
         component: The component associated with the success story.
-    
+
     Returns:
         A formatted string containing the success story feedback.
     """
@@ -434,5 +430,5 @@ def quick_meta_feedback_success(success_story: str, component: str = "general") 
         feedback_type="success_story",
         feedback_content=success_story,
         severity="low",
-        component=component
+        component=component,
     )
