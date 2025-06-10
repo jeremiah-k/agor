@@ -161,6 +161,66 @@ def restore_content_from_codeblock(content: str) -> str:
     return retick_content(content)
 
 
+def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
+    """Parse git branch output to extract local and remote memory branches."""
+    local_memory_branches = []
+    remote_memory_branches = []
+
+    for line in branches_output.split('\n'):
+        line = line.strip()
+        # Skip empty lines
+        if not line:
+            continue
+
+        # Handle current branch marker
+        if line.startswith('*'):
+            line = line[1:].strip()
+
+        # Process remote branches
+        if line.startswith('remotes/origin/agor/mem/'):
+            remote_branch = line[len('remotes/origin/'):]
+            remote_memory_branches.append(remote_branch)
+        # Process local branches
+        elif line.startswith('agor/mem/'):
+            local_memory_branches.append(line)
+
+    return local_memory_branches, remote_memory_branches
+
+
+def _delete_local_branches(branches: List[str], results: Dict) -> None:
+    """Delete local memory branches and update results."""
+    print(f"\n🗑️  Deleting {len(branches)} local memory branches...")
+    for branch in branches:
+        success, output = run_git_command(["branch", "-D", branch])
+        if success:
+            print(f"✅ Deleted local branch: {branch}")
+            results['deleted_local'].append(branch)
+        else:
+            print(f"❌ Failed to delete local branch {branch}: {output}")
+            results['failed'].append(f"local:{branch}")
+
+
+def _delete_remote_branches(branches: List[str], results: Dict) -> None:
+    """Delete remote memory branches and update results."""
+    print(f"\n🌐 Deleting {len(branches)} remote memory branches...")
+    for branch in branches:
+        success, output = run_git_command(["push", "origin", "--delete", branch])
+        if success:
+            print(f"✅ Deleted remote branch: {branch}")
+            results['deleted_remote'].append(branch)
+        else:
+            # Check for common network/permission issues
+            if "Permission denied" in output or "Authentication failed" in output:
+                print(f"🔒 Permission denied for remote branch {branch}: {output}")
+                results['failed'].append(f"remote:{branch}:permission_denied")
+            elif "Network" in output or "Connection" in output:
+                print(f"🌐 Network error deleting remote branch {branch}: {output}")
+                results['failed'].append(f"remote:{branch}:network_error")
+            else:
+                print(f"❌ Failed to delete remote branch {branch}: {output}")
+                results['failed'].append(f"remote:{branch}:unknown_error")
+
+
 def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[str, List[str]]:
     """
     Safely cleanup all memory branches (local and remote).
@@ -191,22 +251,7 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
         print("❌ Failed to list branches")
         return results
 
-    local_memory_branches = []
-    remote_memory_branches = []
-
-    for line in branches_output.split('\n'):
-        line = line.strip()
-        if line.startswith('*'):
-            line = line[1:].strip()
-
-        # Safety check: only process agor/mem/ branches
-        if 'agor/mem/' in line:
-            if line.startswith('remotes/origin/'):
-                remote_branch = line.replace('remotes/origin/', '')
-                if remote_branch.startswith('agor/mem/'):
-                    remote_memory_branches.append(remote_branch)
-            elif line.startswith('agor/mem/'):
-                local_memory_branches.append(line)
+    local_memory_branches, remote_memory_branches = _parse_git_branches(branches_output)
 
     total_branches = len(local_memory_branches) + len(remote_memory_branches)
 
@@ -238,27 +283,9 @@ def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[
             results['skipped'] = local_memory_branches + remote_memory_branches
             return results
 
-    # Delete local memory branches
-    print(f"\n🗑️  Deleting {len(local_memory_branches)} local memory branches...")
-    for branch in local_memory_branches:
-        success, output = run_git_command(["branch", "-D", branch])
-        if success:
-            print(f"✅ Deleted local branch: {branch}")
-            results['deleted_local'].append(branch)
-        else:
-            print(f"❌ Failed to delete local branch {branch}: {output}")
-            results['failed'].append(f"local:{branch}")
-
-    # Delete remote memory branches
-    print(f"\n🌐 Deleting {len(remote_memory_branches)} remote memory branches...")
-    for branch in remote_memory_branches:
-        success, output = run_git_command(["push", "origin", "--delete", branch])
-        if success:
-            print(f"✅ Deleted remote branch: {branch}")
-            results['deleted_remote'].append(branch)
-        else:
-            print(f"❌ Failed to delete remote branch {branch}: {output}")
-            results['failed'].append(f"remote:{branch}")
+    # Delete branches using helper functions
+    _delete_local_branches(local_memory_branches, results)
+    _delete_remote_branches(remote_memory_branches, results)
 
     # Summary
     total_deleted = len(results['deleted_local']) + len(results['deleted_remote'])

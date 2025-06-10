@@ -12,6 +12,7 @@ Key Features:
 - Cross-platform compatibility
 """
 
+import datetime
 import logging
 import shlex
 import subprocess
@@ -364,7 +365,6 @@ class SubprocessManager:
     
     def _get_timestamp(self) -> str:
         """Get current timestamp for logging."""
-        import datetime
         return datetime.datetime.now().isoformat()
 
 
