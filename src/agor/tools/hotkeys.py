@@ -39,7 +39,9 @@ def test_tooling_wrapper() -> bool:
 
 
 def get_timestamp() -> str:
-    """Get current UTC timestamp."""
+    """
+    Returns the current UTC timestamp as a string.
+    """
     return get_current_timestamp()
 
 
@@ -51,10 +53,10 @@ def get_timestamp() -> str:
 
 def get_project_status() -> dict:
     """
-    Get comprehensive project status information.
-
+    Retrieves a dictionary with the current project status, including git branch, commit, uncommitted changes, environment information, and timestamp.
+    
     Returns:
-        Dictionary containing project status details.
+        A dictionary containing project status details such as current branch, commit hash, git status, environment info, and timestamp. If environment detection fails, includes an 'environment_error' key with the error message.
     """
     status = {}
 

@@ -31,7 +31,17 @@ class SubprocessError(Exception):
     
     def __init__(self, message: str, command: List[str], returncode: int, 
                  stdout: str = "", stderr: str = ""):
-        super().__init__(message)
+        """
+                 Initializes a SubprocessError with details about a failed subprocess execution.
+                 
+                 Args:
+                     message: Description of the error.
+                     command: The command that was executed as a list of arguments.
+                     returncode: The exit code returned by the subprocess.
+                     stdout: Standard output captured from the subprocess.
+                     stderr: Standard error captured from the subprocess.
+                 """
+                 super().__init__(message)
         self.command = command
         self.returncode = returncode
         self.stdout = stdout
@@ -48,11 +58,11 @@ class SubprocessManager:
     
     def __init__(self, default_timeout: int = 30, log_commands: bool = True):
         """
-        Initialize the subprocess manager.
+        Initializes a SubprocessManager with default timeout and logging preferences.
         
         Args:
-            default_timeout: Default timeout for subprocess calls in seconds
-            log_commands: Whether to log command execution
+            default_timeout: Timeout in seconds to use for subprocess calls if not specified.
+            log_commands: If True, enables logging of executed commands.
         """
         self.default_timeout = default_timeout
         self.log_commands = log_commands
@@ -70,20 +80,20 @@ class SubprocessManager:
         shell: bool = False
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a command with unified error handling and logging.
+        Executes a command as a subprocess with unified error handling, logging, and optional input.
         
         Args:
-            command: Command to run (string or list)
-            cwd: Working directory for the command
-            timeout: Timeout in seconds (uses default if None)
-            capture_output: Whether to capture stdout/stderr
-            check: Whether to raise exception on non-zero exit
-            env: Environment variables
-            input_text: Input to send to the process
-            shell: Whether to run through shell
-            
+            command: The command to execute, as a string or list of arguments.
+            cwd: Optional working directory for the command.
+            timeout: Timeout in seconds; uses the default if not specified.
+            capture_output: If True, captures stdout and stderr.
+            check: If True, raises SubprocessError on non-zero exit or failure.
+            env: Optional environment variables for the subprocess.
+            input_text: Optional text to send to the process's stdin.
+            shell: If True, executes the command through the shell.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple (success, stdout, stderr, returncode), where success is True if the command exited with code 0.
         """
         # Normalize command to list
         if isinstance(command, str):
@@ -219,15 +229,17 @@ class SubprocessManager:
         timeout: Optional[int] = None
     ) -> Tuple[bool, str]:
         """
-        Run a git command with specialized error handling.
+        Executes a git command and returns its success status and output.
+        
+        Runs the specified git command arguments, combining standard output and error output into a single string. Returns the output from stdout if the command succeeds, or stderr if it fails.
         
         Args:
-            git_args: Git command arguments (without 'git')
-            cwd: Working directory for the command
-            timeout: Timeout in seconds
-            
+            git_args: List of arguments for the git command, excluding the 'git' executable.
+            cwd: Optional working directory in which to run the command.
+            timeout: Optional timeout in seconds for command execution.
+        
         Returns:
-            Tuple of (success, output)
+            A tuple containing a boolean indicating success and the combined output string.
         """
         command = ['git'] + git_args
         success, stdout, stderr, returncode = self.run_command(
@@ -247,16 +259,18 @@ class SubprocessManager:
         use_current_python: bool = True
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a Python command with appropriate interpreter.
+        Executes a Python command using the specified interpreter.
+        
+        Runs a Python subprocess with the given arguments, optionally using the current Python interpreter or the system default. Returns a tuple containing a success flag, standard output, standard error, and the process return code.
         
         Args:
-            python_args: Python command arguments (without 'python')
-            cwd: Working directory for the command
-            timeout: Timeout in seconds
-            use_current_python: Whether to use current Python interpreter
-            
+            python_args: Arguments to pass to the Python interpreter (excluding the interpreter itself).
+            cwd: Optional working directory for the subprocess.
+            timeout: Optional timeout in seconds for the command.
+            use_current_python: If True, uses the current Python interpreter; otherwise, uses 'python3'.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple (success, stdout, stderr, returncode) indicating execution result.
         """
         python_cmd = sys.executable if use_current_python else 'python3'
         
@@ -271,16 +285,16 @@ class SubprocessManager:
         timeout: Optional[int] = None
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a command with input text.
+        Runs a command and sends the specified input text to its standard input.
         
         Args:
-            command: Command to run
-            input_text: Text to send to the process
-            cwd: Working directory
-            timeout: Timeout in seconds
-            
+            command: The command to execute, as a string or list of arguments.
+            input_text: The text to provide to the process's standard input.
+            cwd: Optional working directory for the command.
+            timeout: Optional timeout in seconds for command execution.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple containing a success flag, standard output, standard error, and return code.
         """
         return self.run_command(
             command, cwd=cwd, timeout=timeout, input_text=input_text
@@ -295,17 +309,17 @@ class SubprocessManager:
         timeout: Optional[int] = None
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a command with a temporary file.
+        Runs a command after creating a temporary file with specified content and replacing the `{temp_file}` placeholder in the command with the file's path.
         
         Args:
-            command: Command to run (use {temp_file} placeholder)
-            file_content: Content to write to temporary file
-            file_suffix: Suffix for temporary file
-            cwd: Working directory
-            timeout: Timeout in seconds
-            
+            command: The command to execute, containing a `{temp_file}` placeholder to be replaced with the temporary file path.
+            file_content: The content to write into the temporary file.
+            file_suffix: The suffix to use for the temporary file name.
+            cwd: Optional working directory for the command.
+            timeout: Optional timeout in seconds for command execution.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple containing a success flag, stdout, stderr, and the command's return code.
         """
         with tempfile.NamedTemporaryFile(
             mode='w', suffix=file_suffix, delete=False
@@ -329,28 +343,34 @@ class SubprocessManager:
     
     def get_command_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """
-        Get command execution history.
+        Returns the history of executed commands.
+        
+        If a limit is specified, only the most recent entries up to that limit are returned; otherwise, the full history is provided.
         
         Args:
-            limit: Maximum number of commands to return
-            
+            limit: The maximum number of recent command entries to return.
+        
         Returns:
-            List of command history entries
+            A list of dictionaries containing metadata for each executed command.
         """
         if limit:
             return self.command_history[-limit:]
         return self.command_history.copy()
     
     def clear_history(self) -> None:
-        """Clear command execution history."""
+        """
+        Clears the command execution history.
+        """
         self.command_history.clear()
     
     def get_stats(self) -> Dict[str, Any]:
         """
-        Get execution statistics.
+        Returns statistics on executed subprocess commands.
+        
+        The returned dictionary includes the total number of commands run, counts of successful and failed executions, and the success rate as a float between 0 and 1.
         
         Returns:
-            Dictionary with execution statistics
+            A dictionary with keys: 'total_commands', 'successful_commands', 'failed_commands', and 'success_rate'.
         """
         total_commands = len(self.command_history)
         successful_commands = sum(1 for cmd in self.command_history if cmd['success'])
@@ -364,7 +384,9 @@ class SubprocessManager:
         }
     
     def _get_timestamp(self) -> str:
-        """Get current timestamp for logging."""
+        """
+        Returns the current timestamp as an ISO 8601 formatted string.
+        """
         return datetime.datetime.now().isoformat()
 
 
@@ -374,20 +396,52 @@ _subprocess_manager = SubprocessManager()
 
 # Convenience functions for backward compatibility
 def run_command(command: Union[str, List[str]], **kwargs) -> Tuple[bool, str, str, int]:
-    """Run a command using the global subprocess manager."""
+    """
+    Executes a command using the global subprocess manager.
+    
+    Args:
+        command: The command to execute, as a string or list of arguments.
+        **kwargs: Additional options forwarded to the subprocess manager, such as working directory, timeout, environment variables, input text, shell execution, and output capture.
+    
+    Returns:
+        A tuple containing a success flag, standard output, standard error, and return code.
+    """
     return _subprocess_manager.run_command(command, **kwargs)
 
 
 def run_git_command(git_args: List[str], **kwargs) -> Tuple[bool, str]:
-    """Run a git command using the global subprocess manager."""
+    """
+    Executes a git command using the global subprocess manager.
+    
+    Args:
+        git_args: List of arguments for the git command (excluding 'git' itself).
+    
+    Returns:
+        A tuple containing a success flag and the combined output (stdout if successful, otherwise stderr).
+    """
     return _subprocess_manager.run_git_command(git_args, **kwargs)
 
 
 def run_python_command(python_args: List[str], **kwargs) -> Tuple[bool, str, str, int]:
-    """Run a Python command using the global subprocess manager."""
+    """
+    Executes a Python command using the global subprocess manager.
+    
+    Args:
+    	python_args: List of arguments to pass to the Python interpreter.
+    
+    Returns:
+    	A tuple containing a success flag, stdout, stderr, and return code.
+    """
     return _subprocess_manager.run_python_command(python_args, **kwargs)
 
 
 def get_subprocess_stats() -> Dict[str, Any]:
-    """Get subprocess execution statistics."""
+    """
+    Returns statistics about all subprocess commands executed via the global manager.
+    
+    The statistics include the total number of commands run, the number of successful and failed commands, and the overall success rate.
+     
+    Returns:
+        A dictionary containing execution statistics for subprocess commands.
+    """
     return _subprocess_manager.get_stats()

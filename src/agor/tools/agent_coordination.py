@@ -40,10 +40,10 @@ class AgentCoordinationHelper:
 
     def __init__(self, project_root: Optional[Path] = None):
         """
-        Initialize the coordination helper.
-
+        Initializes the AgentCoordinationHelper with the project root and sets up coordination paths and strategy manager.
+        
         Args:
-            project_root: Root directory of the project. Defaults to current directory.
+            project_root: Optional root directory for the project. If not provided, uses the current working directory.
         """
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
@@ -51,8 +51,15 @@ class AgentCoordinationHelper:
 
     def discover_current_situation(self, agent_id: Optional[str] = None) -> Dict:
         """
-        Discover current coordination situation and provide next actions.
-        This is the main entry point for agents joining a project.
+        Discovers the current coordination state for an agent and provides recommended next actions.
+        
+        This method serves as the main entry point for agents to understand their current role, the active strategy, and actionable steps within an AGOR-coordinated project. It checks for the existence of coordination, detects the active strategy, determines the agent's role, and returns a structured summary including status, strategy details, role information, next actions, and a message.
+        
+        Args:
+            agent_id: Optional identifier for the agent requesting coordination status.
+        
+        Returns:
+            A dictionary containing the current status, strategy information, agent role, recommended next actions, and a summary message.
         """
 
         # Initialize memory sync for agent workflows
@@ -100,10 +107,10 @@ class AgentCoordinationHelper:
 
     def _detect_active_strategy(self) -> Optional[Dict]:
         """
-        Detect what strategy is currently active using the new configuration system.
-
+        Detects the currently active coordination strategy using the strategy configuration manager.
+        
         Returns:
-            Dictionary containing strategy information, or None if no strategy is active.
+            A dictionary with strategy information if an active strategy is found, or None if no strategy is active.
         """
         strategy_file = self.agor_dir / "strategy-active.md"
         if not strategy_file.exists():
@@ -116,13 +123,13 @@ class AgentCoordinationHelper:
 
     def _extract_task_from_content(self, content: str) -> str:
         """
-        Extract task description from strategy content.
-
+        Extracts the task description from the provided strategy content.
+        
         Args:
-            content: Strategy file content
-
+            content: The content of the strategy file as a string.
+        
         Returns:
-            Task description or "Unknown task" if not found
+            The extracted task description, or "Unknown task" if no task is found.
         """
         task_match = re.search(r"### Task: (.+)", content)
         return task_match.group(1) if task_match else "Unknown task"
@@ -325,14 +332,16 @@ class AgentCoordinationHelper:
         self, strategy_info: Dict, agent_id: Optional[str]
     ) -> Dict:
         """
-        Determine what role this agent should play in the current strategy using configuration.
-
+        Determines the agent's role in the current strategy using the strategy configuration manager.
+        
+        Builds a context with assignment status, stage availability, available tasks, and claim status, then delegates role resolution to the strategy manager.
+        
         Args:
-            strategy_info: Information about the current strategy
-            agent_id: Optional agent identifier
-
+            strategy_info: Dictionary with details about the current strategy.
+            agent_id: The agent's identifier, or None.
+        
         Returns:
-            Dictionary containing role information and next actions
+            A dictionary describing the agent's role and related information.
         """
         # Build context for role determination
         context = {
@@ -348,13 +357,13 @@ class AgentCoordinationHelper:
 
     def _get_claimed_agents(self, pattern: str = r"(agent\d+): .+ - CLAIMING") -> set:
         """
-        Get set of agents that have claimed assignments from agentconvo.md.
-
+        Returns a set of agent IDs that have claimed assignments in agentconvo.md.
+        
         Args:
-            pattern: Regex pattern to match claims
-
+            pattern: Regular expression pattern used to identify agent claim entries.
+        
         Returns:
-            Set of claimed agent IDs
+            A set of agent IDs (as lowercase strings) that have made claims.
         """
         agentconvo_file = self.agor_dir / "agentconvo.md"
         claimed_agents = set()
@@ -367,7 +376,16 @@ class AgentCoordinationHelper:
         return claimed_agents
 
     def _check_agent_assignment(self, strategy_info: Dict, agent_id: Optional[str]) -> bool:
-        """Check if agent has an assignment in the strategy."""
+        """
+        Checks whether the specified agent has an assignment in the given strategy.
+        
+        Args:
+            strategy_info: Dictionary containing strategy details, including agent assignments.
+            agent_id: The identifier of the agent to check.
+        
+        Returns:
+            True if the agent is assigned in the strategy; otherwise, False.
+        """
         if not agent_id:
             return False
 
@@ -375,7 +393,15 @@ class AgentCoordinationHelper:
         return any(agent["agent_id"] == agent_id.lower() for agent in agents)
 
     def _check_stage_availability(self, strategy_info: Dict) -> bool:
-        """Check if a pipeline stage is available for claiming."""
+        """
+        Checks whether the current pipeline stage is available to be claimed by an agent.
+        
+        Args:
+            strategy_info: Dictionary containing the current strategy details.
+        
+        Returns:
+            True if the current pipeline stage is unclaimed and available; False otherwise.
+        """
         if strategy_info.get("type") != "pipeline":
             return False
 
@@ -384,7 +410,15 @@ class AgentCoordinationHelper:
         return not self._is_stage_claimed(stage_number)
 
     def _get_available_task_count(self, strategy_info: Dict) -> int:
-        """Get count of available tasks for swarm strategy."""
+        """
+        Returns the number of available tasks in a Swarm strategy.
+        
+        Args:
+            strategy_info: Dictionary containing strategy details.
+        
+        Returns:
+            The count of available tasks if the strategy type is 'swarm'; otherwise, 0.
+        """
         if strategy_info.get("type") != "swarm":
             return 0
 
@@ -393,14 +427,9 @@ class AgentCoordinationHelper:
 
     def _determine_pd_role(self, strategy_info: Dict, agent_id: Optional[str]) -> Dict:
         """
-        Determine role in Parallel Divergent strategy.
-
-        Args:
-            strategy_info: Strategy information
-            agent_id: Optional agent identifier
-
-        Returns:
-            Dictionary containing role assignment
+        Determines the agent's role in the Parallel Divergent strategy based on the current phase and assignment status.
+        
+        Returns a dictionary describing the agent's role, status, and relevant instructions for the current phase (divergent, convergent, synthesis, or setup).
         """
         phase = strategy_info["phase"]
         agents = strategy_info.get("agents", [])

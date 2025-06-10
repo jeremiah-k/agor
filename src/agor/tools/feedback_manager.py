@@ -63,10 +63,9 @@ class FeedbackManager:
     
     def __init__(self, feedback_dir: Optional[Path] = None):
         """
-        Initialize the feedback manager.
+        Initializes the FeedbackManager with a feedback storage directory, template engine, and loads existing feedback history.
         
-        Args:
-            feedback_dir: Directory for storing feedback data
+        If no directory is specified, defaults to '.agor/feedback' in the current working directory.
         """
         self.feedback_dir = feedback_dir or Path(".agor/feedback")
         self.feedback_dir.mkdir(parents=True, exist_ok=True)
@@ -76,7 +75,11 @@ class FeedbackManager:
         self._load_feedback_history()
     
     def _load_feedback_history(self) -> None:
-        """Load existing feedback history from storage."""
+        """
+        Loads feedback history from the feedback directory, deserializing entries from JSON.
+        
+        If the history file is corrupted or contains invalid data, creates a timestamped backup and prints a warning.
+        """
         history_file = self.feedback_dir / "feedback_history.json"
         if history_file.exists():
             try:
@@ -92,7 +95,9 @@ class FeedbackManager:
                 self._backup_corrupted_file(history_file, e)
     
     def _save_feedback_history(self) -> None:
-        """Save feedback history to storage."""
+        """
+        Persists the current feedback history to a JSON file in the feedback directory.
+        """
         history_file = self.feedback_dir / "feedback_history.json"
         
         history_data = {
@@ -118,11 +123,9 @@ class FeedbackManager:
 
     def _backup_corrupted_file(self, corrupted_file: Path, error: Exception) -> None:
         """
-        Create a backup of corrupted feedback file for later inspection.
-
-        Args:
-            corrupted_file: Path to the corrupted file
-            error: The exception that occurred during parsing
+        Creates a timestamped backup of a corrupted feedback file for manual inspection.
+        
+        If an error occurs during backup, prints a warning message with details.
         """
         try:
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -152,21 +155,26 @@ class FeedbackManager:
         agent_id: Optional[str] = None
     ) -> FeedbackEntry:
         """
-        Collect structured feedback entry.
+        Creates and stores a structured feedback entry with validation.
+        
+        Validates the severity level, constructs a FeedbackEntry with the provided details and current timestamp, appends it to the feedback history, persists the updated history, and returns the created entry.
         
         Args:
-            feedback_type: Type of feedback (bug, enhancement, workflow_issue, etc.)
-            feedback_content: Main feedback content
-            suggestions: List of improvement suggestions
-            severity: Severity level (low, medium, high, critical)
-            component: Component affected
-            reproduction_steps: Steps to reproduce (for bugs)
-            expected_behavior: Expected behavior (for bugs)
-            actual_behavior: Actual behavior (for bugs)
-            agent_id: ID of the agent providing feedback
-            
+            feedback_type: The category of feedback, such as 'bug', 'enhancement', or 'workflow_issue'.
+            feedback_content: The main content or description of the feedback.
+            suggestions: Optional list of suggestions for improvement.
+            severity: The severity level of the feedback; must be one of 'low', 'medium', 'high', or 'critical'.
+            component: The affected component or area.
+            reproduction_steps: Optional steps to reproduce the issue, relevant for bug reports.
+            expected_behavior: Optional description of the expected behavior, relevant for bug reports.
+            actual_behavior: Optional description of the actual behavior, relevant for bug reports.
+            agent_id: Optional identifier for the agent submitting the feedback.
+        
         Returns:
-            Created feedback entry
+            The created FeedbackEntry instance.
+        
+        Raises:
+            ValueError: If the provided severity is not one of the allowed levels.
         """
         # Validate severity
         if severity not in ALLOWED_SEVERITIES:
@@ -199,17 +207,10 @@ class FeedbackManager:
         component: str = "general"
     ) -> str:
         """
-        Generate formatted meta feedback for AGOR improvement.
+        Generates formatted meta feedback content for AGOR platform improvement.
         
-        Args:
-            feedback_type: Type of feedback
-            feedback_content: Main feedback content
-            suggestions: List of improvement suggestions
-            severity: Severity level
-            component: Component affected
-            
-        Returns:
-            Formatted meta feedback content
+        Collects and stores structured feedback, then produces a markdown-formatted summary including feedback type, content, suggestions, severity, component, and action items.
+        Returns the formatted meta feedback as a string.
         """
         # Collect the feedback
         entry = self.collect_feedback(
@@ -269,13 +270,15 @@ Priority: {{ severity }}
     
     def create_github_issue_content(self, config: GitHubIssueConfig) -> str:
         """
-        Create GitHub issue content from feedback configuration.
+        Generates formatted GitHub issue content from a feedback configuration.
+        
+        The output includes a structured issue body with title, component, severity, description, reproduction steps, expected and actual behavior (for bugs), suggested solutions, and appropriate GitHub labels based on feedback type and severity.
         
         Args:
-            config: GitHub issue configuration
-            
+            config: Structured configuration containing feedback details for the issue.
+        
         Returns:
-            Formatted GitHub issue content
+            A string containing the formatted GitHub issue content.
         """
         # Map feedback types to GitHub labels
         type_labels = {
@@ -360,10 +363,12 @@ Priority: {{ severity }}
     
     def get_feedback_statistics(self) -> Dict[str, Any]:
         """
-        Get statistics about collected feedback.
+        Returns aggregated statistics about all collected feedback.
         
+        The statistics include the total number of feedback entries, counts grouped by type, severity, and component, as well as summaries of the five most recent feedback entries.
+         
         Returns:
-            Dictionary with feedback statistics
+            A dictionary containing feedback statistics with keys: 'total_feedback', 'by_type', 'by_severity', 'by_component', and 'recent_feedback'.
         """
         if not self.feedback_history:
             return {
@@ -410,13 +415,16 @@ Priority: {{ severity }}
     
     def export_feedback(self, format_type: str = "json") -> str:
         """
-        Export feedback data in specified format.
+        Exports all collected feedback entries in the specified format.
         
         Args:
-            format_type: Export format (json, csv, markdown)
-            
+            format_type: The export format, either "json" or "markdown".
+        
         Returns:
-            Exported feedback data as string
+            A string containing the exported feedback data in the chosen format.
+        
+        Raises:
+            ValueError: If an unsupported export format is specified.
         """
         if format_type == "json":
             return json.dumps({
@@ -457,20 +465,45 @@ _feedback_manager = FeedbackManager()
 
 # Convenience functions for backward compatibility
 def generate_meta_feedback(feedback_type: str, feedback_content: str, **kwargs) -> str:
-    """Generate meta feedback using the global feedback manager."""
+    """
+    Generates formatted meta feedback content using the global feedback manager.
+    
+    Args:
+        feedback_type: The category of feedback (e.g., bug, suggestion, question).
+        feedback_content: The main feedback text.
+    
+    Returns:
+        A formatted string containing the meta feedback, including details such as type, component, severity, timestamp, suggestions, and context.
+    """
     return _feedback_manager.generate_meta_feedback(feedback_type, feedback_content, **kwargs)
 
 
 def create_github_issue_content(config: GitHubIssueConfig) -> str:
-    """Create GitHub issue content using the global feedback manager."""
+    """
+    Generates formatted GitHub issue content from a feedback configuration.
+    
+    Args:
+        config: Structured feedback data for issue creation.
+    
+    Returns:
+        A string containing the GitHub issue body with mapped labels and formatted sections.
+    """
     return _feedback_manager.create_github_issue_content(config)
 
 
 def get_feedback_statistics() -> Dict[str, Any]:
-    """Get feedback statistics using the global feedback manager."""
+    """
+    Returns aggregated statistics about collected feedback entries.
+    
+    The statistics include total feedback count, counts by type, severity, and component, as well as summaries of the most recent feedback entries.
+    """
     return _feedback_manager.get_feedback_statistics()
 
 
 def collect_feedback(feedback_type: str, feedback_content: str, **kwargs) -> FeedbackEntry:
-    """Collect feedback using the global feedback manager."""
+    """
+    Collects structured feedback and returns a FeedbackEntry.
+    
+    Delegates to the global feedback manager to validate, store, and persist the feedback entry with the provided type, content, and optional metadata.
+    """
     return _feedback_manager.collect_feedback(feedback_type, feedback_content, **kwargs)

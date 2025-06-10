@@ -26,7 +26,12 @@ except ImportError:
 
 
 def get_current_branch() -> str:
-    """Get current git branch name."""
+    """
+    Retrieves the name of the current Git branch.
+    
+    Returns:
+        The current branch name as a string, or "main" if the branch cannot be determined.
+    """
     success, branch = run_git_command(["branch", "--show-current"])
     if success:
         return branch.strip()
@@ -508,9 +513,9 @@ def generate_meta_feedback(
     environment_info: dict = None
 ) -> str:
     """
-    Generates structured meta feedback for AGOR, including validation, environment details, and actionable recommendations.
+    Generates a structured meta feedback report for AGOR, including validation, environment details, and actionable recommendations.
     
-    Creates a formatted feedback report with severity and type indicators, affected component, AGOR version, and environment context. For bug reports, includes sections for reproduction steps, expected and actual behavior. Lists improvement suggestions, tailored recommended actions based on feedback type, and metadata for tracking. Ensures clean markdown formatting for agent communication.
+    Creates a formatted markdown report summarizing feedback type, severity, component, AGOR version, and environment context. For bug reports, includes sections for reproduction steps, expected and actual behavior. Lists improvement suggestions and provides tailored recommended actions based on feedback type. If a feedback manager is available, delegates report generation; otherwise, returns a markdown-formatted string with safe codeblock rendering.
     """
     # Validate and set defaults
     if suggestions is None:

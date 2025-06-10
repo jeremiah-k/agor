@@ -157,12 +157,22 @@ def process_content_for_codeblock(content: str) -> str:
 
 
 def restore_content_from_codeblock(content: str) -> str:
-    """Restore content from codeblock processing."""
+    """
+    Restores original content by reapplying triple backticks to previously deticked codeblock content.
+    """
     return retick_content(content)
 
 
 def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
-    """Parse git branch output to extract local and remote memory branches."""
+    """
+    Parses the output of `git branch -a` to extract local and remote memory branches matching the `agor/mem/` pattern.
+    
+    Args:
+        branches_output: The raw output string from `git branch -a`.
+    
+    Returns:
+        A tuple containing two lists: local memory branch names and remote memory branch names.
+    """
     local_memory_branches = []
     remote_memory_branches = []
 
@@ -188,7 +198,13 @@ def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
 
 
 def _delete_local_branches(branches: List[str], results: Dict) -> None:
-    """Delete local memory branches and update results."""
+    """
+    Deletes local memory branches and updates the results dictionary with the outcome.
+    
+    Args:
+        branches: List of local branch names to delete.
+        results: Dictionary to record successfully deleted and failed branches.
+    """
     print(f"\n🗑️  Deleting {len(branches)} local memory branches...")
     for branch in branches:
         success, output = run_git_command(["branch", "-D", branch])
@@ -201,7 +217,13 @@ def _delete_local_branches(branches: List[str], results: Dict) -> None:
 
 
 def _delete_remote_branches(branches: List[str], results: Dict) -> None:
-    """Delete remote memory branches and update results."""
+    """
+    Deletes remote memory branches from the Git repository and updates the results dictionary with the outcome of each deletion attempt.
+    
+    Args:
+        branches: List of remote branch names to delete.
+        results: Dictionary to record deleted and failed branch operations.
+    """
     print(f"\n🌐 Deleting {len(branches)} remote memory branches...")
     for branch in branches:
         success, output = run_git_command(["push", "origin", "--delete", branch])
@@ -223,16 +245,16 @@ def _delete_remote_branches(branches: List[str], results: Dict) -> None:
 
 def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[str, List[str]]:
     """
-    Safely cleanup all memory branches (local and remote).
-
-    SAFETY: Only removes branches matching 'agor/mem/' pattern.
-
+    Identifies and deletes all local and remote Git branches matching the 'agor/mem/' pattern.
+    
+    Performs a safe cleanup of memory branches, supporting dry-run mode to preview deletions and optional user confirmation before proceeding. Returns a dictionary summarizing deleted, failed, and skipped branches.
+    
     Args:
-        dry_run: If True, only shows what would be deleted without actually deleting
-        confirm: If True, requires user confirmation before deletion
-
+        dry_run: If True, lists branches that would be deleted without performing deletion.
+        confirm: If True, prompts the user for confirmation before deleting branches.
+    
     Returns:
-        Dictionary with 'deleted_local', 'deleted_remote', 'failed' lists
+        A dictionary with lists of 'deleted_local', 'deleted_remote', 'failed', and 'skipped' branches.
     """
 
 
@@ -495,17 +517,15 @@ def validate_output_formatting(content: str) -> dict:
 
 def apply_output_formatting(content: str, content_type: str = "general") -> str:
     """
-    Formats content according to AGOR output standards for safe embedding and compliance.
-
-    Deticks the input content to remove triple backticks and wraps the result in double backtick
-    codeblocks for ALL content types to ensure consistent copy-paste workflow.
-
+    Formats content for AGOR output by removing triple backticks and wrapping it in double backtick codeblocks.
+    
+    This ensures all content is safe for copy-paste and complies with AGOR output standards.
+    
     Args:
-        content: Raw content to format
-        content_type: Type of content (for logging/debugging purposes)
-
+        content: The content to be formatted.
+    
     Returns:
-        Formatted content wrapped in double backticks ready for copy-paste
+        The formatted content wrapped in double backtick codeblocks.
     """
     # Process through detick to handle any triple backticks
     processed_content = detick_content(content)
@@ -518,62 +538,57 @@ def apply_output_formatting(content: str, content_type: str = "general") -> str:
 
 def generate_formatted_output(content: str, content_type: str = "general") -> str:
     """
-    Generate properly formatted output for user copy-paste.
-
-    This is the main function that should be used for ALL generated outputs
-    that need to be presented to users for copy-paste.
-
+    Generates output formatted for user copy-paste according to AGOR standards.
+    
+    Formats the provided content using the appropriate output formatting rules for the specified content type, ensuring consistency and safe embedding for user workflows.
+    
     Args:
-        content: Raw content to format
-        content_type: Type of content being formatted
-
+        content: The raw content to be formatted.
+        content_type: The type of content being formatted (e.g., "general", "release_notes", "pr_description").
+    
     Returns:
-        Properly formatted content ready for copy-paste
+        The formatted content, ready for user copy-paste.
     """
     return apply_output_formatting(content, content_type)
 
 
 def generate_release_notes_output(release_notes_content: str) -> str:
     """
-    Generate properly formatted release notes for copy-paste.
-
-    NOTE: Keep release notes content BRIEF to avoid processing errors.
-    Long content can cause the formatting process to fail.
-
+    Formats release notes content for copy-paste by wrapping it in a double backtick codeblock.
+    
     Args:
-        release_notes_content: Raw release notes content (keep brief)
-
+        release_notes_content: The release notes text to be formatted. Should be brief to ensure reliable processing.
+    
     Returns:
-        Formatted release notes wrapped in codeblock
+        The formatted release notes content, safely wrapped for copy-paste.
     """
     return generate_formatted_output(release_notes_content, "release_notes")
 
 
 def generate_pr_description_output(pr_content: str) -> str:
     """
-    Generate properly formatted PR description for copy-paste.
-
-    NOTE: Keep PR description content BRIEF to avoid processing errors.
-    Long content can cause the formatting process to fail.
-
+    Formats a pull request description for copy-paste compliance.
+    
+    Wraps the provided PR description content in a double backtick codeblock for safe embedding and sharing. Content should be kept brief to prevent formatting issues.
+    
     Args:
-        pr_content: Raw PR description content (keep brief)
-
+        pr_content: The pull request description to format.
+    
     Returns:
-        Formatted PR description wrapped in codeblock
+        The formatted PR description as a string.
     """
     return generate_formatted_output(pr_content, "pr_description")
 
 
 def generate_handoff_prompt_output(handoff_content: str) -> str:
     """
-    Generate properly formatted handoff prompt for copy-paste.
-
+    Formats a handoff prompt for copy-paste by wrapping it in a double backtick codeblock.
+    
     Args:
-        handoff_content: Raw handoff prompt content
-
+        handoff_content: The raw handoff prompt content to be formatted.
+    
     Returns:
-        Formatted handoff prompt wrapped in codeblock
+        The handoff prompt content wrapped in a double backtick codeblock for safe embedding and copying.
     """
     return generate_formatted_output(handoff_content, "handoff_prompt")
 
