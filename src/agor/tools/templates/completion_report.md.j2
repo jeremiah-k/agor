@@ -1,0 +1,53 @@
+# 📦 AGOR Snapshot: Task Completion Report
+
+## Snapshot ID
+{{ current_timestamp('%Y%m%dT%H%M%S') }}-task-completion
+
+## Author
+{{ agent_role }}
+
+## Strategy
+{{ strategy | default('[Strategy from coordination system]') }}
+
+## Assigned To
+{{ coordinator_id }}
+
+## Memory Branch
+agor/mem/{{ current_timestamp('%Y%m%dT%H%M')[:13] }}
+
+## Context
+Task completion report for: {{ original_task }}
+
+## Task Status
+{{ final_status }}
+
+📘 **If you're unfamiliar with task completion reports, read the following before proceeding:**
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- `src/agor/tools/AGOR_INSTRUCTIONS.md`
+- `src/agor/tools/README_ai.md`
+- `src/agor/tools/agent-start-here.md`
+
+## Original Task
+{{ original_task }}
+
+## Work Completed
+{{ work_completed | format_list }}
+
+## Files Modified
+{{ files_modified | format_list("- `", "` - [Description of changes]") }}
+
+## Commits Made
+{{ commits_made | format_list("- `", "`") }}
+
+## Results Summary
+{{ results_summary }}
+
+## Issues Encountered
+{{ issues_encountered | default('None') }}
+
+## Recommendations
+{{ recommendations | default('None') }}
+
+## Technical Context
+**Git Branch**: `{{ git_context.branch }}`
+**Current Commit**: `{{ git_context.current_commit }}`

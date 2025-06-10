@@ -9,7 +9,7 @@ All functions use absolute imports for better reliability.
 
 from pathlib import Path
 
-from agor.tools.agent_handoffs import detick_content, retick_content
+
 from agor.tools.dev_testing import detect_environment, test_tooling
 
 # Use absolute imports to prevent E0402 errors
@@ -43,24 +43,10 @@ def get_timestamp() -> str:
     return get_current_timestamp()
 
 
-def detick_content_wrapper(content: str) -> str:
-    """
-    Replaces all triple backticks in the content with double backticks for safe embedding within a single codeblock.
-    """
-    return detick_content(content)
 
 
-def retick_content_wrapper(content: str) -> str:
-    """
-    Converts double backticks (``) in the content back to triple backticks (```) for standard codeblock formatting.
 
-    Args:
-        content: The string content with double backticks to be converted.
 
-    Returns:
-        The content with double backticks replaced by triple backticks.
-    """
-    return retick_content(content)
 
 
 def get_project_status() -> dict:

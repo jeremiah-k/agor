@@ -16,7 +16,7 @@ Provides a clean API interface while keeping individual modules under 500 LOC.
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from agor.tools.agent_handoffs import detick_content, retick_content
 from agor.tools.checklist import (
@@ -159,6 +159,146 @@ def process_content_for_codeblock(content: str) -> str:
 def restore_content_from_codeblock(content: str) -> str:
     """Restore content from codeblock processing."""
     return retick_content(content)
+
+
+def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
+    """Parse git branch output to extract local and remote memory branches."""
+    local_memory_branches = []
+    remote_memory_branches = []
+
+    for line in branches_output.split('\n'):
+        line = line.strip()
+        # Skip empty lines
+        if not line:
+            continue
+
+        # Handle current branch marker
+        if line.startswith('*'):
+            line = line[1:].strip()
+
+        # Process remote branches
+        if line.startswith('remotes/origin/agor/mem/'):
+            remote_branch = line[len('remotes/origin/'):]
+            remote_memory_branches.append(remote_branch)
+        # Process local branches
+        elif line.startswith('agor/mem/'):
+            local_memory_branches.append(line)
+
+    return local_memory_branches, remote_memory_branches
+
+
+def _delete_local_branches(branches: List[str], results: Dict) -> None:
+    """Delete local memory branches and update results."""
+    print(f"\n🗑️  Deleting {len(branches)} local memory branches...")
+    for branch in branches:
+        success, output = run_git_command(["branch", "-D", branch])
+        if success:
+            print(f"✅ Deleted local branch: {branch}")
+            results['deleted_local'].append(branch)
+        else:
+            print(f"❌ Failed to delete local branch {branch}: {output}")
+            results['failed'].append(f"local:{branch}")
+
+
+def _delete_remote_branches(branches: List[str], results: Dict) -> None:
+    """Delete remote memory branches and update results."""
+    print(f"\n🌐 Deleting {len(branches)} remote memory branches...")
+    for branch in branches:
+        success, output = run_git_command(["push", "origin", "--delete", branch])
+        if success:
+            print(f"✅ Deleted remote branch: {branch}")
+            results['deleted_remote'].append(branch)
+        else:
+            # Check for common network/permission issues
+            if "Permission denied" in output or "Authentication failed" in output:
+                print(f"🔒 Permission denied for remote branch {branch}: {output}")
+                results['failed'].append(f"remote:{branch}:permission_denied")
+            elif "Network" in output or "Connection" in output:
+                print(f"🌐 Network error deleting remote branch {branch}: {output}")
+                results['failed'].append(f"remote:{branch}:network_error")
+            else:
+                print(f"❌ Failed to delete remote branch {branch}: {output}")
+                results['failed'].append(f"remote:{branch}:unknown_error")
+
+
+def cleanup_memory_branches(dry_run: bool = True, confirm: bool = True) -> Dict[str, List[str]]:
+    """
+    Safely cleanup all memory branches (local and remote).
+
+    SAFETY: Only removes branches matching 'agor/mem/' pattern.
+
+    Args:
+        dry_run: If True, only shows what would be deleted without actually deleting
+        confirm: If True, requires user confirmation before deletion
+
+    Returns:
+        Dictionary with 'deleted_local', 'deleted_remote', 'failed' lists
+    """
+
+
+    results = {
+        'deleted_local': [],
+        'deleted_remote': [],
+        'failed': [],
+        'skipped': []
+    }
+
+    print("🔍 Scanning for memory branches...")
+
+    # Get all branches (local and remote)
+    success, branches_output = run_git_command(["branch", "-a"])
+    if not success:
+        print("❌ Failed to list branches")
+        return results
+
+    local_memory_branches, remote_memory_branches = _parse_git_branches(branches_output)
+
+    total_branches = len(local_memory_branches) + len(remote_memory_branches)
+
+    if total_branches == 0:
+        print("✅ No memory branches found to cleanup")
+        return results
+
+    print(f"📋 Found {len(local_memory_branches)} local and {len(remote_memory_branches)} remote memory branches")
+
+    if dry_run:
+        print("\n🔍 DRY RUN - Would delete:")
+        for branch in local_memory_branches:
+            print(f"  📍 Local: {branch}")
+        for branch in remote_memory_branches:
+            print(f"  🌐 Remote: {branch}")
+        print(f"\n💡 Run with dry_run=False to actually delete {total_branches} branches")
+        return results
+
+    if confirm:
+        print(f"\n⚠️  About to delete {total_branches} memory branches:")
+        for branch in local_memory_branches:
+            print(f"  📍 Local: {branch}")
+        for branch in remote_memory_branches:
+            print(f"  🌐 Remote: {branch}")
+
+        response = input("\n❓ Continue with deletion? (yes/no): ").lower().strip()
+        if response not in ['yes', 'y']:
+            print("🚫 Cleanup cancelled by user")
+            results['skipped'] = local_memory_branches + remote_memory_branches
+            return results
+
+    # Delete branches using helper functions
+    _delete_local_branches(local_memory_branches, results)
+    _delete_remote_branches(remote_memory_branches, results)
+
+    # Summary
+    total_deleted = len(results['deleted_local']) + len(results['deleted_remote'])
+    total_failed = len(results['failed'])
+
+    print("\n📊 Cleanup Summary:")
+    print(f"✅ Successfully deleted: {total_deleted} branches")
+    print(f"❌ Failed to delete: {total_failed} branches")
+
+    if total_failed == 0:
+        print("🎉 All memory branches cleaned up successfully!")
+
+    return results
 
 
 # Status and Health Check Functions
@@ -356,19 +496,86 @@ def validate_output_formatting(content: str) -> dict:
 def apply_output_formatting(content: str, content_type: str = "general") -> str:
     """
     Formats content according to AGOR output standards for safe embedding and compliance.
-    
-    Deticks the input content to remove triple backticks and, for specific content types such as handoff prompts, snapshots, or meta feedback, wraps the result in double backtick codeblocks. Returns the formatted content ready for output.
+
+    Deticks the input content to remove triple backticks and wraps the result in double backtick
+    codeblocks for ALL content types to ensure consistent copy-paste workflow.
+
+    Args:
+        content: Raw content to format
+        content_type: Type of content (for logging/debugging purposes)
+
+    Returns:
+        Formatted content wrapped in double backticks ready for copy-paste
     """
     # Process through detick to handle any triple backticks
     processed_content = detick_content(content)
 
-    # For handoff prompts and critical outputs, wrap in codeblock
-    if content_type in ["handoff_prompt", "snapshot", "meta_feedback"]:
-        formatted_content = f"``\n{processed_content}\n``"
-    else:
-        formatted_content = processed_content
+    # ALWAYS wrap in codeblock for copy-paste workflow
+    formatted_content = f"``\n{processed_content}\n``"
 
     return formatted_content
+
+
+def generate_formatted_output(content: str, content_type: str = "general") -> str:
+    """
+    Generate properly formatted output for user copy-paste.
+
+    This is the main function that should be used for ALL generated outputs
+    that need to be presented to users for copy-paste.
+
+    Args:
+        content: Raw content to format
+        content_type: Type of content being formatted
+
+    Returns:
+        Properly formatted content ready for copy-paste
+    """
+    return apply_output_formatting(content, content_type)
+
+
+def generate_release_notes_output(release_notes_content: str) -> str:
+    """
+    Generate properly formatted release notes for copy-paste.
+
+    NOTE: Keep release notes content BRIEF to avoid processing errors.
+    Long content can cause the formatting process to fail.
+
+    Args:
+        release_notes_content: Raw release notes content (keep brief)
+
+    Returns:
+        Formatted release notes wrapped in codeblock
+    """
+    return generate_formatted_output(release_notes_content, "release_notes")
+
+
+def generate_pr_description_output(pr_content: str) -> str:
+    """
+    Generate properly formatted PR description for copy-paste.
+
+    NOTE: Keep PR description content BRIEF to avoid processing errors.
+    Long content can cause the formatting process to fail.
+
+    Args:
+        pr_content: Raw PR description content (keep brief)
+
+    Returns:
+        Formatted PR description wrapped in codeblock
+    """
+    return generate_formatted_output(pr_content, "pr_description")
+
+
+def generate_handoff_prompt_output(handoff_content: str) -> str:
+    """
+    Generate properly formatted handoff prompt for copy-paste.
+
+    Args:
+        handoff_content: Raw handoff prompt content
+
+    Returns:
+        Formatted handoff prompt wrapped in codeblock
+    """
+    return generate_formatted_output(handoff_content, "handoff_prompt")
 
 
 # Utility Functions

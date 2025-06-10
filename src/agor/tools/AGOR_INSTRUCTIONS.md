@@ -281,28 +281,35 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 **CRITICAL OUTPUT FORMATTING REQUIREMENTS**:
 
-**MANDATORY FOR ALL GENERATED CONTENT**: PR descriptions, handoff prompts, release notes, meta feedback, session summaries, etc. MUST ALWAYS follow this exact process:
+**MANDATORY FOR ALL GENERATED CONTENT**: PR descriptions, handoff prompts, release notes, meta feedback, session summaries, etc. MUST use the proper dev tooling functions:
 
-1. **Generate the content** (PR notes, handoff prompt, release notes, etc.)
-2. **Process through dev tooling** using `detick_content()` to remove triple backticks
-3. **Wrap the deticked content in a single codeblock** using triple backticks for copy-paste
-
-**EXAMPLE WORKFLOW**:
+**CORRECT WORKFLOW - USE THESE FUNCTIONS**:
 
 ````python
-# Generate content
-content = generate_pr_description_snapshot(...)
-# Process through dev tooling (detick)
-processed_content = detick_content(content)
-# Present in single codeblock for copy-paste
-print("```")
-print(processed_content)
-print("```")
+# For release notes (KEEP BRIEF - long content causes processing errors)
+from agor.tools.dev_tooling import generate_release_notes_output
+formatted_output = generate_release_notes_output(brief_release_notes_content)
+print(formatted_output)
+
+# For PR descriptions (KEEP BRIEF - long content causes processing errors)
+from agor.tools.dev_tooling import generate_pr_description_output
+formatted_output = generate_pr_description_output(brief_pr_content)
+print(formatted_output)
+
+# For handoff prompts (can be full length)
+from agor.tools.dev_tooling import generate_handoff_prompt_output
+formatted_output = generate_handoff_prompt_output(handoff_content)
+print(formatted_output)
+
+# For any other content
+from agor.tools.dev_tooling import generate_formatted_output
+formatted_output = generate_formatted_output(content, "content_type")
+print(formatted_output)
 ````
 
-**NEVER**: Present raw content without deticking and wrapping
-**ALWAYS**: Detick first, then wrap in single codeblock
-**PURPOSE**: Enables seamless copy-paste workflow without formatting issues
+**NEVER**: Manually use detick_content() and manual wrapping
+**ALWAYS**: Use the proper dev tooling output functions above
+**PURPOSE**: Ensures consistent, automatic formatting for seamless copy-paste workflow
 
 **HANDOFF PROMPT FORMATTING - ABSOLUTELY MANDATORY**:
 Every session MUST end with a handoff prompt that is:

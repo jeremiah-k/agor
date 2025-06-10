@@ -17,6 +17,13 @@ from typing import List
 
 from agor.tools.git_operations import get_current_timestamp, run_git_command
 
+# Import feedback manager for modularized feedback handling
+try:
+    from .feedback_manager import FeedbackManager
+    FEEDBACK_MANAGER_AVAILABLE = True
+except ImportError:
+    FEEDBACK_MANAGER_AVAILABLE = False
+
 
 def get_current_branch() -> str:
     """Get current git branch name."""
@@ -676,7 +683,21 @@ This feedback should be:
 **Meta feedback helps evolve AGOR into a more effective coordination platform.**
 """
 
-    # Apply detick processing for clean codeblock rendering
+    # Use new feedback manager if available
+    if FEEDBACK_MANAGER_AVAILABLE:
+        try:
+            feedback_manager = FeedbackManager()
+            return feedback_manager.generate_meta_feedback(
+                feedback_type=feedback_type,
+                feedback_content=feedback_content,
+                suggestions=suggestions,
+                severity=severity,
+                component=component
+            )
+        except Exception as e:
+            print(f"⚠️ Feedback manager error, using fallback: {e}")
+
+    # Apply detick processing for clean codeblock rendering (fallback)
     return detick_content(meta_content)
 
 

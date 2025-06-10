@@ -23,6 +23,8 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from agor.tools.strategy_config import StrategyConfigManager
+
 
 class AgentCoordinationHelper:
     """
@@ -45,6 +47,7 @@ class AgentCoordinationHelper:
         """
         self.project_root = project_root or Path.cwd()
         self.agor_dir = self.project_root / ".agor"
+        self.strategy_manager = StrategyConfigManager()
 
     def discover_current_situation(self, agent_id: Optional[str] = None) -> Dict:
         """
@@ -97,7 +100,7 @@ class AgentCoordinationHelper:
 
     def _detect_active_strategy(self) -> Optional[Dict]:
         """
-        Detect what strategy is currently active.
+        Detect what strategy is currently active using the new configuration system.
 
         Returns:
             Dictionary containing strategy information, or None if no strategy is active.
@@ -108,26 +111,8 @@ class AgentCoordinationHelper:
 
         content = strategy_file.read_text()
 
-        # Strategy type detection mapping
-        strategy_patterns = {
-            "Parallel Divergent Strategy": (
-                "parallel_divergent",
-                self._parse_parallel_divergent_strategy,
-            ),
-            "Pipeline Strategy": ("pipeline", self._parse_pipeline_strategy),
-            "Swarm Strategy": ("swarm", self._parse_swarm_strategy),
-            "Red Team Strategy": ("red_team", self._parse_red_team_strategy),
-            "Mob Programming Strategy": (
-                "mob_programming",
-                self._parse_mob_programming_strategy,
-            ),
-        }
-
-        for pattern, (_, parser) in strategy_patterns.items():
-            if pattern in content:
-                return parser(content)
-
-        return None
+        # Use the new strategy configuration manager
+        return self.strategy_manager.detect_strategy(content)
 
     def _extract_task_from_content(self, content: str) -> str:
         """
@@ -340,7 +325,7 @@ class AgentCoordinationHelper:
         self, strategy_info: Dict, agent_id: Optional[str]
     ) -> Dict:
         """
-        Determine what role this agent should play in the current strategy.
+        Determine what role this agent should play in the current strategy using configuration.
 
         Args:
             strategy_info: Information about the current strategy
@@ -349,23 +334,17 @@ class AgentCoordinationHelper:
         Returns:
             Dictionary containing role information and next actions
         """
-        strategy_type = strategy_info["type"]
-
-        # Strategy-specific role determination
-        role_handlers = {
-            "parallel_divergent": self._determine_pd_role,
-            "pipeline": self._determine_pipeline_role,
-            "swarm": self._determine_swarm_role,
+        # Build context for role determination
+        context = {
+            "agent_id": agent_id,
+            "has_assignment": self._check_agent_assignment(strategy_info, agent_id),
+            "stage_available": self._check_stage_availability(strategy_info),
+            "available_tasks": self._get_available_task_count(strategy_info),
+            "claimed": agent_id and agent_id.lower() in self._get_claimed_agents()
         }
 
-        if strategy_type in role_handlers:
-            return role_handlers[strategy_type](strategy_info, agent_id)
-
-        return {
-            "role": "participant",
-            "message": f"Participate in {strategy_type} strategy",
-            "status": "active",
-        }
+        # Use the new strategy configuration manager
+        return self.strategy_manager.get_role_for_agent(strategy_info, agent_id, context)
 
     def _get_claimed_agents(self, pattern: str = r"(agent\d+): .+ - CLAIMING") -> set:
         """
@@ -386,6 +365,31 @@ class AgentCoordinationHelper:
                 claimed_agents.add(match.group(1).lower())
 
         return claimed_agents
+
+    def _check_agent_assignment(self, strategy_info: Dict, agent_id: Optional[str]) -> bool:
+        """Check if agent has an assignment in the strategy."""
+        if not agent_id:
+            return False
+
+        agents = strategy_info.get("agents", [])
+        return any(agent["agent_id"] == agent_id.lower() for agent in agents)
+
+    def _check_stage_availability(self, strategy_info: Dict) -> bool:
+        """Check if a pipeline stage is available for claiming."""
+        if strategy_info.get("type") != "pipeline":
+            return False
+
+        current_stage = strategy_info.get("current_stage", {})
+        stage_number = current_stage.get("number", 1)
+        return not self._is_stage_claimed(stage_number)
+
+    def _get_available_task_count(self, strategy_info: Dict) -> int:
+        """Get count of available tasks for swarm strategy."""
+        if strategy_info.get("type") != "swarm":
+            return 0
+
+        queue_status = strategy_info.get("queue_status", {})
+        return queue_status.get("available", 0)
 
     def _determine_pd_role(self, strategy_info: Dict, agent_id: Optional[str]) -> Dict:
         """

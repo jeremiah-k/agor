@@ -184,6 +184,7 @@ def commit_to_memory_branch(
                     return False
 
                 # Add our file to index
+                # Note: file_name should already include .agor/ prefix if needed
                 success, ui_output = run_git_command(
                     [
                         "update-index",
@@ -191,7 +192,7 @@ def commit_to_memory_branch(
                         "--cacheinfo",
                         "100644",
                         blob_hash,
-                        f".agor/{file_name}",
+                        file_name,
                     ],
                     env=env,
                 )
@@ -249,7 +250,7 @@ def commit_to_memory_branch(
                 )
 
             print(
-                f"✅ Successfully committed .agor/{file_name} to memory branch {branch_name}"
+                f"✅ Successfully committed {file_name} to memory branch {branch_name}"
             )
             return True
 
