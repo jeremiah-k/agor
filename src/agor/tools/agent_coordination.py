@@ -325,14 +325,12 @@ class AgentCoordinationHelper:
         self, strategy_info: Dict, agent_id: Optional[str]
     ) -> Dict:
         """
-        Determine what role this agent should play in the current strategy using configuration.
-
-        Args:
-            strategy_info: Information about the current strategy
-            agent_id: Optional agent identifier
-
+        Determines the agent's role in the current strategy based on strategy information and agent context.
+        
+        Builds a context dictionary including assignment status, stage availability, available tasks, and claim status, then delegates role resolution to the strategy configuration manager.
+        
         Returns:
-            Dictionary containing role information and next actions
+            A dictionary with the agent's role information and recommended next actions.
         """
         # Build context for role determination
         context = {
@@ -350,13 +348,13 @@ class AgentCoordinationHelper:
 
     def _get_claimed_agents(self, pattern: str = r"(agent\d+): .+ - CLAIMING") -> set:
         """
-        Get set of agents that have claimed assignments from agentconvo.md.
-
+        Returns a set of agent IDs that have claimed assignments in agentconvo.md.
+        
         Args:
-            pattern: Regex pattern to match claims
-
+            pattern: Regular expression pattern used to identify agent claim statements.
+        
         Returns:
-            Set of claimed agent IDs
+            A set of agent IDs (as lowercase strings) that have made claims.
         """
         agentconvo_file = self.agor_dir / "agentconvo.md"
         claimed_agents = set()
@@ -371,7 +369,16 @@ class AgentCoordinationHelper:
     def _check_agent_assignment(
         self, strategy_info: Dict, agent_id: Optional[str]
     ) -> bool:
-        """Check if agent has an assignment in the strategy."""
+        """
+        Checks whether the specified agent is assigned to the current strategy.
+        
+        Args:
+            strategy_info: Dictionary containing strategy details, including agent assignments.
+            agent_id: The identifier of the agent to check.
+        
+        Returns:
+            True if the agent is assigned in the strategy; otherwise, False.
+        """
         if not agent_id:
             return False
 

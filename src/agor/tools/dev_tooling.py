@@ -161,7 +161,12 @@ def restore_content_from_codeblock(content: str) -> str:
 
 
 def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
-    """Parse git branch output to extract local and remote memory branches."""
+    """
+    Parses the output of a git branch listing to identify local and remote memory branches.
+    
+    Returns:
+        A tuple containing two lists: local memory branch names and remote memory branch names.
+    """
     local_memory_branches = []
     remote_memory_branches = []
 
@@ -187,7 +192,13 @@ def _parse_git_branches(branches_output: str) -> Tuple[List[str], List[str]]:
 
 
 def _delete_local_branches(branches: List[str], results: Dict) -> None:
-    """Delete local memory branches and update results."""
+    """
+    Deletes local memory branches and updates the results dictionary with the outcome.
+    
+    Args:
+        branches: List of local branch names to delete.
+        results: Dictionary to record successfully deleted and failed branches.
+    """
     print(f"\n🗑️  Deleting {len(branches)} local memory branches...")
     for branch in branches:
         success, output = run_git_command(["branch", "-D", branch])
@@ -200,7 +211,11 @@ def _delete_local_branches(branches: List[str], results: Dict) -> None:
 
 
 def _delete_remote_branches(branches: List[str], results: Dict) -> None:
-    """Delete remote memory branches and update results."""
+    """
+    Deletes remote memory branches and updates the results dictionary with the outcome.
+    
+    Attempts to delete each specified remote branch. Records successfully deleted branches and categorizes failures by permission, network, or unknown errors.
+    """
     print(f"\n🌐 Deleting {len(branches)} remote memory branches...")
     for branch in branches:
         success, output = run_git_command(["push", "origin", "--delete", branch])
@@ -224,16 +239,16 @@ def cleanup_memory_branches(
     dry_run: bool = True, confirm: bool = True
 ) -> Dict[str, List[str]]:
     """
-    Safely cleanup all memory branches (local and remote).
-
-    SAFETY: Only removes branches matching 'agor/mem/' pattern.
-
+    Removes all local and remote memory branches matching the 'agor/mem/' pattern.
+    
+    Performs a safe cleanup of memory branches, supporting dry run and user confirmation options. Returns a dictionary summarizing which branches were deleted, failed to delete, or skipped.
+     
     Args:
-        dry_run: If True, only shows what would be deleted without actually deleting
-        confirm: If True, requires user confirmation before deletion
-
+        dry_run: If True, lists branches that would be deleted without performing deletion.
+        confirm: If True, prompts the user for confirmation before deleting branches.
+    
     Returns:
-        Dictionary with 'deleted_local', 'deleted_remote', 'failed' lists
+        A dictionary with lists of deleted local branches ('deleted_local'), deleted remote branches ('deleted_remote'), failed deletions ('failed'), and skipped branches ('skipped').
     """
 
     results = {"deleted_local": [], "deleted_remote": [], "failed": [], "skipped": []}
@@ -378,10 +393,10 @@ def display_git_workflow_status() -> str:
 
 def generate_agent_memory_branch() -> str:
     """
-    Generates a unique agent memory branch name using a timestamp-based hash.
-
+    Generates a unique memory branch name for an agent using a timestamp-based hash.
+    
     Returns:
-        A string in the format 'agor/mem/agent_{hash}' for uniquely identifying an agent's memory branch.
+        A string in the format 'agor/mem/agent_{hash}' that uniquely identifies an agent's memory branch.
     """
     import hashlib
     import time
@@ -394,9 +409,9 @@ def generate_agent_memory_branch() -> str:
 
 def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
     """
-    Creates an agent-specific memory branch with an initial commit containing metadata and usage guidelines.
-
-    If no branch name is provided, a unique one is generated. Returns a tuple indicating success and the branch name.
+    Creates a dedicated memory branch for an agent with an initial commit containing metadata and usage guidelines.
+    
+    If no branch name is provided, generates a unique one. Returns a tuple with a success flag and the branch name.
     """
     if memory_branch is None:
         memory_branch = generate_agent_memory_branch()
@@ -447,15 +462,9 @@ This memory branch stores:
 
 def validate_output_formatting(content: str) -> dict:
     """
-    Validates whether the provided content complies with AGOR output formatting standards.
-
-    Checks for the presence of codeblocks, triple backticks, and proper codeblock wrapping. Identifies issues such as the need for deticking or incorrect formatting of handoff prompts, and provides suggestions for compliance.
-
-    Args:
-        content: The content string to validate.
-
-    Returns:
-        A dictionary containing compliance status, detected issues, suggestions for correction, and flags indicating codeblock and deticking requirements.
+    Validates whether content meets AGOR output formatting standards.
+    
+    Checks for codeblock presence, triple backticks, and correct codeblock wrapping. Identifies formatting issues such as the need for deticking or improper handoff prompt formatting, and provides suggestions for compliance. Returns a dictionary with compliance status, detected issues, suggestions, and flags for codeblock and deticking requirements.
     """
     validation = {
         "is_compliant": True,
@@ -623,18 +632,18 @@ def generate_workflow_prompt_template(
     include_explicit_requirements: bool = True,
 ) -> str:
     """
-    Generates an optimized workflow prompt template for AGOR agent tasks.
-
-    Creates a detailed prompt incorporating the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements (with example code), and success criteria. Supports options to include the bookend approach and explicit handoff requirements for seamless agent coordination.
-
+    Generates a detailed workflow prompt template for AGOR agent tasks.
+    
+    The template includes the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements with example code, and success criteria. Options allow inclusion of bookend requirements and explicit handoff instructions for seamless agent coordination.
+    
     Args:
-        task_description: Description of the agent's task.
-        memory_branch: Optional memory branch name for context continuity; generated if not provided.
-        include_bookend: Whether to include session start and end requirements.
-        include_explicit_requirements: Whether to include explicit handoff and formatting requirements.
-
+        task_description: The description of the agent's assigned task.
+        memory_branch: Optional memory branch name for context continuity; a new one is generated if not provided.
+        include_bookend: If True, includes session start and end requirements.
+        include_explicit_requirements: If True, includes explicit handoff and formatting requirements.
+    
     Returns:
-        A formatted prompt template string ready for agent use.
+        A formatted string containing the workflow prompt template for agent use.
     """
     if memory_branch is None:
         memory_branch = generate_agent_memory_branch()
@@ -732,9 +741,9 @@ def validate_agor_workflow_completion(
     has_handoff_prompt: bool = False,
 ) -> dict:
     """
-    Validates workflow completion against AGOR standards and provides feedback.
-
-    Checks for documentation of completed work, file modifications, development snapshot creation, and handoff prompt generation. Returns a dictionary with completeness status, score, identified issues, recommendations, and any missing requirements.
+    Validates AGOR workflow completion and provides a compliance report.
+    
+    Assesses whether work completed, file modifications, snapshot creation, and handoff prompt generation meet AGOR standards. Returns a dictionary summarizing completeness, score, issues, recommendations, and missing requirements.
     """
     validation = {
         "is_complete": True,

@@ -35,10 +35,10 @@ class TemplateEngine:
 
     def __init__(self, template_dir: Optional[Path] = None):
         """
-        Initialize the template engine.
-
-        Args:
-            template_dir: Directory containing template files. Defaults to built-in templates.
+        Initializes the TemplateEngine with a specified or default template directory.
+        
+        If Jinja2 is available, sets up the Jinja2 environment with custom filters and functions.
+        Ensures that default templates exist in the template directory.
         """
         self.template_dir = template_dir or Path(__file__).parent / "templates"
         self.template_dir.mkdir(parents=True, exist_ok=True)
@@ -58,18 +58,38 @@ class TemplateEngine:
         self._ensure_default_templates()
 
     def _register_custom_filters(self) -> None:
-        """Register custom Jinja2 filters for AGOR templates."""
+        """
+        Registers custom Jinja2 filters for formatting timestamps, truncating commit hashes, formatting lists, and generating safe filenames for use in AGOR templates.
+        """
         if not self.env:
             return
 
         def format_timestamp(
             timestamp: datetime.datetime, format_str: str = "%Y-%m-%d %H:%M:%S"
         ) -> str:
-            """Format datetime timestamp."""
+            """
+            Formats a datetime object as a string using the specified format.
+            
+            Args:
+                timestamp: The datetime object to format.
+                format_str: The format string to use. Defaults to "%Y-%m-%d %H:%M:%S".
+            
+            Returns:
+                The formatted timestamp as a string.
+            """
             return timestamp.strftime(format_str)
 
         def truncate_commit(commit_hash: str, length: int = 8) -> str:
-            """Truncate git commit hash."""
+            """
+            Truncates a git commit hash to a specified length, appending ellipsis if truncated.
+            
+            Args:
+                commit_hash: The full git commit hash string.
+                length: The maximum length of the truncated hash before adding ellipsis. Defaults to 8.
+            
+            Returns:
+                The truncated commit hash with ellipsis if it exceeds the specified length, otherwise the original hash.
+            """
             return (
                 commit_hash[:length] + "..."
                 if len(commit_hash) > length
@@ -79,11 +99,25 @@ class TemplateEngine:
         def format_list(
             items: List[str], prefix: str = "- ", join_str: str = "\n"
         ) -> str:
-            """Format list items with prefix."""
+            """
+            Formats a list of strings by prefixing each item and joining them with a specified separator.
+            
+            Args:
+                items: The list of strings to format.
+                prefix: The string to prepend to each item. Defaults to "- ".
+                join_str: The string used to join the formatted items. Defaults to a newline.
+            
+            Returns:
+                A single string with each item prefixed and joined by the specified separator.
+            """
             return join_str.join(f"{prefix}{item}" for item in items)
 
         def safe_filename(text: str, max_length: int = 30) -> str:
-            """Create safe filename from text."""
+            """
+            Converts a string into a filesystem-safe filename.
+            
+            Removes all characters except alphanumerics, hyphens, and underscores, and truncates the result to a maximum length.
+            """
             safe_text = "".join(c for c in text if c.isalnum() or c in "-_")
             return safe_text[:max_length]
 
@@ -98,16 +132,37 @@ class TemplateEngine:
         )
 
     def _register_custom_functions(self) -> None:
-        """Register custom Jinja2 global functions."""
+        """
+        Registers custom global functions for use in Jinja2 templates.
+        
+        Adds `current_timestamp`, which returns the current date and time as a formatted string, and `enumerate_items`, which enumerates a list of strings starting from a specified index.
+        """
         if not self.env:
             return
 
         def current_timestamp(format_str: str = "%Y-%m-%d %H:%M:%S") -> str:
-            """Get current timestamp."""
+            """
+            Returns the current date and time as a formatted string.
+            
+            Args:
+                format_str: Optional format string for the timestamp. Defaults to "%Y-%m-%d %H:%M:%S".
+            
+            Returns:
+                The current timestamp formatted according to format_str.
+            """
             return datetime.datetime.now().strftime(format_str)
 
         def enumerate_items(items: List[str], start: int = 1) -> List[tuple]:
-            """Enumerate items with custom start."""
+            """
+            Enumerates a list of strings, returning pairs of index and item starting from a given value.
+            
+            Args:
+                items: The list of strings to enumerate.
+                start: The starting index for enumeration (default is 1).
+            
+            Returns:
+                A list of tuples, each containing the index and the corresponding item.
+            """
             return list(enumerate(items, start))
 
         self.env.globals.update(
@@ -115,7 +170,11 @@ class TemplateEngine:
         )
 
     def _ensure_default_templates(self) -> None:
-        """Create default templates if they don't exist."""
+        """
+        Creates default template files in the template directory if they do not already exist.
+        
+        For each supported template type, checks for its presence in the template directory and writes the default content if missing.
+        """
         templates = {
             "snapshot.md.j2": self._get_snapshot_template(),
             "handoff_prompt.md.j2": self._get_handoff_template(),
@@ -130,14 +189,9 @@ class TemplateEngine:
 
     def render_template(self, template_name: str, context: Dict[str, Any]) -> str:
         """
-        Render a template with the given context.
-
-        Args:
-            template_name: Name of the template file
-            context: Template context variables
-
-        Returns:
-            Rendered template content
+        Renders a template file with the provided context.
+        
+        If Jinja2 is unavailable or an error occurs during rendering, falls back to basic string formatting. Returns the rendered template content as a string.
         """
         if not JINJA2_AVAILABLE:
             return self._fallback_render(template_name, context)
@@ -153,14 +207,16 @@ class TemplateEngine:
 
     def render_string(self, template_string: str, context: Dict[str, Any]) -> str:
         """
-        Render a template string with the given context.
-
+        Renders a template from a string using the provided context.
+        
+        If Jinja2 is unavailable or rendering fails, falls back to Python's built-in string formatting.
+        
         Args:
-            template_string: Template content as string
-            context: Template context variables
-
+            template_string: The template content as a string.
+            context: Variables to use when rendering the template.
+        
         Returns:
-            Rendered template content
+            The rendered template as a string.
         """
         if not JINJA2_AVAILABLE:
             return template_string.format(**context)
@@ -174,10 +230,9 @@ class TemplateEngine:
 
     def _fallback_render(self, template_name: str, context: Dict[str, Any]) -> str:
         """
-        Fallback rendering using string formatting when Jinja2 is not available.
-
-        Note: This fallback only supports simple variable substitution and will not
-        handle Jinja2 features like loops, conditionals, or filters.
+        Renders a template file using Python string formatting as a fallback when Jinja2 is unavailable.
+        
+        Supports only basic variable substitution; Jinja2-specific features such as loops, conditionals, and filters are not processed. If the template file does not exist, returns a "Template not found" message.
         """
         template_path = self.template_dir / template_name
         if template_path.exists():
@@ -199,7 +254,11 @@ class TemplateEngine:
             return f"Template not found: {template_name}"
 
     def _get_snapshot_template(self) -> str:
-        """Get the default snapshot template."""
+        """
+        Returns the default Jinja2 template string for generating an AGOR agent snapshot document.
+        
+        The template includes sections for metadata, required documentation, environment context, problem definition, status, completed work, commits, modified files, next steps, context notes, technical context, instructions for the receiving agent, and communication protocol. It uses Jinja2 syntax and custom filters for formatting context variables.
+        """
         return """# 📸 Agent Snapshot Document
 
 **Generated**: {{ current_timestamp() }}
@@ -353,7 +412,11 @@ git log --oneline -10
 ```"""
 
     def _get_handoff_template(self) -> str:
-        """Get the default handoff prompt template."""
+        """
+        Returns the default Jinja2 template string for the handoff prompt.
+        
+        The template provides a structured session end report for agent handoff, including sections for work accomplished, project status, files modified, next agent instructions, critical context, handoff requirements, and immediate next steps.
+        """
         return """# 📋 MANDATORY SESSION END REPORT
 
 **Generated**: {{ current_timestamp() }}
@@ -402,7 +465,11 @@ The next agent should:
 **This report ensures seamless agent-to-agent coordination and prevents work duplication.**"""
 
     def _get_completion_template(self) -> str:
-        """Get the default completion report template."""
+        """
+        Returns the default Jinja2 template string for generating a task completion report.
+        
+        The template includes sections for snapshot metadata, author, strategy, coordinator, memory branch, context, task status, documentation references, work completed, files modified, commits made, results summary, issues encountered, recommendations, and technical context.
+        """
         return """# 📦 AGOR Snapshot: Task Completion Report
 
 ## Snapshot ID
@@ -458,7 +525,11 @@ Task completion report for: {{ original_task }}
 **Current Commit**: `{{ git_context.current_commit }}`"""
 
     def _get_pr_description_template(self) -> str:
-        """Get the default PR description template."""
+        """
+        Returns the default Jinja2 template string for pull request descriptions.
+        
+        The template includes sections for summary, changes made, testing notes, checklist, related issues, and additional notes, using custom filters for formatting.
+        """
         return """## 🎯 Summary
 
 {{ summary }}
@@ -490,18 +561,42 @@ Task completion report for: {{ original_task }}
 
 # Convenience functions for backward compatibility
 def render_snapshot_template(context: Dict[str, Any]) -> str:
-    """Render snapshot template with given context."""
+    """
+    Renders the snapshot template using the provided context.
+    
+    Args:
+        context: Dictionary containing values to populate the snapshot template.
+    
+    Returns:
+        The rendered snapshot as a string.
+    """
     engine = TemplateEngine()
     return engine.render_template("snapshot.md.j2", context)
 
 
 def render_handoff_template(context: Dict[str, Any]) -> str:
-    """Render handoff prompt template with given context."""
+    """
+    Renders the handoff prompt template using the provided context.
+    
+    Args:
+        context: Dictionary containing values to populate the handoff prompt template.
+    
+    Returns:
+        The rendered handoff prompt as a string.
+    """
     engine = TemplateEngine()
     return engine.render_template("handoff_prompt.md.j2", context)
 
 
 def render_completion_template(context: Dict[str, Any]) -> str:
-    """Render completion report template with given context."""
+    """
+    Renders the task completion report template using the provided context.
+    
+    Args:
+        context: Dictionary containing values to populate the completion report template.
+    
+    Returns:
+        The rendered completion report as a string.
+    """
     engine = TemplateEngine()
     return engine.render_template("completion_report.md.j2", context)
