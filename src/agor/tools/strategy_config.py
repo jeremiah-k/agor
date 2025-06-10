@@ -59,10 +59,9 @@ class StrategyConfigManager:
 
     def __init__(self, config_path: Optional[Path] = None):
         """
-        Initialize the strategy configuration manager.
-
-        Args:
-            config_path: Path to strategy configuration file. Defaults to built-in config.
+        Initializes the StrategyConfigManager with strategy configurations and pattern handlers.
+        
+        If a configuration file path is provided, loads strategy configurations from that file; otherwise, uses the default configuration file. Sets up internal dictionaries for strategies and pattern handlers, loads configurations, and registers default pattern handlers.
         """
         self.config_path = (
             config_path or Path(__file__).parent / "strategy_configs.json"
@@ -74,13 +73,13 @@ class StrategyConfigManager:
 
     def _validate_config_structure(self, config_data: Dict[str, Any]) -> bool:
         """
-        Validate that the configuration data has the expected structure.
-
+        Validates that the provided configuration data matches the expected structure for strategy definitions.
+        
         Args:
-            config_data: Configuration data to validate
-
+            config_data: The configuration data to validate.
+        
         Returns:
-            True if valid, False otherwise
+            True if the configuration structure is valid, False otherwise.
         """
         if not isinstance(config_data, dict):
             return False
@@ -130,7 +129,11 @@ class StrategyConfigManager:
         return True
 
     def _load_configurations(self) -> None:
-        """Load strategy configurations from file or create defaults."""
+        """
+        Loads strategy configurations from a file if available and valid; otherwise, creates and loads default configurations.
+        
+        If the configuration file exists and is valid, parses its contents into internal structures. If the file is missing, invalid, or cannot be parsed, falls back to default configurations.
+        """
         if self.config_path.exists():
             try:
                 with open(self.config_path) as f:
@@ -150,7 +153,11 @@ class StrategyConfigManager:
             self._create_default_configurations()
 
     def _parse_configurations(self, config_data: Dict[str, Any]) -> None:
-        """Parse configuration data into StrategyConfig objects."""
+        """
+        Parses strategy configuration data and populates internal strategy configuration objects.
+        
+        Iterates through each strategy in the provided configuration data, constructs corresponding StrategyPattern and RoleConfig objects, and stores them as StrategyConfig instances keyed by strategy name.
+        """
         for strategy_name, strategy_data in config_data.get("strategies", {}).items():
             # Parse pattern configuration
             pattern_data = strategy_data.get("patterns", {})
@@ -184,7 +191,11 @@ class StrategyConfigManager:
             self.strategies[strategy_name] = strategy_config
 
     def _create_default_configurations(self) -> None:
-        """Create default strategy configurations."""
+        """
+        Creates and saves default strategy configurations for parallel_divergent, pipeline, and swarm strategies.
+        
+        Initializes default patterns, roles, actions, and phase transitions for each strategy, writes the configuration to the designated file path, and parses it into internal data structures.
+        """
         default_config = {
             "strategies": {
                 "parallel_divergent": {
@@ -317,7 +328,12 @@ class StrategyConfigManager:
         self._parse_configurations(default_config)
 
     def _register_default_handlers(self) -> None:
-        """Register default pattern handlers."""
+        """
+        Registers default parser methods for known strategy pattern handler keys.
+        
+        Associates parser class names with their corresponding internal parsing methods,
+        enabling automatic selection of the appropriate parser during strategy detection.
+        """
         self.pattern_handlers.update(
             {
                 "parallel_divergent_parser": self._parse_parallel_divergent,
@@ -329,13 +345,15 @@ class StrategyConfigManager:
 
     def detect_strategy(self, content: str) -> Optional[Dict[str, Any]]:
         """
-        Detect active strategy using configured patterns.
-
+        Detects the active strategy in the provided content using configured detection patterns.
+        
+        Analyzes the input content against all configured strategy patterns. If a pattern matches, invokes the corresponding parser to extract strategy information.
+        
         Args:
-            content: Strategy file content to analyze
-
+            content: The content of the strategy file to analyze.
+        
         Returns:
-            Dictionary containing strategy information, or None if no strategy detected
+            A dictionary with parsed strategy information if a strategy is detected; otherwise, None.
         """
         for _strategy_type, config in self.strategies.items():
             for pattern in config.patterns.detection_patterns:
@@ -355,15 +373,17 @@ class StrategyConfigManager:
         context: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
-        Determine agent role using configured role conditions.
-
+        Determines the appropriate role for an agent based on strategy information and context.
+        
+        Evaluates configured role conditions for the detected strategy and returns the first matching role with associated actions, status, and a message. If no roles match or the strategy is unknown, returns a default participant role.
+         
         Args:
-            strategy_info: Information about the current strategy
-            agent_id: Optional agent identifier
-            context: Additional context for role determination
-
+            strategy_info: Dictionary containing detected strategy details.
+            agent_id: Optional identifier for the agent.
+            context: Additional context relevant to role assignment.
+        
         Returns:
-            Dictionary containing role information
+            A dictionary with keys such as "role", "actions", "message", and optionally "status" describing the agent's assigned role.
         """
         strategy_type = strategy_info.get("type")
         config = self.strategies.get(strategy_type)
@@ -394,7 +414,11 @@ class StrategyConfigManager:
         strategy_info: Dict[str, Any],
         context: Dict[str, Any],
     ) -> bool:
-        """Evaluate role assignment conditions."""
+        """
+        Evaluates whether the provided conditions for a role assignment are satisfied.
+        
+        Checks each condition key against the current strategy information and context. Returns True only if all specified conditions are met; otherwise, returns False.
+        """
         for condition_key, condition_value in conditions.items():
             if condition_key == "phase":
                 if strategy_info.get("phase") != condition_value:
@@ -415,7 +439,18 @@ class StrategyConfigManager:
         return True
 
     def _evaluate_numeric_condition(self, value: int, condition: str) -> bool:
-        """Evaluate numeric conditions like '> 0', '= 0', etc."""
+        """
+        Evaluates a numeric condition string against a given integer value.
+        
+        Supports conditions in the form '> N', '= N', or '< N', where N is an integer.
+        
+        Args:
+            value: The integer value to evaluate.
+            condition: The condition string to check against.
+        
+        Returns:
+            True if the value satisfies the condition, otherwise False.
+        """
         if condition.startswith("> "):
             return value > int(condition[2:])
         elif condition.startswith("= "):
@@ -427,7 +462,12 @@ class StrategyConfigManager:
     def _determine_status(
         self, role_config: RoleConfig, context: Dict[str, Any]
     ) -> str:
-        """Determine role status based on context."""
+        """
+        Determines the status of a role based on context flags.
+        
+        Returns:
+            The status string: "working" if claimed, "available" if available, otherwise "waiting".
+        """
         # Default status determination logic
         if context.get("claimed", False):
             return "working"
@@ -440,7 +480,11 @@ class StrategyConfigManager:
     def _parse_parallel_divergent(
         self, content: str, config: StrategyConfig
     ) -> Dict[str, Any]:
-        """Parse Parallel Divergent strategy using configuration."""
+        """
+        Parses content for a Parallel Divergent strategy using the provided configuration.
+        
+        Extracts the task description and current phase from the content, returning a dictionary with strategy type, phase, task, and configuration.
+        """
         task = self._extract_task_from_content(content)
         phase = self._extract_pd_phase(content)
 
@@ -452,7 +496,11 @@ class StrategyConfigManager:
         }
 
     def _parse_pipeline(self, content: str, config: StrategyConfig) -> Dict[str, Any]:
-        """Parse Pipeline strategy using configuration."""
+        """
+        Parses a pipeline strategy file and extracts relevant information.
+        
+        Extracts the task description and current stage from the provided content, returning a dictionary with strategy type, phase, task, current stage, and configuration.
+        """
         task = self._extract_task_from_content(content)
         current_stage = self._extract_current_stage(content)
 
@@ -465,13 +513,33 @@ class StrategyConfigManager:
         }
 
     def _parse_swarm(self, content: str, config: StrategyConfig) -> Dict[str, Any]:
-        """Parse Swarm strategy using configuration."""
+        """
+        Parses Swarm strategy content and returns extracted strategy information.
+        
+        Args:
+            content: The content of the strategy file.
+            config: The configuration object for the Swarm strategy.
+        
+        Returns:
+            A dictionary containing the strategy type, phase, extracted task, and configuration.
+        """
         task = self._extract_task_from_content(content)
 
         return {"type": "swarm", "phase": "active", "task": task, "config": config}
 
     def _parse_generic(self, content: str, config: StrategyConfig) -> Dict[str, Any]:
-        """Generic parser for unknown strategy types."""
+        """
+        Parses strategy content using a generic approach for unrecognized strategy types.
+        
+        Extracts the task description and assigns the default phase from the configuration.
+        
+        Args:
+            content: The strategy file content as a string.
+            config: The strategy configuration object.
+        
+        Returns:
+            A dictionary containing the strategy type, phase, extracted task, and configuration.
+        """
         task = self._extract_task_from_content(content)
 
         return {
@@ -482,12 +550,20 @@ class StrategyConfigManager:
         }
 
     def _extract_task_from_content(self, content: str) -> str:
-        """Extract task description from strategy content."""
+        """
+        Extracts the task description from the strategy content.
+        
+        Searches for a line starting with "### Task: " and returns the following text as the task description. Returns "Unknown task" if no such line is found.
+        """
         task_match = re.search(r"### Task: (.+)", content)
         return task_match.group(1) if task_match else "Unknown task"
 
     def _extract_pd_phase(self, content: str) -> str:
-        """Extract current phase from Parallel Divergent strategy content."""
+        """
+        Extracts the current phase from Parallel Divergent strategy content.
+        
+        Searches for known phase markers in the provided content and returns the corresponding phase name. Returns "setup" if no known phase is found.
+        """
         phase_patterns = {
             "Phase 1 - Divergent Execution (ACTIVE)": "divergent",
             "Phase 2 - Convergent Review (ACTIVE)": "convergent",
@@ -500,7 +576,18 @@ class StrategyConfigManager:
         return "setup"
 
     def _extract_current_stage(self, content: str) -> Dict[str, Any]:
-        """Extract current stage from Pipeline strategy content."""
+        """
+        Extracts the current stage number and name from Pipeline strategy content.
+        
+        If an active stage is found in the content, returns its number and name.
+        If not found, defaults to stage number 1 with name "Unknown".
+        
+        Args:
+            content: The strategy file content as a string.
+        
+        Returns:
+            A dictionary with keys "number" (int) and "name" (str) representing the current stage.
+        """
         current_stage_match = re.search(
             r"### Status: Stage (\d+) - ([^(]+) \(ACTIVE\)", content
         )

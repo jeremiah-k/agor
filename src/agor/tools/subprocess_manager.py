@@ -37,6 +37,16 @@ class SubprocessError(Exception):
         stdout: str = "",
         stderr: str = "",
     ):
+        """
+        Initializes a SubprocessError with details about a failed subprocess execution.
+        
+        Args:
+            message: Description of the error.
+            command: The command that was executed as a list of arguments.
+            returncode: The exit code returned by the subprocess.
+            stdout: Standard output captured from the subprocess, if any.
+            stderr: Standard error output captured from the subprocess, if any.
+        """
         super().__init__(message)
         self.command = command
         self.returncode = returncode
@@ -54,11 +64,11 @@ class SubprocessManager:
 
     def __init__(self, default_timeout: int = 30, log_commands: bool = True):
         """
-        Initialize the subprocess manager.
-
+        Initializes a SubprocessManager with a default timeout and optional command logging.
+        
         Args:
-            default_timeout: Default timeout for subprocess calls in seconds
-            log_commands: Whether to log command execution
+            default_timeout: The default timeout in seconds for subprocess calls.
+            log_commands: If True, enables logging of command execution.
         """
         self.default_timeout = default_timeout
         self.log_commands = log_commands
@@ -76,20 +86,22 @@ class SubprocessManager:
         shell: bool = False,
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a command with unified error handling and logging.
-
+        Executes a command as a subprocess with unified error handling, logging, and history tracking.
+        
+        Supports running commands as strings or lists, with options for working directory, timeout, environment variables, input text, shell execution, and output capture. Records each execution in command history and handles timeouts, missing commands, and unexpected errors. Raises SubprocessError if `check` is True and the command fails.
+        
         Args:
-            command: Command to run (string or list)
-            cwd: Working directory for the command
-            timeout: Timeout in seconds (uses default if None)
-            capture_output: Whether to capture stdout/stderr
-            check: Whether to raise exception on non-zero exit
-            env: Environment variables
-            input_text: Input to send to the process
-            shell: Whether to run through shell
-
+            command: The command to execute, as a string or list of arguments.
+            cwd: Optional working directory for the command.
+            timeout: Timeout in seconds; uses the default if not specified.
+            capture_output: If True, captures stdout and stderr.
+            check: If True, raises SubprocessError on non-zero exit.
+            env: Optional environment variables for the subprocess.
+            input_text: Optional text to send to the process's stdin.
+            shell: If True, runs the command through the shell.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple (success, stdout, stderr, returncode), where success is True if the command exited with code 0.
         """
         # Normalize command to list
         if isinstance(command, str):
@@ -234,15 +246,15 @@ class SubprocessManager:
         timeout: Optional[int] = None,
     ) -> Tuple[bool, str]:
         """
-        Run a git command with specialized error handling.
-
+        Executes a git command and returns its success status and output.
+        
         Args:
-            git_args: Git command arguments (without 'git')
-            cwd: Working directory for the command
-            timeout: Timeout in seconds
-
+            git_args: Arguments for the git command, excluding the 'git' executable.
+            cwd: Optional working directory in which to run the command.
+            timeout: Optional timeout in seconds for command execution.
+        
         Returns:
-            Tuple of (success, output)
+            A tuple containing a boolean indicating success and the command output (stdout if successful, otherwise stderr).
         """
         command = ["git"] + git_args
         success, stdout, stderr, returncode = self.run_command(
@@ -262,16 +274,18 @@ class SubprocessManager:
         use_current_python: bool = True,
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a Python command with appropriate interpreter.
-
+        Executes a Python command using the specified interpreter.
+        
+        Runs a Python subprocess with the given arguments, optionally using the current Python interpreter or "python3". Returns a tuple containing success status, standard output, standard error, and the process return code.
+        
         Args:
-            python_args: Python command arguments (without 'python')
-            cwd: Working directory for the command
-            timeout: Timeout in seconds
-            use_current_python: Whether to use current Python interpreter
-
+            python_args: Arguments to pass to the Python interpreter (excluding the interpreter itself).
+            cwd: Optional working directory for the subprocess.
+            timeout: Optional timeout in seconds for command execution.
+            use_current_python: If True, uses the current Python interpreter; otherwise, uses "python3".
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple (success, stdout, stderr, returncode) indicating execution outcome and outputs.
         """
         python_cmd = sys.executable if use_current_python else "python3"
 
@@ -286,16 +300,16 @@ class SubprocessManager:
         timeout: Optional[int] = None,
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a command with input text.
-
+        Executes a command, sending the specified input text to its standard input.
+        
         Args:
-            command: Command to run
-            input_text: Text to send to the process
-            cwd: Working directory
-            timeout: Timeout in seconds
-
+            command: The command to execute, as a string or list of arguments.
+            input_text: The text to provide to the process's standard input.
+            cwd: Optional working directory for the command.
+            timeout: Optional timeout in seconds for command execution.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple containing a boolean indicating success, the command's stdout, stderr, and return code.
         """
         return self.run_command(
             command, cwd=cwd, timeout=timeout, input_text=input_text
@@ -310,17 +324,19 @@ class SubprocessManager:
         timeout: Optional[int] = None,
     ) -> Tuple[bool, str, str, int]:
         """
-        Run a command with a temporary file.
-
+        Executes a command that operates on a temporary file containing specified content.
+        
+        The command should include a `{temp_file}` placeholder, which will be replaced with the path to the created temporary file. The temporary file is deleted after command execution.
+        
         Args:
-            command: Command to run (use {temp_file} placeholder)
-            file_content: Content to write to temporary file
-            file_suffix: Suffix for temporary file
-            cwd: Working directory
-            timeout: Timeout in seconds
-
+            command: The command to execute, as a string or list, with `{temp_file}` as a placeholder for the temporary file path.
+            file_content: The content to write into the temporary file before execution.
+            file_suffix: The suffix to use for the temporary file name.
+            cwd: Optional working directory for the command.
+            timeout: Optional timeout in seconds for command execution.
+        
         Returns:
-            Tuple of (success, stdout, stderr, returncode)
+            A tuple containing a boolean indicating success, the command's stdout, stderr, and return code.
         """
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=file_suffix, delete=False
@@ -346,28 +362,32 @@ class SubprocessManager:
 
     def get_command_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """
-        Get command execution history.
-
+        Returns the command execution history, optionally limited to the most recent entries.
+        
         Args:
-            limit: Maximum number of commands to return
-
+            limit: If specified, limits the number of returned history entries to the most recent.
+        
         Returns:
-            List of command history entries
+            A list of dictionaries containing details of each executed command.
         """
         if limit:
             return self.command_history[-limit:]
         return self.command_history.copy()
 
     def clear_history(self) -> None:
-        """Clear command execution history."""
+        """
+        Clears the stored command execution history.
+        """
         self.command_history.clear()
 
     def get_stats(self) -> Dict[str, Any]:
         """
-        Get execution statistics.
-
+        Returns statistics about executed subprocess commands.
+        
+        The statistics include the total number of commands run, counts of successful and failed commands, and the overall success rate.
+        
         Returns:
-            Dictionary with execution statistics
+            A dictionary containing total_commands, successful_commands, failed_commands, and success_rate.
         """
         total_commands = len(self.command_history)
         successful_commands = sum(1 for cmd in self.command_history if cmd["success"])
@@ -383,7 +403,9 @@ class SubprocessManager:
         }
 
     def _get_timestamp(self) -> str:
-        """Get current timestamp for logging."""
+        """
+        Returns the current timestamp in ISO 8601 format for logging purposes.
+        """
         return datetime.datetime.now().isoformat()
 
 

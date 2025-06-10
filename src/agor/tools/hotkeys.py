@@ -38,16 +38,20 @@ def test_tooling_wrapper() -> bool:
 
 
 def get_timestamp() -> str:
-    """Get current UTC timestamp."""
+    """
+    Returns the current UTC timestamp as a string.
+    """
     return get_current_timestamp()
 
 
 def get_project_status() -> dict:
     """
-    Get comprehensive project status information.
-
+    Collects and returns comprehensive project status information.
+    
+    The returned dictionary includes the current git branch, commit hash, presence of uncommitted changes, git status output, environment details (if available), and a UTC timestamp. If environment detection fails, an error message is included under 'environment_error'.
+     
     Returns:
-        Dictionary containing project status details.
+        A dictionary containing project status details.
     """
     status = {}
 
@@ -213,9 +217,9 @@ def workspace_health_check() -> dict:
 
 def display_workspace_health() -> str:
     """
-    Returns a formatted markdown summary of the current workspace health.
-
-    The summary includes overall status, timestamp, environment details, issues, warnings, and a message if all systems are operational.
+    Returns a markdown-formatted summary of the current workspace health.
+    
+    The summary includes overall status with emoji, timestamp, environment details, any detected issues or warnings, and a message indicating if all systems are operational.
     """
     health = workspace_health_check()
 
@@ -259,9 +263,9 @@ def generate_meta_feedback_hotkey(
     component: str = "general",
 ) -> str:
     """
-    Generates formatted meta feedback about AGOR for quick submission.
-
-    If no feedback content is provided, a default prompt is used. Returns an error message if feedback generation fails.
+    Generates a formatted meta feedback entry about AGOR for quick submission.
+    
+    If no feedback content is provided, a default prompt is used. Returns an error message string if feedback generation fails.
     """
     try:
         from agor.tools.agent_handoffs import generate_meta_feedback
@@ -282,8 +286,8 @@ def generate_meta_feedback_hotkey(
 def system_health_check_hotkey() -> str:
     """
     Performs a comprehensive system health check and returns a detailed markdown report.
-
-    The report summarizes workspace health, project status, development tooling, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
+    
+    The report includes workspace health, project status, development tooling status, memory system availability, detected issues, warnings, and actionable recommendations. Returns an error message if the health check fails.
     """
     try:
         # Get workspace health
@@ -377,12 +381,12 @@ Based on the health check:
 
 def quick_meta_feedback_bug(bug_description: str, component: str = "general") -> str:
     """
-    Generates a formatted bug report meta feedback entry with medium severity.
-
+    Generates a formatted meta feedback entry for reporting a bug with medium severity.
+    
     Args:
         bug_description: Description of the bug to report.
         component: The component where the bug was found.
-
+    
     Returns:
         A formatted string representing the bug report feedback.
     """
@@ -398,12 +402,12 @@ def quick_meta_feedback_enhancement(
     enhancement_idea: str, component: str = "general"
 ) -> str:
     """
-    Submits a quick enhancement suggestion as meta feedback.
-
+    Generates a formatted meta feedback entry for an enhancement suggestion.
+    
     Args:
         enhancement_idea: Description of the proposed enhancement.
         component: The component or area related to the enhancement.
-
+    
     Returns:
         A formatted string containing the enhancement suggestion feedback.
     """
@@ -417,14 +421,14 @@ def quick_meta_feedback_enhancement(
 
 def quick_meta_feedback_success(success_story: str, component: str = "general") -> str:
     """
-    Generates a formatted success story meta feedback report for AGOR.
-
+    Generates a formatted meta feedback entry for a success story in AGOR.
+    
     Args:
         success_story: Description of the successful workflow or outcome.
-        component: The component associated with the success story.
-
+        component: The AGOR component associated with the success story.
+    
     Returns:
-        A formatted string containing the success story feedback.
+        A formatted string containing the success story feedback entry.
     """
     return generate_meta_feedback_hotkey(
         feedback_type="success_story",
