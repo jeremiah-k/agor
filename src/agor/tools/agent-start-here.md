@@ -29,7 +29,7 @@ This will tell you:
 - **"How do I start a strategy?"** → [Strategy Implementation](index.md#i-need-to-implementexecute-a-strategy)
 - **"How do I coordinate with other agents?"** → [Multi-agent Coordination](index.md#i-need-multi-agent-coordination-strategies)
 - **"How do I snapshot work?"** → [Snapshot System](index.md#i-need-to-snapshot-work-to-another-agent)
-- **"What are the hotkeys?"** → [README_ai.md Lines 120-220](README_ai.md)
+- **"What operations can I perform?"** → See "Role-Specific Guides" (Section 2) and "Core System Operations and Descriptions" (Section 3.1) in `AGOR_INSTRUCTIONS.md`.
 
 ## 🔄 Strategy Quick Start
 
