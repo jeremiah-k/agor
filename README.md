@@ -69,80 +69,66 @@ AGOR enhances the original AgentGrunt capabilities by offering two primary opera
 
 ## 🎯 Core Capabilities & Features
 
-### Role-Based Workflows
+AGOR structures AI-driven development through distinct roles and a powerful set of tools:
 
-AGOR defines distinct roles to structure AI-driven development tasks. Each role is equipped with a specialized set of tools and designed for specific types of activities:
+**🔹 Worker Agent**: Focuses on deep codebase analysis, implementation, debugging, and answering technical questions. Ideal for solo development tasks, feature implementation, and executing specific tasks within a coordinated workflow. This role is crucial for hands-on development and detailed technical work.
 
-**🔹 Worker Agent**: Focuses on deep codebase analysis, implementation, and answering technical questions. Ideal for solo development tasks, feature implementation, and detailed debugging.
+**🔹 Project Coordinator**: Handles strategic planning, designs multi-agent workflows, and orchestrates team activities. Best suited for project oversight, breaking down complex tasks, strategy design, and overall team coordination. This role ensures that development efforts are aligned and progressing efficiently.
 
-**🔹 PROJECT COORDINATOR**: Handles strategic planning, designs multi-agent workflows, and orchestrates team activities. Best suited for multi-agent project planning, strategy design, and overall team coordination.
+### Advanced Coordination Concepts (Experimental)
 
-**🔹 AGENT WORKER**: Executes specific tasks assigned by a Project Coordinator and participates in coordinated work snapshots. Primarily used for task execution within a team and following established multi-agent workflows.
+AGOR is exploring several advanced strategies for multi-agent collaboration. These are currently experimental and represent future directions for the framework:
 
-### Multi-Agent Strategies
+- **Parallel Divergent**: Independent exploration by multiple agents, followed by peer review and synthesis of solutions.
+- **Pipeline**: Sequential task handling where work is passed between specialized agents via snapshots.
+- **Swarm**: Dynamic task assignment from a shared queue to maximize parallelism.
+- **Red Team**: Adversarial build/break cycles to improve robustness and identify weaknesses.
+- **Mob Programming**: Collaborative coding where multiple agents (or an agent and humans) work together on the same task simultaneously.
 
-- **Parallel Divergent**: Independent exploration → peer review → synthesis
-- **Pipeline**: Sequential snapshots with specialization
-- **Swarm**: Dynamic task assignment for maximum parallelism
-- **Red Team**: Adversarial build/break cycles for robustness
-- **Mob Programming**: Collaborative coding with rotating roles
+### Key Features for Context Management and Development
 
-### Key Development Tools
+AGOR provides tools designed to facilitate seamless development and effective context transfer, whether working solo or in a multi-agent team:
 
-- **Git integration** with portable binary (works in any environment)
-- **Codebase analysis** with language-specific exploration
-- **Memory persistence** with markdown files and git branch synchronization
-- **Mandatory snapshot system** for context preservation and agent transitions
-- **Quality gates** and validation checkpoints
-- **Structured Snapshot Protocols** (for multi-agent coordination and solo context management)
+- **Structured Snapshot System**: Capture and transfer detailed work context between development sessions or different AI agents, ensuring continuity and shared understanding. This is crucial for complex tasks and effective handoffs.
+- **Agent Handoff Prompts**: Generate clear, actionable prompts for transferring tasks and context to another agent, detailing work completed, current status, and next steps.
+- **Integrated Memory System**: Persist important information, decisions, and learnings using markdown files synchronized with Git branches. This allows agents to maintain context over time and across different tasks.
+- **Git Integration**: A portable Git binary enables direct version control operations within the agent's environment, facilitating standard development practices.
+- **Codebase Analysis Tools**: Explore and understand codebases with language-specific tools, aiding in efficient navigation and comprehension.
 
-## 📊 Hotkey Interface
+## ⚙️ Core Operations and Functionality
 
-AGOR utilizes a conversational hotkey system for AI-user interaction. The AI will typically present these options in a menu. This list includes common hotkeys; for comprehensive lists, refer to the role-specific menus in `AGOR_INSTRUCTIONS.md`.
+AGOR empowers users and AI agents with a range of functionalities accessible through a conversational interface. Instead of cryptic shortcuts, AGOR focuses on the actions you can perform:
 
-**Strategic Planning**:
+**Strategic Project Management:**
+- Develop comprehensive strategic plans for projects.
+- Break down large projects into manageable tasks and phases.
+- Conduct architectural reviews and plan for system improvements.
 
-- `sp`: strategic plan
-- `bp`: break down project
-- `ar`: architecture review
+**Coordination and Team Setup (for multi-agent scenarios):**
+- Select and initialize various multi-agent coordination strategies (such as Parallel Divergent, Pipeline, etc.).
+- Design and create specialized agent teams with defined roles.
+- Prepare snapshot procedures and prompts for effective agent handoffs.
 
-**Strategy Selection**:
+**Codebase Interaction and Analysis:**
+- Perform in-depth analysis of the existing codebase.
+- View the full content of project files.
+- Display only the changes made to files for focused review.
+- Generate detailed snapshots of work for context sharing or backup.
 
-- `ss`: strategy selection
-- `pd`: parallel divergent
-- `pl`: pipeline
-- `sw`: swarm
+**Memory and Context Management:**
+- Add information to the persistent memory system.
+- Search the existing memory for relevant information.
 
-**Team Management**:
+**Development and Version Control:**
+- Modify project files with an integrated editing capability.
+- Commit changes to the version control system with descriptive messages.
+- View differences between versions of files.
 
-- `ct`: create team
-- `tm`: team manifest
-- `hp`: snapshot prompts
-
-**Analysis**:
-
-- `a`: analyze codebase
-- `f`: full files
-- `co`: changes only
-- `da`: detailed snapshot
-
-**Memory**:
-
-- `mem-add`: add memory
-- `mem-search`: search memories
-
-**Editing & Version Control**:
-
-- `edit`: modify files
-- `commit`: save changes
-- `diff`: show changes
-
-**Coordination**:
-
-- `init`: initialize
-- `status`: check state
-- `sync`: update
-- `meta`: provide feedback
+**Session and System Management:**
+- Initialize the AGOR environment for a new project or session.
+- Check the current status of the project and AGOR system.
+- Synchronize work with the main repository or other agents.
+- Provide feedback on AGOR's performance and features.
 
 ## 🏢 Platform Support
 

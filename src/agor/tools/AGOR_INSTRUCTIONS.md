@@ -10,10 +10,10 @@ This guide covers initial setup post-role selection, role-specific workflows, de
 
 As an AGOR agent, you'll interact with the system and the user in several ways. It's important to understand the different types of "commands" and tools at your disposal:
 
-1.  **Conversational Hotkeys (Your Primary Interaction Method):**
+1.  **Conversational Commands (Your Primary Interaction Method):**
 
-    - These are symbolic commands (e.g., `a` for analyze, `sp` for strategic plan, `edit` for modify files) that you will present to the user in menus.
-    - When the user selects a hotkey, you will then execute the corresponding action as detailed in this document (see Section 2 for role-specific menus and Section 3.1 for detailed hotkey actions).
+    - These are commands representing specific AGOR functionalities (e.g., analyzing the codebase, creating a strategic plan, modifying files) that you will present to the user in menus.
+    - When the user selects a command from the menu, you will then execute the corresponding action as detailed in this document (see Section 2 for role-specific menus and Section 3.1 for detailed operational descriptions).
     - This is the primary way you will receive instructions and collaborate with the user.
 
 2.  **Internal Agent Tools & Scripts (Your Direct Execution):**
@@ -28,7 +28,7 @@ As an AGOR agent, you'll interact with the system and the user in several ways. 
     - You, as the AI agent, will generally _not_ execute these `agor ...` CLI commands yourself.
     - Understanding that these CLI commands exist helps you understand how your operational environment was prepared by the user.
 
-## Your primary focus will be on (1) Conversational Hotkeys and (2) using your Internal Agent Tools as instructed.
+## Your primary focus will be on (1) Guiding the user through Conversational Commands and (2) using your Internal Agent Tools as instructed.
 
 ## 1. Essential Initial Setup (Post-Role Selection)
 
@@ -111,44 +111,73 @@ Find your selected role below for detailed guidance, including specific initiali
      - Development Setup: Identify build systems, CI/CD, development tools.
   3. Present analysis results or execute assigned tasks.
 
-  **Important**: After completing these initial actions, display the **WORKER AGENT Menu** (as defined below) to the user and await their command. Show only the clean menu, without technical function names or internal documentation.
+  **Important**: After completing these initial actions, present the **Worker Agent Capabilities Menu** (as defined below) to the user and await their selection. Show only the clean menu, without technical function names or internal documentation.
 
-**WORKER AGENT Menu:**
+**Worker Agent Capabilities Menu:**
+
 **📊 Analysis & Display:**
-a ) analyze codebase f ) full files co) changes only da) detailed snapshot m ) show diff
+- Analyze codebase comprehensively
+- Display full file contents
+- Show only changed sections of files
+- Generate a detailed snapshot of current work
+- Show differences in code (Git diff)
+
 **🔍 Code Exploration:**
-bfs) breadth-first search grep) search patterns tree) directory structure
+- Perform a breadth-first search for files
+- Search for specific patterns within files (grep)
+- Display the directory structure (tree)
+
 **✏️ Editing & Changes:**
-edit) modify files commit) save changes diff) show changes
+- Modify file contents
+- Save current changes (commit)
+
 **📋 Documentation:**
-doc) generate docs comment) add comments explain) code explanation
+- Generate documentation for code
+- Add comments to code
+- Explain code segments
+
 **🤝 Coordination (Multi-Agent):**
-status) check coordination sync) update from main ch) checkpoint planning
-log) update agent log msg) post to agentconvo report) status report
-task) receive task complete) mark complete
-**Dev Tooling Integration:** (Note: many of these invoke interactive tooling or prompt for input)
-handoff) generate handoff prompt using dev tooling
-outputs) generate complete project outputs (snapshot + handoff + PR)
-qcp) quick commit and push with timestamp
-test-tools) test all dev tooling functions
-env-info) show environment and version info
+- Check current coordination status
+- Synchronize with the main project repository
+- Create a planning checkpoint
+- Update the agent's activity log
+- Post a message to the shared agent conversation
+- Report current status
+- Receive an assigned task
+- Mark the current task as complete
+
+**🛠️ Development Tooling Integration:**
+- Generate a handoff prompt for another agent
+- Generate all standard project outputs (snapshot, handoff, PR notes)
+- Perform a quick commit and push of current work
+- Test all development tooling functions
+- Show environment and version information
+
 **🔄 Session Management:**
-session-end) MANDATORY session end prompt for agent coordination
-**🤝 Snapshot Procedures:** (Note: these invoke interactive tooling or use snapshot generation functions which may prompt for input)
-snapshot) create snapshot document for another agent
-progress-report) create progress report snapshot for status updates
-create-pr) generate PR description for current work
-receive-snapshot) receive snapshot from another agent
-**💾 Memory Sync (Advanced/Dev Use):**
-mem-sync-start) start memory sync mem-sync-save) save memory state
-mem-sync-restore) restore memory mem-sync-status) show sync status
+- Initiate the mandatory session end procedure for agent coordination
+
+**📸 Snapshot Procedures:**
+- Create a snapshot document for another agent
+- Create a progress report snapshot
+- Generate a Pull Request description for the current work
+- Receive a snapshot from another agent
+
+**💾 Memory Synchronization (Advanced/Developer Use):**
+- Start memory synchronization
+- Save the current memory state
+- Restore memory from a saved state
+- Show current memory synchronization status
+
 **🔄 Meta-Development:**
-meta) provide feedback on AGOR itself
+- Provide feedback on the AGOR system itself
 
-**🔄 Session Navigation:**
-help) show this menu status) show current status refresh) refresh options reset) clean restart
+**⚙️ Session Navigation:**
+- Show this capabilities menu
+- Show current operational status
+- Refresh available options
+- Perform a clean restart of the session
 
-**Menu Flow**: After the user selects any hotkey option:
+**Menu Flow**: After the user selects any option from the menu:
 
 1. Confirm the action: "🔍 [Action name]..."
 2. Execute the action using internal tools
@@ -172,33 +201,62 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
   4. Break down work into delegatable tasks for Worker Agents.
   5. Display organized strategic analysis and delegation plan to the user.
 
-  **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **PROJECT COORDINATOR Menu** (as defined below) to the user and await their command. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
+  **CRITICAL**: After completing these initial actions, you MUST display EXACTLY the **Project Coordinator Capabilities Menu** (as defined below) to the user and await their selection. DO NOT show any technical function names, internal documentation, or code examples. Only show the clean menu.
 
-**PROJECT COORDINATOR Menu:**
+**Project Coordinator Capabilities Menu:**
+
 **🎯 Strategic Planning:**
-sp) strategic plan ✅ bp) break down project ✅ ar) architecture review ✅ dp) dependency planning rp) risk planning
-**⚡ Strategy Selection:**
-ss) strategy selection ✅ pd) parallel divergent ✅ pl) pipeline ✅ sw) swarm ✅ rt) red team ✅ mb) mob programming ✅
-**👥 Team Design:**
-ct) create team ✅ tm) team manifest ✅ hp) snapshot prompts ✅ as) assign specialists tc) team coordination
-**🔄 Coordination:**
-wf) workflow design ✅ qg) quality gates ✅ eo) execution order init) initialize coordination
-**📊 Basic Analysis:**
-a ) analyze codebase da) detailed snapshot
-**🤝 Snapshot Procedures:** (Note: these invoke interactive tooling or use snapshot generation functions which may prompt for input)
-snapshot) create snapshot document for another agent
-work-order) create work order snapshot for task assignment
-progress-report) create progress report snapshot for status updates
-create-pr) generate PR description for current work
-receive-snapshot) receive snapshot from another agent
-**💾 Memory Sync (Advanced/Dev Use):**
-mem-sync-start) start memory sync mem-sync-save) save memory state
-mem-sync-restore) restore memory mem-sync-status) show sync status
-**🔄 Meta-Development:**
-meta) provide feedback on AGOR itself
+- Create a strategic plan for the project
+- Break down the project into manageable tasks
+- Conduct an architecture review
+- Plan for project dependencies
+- Identify and plan for project risks
 
-**🔄 Session Navigation:**
-?) quick help menu) refresh options reset) clean restart
+**⚡ Strategy Selection & Implementation:**
+- Analyze the project and select an optimal multi-agent strategy
+- Implement the Parallel Divergent strategy
+- Implement the Pipeline strategy
+- Implement the Swarm strategy
+- Implement the Red Team strategy
+- Implement the Mob Programming strategy
+
+**👥 Team Design & Management:**
+- Create and define the structure for an agent team
+- Generate a team manifest with roles and responsibilities
+- Design snapshot prompts and procedures for team handoffs
+- Assign specialists to specific tasks or areas
+- Configure team coordination parameters
+
+**🔄 Coordination & Workflow:**
+- Design the overall project workflow
+- Define quality gates and validation checkpoints
+- Determine the execution order for tasks
+- Initialize the coordination system for the project
+
+**📊 Basic Analysis:**
+- Analyze the project codebase
+- Generate a detailed snapshot of current work or project state
+
+**📸 Snapshot Procedures:**
+- Create a snapshot document for another agent or for archival
+- Create a work order snapshot for task assignment
+- Create a progress report snapshot for status updates
+- Generate a Pull Request description for completed work
+- Receive a snapshot from another agent
+
+**💾 Memory Synchronization (Advanced/Developer Use):**
+- Start memory synchronization
+- Save the current memory state
+- Restore memory from a saved state
+- Show current memory synchronization status
+
+**🔄 Meta-Development:**
+- Provide feedback on the AGOR system itself
+
+**⚙️ Session Navigation:**
+- Show a quick help summary
+- Refresh this capabilities menu
+- Perform a clean restart of the session
 
 **CRITICAL MENU FLOW**: Follow the same menu flow pattern as described above.
 
@@ -208,76 +266,76 @@ meta) provide feedback on AGOR itself
 
 This section details standard AGOR operational procedures, hotkey actions, and strategies.
 
-### 3.1. Hotkey Actions (General and Role-Specific)
+### 3.1. Core System Operations and Descriptions
 
 **Strategic Planning:**
 
-- **`sp`**: Create comprehensive project strategy with goals, scope, timeline, and success metrics
-- **`bp`**: Break project into tasks with dependencies, complexity analysis, and agent assignments
-- **`ar`**: Analyze architecture and plan improvements with technical recommendations
-- **`dp`**: Analyze dependencies and create dependency management plan
-- **`rp`**: Assess project risks and create mitigation strategies
+- **Create Strategic Plan**: Develop a comprehensive project strategy with goals, scope, timeline, and success metrics
+- **Break Down Project**: Break project into tasks with dependencies, complexity analysis, and agent assignments
+- **Architecture Review**: Analyze architecture and plan improvements with technical recommendations
+- **Dependency Planning**: Analyze dependencies and create dependency management plan
+- **Risk Planning**: Assess project risks and create mitigation strategies
 
 **Team & Coordination:**
 
-- **`ct`**: Design team structure with specialized roles and coordination protocols
-- **`tm`**: Generate team documentation with roles, prompts, and performance tracking
-- **`hp`**: Create agent snapshot prompts with context and transition procedures
-- **`wf`**: Design workflow with snapshot procedures and quality gates
-- **`qg`**: Define quality gates and acceptance criteria with validation procedures
-- **`eo`**: Plan execution sequence considering dependencies and optimization strategies
+- **Create Team**: Design team structure with specialized roles and coordination protocols
+- **Generate Team Manifest**: Generate team documentation with roles, prompts, and performance tracking
+- **Create Snapshot Prompts**: Create agent snapshot prompts with context and transition procedures
+- **Design Workflow**: Design workflow with snapshot procedures and quality gates
+- **Define Quality Gates**: Define quality gates and acceptance criteria with validation procedures
+- **Plan Execution Order**: Plan execution sequence considering dependencies and optimization strategies
 
 **Coordination Setup:**
 
-- **`init`**: (Normally used by Project Coordinator or after role selection) Initializes the project environment for AGOR. The Memory Synchronization System will handle the setup of necessary `.agor/` coordination files on dedicated memory branches. This command ensures the project is ready for AGOR operations. Takes optional task description parameter. If any part of this runs automatically before role selection, its output MUST be suppressed.
-- **`as`**: [FUTURE IMPLEMENTATION] Assign specialists to specific project areas
-- **`tc`**: [FUTURE IMPLEMENTATION] Team coordination and communication setup
+- **Initialize AGOR Environment**: (Normally used by Project Coordinator or after role selection) Initializes the project environment for AGOR. The Memory Synchronization System will handle the setup of necessary `.agor/` coordination files on dedicated memory branches. This command ensures the project is ready for AGOR operations. Takes optional task description parameter. If any part of this runs automatically before role selection, its output MUST be suppressed.
+- **Assign Specialists**: [FUTURE IMPLEMENTATION] Assign specialists to specific project areas
+- **Setup Team Coordination**: [FUTURE IMPLEMENTATION] Team coordination and communication setup
 
 **STRATEGY ACTIONS:**
 
-- **`ss`**: Analyze project and recommend optimal development strategy
-- **`pd`**: Set up Parallel Divergent strategy (multiple independent agents)
-- **`pl`**: Set up Pipeline strategy (sequential agent snapshots)
-- **`sw`**: Set up Swarm strategy (task queue with dynamic assignment)
-- **`rt`**: Set up Red Team strategy (adversarial build/break cycles)
-- **`mb`**: Set up Mob Programming strategy (collaborative coding)
+- **Select Development Strategy**: Analyze project and recommend optimal development strategy
+- **Setup Parallel Divergent Strategy**: Set up Parallel Divergent strategy (multiple independent agents)
+- **Setup Pipeline Strategy**: Set up Pipeline strategy (sequential agent snapshots)
+- **Setup Swarm Strategy**: Set up Swarm strategy (task queue with dynamic assignment)
+- **Setup Red Team Strategy**: Set up Red Team strategy (adversarial build/break cycles)
+- **Setup Mob Programming Strategy**: Set up Mob Programming strategy (collaborative coding)
 
 **WORKER AGENT ACTIONS:**
 **Analysis & Display:**
 
-- **`a`**: Perform comprehensive codebase analysis with structure, dependencies, and recommendations
-- **`f`**: Display complete files with full content and formatting preserved
-- **`co`**: Show only changed sections with before/after context for focused review
-- **`da`**: Generate detailed work snapshot analysis in single codeblock for agent transitions
-- **`m`**: Show git diff of current changes (equivalent to `git diff`). No parameters required.
+- **Analyze Codebase**: Perform comprehensive codebase analysis with structure, dependencies, and recommendations
+- **Display Full Files**: Display complete files with full content and formatting preserved
+- **Show Changes Only**: Show only changed sections with before/after context for focused review
+- **Generate Detailed Snapshot Analysis**: Generate detailed work snapshot analysis in single codeblock for agent transitions
+- **Show Git Diff**: Show git diff of current changes (equivalent to `git diff`). No parameters required.
 
 **Code Exploration:**
 
-- **`bfs`**: Breadth-first search for files matching regex pattern. Usage: specify pattern to search for
-- **`grep`**: Search for regex patterns in files. Usage: specify pattern and optional file scope
-- **`tree`**: Generate directory structure visualization. Usage: optional directory path and depth
+- **Breadth-First Search**: Breadth-first search for files matching regex pattern. Usage: specify pattern to search for
+- **Grep (Search Patterns)**: Search for regex patterns in files. Usage: specify pattern and optional file scope
+- **Tree (Directory Structure)**: Generate directory structure visualization. Usage: optional directory path and depth
 
 **Editing & Changes:**
 
-- **`edit`**: Modify files with targeted changes. Usage: specify file path and changes to make
-- **`commit`**: Save changes to git with descriptive commit message. Usage: provide commit message describing changes
-- **`diff`**: Show git diff of current changes (same as `m`). No parameters required.
+- **Modify Files**: Modify files with targeted changes. Usage: specify file path and changes to make
+- **Commit Changes**: Save changes to git with descriptive commit message. Usage: provide commit message describing changes
+- **Show Git Diff (Editing)**: Show git diff of current changes (same as `m`). No parameters required.
 
 **Documentation:**
 
-- **`doc`**: Generate comprehensive documentation for code modules and functions
-- **`comment`**: Add inline comments and docstrings to improve code readability
-- **`explain`**: Provide detailed code explanation with logic flow and purpose
+- **Generate Documentation**: Generate comprehensive documentation for code modules and functions
+- **Add Comments**: Add inline comments and docstrings to improve code readability
+- **Explain Code**: Provide detailed code explanation with logic flow and purpose
 
 **Dev Tooling Integration:**
 
-- **`handoff`**: Generate handoff prompt using dev tooling. Usage: provide task description, work completed, and next steps
-- **`outputs`**: Generate complete project outputs (snapshot + handoff + PR description). Usage: provide task description and context
-- **`qcp`**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
-- **`test-tools`**: Test all dev tooling functions to ensure they work properly. No parameters required.
-- **`env-info`**: Show current environment detection, AGOR version, and platform information. No parameters required.
-- **`meta`**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
-- **`session-end`**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
+- **Generate Handoff Prompt**: Generate handoff prompt using dev tooling. Usage: provide task description, work completed, and next steps
+- **Generate All Outputs**: Generate complete project outputs (snapshot + handoff + PR description). Usage: provide task description and context
+- **Quick Commit and Push**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
+- **Test All Dev Tools**: Test all dev tooling functions to ensure they work properly. No parameters required.
+- **Show Environment Info**: Show current environment detection, AGOR version, and platform information. No parameters required.
+- **Provide AGOR Feedback**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
+- **Initiate Session End Procedure**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
 
 **CRITICAL OUTPUT FORMATTING REQUIREMENTS**:
 
@@ -326,36 +384,36 @@ Always create a snapshot before ending your session using the dev tooling.
 **WORKER AGENT COORDINATION ACTIONS:**
 **Coordination:**
 
-- **`status`**: Check coordination files (via Memory Synchronization System), agent memory files, and recent activity in agentconvo.md
-- **`sync`**: Pull latest changes from main branch and update coordination status (Memory Synchronization System handles memory branch updates)
-- **`ch`**: Create checkpoint in agent memory with current progress and status. Usage: provide checkpoint description (Memory Synchronization System will persist this)
+- **Check Coordination Status**: Check coordination files (via Memory Synchronization System), agent memory files, and recent activity in agentconvo.md
+- **Synchronize with Main**: Pull latest changes from main branch and update coordination status (Memory Synchronization System handles memory branch updates)
+- **Create Checkpoint**: Create checkpoint in agent memory with current progress and status. Usage: provide checkpoint description (Memory Synchronization System will persist this)
 
 **Communication:**
 
-- **`log`**: Update agent memory log with progress, decisions, and current status. Usage: provide log entry content (Memory Synchronization System will persist this)
-- **`msg`**: Post message to agentconvo.md for cross-agent communication. Usage: provide message content (Memory Synchronization System will persist this)
-- **`report`**: Generate comprehensive status report including completed work, current tasks, and next steps
+- **Update Agent Log**: Update agent memory log with progress, decisions, and current status. Usage: provide log entry content (Memory Synchronization System will persist this)
+- **Post Message to AgentConvo**: Post message to agentconvo.md for cross-agent communication. Usage: provide message content (Memory Synchronization System will persist this)
+- **Report Status**: Generate comprehensive status report including completed work, current tasks, and next steps
 
 **Task Management:**
 
-- **`task`**: Receive and acknowledge task assignment from coordinator (often as a work snapshot). Usage: task will be provided by coordinator
-- **`complete`**: Mark current task as complete and update all coordination files (Memory Synchronization System will persist this). Usage: provide completion summary
-- **`snapshot`**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status (Memory Synchronization System will persist this)
-- **`progress-report`**: Create progress report snapshot for status updates to coordinators or team members
-- **`work-order`**: Create work order snapshot for task assignment (Project Coordinator role)
-- **`create-pr`**: Generate PR description for current work with comprehensive context (user will create the actual PR)
-- **`receive-snapshot`**: Receive and acknowledge snapshot from another agent or coordinator
+- **Receive Task Assignment**: Receive and acknowledge task assignment from coordinator (often as a work snapshot). Usage: task will be provided by coordinator
+- **Mark Task Complete**: Mark current task as complete and update all coordination files (Memory Synchronization System will persist this). Usage: provide completion summary
+- **Create Snapshot Document**: Prepare snapshot document for next agent (or for archival) with comprehensive context and status (Memory Synchronization System will persist this)
+- **Create Progress Report Snapshot**: Create progress report snapshot for status updates to coordinators or team members
+- **Create Work Order Snapshot**: Create work order snapshot for task assignment (Project Coordinator role)
+- **Generate PR Description**: Generate PR description for current work with comprehensive context (user will create the actual PR)
+- **Receive Snapshot**: Receive and acknowledge snapshot from another agent or coordinator
 
 **Meta-Development:**
 
-- **`meta`**: Provide feedback on AGOR itself (report issues, suggestions, or exceptional workflows)
+- **Provide AGOR Feedback (In-Task)**: Provide feedback on AGOR itself (report issues, suggestions, or exceptional workflows)
 
 **System:**
 
-- **`c`**: Continue previous operation
-- **`r`**: Refresh context or retry last action
-- **`w`**: Work autonomously on the current task
-- **`help`**: Display this menu and available hotkeys
+- **Continue Operation**: Continue previous operation
+- **Refresh Context/Retry**: Refresh context or retry last action
+- **Work Autonomously**: Work autonomously on the current task
+- **Display Capabilities Menu**: Display this menu and available capabilities
 
 ### 3.2. Agent Coordination System
 
@@ -377,14 +435,14 @@ Always create a snapshot before ending your session using the dev tooling.
 **CRITICAL**: Agent coordination can be a two-way process using snapshots, managed by the Memory Synchronization System:
 **📤 Work Assignment (Coordinator → Agent via Snapshot)**
 
-1. **Creating Work Snapshots**: Coordinator uses `snapshot` hotkey to generate a snapshot detailing the work. The Memory Synchronization System persists this to a memory branch.
-2. **Agent Receipt**: Agent uses `receive-snapshot` hotkey to accept the work snapshot. The system retrieves it from the appropriate memory branch.
+1. **Creating Work Snapshots**: Coordinator initiates the snapshot creation process to generate a snapshot detailing the work. The Memory Synchronization System persists this to a memory branch.
+2. **Agent Receipt**: Agent initiates the snapshot reception process to accept the work snapshot. The system retrieves it from the appropriate memory branch.
 3. **Communication**: Update `.agor/agentconvo.md` (on the memory branch via the sync system) to confirm snapshot receipt.
 4. **Work Execution**: Follow next steps outlined in the work snapshot.
 
 **📥 Task Completion (Agent → Coordinator via Snapshot)**
 
-1. **Completion Snapshot/Report**: Agent uses `complete` hotkey (which may generate a snapshot or report). This is persisted by the Memory Synchronization System.
+1. **Completion Snapshot/Report**: Agent initiates the task completion process (which may generate a snapshot or report). This is persisted by the Memory Synchronization System.
 2. **Results Summary**: Include work completed, commits, issues, recommendations
 3. **Coordinator Review**: Coordinator reviews results (retrieved from memory branch) and provides feedback
 4. **Integration**: Coordinator decides on integration and next steps
@@ -497,13 +555,13 @@ AGOR supports 5 multi-agent development strategies. The Memory Synchronization S
 
 **📋 COMPREHENSIVE PROTOCOLS**: See `docs/multi-agent-protocols.md` for complete implementation protocols, session management, and coordination requirements.
 
-🔄 **Parallel Divergent** (`pd`): Multiple agents work independently, then peer review
-⚡ **Pipeline** (`pl`): Sequential work via snapshots with specialization
-🐝 **Swarm** (`sw`): Dynamic task assignment from shared queue (tasks can be snapshots)
-⚔️ **Red Team** (`rt`): Adversarial build/break cycles (states captured as snapshots)
-👥 **Mob Programming** (`mb`): Collaborative coding with rotating roles
+🔄 **Parallel Divergent**: Multiple agents work independently, then peer review
+⚡ **Pipeline**: Sequential work via snapshots with specialization
+🐝 **Swarm**: Dynamic task assignment from shared queue (tasks can be snapshots)
+⚔️ **Red Team**: Adversarial build/break cycles (states captured as snapshots)
+👥 **Mob Programming**: Collaborative coding with rotating roles
 
-Use `ss` to analyze your project and get strategy recommendations.
+Use the 'Select Development Strategy' function to analyze your project and get strategy recommendations.
 
 **STRATEGY PARAMETER EFFECTS:**
 (Content remains the same)
@@ -521,7 +579,7 @@ Use `ss` to analyze your project and get strategy recommendations.
 
 (Content remains largely the same, emphasizing that snapshots are stored and managed by the Memory Synchronization System)
 ...
-**Creating a Snapshot (`snapshot` hotkey)**
+**Creating a Snapshot**
 ... 3. **AGOR generates**:
 
 - Complete snapshot document in `.agor/snapshots/` (on a memory branch via Memory Synchronization System)
@@ -547,9 +605,9 @@ Use `ss` to analyze your project and get strategy recommendations.
 
 - Work autonomously, try multiple approaches before asking for input
 - Use short code cells (1-2 lines), verify with `/tmp/agor_tools/git diff` on your _working_ branch
-- Always show hotkey menu at end of replies
+- Always show capabilities menu at end of replies
 - Your operational memory (decisions, progress) is managed by the Memory Synchronization System.
-- **Provide feedback on AGOR**: Use `meta` hotkey to report issues, suggestions, or exceptional workflows
+- **Provide feedback on AGOR**: Use the 'Provide AGOR Feedback' function to report issues, suggestions, or exceptional workflows
 
 **Shared File Access (CRITICAL for Multi-Agent Coordination - Managed by Memory Synchronization System):**
 The Memory Synchronization System is designed to handle concurrent access to coordination files on memory branches. However, agents should still follow logical best practices:
@@ -640,16 +698,16 @@ Memory files in `.agor/` are handled by the Memory Synchronization System.
 
 The `agor status` command (and similar status reporting) will include information about the Memory Synchronization System, such as the active memory branch and sync health, if relevant to the agent's current context or for diagnostic purposes.
 
-#### Manual Memory Sync Hotkeys (Primarily for AGOR Development & Advanced Use)
+#### Manual Memory Sync Operations (Primarily for AGOR Development & Advanced Use)
 
-While the Memory Synchronization System is designed to be automatic for standard agent operations, the following hotkeys exist primarily for **AGOR developers or very advanced use cases** (e.g., manually forcing a sync after a network outage, or specific testing scenarios):
+While the Memory Synchronization System is designed to be automatic for standard agent operations, the following operations exist primarily for **AGOR developers or very advanced use cases** (e.g., manually forcing a sync after a network outage, or specific testing scenarios):
 
-**Memory Sync Commands (Advanced/Developer Use):**
+**Memory Sync Operations (Advanced/Developer Use):**
 
-- **`mem-sync-start`**: Manually initialize or restart memory synchronization.
-- **`mem-sync-save`**: Manually force a save of the current memory state to the memory branch.
-- **`mem-sync-restore`**: Manually attempt to restore memory state from a specified memory branch.
-- **`mem-sync-status`**: Show detailed current memory synchronization status.
+- **Manually Start Memory Sync**: Initialize or restart memory synchronization.
+- **Manually Save Memory Sync**: Manually force a save of the current memory state to the memory branch.
+- **Manually Restore Memory Sync**: Manually attempt to restore memory state from a specified memory branch.
+- **Show Memory Sync Status**: Show detailed current memory synchronization status.
 
 **Standard agents should rely on the system's automatic synchronization.**
 

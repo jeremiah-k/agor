@@ -446,9 +446,10 @@ agor bundle https://github.com/your-username/your-project
 While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for individual development work:
 
 - **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)snapshots can bring clarity to complex projects.
-- **Context Preservation**: AI assistants often have context window limits. Using AGOR's `snapshot` hotkey (even if you're creating a snapshot for yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
+- **Context Preservation**: AI assistants often have context window limits. Using AGOR's snapshot creation functionality (even if you're creating a snapshot for yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
 - **Tool Integration**: AGOR provides a consistent interface for interacting with your codebase, including integrated Git commands and analysis tools, all within the AI's workflow.
 - **Future Scalability**: If your solo project grows to involve more collaborators (human or AI), you'll already have a structured process in place.
+- **Team Integration**: When part of a team, the Worker Agent excels at executing specific tasks assigned by a Project Coordinator, often based on detailed work snapshots, and integrates smoothly into established multi-agent workflows.
 
 ### 📋 PROJECT COORDINATOR
 
@@ -469,49 +470,21 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 
 **Key Capabilities:**
 
-- Initialize coordination strategies (`pd`, `pl`, `sw`, `rt`, `mb`)
-- Create specialized agent teams (`ct`)
-- Design snapshot procedures (`hp` - snapshot prompts)
+- Initialize various coordination strategies (e.g., Parallel Divergent, Pipeline, Swarm).
+- Create specialized agent teams.
+- Design snapshot procedures and prompts.
 - Monitor team progress and coordination
 
 **Typical Workflow:**
 
-1. Analyze project requirements (`sp`)
-2. Select optimal strategy (`ss`)
-3. Create specialized team (`ct`)
+1. Analyze project requirements.
+2. Select an optimal strategy.
+3. Create a specialized team.
 4. Initialize strategy and coordinate agents
 
-### 🤖 AGENT WORKER
-
-**Primary Purpose:** Task execution and processing work snapshots
-
-**Best For:**
-
-- Receiving specific tasks from coordinators (often as snapshots)
-- Executing specialized development work based on snapshots
-- Following established workflows
-- Team coordination and communication
-
-**Works in Both Modes:**
-
-- **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
-- **Bundled Mode**: Copy-paste codeblocks with completed tasks
-- **Team coordination** capabilities available in both modes
-
-**Key Capabilities:**
-
-- Excels at receiving and executing work based on snapshots
-- Maintains coordination with other agents
-- Reports progress and status
-
-**Typical Workflow:**
-
-1. Check coordination status (`status`)
-2. Receive task assignment (`task` - often a snapshot)
-3. Execute assigned work
-4. Report completion and create a new snapshot (`complete`, `snapshot`)
-
 ## 🎼 Multi-Agent Coordination Strategies
+
+AGOR is exploring several advanced strategies for multi-agent collaboration. While these are areas of ongoing development and refinement, they illustrate various approaches to coordinating multiple AI agents:
 
 ### When to Use Each Strategy
 
@@ -553,14 +526,14 @@ While "Orchestrator" might suggest a multi-agent focus, AGOR provides significan
 2. **Choose any role** based on what you want to do:
    - **Worker Agent**: For code analysis and implementation
    - **Project Coordinator**: For planning and strategy
-3. **Use basic hotkeys**: `a` (analyze), `f` (full files), `status`
+3. **Try basic operations like analyzing the codebase, viewing full files, or checking the system status.**
 4. **Practice with small projects** before attempting multi-agent workflows
 
 ### For Advanced Users
 
 1. **Try Standalone Mode** with git-capable agents
 2. **Experiment with different roles** based on your needs
-3. **Initialize multi-agent strategies** (`ss`, `pd`, `pl`)
+3. **Initialize different multi-agent strategies.**
 4. **Use advanced features**: Memory synchronization, custom strategies
 
 ### For Teams
@@ -585,7 +558,7 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 **Solution:**
 
 1. Check `.agor/` directory exists and has proper files
-2. Ensure all agents are using `sync` hotkey regularly
+2. Ensure all agents are regularly synchronizing their work.
 3. Verify agents are communicating via `agentconvo.md`
 
 ### "Bundle upload fails"
@@ -609,4 +582,4 @@ cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
 ---
 
-_This guide evolves with AGOR. Suggest improvements through GitHub issues or the `meta` hotkey._
+_This guide evolves with AGOR. Suggest improvements through GitHub issues or by providing feedback through the AGOR system._
