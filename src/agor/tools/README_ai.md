@@ -107,6 +107,7 @@ Based on your environment detection:
 
 **Core Development Functions**:
 
+- `get_available_functions_reference()` - **MANDATORY**: List all available AGOR development functions
 - `create_development_snapshot()` - Create comprehensive work snapshots
 - `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
 - `generate_pr_description_snapshot()` - Create PR descriptions for completed work
@@ -137,7 +138,7 @@ Based on your environment detection:
 
 **ALWAYS read and understand what dev tools tell you:**
 
-- "✅ Snapshot committed to memory branch: agor/mem/agent_abc123" means SUCCESS
+- "✅ Snapshot committed to memory branch: agor/mem/main" means SUCCESS
 - "📁 Snapshot file: .agor/snapshots/filename.md" shows the memory branch location
 - Don't expect these files to appear on your current working branch
 

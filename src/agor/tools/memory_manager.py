@@ -267,29 +267,46 @@ def commit_to_memory_branch(
         return False
 
 
-def auto_commit_memory(content: str, memory_type: str, agent_id: str) -> bool:
+def auto_commit_memory(
+    content: str, memory_type: str, agent_id: str, memory_branch: str = None
+) -> bool:
     """
-    Automatically commit content to memory branch with standardized naming.
+    Automatically commit content to main memory branch with agent directory structure.
 
     Args:
         content: Memory content to commit
         memory_type: Type of memory (e.g., 'session_start', 'progress', 'completion')
-        agent_id: Agent identifier
+        agent_id: Agent identifier (will be sanitized for security)
+        memory_branch: Optional specific memory branch. If not provided, uses main memory branch.
 
     Returns:
         True if successful, False otherwise
     """
-    print(f"💾 Auto-committing memory: {memory_type} for {agent_id}")
+    # Import sanitization function from utils (centralized location)
+    from agor.utils import sanitize_slug
 
-    # Create standardized file name
-    file_name = f"{agent_id}-memory.md"
+    # Sanitize inputs to prevent injection attacks
+    safe_agent_id = sanitize_slug(agent_id)
+    safe_memory_type = sanitize_slug(memory_type)
 
-    # Create commit message
-    commit_message = f"Memory update: {memory_type} for {agent_id}"
+    print(f"💾 Auto-committing memory: {safe_memory_type} for {safe_agent_id}")
 
-    # Commit to memory branch
+    # Use main memory branch with agent directory structure
+    if memory_branch is None:
+        memory_branch = "agor/mem/main"
+
+    # Create standardized file name with sanitized components in agent directory
+    file_name = f"agents/{safe_agent_id}/{safe_agent_id}-memory.md"
+
+    # Create commit message with sanitized components
+    commit_message = f"Memory update: {safe_memory_type} for {safe_agent_id}"
+
+    # Commit to main memory branch with agent directory structure
     return commit_to_memory_branch(
-        file_content=content, file_name=file_name, commit_message=commit_message
+        file_content=content,
+        file_name=file_name,
+        branch_name=memory_branch,
+        commit_message=commit_message,
     )
 
 

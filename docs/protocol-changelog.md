@@ -17,6 +17,121 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ---
 
+## Protocol v0.5.1 (2025-06-15)
+
+### 🔒 **SECURITY FIXES: Agent ID Sanitization**
+
+**Critical Security Improvements**
+
+- **Input Sanitization**: All agent IDs now sanitized to prevent injection attacks and path traversal
+- **Safe File Paths**: Agent IDs cleaned before use in file names and branch names
+- **Persistent Agent IDs**: Optional `/tmp/agor/agent_id` file for session persistence (with limitations)
+
+### 🏗️ **Single Memory Branch Architecture (Stable)**
+
+**Production-Ready Architecture**
+
+- **Main Memory Branch**: `agor/mem/main` with directory structure
+- **Agent Isolation**: Each agent gets directory in `agents/agent_{hash}_{timestamp}/`
+- **Automated Handoffs**: Structured agent-to-agent coordination via `handoffs/pending/`
+- **Intelligent Cleanup**: Date and pattern-based directory management
+
+### 📝 **Enhanced User Experience**
+
+**Comprehensive Documentation and Examples**
+
+- **Agent Prompt Examples**: Complete guide with codeblock formatting requirements
+- **Stacking Prompts**: Multi-step workflow examples for complex tasks
+- **Platform Reorganization**: AugmentCode prioritized, Google AI Studio deprecated
+- **Security Awareness**: Documentation of agent identification limitations
+
+### 🔧 **New Security Functions**
+
+**Security and Utility Enhancements** (`src/agor/tools/dev_tools.py`)
+
+- `sanitize_slug()`: Prevents injection attacks in file/branch names
+- `get_or_create_agent_id_file()`: Optional persistent agent IDs with warnings
+- Enhanced `cleanup_agent_directories()`: Safe current agent detection
+- Deprecated `cleanup_agent_memory_branches()`: Legacy function marked deprecated
+
+### 📚 **Documentation Alignment**
+
+**Complete Documentation Update**
+
+- **Protocol Version**: Updated to v0.6.0 across all documentation
+- **Security Notes**: Added warnings about agent identification limitations
+- **Architecture Compliance**: Emphasized `.agor/` only on memory branches
+- **Tool References**: Updated function names and capabilities
+
+### 🎯 **Protocol Compatibility**
+
+**Security-First Compatibility**
+
+- **Breaking Changes**: None for normal usage, enhanced security for edge cases
+- **New Capabilities**: Secure agent identification, persistent IDs (optional)
+- **Deprecations**: Multi-branch cleanup functions (legacy approach)
+
+**Agent Responsibilities Updated**:
+
+- Agents must use sanitized IDs for all file operations
+- Agents should be aware of identification limitations
+- Agents should use new directory-based memory structure
+
+---
+
+## Protocol v0.5.0 (2025-06-15)
+
+### 🆔 **MAJOR FEATURE: Agent Unique Identification System**
+
+**Agent Identity Management**
+
+- **Persistent Agent IDs**: Each agent gets a unique, persistent identifier (e.g., `agent_7cb9e6d4`)
+- **Agent-Specific Memory Branches**: Agents use dedicated memory branches (`agor/mem/{agent_id}`)
+- **Isolated Agent Storage**: Prevents agents from interfering with each other's snapshots
+- **Cross-Agent Communication**: Enhanced agentconvo.md protocol with agent IDs
+
+### 🔧 Technical Implementation
+
+**New Functions** (`src/agor/tools/dev_tools.py`)
+
+- `get_or_create_agent_id()`: Creates persistent agent ID stored in `.agor/agent_id`
+- `cleanup_agent_memory_branches()`: Cleans up old memory branches
+- `generate_agent_memory_branch(agent_id)`: Creates agent-specific memory branch names
+
+**Enhanced Snapshot System**
+
+- All snapshots now include agent ID in metadata
+- Snapshots automatically commit to agent-specific memory branches
+- Enhanced handoff prompts with agent context
+
+### 📚 Documentation Improvements
+
+**User Experience Enhancements**
+
+- **Agent Prompt Examples** (`docs/agent-prompt-examples.md`): Comprehensive examples with emphasis on using AGOR tools
+- **Platform Reorganization**: AugmentCode moved to top, Google AI Studio to bottom (free tier being phased out)
+- **CLI vs Agent Tool Distinction**: Clear separation between developer CLI commands and agent development tools
+- **Linked User Guidelines**: Replaced large codeblocks with links to `augment_user_guidelines.md`
+
+### 🎯 Protocol Compatibility
+
+**Breaking Changes**: None - all changes are backward compatible
+
+**New Capabilities**:
+
+- Agents maintain persistent identity across sessions
+- Isolated memory branches prevent agent conflicts
+- Enhanced agent coordination with unique identification
+- Better user guidance with explicit tool usage examples
+
+**Agent Responsibilities Added**:
+
+- Agents should look for opportunities to update the dev tools index
+- Agents should look for opportunities to add useful prompts to example prompts
+- Agents should use persistent agent IDs for all memory operations
+
+---
+
 ## Protocol v0.4.0 (2024-12-27)
 
 ### 🔄 **BREAKING CHANGE: Handoff → Snapshot Terminology**
@@ -160,7 +275,7 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ## Quick Protocol Check
 
-**Current Protocol Version**: `0.4.0`
+**Current Protocol Version**: `0.5.1`
 
 **Check Your Version**:
 

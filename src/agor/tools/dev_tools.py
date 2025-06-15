@@ -31,6 +31,7 @@ from agor.tools.dev_testing import detect_environment, test_tooling
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
+    get_file_timestamp,
     quick_commit_push,
     run_git_command,
 )
@@ -51,6 +52,7 @@ from agor.tools.snapshots import (
     generate_agent_handoff_prompt,
     generate_mandatory_session_end_prompt,
 )
+from agor.utils import sanitize_slug
 
 # Handle imports for both installed and development environments
 try:
@@ -75,9 +77,9 @@ except ImportError:
 # ===================================
 
 
-def create_development_snapshot(title: str, context: str) -> bool:
-    """Create development snapshot - main API function."""
-    return create_snapshot(title, context)
+def create_development_snapshot(title: str, context: str, agent_id: str = None, custom_branch: str = None) -> bool:
+    """Create development snapshot in agent's directory within main memory branch."""
+    return create_snapshot(title, context, agent_id, custom_branch)
 
 
 def generate_seamless_agent_handoff(
@@ -379,6 +381,68 @@ def display_git_workflow_status() -> str:
     return generate_git_workflow_report()
 
 
+# Security and Utility Functions
+# ==============================
+
+
+# sanitize_slug function now imported from agor.utils
+
+
+def get_or_create_agent_id_file(agent_id: str = None) -> str:
+    """
+    Get or create agent ID from /tmp/agor/agent_id file for persistence across sessions.
+
+    Note: This approach has limitations and should not be relied upon heavily.
+    - Does not work reliably with Augment local agents
+    - May not work on certain platforms
+    - Users should monitor and modify as needed
+
+    Args:
+        agent_id: Optional agent ID to store. If not provided, reads from file or generates new one.
+
+    Returns:
+        Agent ID string
+    """
+    import tempfile
+    from pathlib import Path
+
+    # Use /tmp/agor/ directory for agent ID persistence
+    tmp_agor_dir = Path(tempfile.gettempdir()) / "agor"
+    agent_id_file = tmp_agor_dir / "agent_id"
+
+    try:
+        # Create directory if it doesn't exist
+        tmp_agor_dir.mkdir(exist_ok=True)
+
+        # If agent_id provided, store it
+        if agent_id:
+            sanitized_id = sanitize_slug(agent_id)
+            agent_id_file.write_text(sanitized_id)
+            return sanitized_id
+
+        # Try to read existing agent ID
+        if agent_id_file.exists():
+            stored_id = agent_id_file.read_text().strip()
+            if stored_id and len(stored_id) > 0:
+                return sanitize_slug(stored_id)
+
+        # Generate new agent ID if none exists
+        new_agent_id = generate_unique_agent_id()
+        sanitized_id = sanitize_slug(new_agent_id)
+        agent_id_file.write_text(sanitized_id)
+
+        print(f"📝 Created new agent ID file: {agent_id_file}")
+        print(f"🆔 Agent ID: {sanitized_id}")
+        print("⚠️  Note: Agent identification has limitations and should not be relied upon heavily")
+
+        return sanitized_id
+
+    except Exception as e:
+        print(f"⚠️  Could not manage agent ID file: {e}")
+        # Fallback to generating new ID
+        return sanitize_slug(generate_unique_agent_id())
+
+
 # Memory Management Functions
 # ===========================
 
@@ -387,73 +451,620 @@ def display_git_workflow_status() -> str:
 # Note: read_from_memory_branch and list_memory_branches available if needed
 
 
-def generate_agent_memory_branch() -> str:
+def generate_unique_agent_id() -> str:
     """
-    Generates a unique agent memory branch name using a timestamp-based hash.
+    Generate a truly unique agent identifier for each agent session.
+
+    Format: agent_{hash}_{timestamp} for uniqueness and readability.
+    Each agent session gets its own directory in the main memory branch.
 
     Returns:
-        A string in the format 'agor/mem/agent_{hash}' for uniquely identifying an agent's memory branch.
+        A string agent ID in format 'agent_{hash}_{timestamp}' for unique identification.
     """
     import hashlib
+    import os
     import time
+    import uuid
 
-    agent_id = hashlib.md5(f"agent_{time.time()}".encode()).hexdigest()[:8]
-    memory_branch = f"agor/mem/agent_{agent_id}"
+    # Create truly unique identifier using multiple sources
+    full_timestamp = str(int(time.time()))  # full epoch seconds for proper datetime conversion
+    random_component = str(uuid.uuid4())[:8]  # random component
+    process_id = str(os.getpid())  # process ID
 
-    return memory_branch
+    # Combine for uniqueness
+    unique_string = f"{random_component}_{process_id}_{time.time()}"
+    agent_hash = hashlib.md5(unique_string.encode()).hexdigest()[:8]
+
+    # Format: agent_{hash}_{timestamp} with full timestamp for datetime compatibility
+    agent_id = f"agent_{agent_hash}_{full_timestamp}"
+
+    # Sanitize the agent ID before returning to ensure it's safe for use
+    return sanitize_slug(agent_id)
 
 
-def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
+def generate_agent_id() -> str:
     """
-    Creates an agent-specific memory branch with an initial commit containing metadata and usage guidelines.
+    Generate a unique agent ID for this agent session.
 
-    If no branch name is provided, a unique one is generated. Returns a tuple indicating success and the branch name.
+    Each agent session gets a unique ID - this is the correct behavior.
     """
-    if memory_branch is None:
-        memory_branch = generate_agent_memory_branch()
+    return generate_unique_agent_id()
+
+
+def get_main_memory_branch(custom_branch: str = None) -> str:
+    """
+    Get the main memory branch name, with optional custom branch support.
+
+    Args:
+        custom_branch: Optional custom memory branch name. If not provided, uses 'agor/mem/main'.
+
+    Returns:
+        A string memory branch name (e.g., 'agor/mem/main' or custom branch).
+    """
+    if custom_branch:
+        return custom_branch
+    return "agor/mem/main"
+
+
+def get_agent_directory_path(agent_id: str) -> str:
+    """
+    Get the agent's directory path within the memory branch.
+
+    Args:
+        agent_id: Agent identifier
+
+    Returns:
+        A string path like 'agents/agent_{hash}_{timestamp}/' for the agent's directory.
+    """
+    return f"agents/{agent_id}/"
+
+
+def initialize_agent_workspace(agent_id: str = None, custom_branch: str = None) -> tuple[bool, str, str]:
+    """
+    Initialize agent workspace in the main memory branch with directory structure.
+
+    Args:
+        agent_id: Optional agent ID. If not provided, generates a new one.
+        custom_branch: Optional custom memory branch. Defaults to 'agor/mem/main'.
+
+    Returns:
+        A tuple containing (success, agent_id, memory_branch) for tracking agent identity.
+    """
+    if agent_id is None:
+        agent_id = generate_agent_id()
+
+    memory_branch = get_main_memory_branch(custom_branch)
+    agent_dir = get_agent_directory_path(agent_id)
 
     try:
         from agor.tools.memory_manager import commit_to_memory_branch
 
-        # Create initial commit to establish the memory branch
-        initial_content = f"""# Agent Memory Branch: {memory_branch}
+        # Create agent initialization file
+        agent_init_content = f"""# Agent Workspace: {agent_id}
 
+**Agent ID**: {agent_id}
 **Created**: {get_current_timestamp()}
-**Purpose**: Dedicated memory space for agent coordination and snapshots
+**Memory Branch**: {memory_branch}
+**Agent Directory**: {agent_dir}
 
-## Branch Usage
+## Agent Workspace Structure
 
-This memory branch stores:
-- Development snapshots
-- Agent coordination data
-- Session context and handoff information
-- Workflow state and progress tracking
+This agent's workspace contains:
+- `snapshots/` - Development snapshots and work progress
+- `work_log.md` - Session work log and notes
+- `agent_info.md` - Agent metadata and session information
 
-## Agent Guidelines
+## Coordination
 
-- Use this branch for all snapshot commits
-- Reference this branch in handoff prompts
-- Maintain context continuity across sessions
-- Clean up when agent work is complete
+- **Main Memory Branch**: {memory_branch}
+- **Shared Coordination**: `shared/agentconvo.md`
+- **Handoffs**: `handoffs/pending/` and `handoffs/completed/`
+- **Agent Directory**: `{agent_dir}`
+
+## Session Guidelines
+
+- All work snapshots go in this agent's directory
+- Reference other agents via their directories
+- Use shared coordination files for cross-agent communication
+- Create handoffs in `handoffs/pending/` for agent transitions
 """
 
+        # Create shared coordination structure if it doesn't exist
+        shared_agentconvo_content = f"""# Agent Conversation Log
+
+**Memory Branch**: {memory_branch}
+**Last Updated**: {get_current_timestamp()}
+
+## Active Agents
+
+- **{agent_id}**: Initialized at {get_current_timestamp()}
+
+## Coordination Notes
+
+Use this file for cross-agent communication and coordination.
+
+## Agent Directory Structure
+
+```
+{memory_branch}/
+├── agents/
+│   ├── {agent_id}/
+│   │   ├── snapshots/
+│   │   ├── work_log.md
+│   │   └── agent_info.md
+├── shared/
+│   ├── agentconvo.md (this file)
+│   └── project_status.md
+└── handoffs/
+    ├── pending/
+    ├── completed/
+    └── archive/
+```
+"""
+
+        # Commit agent initialization
+        agent_success = commit_to_memory_branch(
+            file_content=agent_init_content,
+            file_name=f"{agent_dir}agent_info.md",
+            branch_name=memory_branch,
+            commit_message=f"Initialize agent workspace for {agent_id}",
+        )
+
+        # Commit shared coordination structure
+        shared_success = commit_to_memory_branch(
+            file_content=shared_agentconvo_content,
+            file_name="shared/agentconvo.md",
+            branch_name=memory_branch,
+            commit_message=f"Update shared coordination for agent {agent_id}",
+        )
+
+        if agent_success and shared_success:
+            print(f"✅ Initialized agent workspace: {memory_branch}/{agent_dir}")
+            print(f"🆔 Agent ID: {agent_id}")
+            print(f"📁 Agent Directory: {agent_dir}")
+        else:
+            print("❌ Failed to initialize agent workspace")
+
+        return agent_success and shared_success, agent_id, memory_branch
+
+    except Exception as e:
+        print(f"❌ Error initializing agent workspace: {e}")
+        return False, agent_id, memory_branch
+
+
+def cleanup_agent_directories(
+    keep_current: bool = True,
+    days_old: int = None,
+    agent_pattern: str = None,
+    custom_branch: str = None,
+    current_agent_id: str = None
+) -> bool:
+    """
+    Intelligently clean up agent directories in the main memory branch.
+
+    Args:
+        keep_current: If True, keeps the current agent's directory
+        days_old: Only remove directories older than this many days
+        agent_pattern: Only remove agents matching this pattern (e.g., "agent_abc*")
+        custom_branch: Custom memory branch to clean up
+        current_agent_id: Explicit current agent ID (if not provided, reads from file)
+
+    Returns:
+        True if cleanup was successful, False otherwise
+    """
+    try:
+        import os
+        import subprocess
+        from datetime import datetime, timedelta
+
+        memory_branch = get_main_memory_branch(custom_branch)
+
+        # Get current agent ID safely
+        if keep_current:
+            if current_agent_id:
+                current_agent_id = sanitize_slug(current_agent_id)
+            else:
+                # Try to get from persistent file, don't generate new one
+                current_agent_id = get_or_create_agent_id_file()
+
+        print(f"🧹 Cleaning up agent directories in {memory_branch}")
+        if current_agent_id:
+            print(f"🆔 Keeping current agent: {current_agent_id}")
+
+        # SAFETY: Capture current branch before any checkout operations
+        original_branch_result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd="."
+        )
+
+        if original_branch_result.returncode != 0:
+            print("❌ Could not determine current branch")
+            return False
+
+        original_branch = original_branch_result.stdout.strip()
+        print(f"🔒 Current branch: {original_branch} (will restore after cleanup)")
+
+        try:
+            # Switch to memory branch to examine directories
+            checkout_result = subprocess.run(
+                ["git", "checkout", memory_branch],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
+
+            if checkout_result.returncode != 0:
+                print(f"❌ Could not checkout memory branch {memory_branch}")
+                return False
+
+            # List agent directories
+            agents_dir = "agents"
+            if not os.path.exists(agents_dir):
+                print(f"📁 No agents directory found in {memory_branch}")
+                return True
+
+            directories_removed = 0
+            removed_directories = []  # Track removed directories for specific git staging
+
+            for agent_dir in os.listdir(agents_dir):
+                agent_path = os.path.join(agents_dir, agent_dir)
+
+                # Skip if not a directory
+                if not os.path.isdir(agent_path):
+                    continue
+
+                # Skip current agent if keeping it
+                if keep_current and current_agent_id and agent_dir == current_agent_id:
+                    print(f"⏭️  Keeping current agent directory: {agent_dir}")
+                    continue
+
+                # Check pattern matching
+                if agent_pattern and not agent_dir.startswith(agent_pattern.replace("*", "")):
+                    continue
+
+                # Check age if specified
+                if days_old:
+                    try:
+                        # Extract timestamp from agent_id (assuming agent_{hash}_{timestamp} format)
+                        timestamp_str = agent_dir.split("_")[-1]
+                        agent_timestamp = datetime.fromtimestamp(int(timestamp_str))
+                        cutoff_date = datetime.now() - timedelta(days=days_old)
+
+                        if agent_timestamp > cutoff_date:
+                            print(f"⏭️  Keeping recent agent directory: {agent_dir}")
+                            continue
+                    except (ValueError, IndexError):
+                        print(f"⚠️  Could not parse timestamp for {agent_dir}, skipping")
+                        continue
+
+                # Remove the directory
+                import shutil
+                try:
+                    shutil.rmtree(agent_path)
+                    print(f"✅ Removed agent directory: {agent_dir}")
+                    directories_removed += 1
+                    removed_directories.append(agent_path)  # Track for git staging
+                except Exception as e:
+                    print(f"❌ Failed to remove {agent_dir}: {e}")
+
+            # Commit the cleanup - only stage specific removed directories
+            if directories_removed > 0:
+                # Stage only the specific directories that were removed
+                for removed_dir in removed_directories:
+                    subprocess.run(
+                        ["git", "rm", "-r", "--cached", removed_dir],
+                        cwd=".",
+                    )
+                subprocess.run([
+                    "git", "commit", "-m",
+                    f"🧹 Cleanup: Removed {directories_removed} agent directories"
+                ], cwd=".")
+
+                # Push the cleanup
+                subprocess.run(["git", "push", "origin", memory_branch], cwd=".")
+
+            print(f"🧹 Cleanup complete: Removed {directories_removed} agent directories")
+            return True
+
+        finally:
+            # SAFETY: Always restore original branch regardless of success/failure
+            try:
+                restore_result = subprocess.run(
+                    ["git", "checkout", original_branch],
+                    capture_output=True,
+                    text=True,
+                    cwd="."
+                )
+                if restore_result.returncode == 0:
+                    print(f"🔒 Restored original branch: {original_branch}")
+                else:
+                    print(f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}")
+            except Exception as restore_error:
+                print(f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}")
+
+    except Exception as e:
+        print(f"❌ Error during cleanup: {e}")
+        return False
+
+
+def check_pending_handoffs(custom_branch: str = None) -> list:
+    """
+    Check for pending handoffs in the main memory branch.
+
+    Args:
+        custom_branch: Optional custom memory branch
+
+    Returns:
+        List of pending handoff files
+    """
+    try:
+        import os
+        import subprocess
+
+        memory_branch = get_main_memory_branch(custom_branch)
+
+        # Capture current branch before switching
+        original_branch_result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd="."
+        )
+
+        if original_branch_result.returncode != 0:
+            print("❌ Could not determine current branch")
+            return []
+
+        original_branch = original_branch_result.stdout.strip()
+
+        try:
+            # Switch to memory branch to check handoffs
+            checkout_result = subprocess.run(
+                ["git", "checkout", memory_branch],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
+
+            if checkout_result.returncode != 0:
+                print(f"❌ Could not checkout memory branch {memory_branch}")
+                return []
+
+            # Check for pending handoffs
+            pending_dir = "handoffs/pending"
+            if not os.path.exists(pending_dir):
+                print("📁 No pending handoffs directory found")
+                return []
+
+            pending_handoffs = []
+            for handoff_file in os.listdir(pending_dir):
+                if handoff_file.endswith('.md'):
+                    pending_handoffs.append(os.path.join(pending_dir, handoff_file))
+
+            if pending_handoffs:
+                print(f"📬 Found {len(pending_handoffs)} pending handoffs:")
+                for handoff in pending_handoffs:
+                    print(f"   - {handoff}")
+            else:
+                print("📭 No pending handoffs found")
+
+            return pending_handoffs
+
+        finally:
+            # Always switch back to original branch
+            try:
+                restore_result = subprocess.run(
+                    ["git", "checkout", original_branch],
+                    capture_output=True,
+                    text=True,
+                    cwd="."
+                )
+                if restore_result.returncode != 0:
+                    print(f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}")
+            except Exception as restore_error:
+                print(f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}")
+
+    except Exception as e:
+        print(f"❌ Error checking pending handoffs: {e}")
+        return []
+
+
+def create_handoff_prompt(
+    agent_id: str,
+    title: str,
+    work_summary: str,
+    next_steps: list,
+    custom_branch: str = None
+) -> bool:
+    """
+    Create a handoff prompt in the pending handoffs directory.
+
+    Args:
+        agent_id: Current agent ID
+        title: Handoff title
+        work_summary: Summary of work completed
+        next_steps: List of next steps for receiving agent
+        custom_branch: Optional custom memory branch
+
+    Returns:
+        True if handoff was created successfully
+    """
+    try:
+        from agor.tools.memory_manager import commit_to_memory_branch
+
+        # Sanitize agent_id to ensure it's safe for use in paths
+        agent_id = sanitize_slug(agent_id)
+
+        memory_branch = get_main_memory_branch(custom_branch)
+        agent_dir = get_agent_directory_path(agent_id)
+        timestamp_str = get_file_timestamp()
+
+        handoff_content = f"""# 🤝 Agent Handoff: {title}
+
+**From Agent**: {agent_id}
+**Created**: {get_current_timestamp()}
+**Agent Directory**: {agent_dir}
+**Memory Branch**: {memory_branch}
+
+## Work Summary
+
+{work_summary}
+
+## Next Steps
+
+{chr(10).join(f"- {step}" for step in next_steps)}
+
+## Agent Context
+
+- **Previous Agent Directory**: `{agent_dir}`
+- **Snapshots Location**: `{agent_dir}snapshots/`
+- **Work Log**: `{agent_dir}work_log.md`
+
+## Instructions for Next Agent
+
+1. **Initialize your workspace**: Use AGOR dev tools to create your agent directory
+2. **Review previous work**: Check `{agent_dir}snapshots/` for context
+3. **Update coordination**: Add your progress to `shared/agentconvo.md`
+4. **Move this handoff**: When you start work, move this file to `handoffs/completed/`
+5. **Create your own handoff**: When finished, create handoff in `handoffs/pending/`
+
+## AGOR Actions Required
+
+**Next agent should:**
+- Use AGOR dev tools to initialize workspace
+- Create snapshots in your own agent directory
+- Update shared coordination files
+- Generate properly formatted outputs in single codeblocks
+"""
+
+        handoff_filename = f"handoffs/pending/{timestamp_str}_{agent_id}_to_next_agent.md"
+
         success = commit_to_memory_branch(
-            content=initial_content,
-            memory_type="agent_initialization",
-            agent_id=memory_branch.split("_")[-1],  # Extract agent ID from branch name
-            memory_branch=memory_branch,
+            file_content=handoff_content,
+            file_name=handoff_filename,
+            branch_name=memory_branch,
+            commit_message=f"🤝 Create handoff from {agent_id}: {title}",
         )
 
         if success:
-            print(f"✅ Created agent memory branch: {memory_branch}")
+            print(f"✅ Created handoff: {handoff_filename}")
         else:
-            print(f"❌ Failed to create agent memory branch: {memory_branch}")
+            print("❌ Failed to create handoff")
 
-        return success, memory_branch
+        return success
 
     except Exception as e:
-        print(f"❌ Error creating agent memory branch: {e}")
-        return False, memory_branch
+        print(f"❌ Error creating handoff: {e}")
+        return False
+
+
+def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool = True, current_agent_id: str = None) -> bool:
+    """
+    DEPRECATED: Clean up old agent memory branches from multi-branch era.
+
+    NOTE: This function is deprecated since we now use single memory branch architecture.
+    Use cleanup_agent_directories() instead for the new directory-based approach.
+
+    Args:
+        keep_current: If True, keeps the current agent's memory branch
+        cleanup_local: If True, also cleans up local memory branches
+        current_agent_id: Explicit current agent ID (prevents generating wrong ID)
+
+    Returns:
+        True if cleanup was successful, False otherwise
+    """
+    import warnings
+    warnings.warn(
+        "cleanup_agent_memory_branches() is deprecated. Use cleanup_agent_directories() instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+
+    try:
+        import subprocess
+
+        # Get current agent ID safely - don't generate new one
+        if keep_current:
+            if current_agent_id:
+                current_agent_id = sanitize_slug(current_agent_id)
+            else:
+                # Try to get from persistent file
+                current_agent_id = get_or_create_agent_id_file()
+            print(f"🆔 Current agent ID: {current_agent_id}")
+
+        branches_deleted = 0
+
+        # Clean up local branches first
+        if cleanup_local:
+            print("🧹 Cleaning up local memory branches...")
+            local_result = subprocess.run(
+                ["git", "branch", "--list", "agor/mem/*"],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
+
+            if local_result.returncode == 0 and local_result.stdout.strip():
+                for line in local_result.stdout.strip().split('\n'):
+                    if line.strip():
+                        branch = line.strip().replace('* ', '').strip()
+                        # Skip current agent's branch if keeping it
+                        if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                            print(f"⏭️  Keeping current agent branch: {branch}")
+                            continue
+
+                        # Delete local branch
+                        delete_result = subprocess.run(
+                            ["git", "branch", "-D", branch],
+                            capture_output=True,
+                            text=True,
+                            cwd="."
+                        )
+                        if delete_result.returncode == 0:
+                            print(f"✅ Deleted local memory branch: {branch}")
+                            branches_deleted += 1
+                        else:
+                            print(f"❌ Failed to delete local memory branch: {branch}")
+
+        # Clean up remote branches
+        print("🧹 Cleaning up remote memory branches...")
+        remote_result = subprocess.run(
+            ["git", "branch", "-r", "--list", "origin/agor/mem/*"],
+            capture_output=True,
+            text=True,
+            cwd="."
+        )
+
+        if remote_result.returncode == 0 and remote_result.stdout.strip():
+            for line in remote_result.stdout.strip().split('\n'):
+                if line.strip():
+                    branch = line.strip().replace('origin/', '')
+                    # Skip current agent's branch if keeping it
+                    if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                        print(f"⏭️  Keeping current agent remote branch: {branch}")
+                        continue
+
+                    # Delete remote branch
+                    delete_result = subprocess.run(
+                        ["git", "push", "origin", "--delete", branch],
+                        capture_output=True,
+                        text=True,
+                        cwd="."
+                    )
+                    if delete_result.returncode == 0:
+                        print(f"✅ Deleted remote memory branch: {branch}")
+                        branches_deleted += 1
+                    else:
+                        print(f"❌ Failed to delete remote memory branch: {branch}")
+
+        print(f"🧹 Cleaned up {branches_deleted} memory branches total")
+        return True
+
+    except Exception as e:
+        print(f"❌ Error cleaning up memory branches: {e}")
+        return False
 
 
 def validate_output_formatting(content: str) -> dict:
@@ -625,7 +1236,8 @@ def get_available_functions_reference() -> str:
     """
     import inspect
     import sys
-    from agor.tools import memory_manager, git_operations, snapshot_templates
+
+    from agor.tools import git_operations, memory_manager, snapshot_templates
 
     output = []
     output.append("# 🛠️ AGOR Development Tools Functions Reference")
@@ -935,7 +1547,7 @@ def get_workflow_optimization_tips() -> str:
 # Generate optimized prompt
 prompt = generate_workflow_prompt_template(
     task_description="Your task",
-    memory_branch="agor/mem/agent_12345678"
+    memory_branch="agor/mem/main"
 )
 
 # Validate completion

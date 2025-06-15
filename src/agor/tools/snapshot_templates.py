@@ -97,6 +97,7 @@ def generate_snapshot_document(
     agent_role: str,
     snapshot_reason: str,  # Renamed parameter
     estimated_completion: str = "Unknown",
+    agent_id: str = None,
 ) -> str:
     """Generate a comprehensive snapshot document for agent transitions or context saving."""
 
@@ -104,9 +105,16 @@ def generate_snapshot_document(
     git_context = get_git_context()
     agor_version = get_agor_version()
 
+    # Generate agent ID if not provided
+    if agent_id is None:
+        from agor.tools.dev_tools import generate_agent_id
+
+        agent_id = generate_agent_id()
+
     return f"""# 📸 Agent Snapshot Document
 
 **Generated**: {timestamp}
+**Agent ID**: {agent_id}
 **From Agent Role**: {agent_role}
 **Snapshot Reason**: {snapshot_reason}
 **AGOR Version**: {agor_version}
@@ -241,7 +249,7 @@ git log --oneline -10
 
 **Receiving Agent**: Please confirm snapshot receipt (if applicable) by updating `.agor/agentconvo.md` with:
 ```
-[AGENT-ID] [{timestamp}] - SNAPSHOT RECEIVED: {problem_description[:50]}...
+[{agent_id}] [{timestamp}] - SNAPSHOT RECEIVED: {problem_description[:50]}...
 ```
 """
 

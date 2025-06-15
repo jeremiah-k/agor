@@ -66,13 +66,34 @@ class HandoffRequest:
             self.brief_context = ""
 
 
-def create_snapshot(title: str, context: str) -> bool:
-    """Create development snapshot."""
-    timestamp_str = get_file_timestamp()
-    snapshot_file = (
-        f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+def create_snapshot(
+    title: str, context: str, agent_id: str = None, custom_branch: str = None
+) -> bool:
+    """Create development snapshot in agent's directory within main memory branch."""
+    # Import all required functions at the top to avoid per-call overhead
+    from agor.utils import sanitize_slug
+    from agor.tools.dev_tools import (
+        generate_agent_id,
+        get_agent_directory_path,
+        get_main_memory_branch,
     )
 
+    timestamp_str = get_file_timestamp()
+
+    # Generate agent ID if not provided
+    if agent_id is None:
+        agent_id = generate_agent_id()
+    else:
+        agent_id = sanitize_slug(agent_id)
+
+    # Get memory branch and agent directory
+    memory_branch = get_main_memory_branch(custom_branch)
+    agent_dir = get_agent_directory_path(agent_id)
+
+    # Snapshot file path within agent's directory
+    safe_title = sanitize_slug(title.lower())
+    snapshot_filename = f"{timestamp_str}_{safe_title}_snapshot.md"
+    snapshot_file = f"{agent_dir}snapshots/{snapshot_filename}"
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
     current_branch = current_branch_val.strip() if success_branch else "unknown"
@@ -91,6 +112,7 @@ def create_snapshot(title: str, context: str) -> bool:
     current_time_for_snapshot = get_current_timestamp()
     snapshot_content = f"""# 📸 {title} Development Snapshot
 **Generated**: {current_time_for_snapshot}
+**Agent ID**: {agent_id}
 **Agent**: Augment Agent (Software Engineering)
 **Branch**: {current_branch}
 **Commit**: {current_commit}
@@ -126,14 +148,13 @@ If you're picking up this work:
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
     snapshot_path.write_text(snapshot_content)
 
-    # Commit snapshot to memory branch using cross-branch commit (NEVER switches branches)
-
-    snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
-    commit_message = f"📸 Create development snapshot: {title}"
+    # Commit snapshot to agent's directory in main memory branch (NEVER switches branches)
+    commit_message = f"📸 Create development snapshot: {title} (Agent: {agent_id})"
 
     success = commit_to_memory_branch(
         file_content=snapshot_content,
-        file_name=f".agor/snapshots/{snapshot_filename}",
+        file_name=snapshot_file,
+        branch_name=memory_branch,
         commit_message=commit_message,
     )
 
@@ -291,6 +312,14 @@ def create_seamless_handoff(
     if brief_context is None:
         brief_context = ""
 
+    # Generate agent ID for this handoff
+    from agor.tools.dev_tools import generate_agent_id, get_agent_directory_path
+
+    agent_id = generate_agent_id()
+
+    # Get agent directory path for proper file structure
+    agent_dir = get_agent_directory_path(agent_id)
+
     # Generate comprehensive snapshot using snapshot_templates
     snapshot_content = generate_snapshot_document(
         problem_description=task_description,
@@ -302,20 +331,21 @@ def create_seamless_handoff(
         context_notes=context_notes,
         agent_role="SOLO DEVELOPER",
         snapshot_reason="Agent handoff coordination",
+        agent_id=agent_id,
     )
 
-    # Attempt to commit snapshot to memory branch
+    # Attempt to commit snapshot to main memory branch with agent directory structure
     memory_branch = None
     try:
-        # Try to commit to memory branch
+        # Use main memory branch with agent directory structure
+        memory_branch = "agor/mem/main"
         timestamp_str = get_file_timestamp()
-        memory_branch = f"agor/mem/{timestamp_str}_handoff"
 
         success = commit_to_memory_branch(
             file_content=snapshot_content,
-            file_name=f".agor/snapshots/{timestamp_str}_handoff_snapshot.md",
-            commit_message="📸 Handoff snapshot",
-            memory_branch=memory_branch,
+            file_name=f"{agent_dir}snapshots/{timestamp_str}_handoff_snapshot.md",
+            branch_name=memory_branch,
+            commit_message=f"📸 Handoff snapshot for {agent_id}",
         )
 
         if success:
@@ -345,6 +375,7 @@ def generate_handoff_snapshot(
     next_steps: list = None,
     files_modified: list = None,
     context_notes: str = None,
+    agent_id: str = None,
 ) -> str:
     """
     Generate a comprehensive handoff snapshot using the snapshot template system.
@@ -355,6 +386,7 @@ def generate_handoff_snapshot(
         next_steps: List of next steps for the receiving agent.
         files_modified: List of files that were modified.
         context_notes: Additional context notes.
+        agent_id: Optional agent ID. If not provided, generates a new one.
 
     Returns:
         Formatted snapshot content ready for use.
@@ -369,6 +401,12 @@ def generate_handoff_snapshot(
     if context_notes is None:
         context_notes = ""
 
+    # Generate agent ID if not provided
+    if agent_id is None:
+        from agor.tools.dev_tools import generate_agent_id
+
+        agent_id = generate_agent_id()
+
     # Generate snapshot using template system
     snapshot_content = generate_snapshot_document(
         problem_description=task_description,
@@ -380,6 +418,7 @@ def generate_handoff_snapshot(
         context_notes=context_notes,
         agent_role="SOLO DEVELOPER",
         snapshot_reason="Agent coordination and handoff",
+        agent_id=agent_id,
     )
 
     return snapshot_content

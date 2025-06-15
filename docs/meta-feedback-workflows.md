@@ -1,6 +1,6 @@
 # 🔄 AGOR Meta Feedback System Workflows
 
-**Version**: 0.5.1
+**Version**: 0.6.0
 **Last Updated**: 2025-06-09
 **Purpose**: Guide agents through effective meta feedback workflows for continuous AGOR improvement
 
