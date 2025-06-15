@@ -258,24 +258,24 @@ Here are key examples of how to ask agents to use AGOR tools:
 ### 📸 Creating Snapshots & Handoffs
 
 **End of work session:**
-> "**Use AGOR's snapshot tools** to create a development snapshot of our progress, then **generate a handoff prompt** so another agent can continue this work."
+> "**Use AGOR's snapshot tools** to create a development snapshot of our progress, then **generate a handoff prompt** so another agent can continue this work. **Wrap the output in a single codeblock** so I can copy and paste easily for a clean transition."
 
 **Before switching tasks:**
-> "**Use `create_development_snapshot()`** to save our current progress, then **use AGOR's PR tools** to generate a description for this work."
+> "**Use `create_development_snapshot()`** to save our current progress, then **use AGOR's PR tools** to generate a description for this work. **Run both through dev tools and wrap each in separate codeblocks** for easy copy-paste."
 
 **Regular progress saving:**
-> "**Use AGOR's `quick_commit_and_push()`** to commit our progress and **create an AGOR snapshot** in case we need to hand this off later."
+> "**Use AGOR's `quick_commit_and_push()`** to commit our progress and **create an AGOR snapshot** in case we need to hand this off later. **Wrap the snapshot output in a single codeblock.**"
 
 ### 🚀 Release & PR Management
 
 **After completing a feature:**
-> "**Use AGOR's `quick_commit_and_push()`** to commit our authentication feature changes, then **use the dev tools to generate release notes** for this update."
+> "**Use AGOR's `quick_commit_and_push()`** to commit our authentication feature changes, then **use the dev tools to generate release notes** for this update. **Wrap the release notes in a single codeblock** for easy copy-paste."
 
 **When work is ready for review:**
-> "**Use `generate_pr_description_output()`** to create a properly formatted PR description that explains what we built and why."
+> "**Use `generate_pr_description_output()`** to create a properly formatted PR description that explains what we built and why. **Wrap the final output in a single codeblock** so I can copy and paste it directly."
 
 **For bug fixes:**
-> "**Use AGOR's commit tools** to save this login fix, then **generate release notes using AGOR tools** about what was resolved."
+> "**Use AGOR's commit tools** to save this login fix, then **generate release notes using AGOR tools** about what was resolved. **Format the output in a single codeblock.**"
 
 ### 🔄 Agent Coordination
 
