@@ -251,29 +251,31 @@ agor bundle your-project -f tar.gz
 
 ## 💬 Example User Prompts
 
-Here are natural language examples of how to ask agents to use AGOR tools:
+**📖 For comprehensive examples with emphasis on using AGOR tools, see: [Agent Prompt Examples](agent-prompt-examples.md)**
+
+Here are key examples of how to ask agents to use AGOR tools:
 
 ### 📸 Creating Snapshots & Handoffs
 
 **End of work session:**
-> "I'm wrapping up for today. Can you create a snapshot of our progress and generate a handoff prompt so another agent can pick up where we left off?"
+> "**Use AGOR's snapshot tools** to create a development snapshot of our progress, then **generate a handoff prompt** so another agent can continue this work."
 
 **Before switching tasks:**
-> "Before we move on to the next issue, let's save our current progress. Create a snapshot and generate a PR description for the work we've done."
+> "**Use `create_development_snapshot()`** to save our current progress, then **use AGOR's PR tools** to generate a description for this work."
 
 **Regular progress saving:**
-> "Let's commit our progress so far and create a quick snapshot in case we need to hand this off later."
+> "**Use AGOR's `quick_commit_and_push()`** to commit our progress and **create an AGOR snapshot** in case we need to hand this off later."
 
 ### 🚀 Release & PR Management
 
 **After completing a feature:**
-> "We just finished implementing the user authentication feature. Can you commit our changes and create some release notes for this update?"
+> "**Use AGOR's `quick_commit_and_push()`** to commit our authentication feature changes, then **use the dev tools to generate release notes** for this update."
 
 **When work is ready for review:**
-> "This feature is ready for review. Can you generate a PR description that explains what we built and why?"
+> "**Use `generate_pr_description_output()`** to create a properly formatted PR description that explains what we built and why."
 
 **For bug fixes:**
-> "We've fixed the login issue. Can you commit this fix and generate a brief release note about what was resolved?"
+> "**Use AGOR's commit tools** to save this login fix, then **generate release notes using AGOR tools** about what was resolved."
 
 ### 🔄 Agent Coordination
 
