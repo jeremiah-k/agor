@@ -65,7 +65,7 @@ _This gives the agent direct access to all AGOR documentation and tools_
 
 - In Augment Chat, click the **Context menu** or use **@-mention**
 - Select **User Guidelines**
-- Copy and paste the complete User Guidelines (see below)
+- Copy and paste the complete User Guidelines from: [docs/augment_user_guidelines.md](augment_user_guidelines.md)
 
 _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 
@@ -78,56 +78,7 @@ _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 - `src/agor/tools/agent-start-here.md` (quick startup guide)
 - `src/agor/tools/index.md` (documentation index for efficient lookup)
 
-**"User Guidelines" (agent instructions) for AugmentCode Local (Copy & Paste):**
 
-```
-# AGOR Agent Instructions for AugmentCode Local
-
-You are working with the AGOR (AgentOrchestrator) development coordination platform. Your core responsibilities:
-
-## 🎯 Essential Requirements
-
-1. **Read AGOR Documentation First**: Always start by reading these files from workspace sources:
-   - `src/agor/tools/README_ai.md` (role selection and initialization)
-   - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
-
-2. **Select Your Role**: Choose based on the task:
-   - **Worker Agent**: Code analysis, implementation, debugging, task execution
-   - **Project Coordinator**: Planning, architecture, multi-agent coordination
-
-3. **Use AGOR Development Tools**: Import and use functions from `src/agor/tools/dev_tools.py`:
-   - `create_development_snapshot()` for work snapshots
-   - `generate_session_end_prompt()` for agent transitions
-   - `generate_pr_description_output()` for PR descriptions
-   - `quick_commit_and_push()` for git operations
-
-4. **OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tools functions:
-   - `generate_release_notes_output()` for **brief** release notes (keep concise to avoid processing errors)
-   - `generate_pr_description_output()` for **brief** PR descriptions (keep concise to avoid processing errors)
-   - `generate_handoff_prompt_output()` for handoff prompts (can be full length)
-   - `generate_formatted_output()` for any other content
-   These functions automatically handle deticking and codeblock wrapping.
-
-5. **End Sessions Properly**: Always create snapshots before ending sessions using `generate_session_end_prompt()`
-
-5. **Proactive Assistance**: End responses with helpful suggestions:
-   - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
-   - "Would you like me to create a release notes summary for the changes we've made?"
-   - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
-
-## 🚀 Quick Start
-
-1. Read AGOR documentation from workspace sources:
-   - `src/agor/tools/README_ai.md` (role selection)
-   - `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive guide)
-
-2. Select your role (Worker Agent or Project Coordinator)
-
-3. Use AGOR development tools for snapshots, PR descriptions, and handoffs
-
-4. Always end sessions with proper snapshots for continuity
-
-```
 
 **Step 5: Agent Initialization Prompt**
 
@@ -172,7 +123,7 @@ After reading these files, help me initialize AGOR for this project and select t
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
 
-**Note: First copy and paste the "User Guidelines" section from "Local Agents" setup into your AugmentCode extension, if you have not already, then proceed with the rest.**
+**Note: First copy and paste the User Guidelines from [docs/augment_user_guidelines.md](augment_user_guidelines.md) into your AugmentCode extension, if you have not already, then proceed with the rest.**
 
 **Agent Initialization Prompt (Copy & Paste to Remote Agent):**
 

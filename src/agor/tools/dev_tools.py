@@ -75,9 +75,9 @@ except ImportError:
 # ===================================
 
 
-def create_development_snapshot(title: str, context: str) -> bool:
+def create_development_snapshot(title: str, context: str, agent_id: str = None) -> bool:
     """Create development snapshot - main API function."""
-    return create_snapshot(title, context)
+    return create_snapshot(title, context, agent_id)
 
 
 def generate_seamless_agent_handoff(
@@ -387,30 +387,65 @@ def display_git_workflow_status() -> str:
 # Note: read_from_memory_branch and list_memory_branches available if needed
 
 
-def generate_agent_memory_branch() -> str:
+def generate_agent_id() -> str:
     """
-    Generates a unique agent memory branch name using a timestamp-based hash.
+    Generate a unique agent identifier using environment and timestamp.
+
+    Creates a consistent agent ID that persists across sessions for the same environment.
+    Uses a combination of environment detection and timestamp for uniqueness.
 
     Returns:
-        A string in the format 'agor/mem/agent_{hash}' for uniquely identifying an agent's memory branch.
+        A string agent ID in format 'agent_{hash}' for identifying this agent instance.
     """
     import hashlib
     import time
+    import os
 
-    agent_id = hashlib.md5(f"agent_{time.time()}".encode()).hexdigest()[:8]
-    memory_branch = f"agor/mem/agent_{agent_id}"
+    # Get environment-specific identifiers
+    env_info = detect_environment()
+    env_signature = f"{env_info.get('mode', 'unknown')}_{env_info.get('platform', 'unknown')}"
 
+    # Add some system-specific info for uniqueness
+    system_info = f"{os.getcwd()}_{time.time()}"
+
+    # Create hash from environment and system info
+    agent_hash = hashlib.md5(f"{env_signature}_{system_info}".encode()).hexdigest()[:8]
+    agent_id = f"agent_{agent_hash}"
+
+    return agent_id
+
+
+def generate_agent_memory_branch(agent_id: str = None) -> str:
+    """
+    Generates a unique agent memory branch name using agent ID.
+
+    Args:
+        agent_id: Optional agent ID. If not provided, generates a new one.
+
+    Returns:
+        A string in the format 'agor/mem/{agent_id}' for uniquely identifying an agent's memory branch.
+    """
+    if agent_id is None:
+        agent_id = generate_agent_id()
+
+    memory_branch = f"agor/mem/{agent_id}"
     return memory_branch
 
 
-def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
+def create_agent_memory_branch(agent_id: str = None) -> tuple[bool, str, str]:
     """
     Creates an agent-specific memory branch with an initial commit containing metadata and usage guidelines.
 
-    If no branch name is provided, a unique one is generated. Returns a tuple indicating success and the branch name.
+    Args:
+        agent_id: Optional agent ID. If not provided, generates a new one.
+
+    Returns:
+        A tuple containing (success, agent_id, memory_branch) for tracking agent identity.
     """
-    if memory_branch is None:
-        memory_branch = generate_agent_memory_branch()
+    if agent_id is None:
+        agent_id = generate_agent_id()
+
+    memory_branch = generate_agent_memory_branch(agent_id)
 
     try:
         from agor.tools.memory_manager import commit_to_memory_branch
@@ -418,6 +453,7 @@ def create_agent_memory_branch(memory_branch: str = None) -> tuple[bool, str]:
         # Create initial commit to establish the memory branch
         initial_content = f"""# Agent Memory Branch: {memory_branch}
 
+**Agent ID**: {agent_id}
 **Created**: {get_current_timestamp()}
 **Purpose**: Dedicated memory space for agent coordination and snapshots
 
@@ -435,25 +471,33 @@ This memory branch stores:
 - Reference this branch in handoff prompts
 - Maintain context continuity across sessions
 - Clean up when agent work is complete
+
+## Agent Identity
+
+This agent should use the following identifiers:
+- **Agent ID**: {agent_id}
+- **Memory Branch**: {memory_branch}
+- **Session Prefix**: [{agent_id}]
 """
 
         success = commit_to_memory_branch(
             content=initial_content,
             memory_type="agent_initialization",
-            agent_id=memory_branch.split("_")[-1],  # Extract agent ID from branch name
+            agent_id=agent_id,
             memory_branch=memory_branch,
         )
 
         if success:
             print(f"✅ Created agent memory branch: {memory_branch}")
+            print(f"🆔 Agent ID: {agent_id}")
         else:
             print(f"❌ Failed to create agent memory branch: {memory_branch}")
 
-        return success, memory_branch
+        return success, agent_id, memory_branch
 
     except Exception as e:
         print(f"❌ Error creating agent memory branch: {e}")
-        return False, memory_branch
+        return False, agent_id, memory_branch
 
 
 def validate_output_formatting(content: str) -> dict:

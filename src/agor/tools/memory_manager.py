@@ -267,29 +267,37 @@ def commit_to_memory_branch(
         return False
 
 
-def auto_commit_memory(content: str, memory_type: str, agent_id: str) -> bool:
+def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_branch: str = None) -> bool:
     """
-    Automatically commit content to memory branch with standardized naming.
+    Automatically commit content to agent-specific memory branch with standardized naming.
 
     Args:
         content: Memory content to commit
         memory_type: Type of memory (e.g., 'session_start', 'progress', 'completion')
         agent_id: Agent identifier
+        memory_branch: Optional specific memory branch. If not provided, uses agent-specific branch.
 
     Returns:
         True if successful, False otherwise
     """
     print(f"💾 Auto-committing memory: {memory_type} for {agent_id}")
 
-    # Create standardized file name
-    file_name = f"{agent_id}-memory.md"
+    # Use agent-specific memory branch if not provided
+    if memory_branch is None:
+        memory_branch = f"agor/mem/{agent_id}"
+
+    # Create standardized file name with .agor prefix
+    file_name = f".agor/{agent_id}-memory.md"
 
     # Create commit message
     commit_message = f"Memory update: {memory_type} for {agent_id}"
 
-    # Commit to memory branch
+    # Commit to agent-specific memory branch
     return commit_to_memory_branch(
-        file_content=content, file_name=file_name, commit_message=commit_message
+        file_content=content,
+        file_name=file_name,
+        branch_name=memory_branch,
+        commit_message=commit_message
     )
 
 
