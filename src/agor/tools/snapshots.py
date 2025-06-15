@@ -89,7 +89,9 @@ def create_snapshot(
     agent_dir = get_agent_directory_path(agent_id)
 
     # Snapshot file path within agent's directory
-    snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+    from agor.utils import sanitize_slug
+    safe_title = sanitize_slug(title.lower())
+    snapshot_filename = f"{timestamp_str}_{safe_title}_snapshot.md"
     snapshot_file = f"{agent_dir}snapshots/{snapshot_filename}"
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
