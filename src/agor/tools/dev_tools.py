@@ -13,8 +13,6 @@ It imports functionality from specialized modules for better organization:
 - dev_testing: Testing utilities and environment detection
 
 Provides a clean API interface while keeping individual modules under 500 LOC.
-
-TODO: Rename this file to dev_tools.py in next version for consistency
 """
 
 from typing import Dict, List, Tuple
