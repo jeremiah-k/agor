@@ -78,7 +78,11 @@ except ImportError:
 
 
 def create_development_snapshot(title: str, context: str, agent_id: str = None, custom_branch: str = None) -> bool:
-    """Create development snapshot in agent's directory within main memory branch."""
+    """
+    Creates a development snapshot in the specified agent's directory on the main memory branch.
+    
+    If `agent_id` or `custom_branch` are provided, the snapshot is stored in the corresponding agent directory and/or memory branch. Returns True if the snapshot was created successfully, otherwise False.
+    """
     return create_snapshot(title, context, agent_id, custom_branch)
 
 
@@ -90,7 +94,20 @@ def generate_seamless_agent_handoff(
     context_notes: str = None,
     brief_context: str = None,
 ) -> tuple[str, str]:
-    """Generate seamless agent handoff - main API function."""
+    """
+    Generates a seamless agent handoff prompt and summary for transitioning tasks between agents.
+    
+    Args:
+        task_description: Description of the current task or objective.
+        work_completed: Optional list detailing work that has been completed.
+        next_steps: Optional list of recommended next actions.
+        files_modified: Optional list of files that were changed.
+        context_notes: Optional additional context or notes for the next agent.
+        brief_context: Optional brief summary of the context.
+    
+    Returns:
+        A tuple containing the handoff prompt and a summary string for the next agent.
+    """
     return create_seamless_handoff(
         task_description=task_description,
         work_completed=work_completed,
@@ -377,7 +394,9 @@ def check_git_workflow() -> Dict[str, any]:
 
 
 def display_git_workflow_status() -> str:
-    """Display git workflow status report."""
+    """
+    Returns a formatted report summarizing the current git workflow status.
+    """
     return generate_git_workflow_report()
 
 
@@ -390,18 +409,12 @@ def display_git_workflow_status() -> str:
 
 def get_or_create_agent_id_file(agent_id: str = None) -> str:
     """
-    Get or create agent ID from /tmp/agor/agent_id file for persistence across sessions.
-
-    Note: This approach has limitations and should not be relied upon heavily.
-    - Does not work reliably with Augment local agents
-    - May not work on certain platforms
-    - Users should monitor and modify as needed
-
-    Args:
-        agent_id: Optional agent ID to store. If not provided, reads from file or generates new one.
-
+    Retrieves or creates a persistent agent ID stored in /tmp/agor/agent_id.
+    
+    If an agent ID is provided, it is sanitized and stored; otherwise, the function reads an existing ID from the file or generates a new unique one. This method is intended for session persistence but may not be reliable across all environments or platforms.
+    
     Returns:
-        Agent ID string
+        The agent ID string.
     """
     import tempfile
     from pathlib import Path
@@ -453,13 +466,12 @@ def get_or_create_agent_id_file(agent_id: str = None) -> str:
 
 def generate_unique_agent_id() -> str:
     """
-    Generate a truly unique agent identifier for each agent session.
-
-    Format: agent_{hash}_{timestamp} for uniqueness and readability.
-    Each agent session gets its own directory in the main memory branch.
-
+    Generates a unique agent ID string for identifying agent sessions.
+    
+    The ID is formatted as 'agent_{hash}_{timestamp}', combining a random hash and the current timestamp to ensure uniqueness and readability. The result is sanitized for safe use as a directory or file name.
+    
     Returns:
-        A string agent ID in format 'agent_{hash}_{timestamp}' for unique identification.
+        A unique agent ID string in the format 'agent_{hash}_{timestamp}'.
     """
     import hashlib
     import os
@@ -484,22 +496,23 @@ def generate_unique_agent_id() -> str:
 
 def generate_agent_id() -> str:
     """
-    Generate a unique agent ID for this agent session.
-
-    Each agent session gets a unique ID - this is the correct behavior.
+    Generates a unique agent ID string for the current agent session.
+    
+    Returns:
+        A unique agent ID in the format 'agent_{hash}_{timestamp}'.
     """
     return generate_unique_agent_id()
 
 
 def get_main_memory_branch(custom_branch: str = None) -> str:
     """
-    Get the main memory branch name, with optional custom branch support.
-
+    Returns the main memory branch name, defaulting to 'agor/mem/main' unless a custom branch is specified.
+    
     Args:
-        custom_branch: Optional custom memory branch name. If not provided, uses 'agor/mem/main'.
-
+        custom_branch: If provided, this branch name is returned instead of the default.
+    
     Returns:
-        A string memory branch name (e.g., 'agor/mem/main' or custom branch).
+        The memory branch name as a string.
     """
     if custom_branch:
         return custom_branch
@@ -508,27 +521,29 @@ def get_main_memory_branch(custom_branch: str = None) -> str:
 
 def get_agent_directory_path(agent_id: str) -> str:
     """
-    Get the agent's directory path within the memory branch.
-
+    Returns the directory path for the specified agent within the memory branch.
+    
     Args:
-        agent_id: Agent identifier
-
+        agent_id: The unique identifier for the agent.
+    
     Returns:
-        A string path like 'agents/agent_{hash}_{timestamp}/' for the agent's directory.
+        The relative path to the agent's directory, formatted as 'agents/{agent_id}/'.
     """
     return f"agents/{agent_id}/"
 
 
 def initialize_agent_workspace(agent_id: str = None, custom_branch: str = None) -> tuple[bool, str, str]:
     """
-    Initialize agent workspace in the main memory branch with directory structure.
-
+    Initializes an agent workspace directory structure in the main memory branch.
+    
+    Creates the necessary agent directory, metadata files, and a shared coordination file within the specified or default memory branch. Commits initialization files to the memory branch for agent tracking and coordination.
+    
     Args:
-        agent_id: Optional agent ID. If not provided, generates a new one.
+        agent_id: Optional agent ID. Generates a new one if not provided.
         custom_branch: Optional custom memory branch. Defaults to 'agor/mem/main'.
-
+    
     Returns:
-        A tuple containing (success, agent_id, memory_branch) for tracking agent identity.
+        A tuple (success, agent_id, memory_branch) indicating whether initialization succeeded, the agent ID used, and the memory branch name.
     """
     if agent_id is None:
         agent_id = generate_agent_id()
@@ -640,17 +655,19 @@ def cleanup_agent_directories(
     current_agent_id: str = None
 ) -> bool:
     """
-    Intelligently clean up agent directories in the main memory branch.
-
+    Removes agent directories from the main memory branch based on specified criteria.
+    
+    Agent directories can be filtered by age, name pattern, and whether to keep the current agent's directory. The function safely checks out the memory branch, deletes matching directories, stages and commits the removals, pushes changes, and restores the original branch. Returns True if cleanup succeeds, False otherwise.
+    
     Args:
-        keep_current: If True, keeps the current agent's directory
-        days_old: Only remove directories older than this many days
-        agent_pattern: Only remove agents matching this pattern (e.g., "agent_abc*")
-        custom_branch: Custom memory branch to clean up
-        current_agent_id: Explicit current agent ID (if not provided, reads from file)
-
+        keep_current: If True, preserves the current agent's directory.
+        days_old: Only removes directories older than this number of days.
+        agent_pattern: Only removes agent directories matching this pattern (e.g., "agent_abc*").
+        custom_branch: Specifies a custom memory branch to operate on.
+        current_agent_id: Explicitly sets the current agent ID; if not provided, it is read from file.
+    
     Returns:
-        True if cleanup was successful, False otherwise
+        True if cleanup was successful, False otherwise.
     """
     try:
         import os
@@ -791,13 +808,15 @@ def cleanup_agent_directories(
 
 def check_pending_handoffs(custom_branch: str = None) -> list:
     """
-    Check for pending handoffs in the main memory branch.
-
+    Checks for pending handoff markdown files in the `handoffs/pending` directory of the specified or main memory branch.
+    
+    Switches to the memory branch, lists all `.md` files in the pending handoffs directory, and restores the original branch after completion.
+    
     Args:
-        custom_branch: Optional custom memory branch
-
+        custom_branch: Optional name of a custom memory branch to check.
+    
     Returns:
-        List of pending handoff files
+        A list of file paths for pending handoff markdown files.
     """
     try:
         import os
@@ -879,17 +898,9 @@ def create_handoff_prompt(
     custom_branch: str = None
 ) -> bool:
     """
-    Create a handoff prompt in the pending handoffs directory.
-
-    Args:
-        agent_id: Current agent ID
-        title: Handoff title
-        work_summary: Summary of work completed
-        next_steps: List of next steps for receiving agent
-        custom_branch: Optional custom memory branch
-
-    Returns:
-        True if handoff was created successfully
+    Creates a handoff prompt file in the pending handoffs directory for agent coordination.
+    
+    The function generates a markdown file summarizing completed work, next steps, and instructions for the next agent, then commits it to the specified memory branch. Returns True if the handoff was created and committed successfully; otherwise, returns False.
     """
     try:
         from agor.tools.memory_manager import commit_to_memory_branch
@@ -962,18 +973,17 @@ def create_handoff_prompt(
 
 def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool = True, current_agent_id: str = None) -> bool:
     """
-    DEPRECATED: Clean up old agent memory branches from multi-branch era.
-
-    NOTE: This function is deprecated since we now use single memory branch architecture.
-    Use cleanup_agent_directories() instead for the new directory-based approach.
-
+    DEPRECATED: Removes old agent memory branches from the previous multi-branch architecture.
+    
+    This function is retained for backward compatibility but is deprecated in favor of the new directory-based memory management. Use `cleanup_agent_directories()` for current workflows.
+    
     Args:
-        keep_current: If True, keeps the current agent's memory branch
-        cleanup_local: If True, also cleans up local memory branches
-        current_agent_id: Explicit current agent ID (prevents generating wrong ID)
-
+        keep_current: If True, preserves the current agent's memory branch.
+        cleanup_local: If True, also deletes local memory branches.
+        current_agent_id: The agent ID to identify the current agent's branch for exclusion.
+    
     Returns:
-        True if cleanup was successful, False otherwise
+        True if cleanup completes successfully, False otherwise.
     """
     import warnings
     warnings.warn(
@@ -1069,15 +1079,15 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
 
 def validate_output_formatting(content: str) -> dict:
     """
-    Validates whether the provided content complies with AGOR output formatting standards.
-
-    Checks for the presence of codeblocks, triple backticks, and proper codeblock wrapping. Identifies issues such as the need for deticking or incorrect formatting of handoff prompts, and provides suggestions for compliance.
-
+    Validates whether content meets AGOR output formatting standards.
+    
+    Checks for codeblock presence, triple backticks, and correct codeblock wrapping. Identifies formatting issues such as the need for deticking or improper handoff prompt formatting, and provides suggestions for compliance.
+    
     Args:
         content: The content string to validate.
-
+    
     Returns:
-        A dictionary containing compliance status, detected issues, suggestions for correction, and flags indicating codeblock and deticking requirements.
+        A dictionary with compliance status, detected issues, suggestions for correction, and flags indicating codeblock and deticking requirements.
     """
     validation = {
         "is_compliant": True,
@@ -1226,13 +1236,9 @@ def detect_current_environment() -> dict:
 
 def get_available_functions_reference() -> str:
     """
-    Generate comprehensive reference of all AGOR development tools functions.
-
-    This function dynamically inspects all AGOR modules and generates a complete
-    reference guide that agents MUST call to understand available functionality.
-
-    Returns:
-        Formatted string containing all function references with descriptions
+    Generates a comprehensive, dynamically built reference guide of all available AGOR development tool functions.
+    
+    This function inspects core AGOR modules and returns a formatted string listing each function with its summary, providing agents with an up-to-date overview of available capabilities and their purposes.
     """
     import inspect
     import sys
@@ -1507,7 +1513,9 @@ def validate_agor_workflow_completion(
 
 def get_workflow_optimization_tips() -> str:
     """
-    Returns formatted AGOR workflow optimization tips, including best practices, common issues with solutions, helper function usage examples, and success metrics to improve agent workflow compliance and coordination.
+    Returns formatted AGOR workflow optimization tips.
+    
+    Provides best practices, common pitfalls with solutions, helper function usage examples, and success metrics to help agents maintain workflow compliance and seamless coordination in AGOR development environments.
     """
     tips = f"""# 🎯 AGOR Workflow Optimization Tips
 

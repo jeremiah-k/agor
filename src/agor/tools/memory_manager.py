@@ -69,16 +69,16 @@ def commit_to_memory_branch(
     commit_message: Optional[str] = None,
 ) -> bool:
     """
-    Commits content to a memory branch without switching from the current branch.
-
-    Creates or updates a memory branch, storing the provided file content under the `.agor/` directory. If the memory branch does not exist, it is initialized with an empty commit. The function ensures the current working branch remains unchanged and attempts to push the memory branch after committing.
-
+    Commits file content to a specified memory branch without switching the current branch.
+    
+    Creates or updates a memory branch, initializing it if necessary, and stores the provided file content under the given file name. Ensures the current working branch remains unchanged throughout the operation. Attempts to push the updated memory branch after committing.
+    
     Args:
-        file_content: The content to be committed to the memory branch.
-        file_name: The name of the file to create or update within the `.agor/` directory.
-        branch_name: The target memory branch name. If None, a name is auto-generated.
-        commit_message: The commit message. If None, a message is auto-generated.
-
+        file_content: The content to commit to the memory branch.
+        file_name: The file path (relative to the repository root) to create or update in the memory branch.
+        branch_name: The target memory branch name. If not provided, a name is auto-generated.
+        commit_message: The commit message. If not provided, a message is auto-generated.
+    
     Returns:
         True if the commit operation succeeds, False otherwise.
     """
@@ -271,16 +271,9 @@ def auto_commit_memory(
     content: str, memory_type: str, agent_id: str, memory_branch: str = None
 ) -> bool:
     """
-    Automatically commit content to main memory branch with agent directory structure.
-
-    Args:
-        content: Memory content to commit
-        memory_type: Type of memory (e.g., 'session_start', 'progress', 'completion')
-        agent_id: Agent identifier (will be sanitized for security)
-        memory_branch: Optional specific memory branch. If not provided, uses main memory branch.
-
-    Returns:
-        True if successful, False otherwise
+    Commits memory content to a specified or default memory branch using an agent-specific directory structure.
+    
+    Sanitizes the agent ID and memory type to prevent injection attacks, constructs a standardized file path, and creates a commit message reflecting the memory type and agent. Returns True if the commit succeeds, otherwise False.
     """
     # Import sanitization function from utils (centralized location)
     from agor.utils import sanitize_slug

@@ -20,15 +20,9 @@ from .settings import settings
 
 def sanitize_slug(input_string: str) -> str:
     """
-    Sanitize input string to create safe slugs for file names and branch names.
-
-    Prevents path traversal, injection attacks, and illegal characters.
-
-    Args:
-        input_string: Input string to sanitize
-
-    Returns:
-        Sanitized string containing only safe characters (alphanumerics, dashes, underscores)
+    Sanitizes a string to produce a safe slug for filenames or branch names.
+    
+    Replaces unsafe characters with underscores, collapses consecutive underscores or dashes, trims leading/trailing underscores or dashes, and limits the result to 50 characters. Returns "unknown" if the sanitized string is empty.
     """
     import re
 
@@ -55,6 +49,11 @@ def sanitize_slug(input_string: str) -> str:
 
 
 def move_directory(src_dir: Path, dest_dir: Path):
+    """
+    Moves all contents from the source directory to the destination directory.
+    
+    Ensures the destination directory exists before moving each item. Returns the path to the destination directory.
+    """
     dest_dir.mkdir(
         parents=True, exist_ok=True
     )  # Ensures that the destination directory exists

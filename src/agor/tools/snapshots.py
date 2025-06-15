@@ -50,9 +50,9 @@ class HandoffRequest:
 
     def __post_init__(self):
         """
-        Ensures all optional fields are initialized to empty lists or strings if not provided.
-
-        This method sets default empty values for fields that may be None after dataclass initialization, preventing issues with mutable defaults.
+        Initializes optional fields to empty lists or strings if they are None after dataclass creation.
+        
+        Prevents mutable default argument issues by ensuring all list and string fields have safe default values.
         """
         if self.work_completed is None:
             self.work_completed = []
@@ -69,7 +69,20 @@ class HandoffRequest:
 def create_snapshot(
     title: str, context: str, agent_id: str = None, custom_branch: str = None
 ) -> bool:
-    """Create development snapshot in agent's directory within main memory branch."""
+    """
+    Creates a development snapshot file in the specified agent's directory within the main memory branch.
+    
+    The snapshot includes metadata such as agent ID, branch, commit, AGOR version, and development context. The file is saved locally and committed to the agent's directory in the designated memory branch. Returns True if the commit succeeds, otherwise False.
+    
+    Args:
+        title: Title for the snapshot.
+        context: Description of the current development context.
+        agent_id: Optional agent identifier; generated if not provided.
+        custom_branch: Optional memory branch name; defaults to the main memory branch.
+    
+    Returns:
+        True if the snapshot was successfully committed to the memory branch, otherwise False.
+    """
     # Import all required functions at the top to avoid per-call overhead
     from agor.utils import sanitize_slug
     from agor.tools.dev_tools import (
@@ -285,20 +298,9 @@ def create_seamless_handoff(
     brief_context: str = None,
 ) -> tuple[str, str]:
     """
-    Generates a comprehensive agent handoff by creating a project snapshot and a formatted handoff prompt.
-
-    This function automates the agent handoff process by generating a detailed snapshot of the current work, attempting to commit it to a dedicated memory branch with a safe fallback, and producing a ready-to-use handoff prompt with formatting safeguards. Both the snapshot content and the prompt are returned for immediate use.
-
-    Args:
-        task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
-        context_notes: Additional context notes.
-        brief_context: Brief verbal background for quick orientation.
-
-    Returns:
-        Tuple of (snapshot_content, handoff_prompt) both ready for immediate use.
+    Automates agent handoff by generating a detailed project snapshot and a formatted handoff prompt.
+    
+    Creates a comprehensive snapshot of the current work state, attempts to commit it to the agent's memory branch, and produces a ready-to-use handoff prompt for seamless agent transitions. Returns both the snapshot content and the handoff prompt as a tuple.
     """
     # Set defaults for optional parameters
     if work_completed is None:
@@ -378,18 +380,9 @@ def generate_handoff_snapshot(
     agent_id: str = None,
 ) -> str:
     """
-    Generate a comprehensive handoff snapshot using the snapshot template system.
-
-    Args:
-        task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
-        context_notes: Additional context notes.
-        agent_id: Optional agent ID. If not provided, generates a new one.
-
-    Returns:
-        Formatted snapshot content ready for use.
+    Generates a formatted handoff snapshot summarizing task progress and context for agent transitions.
+    
+    Initializes optional parameters to empty lists or strings if not provided. If no agent ID is given, a new one is generated. Returns a snapshot document containing the task description, completed work, next steps, modified files, context notes, and agent identification, formatted for use in agent coordination workflows.
     """
     # Set defaults for optional parameters
     if work_completed is None:
