@@ -31,6 +31,7 @@ from agor.tools.dev_testing import detect_environment, test_tooling
 # Use absolute imports to prevent E0402 errors
 from agor.tools.git_operations import (
     get_current_timestamp,
+    get_file_timestamp,
     quick_commit_push,
     run_git_command,
 )
@@ -379,6 +380,102 @@ def display_git_workflow_status() -> str:
     return generate_git_workflow_report()
 
 
+# Security and Utility Functions
+# ==============================
+
+
+def sanitize_slug(input_string: str) -> str:
+    """
+    Sanitize input string to create safe slugs for file names and branch names.
+
+    Prevents path traversal, injection attacks, and illegal characters.
+
+    Args:
+        input_string: Input string to sanitize
+
+    Returns:
+        Sanitized string containing only safe characters (alphanumerics, dashes, underscores)
+    """
+    import re
+
+    if not input_string:
+        return "unknown"
+
+    # Remove or replace unsafe characters
+    # Keep only alphanumerics, dashes, and underscores
+    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(input_string))
+
+    # Remove multiple consecutive underscores/dashes
+    sanitized = re.sub(r'[_\-]+', '_', sanitized)
+
+    # Remove leading/trailing underscores/dashes
+    sanitized = sanitized.strip('_-')
+
+    # Ensure it's not empty and not too long
+    if not sanitized:
+        sanitized = "unknown"
+    elif len(sanitized) > 50:
+        sanitized = sanitized[:50].rstrip('_-')
+
+    return sanitized
+
+
+def get_or_create_agent_id_file(agent_id: str = None) -> str:
+    """
+    Get or create agent ID from /tmp/agor/agent_id file for persistence across sessions.
+
+    Note: This approach has limitations and should not be relied upon heavily.
+    - Does not work reliably with Augment local agents
+    - May not work on certain platforms
+    - Users should monitor and modify as needed
+
+    Args:
+        agent_id: Optional agent ID to store. If not provided, reads from file or generates new one.
+
+    Returns:
+        Agent ID string
+    """
+    import os
+    import tempfile
+    from pathlib import Path
+
+    # Use /tmp/agor/ directory for agent ID persistence
+    tmp_agor_dir = Path(tempfile.gettempdir()) / "agor"
+    agent_id_file = tmp_agor_dir / "agent_id"
+
+    try:
+        # Create directory if it doesn't exist
+        tmp_agor_dir.mkdir(exist_ok=True)
+
+        # If agent_id provided, store it
+        if agent_id:
+            sanitized_id = sanitize_slug(agent_id)
+            agent_id_file.write_text(sanitized_id)
+            return sanitized_id
+
+        # Try to read existing agent ID
+        if agent_id_file.exists():
+            stored_id = agent_id_file.read_text().strip()
+            if stored_id and len(stored_id) > 0:
+                return sanitize_slug(stored_id)
+
+        # Generate new agent ID if none exists
+        new_agent_id = generate_unique_agent_id()
+        sanitized_id = sanitize_slug(new_agent_id)
+        agent_id_file.write_text(sanitized_id)
+
+        print(f"📝 Created new agent ID file: {agent_id_file}")
+        print(f"🆔 Agent ID: {sanitized_id}")
+        print(f"⚠️  Note: Agent identification has limitations and should not be relied upon heavily")
+
+        return sanitized_id
+
+    except Exception as e:
+        print(f"⚠️  Could not manage agent ID file: {e}")
+        # Fallback to generating new ID
+        return sanitize_slug(generate_unique_agent_id())
+
+
 # Memory Management Functions
 # ===========================
 
@@ -572,7 +669,8 @@ def cleanup_agent_directories(
     keep_current: bool = True,
     days_old: int = None,
     agent_pattern: str = None,
-    custom_branch: str = None
+    custom_branch: str = None,
+    current_agent_id: str = None
 ) -> bool:
     """
     Intelligently clean up agent directories in the main memory branch.
@@ -582,6 +680,7 @@ def cleanup_agent_directories(
         days_old: Only remove directories older than this many days
         agent_pattern: Only remove agents matching this pattern (e.g., "agent_abc*")
         custom_branch: Custom memory branch to clean up
+        current_agent_id: Explicit current agent ID (if not provided, reads from file)
 
     Returns:
         True if cleanup was successful, False otherwise
@@ -592,7 +691,14 @@ def cleanup_agent_directories(
         from datetime import datetime, timedelta
 
         memory_branch = get_main_memory_branch(custom_branch)
-        current_agent_id = generate_agent_id() if keep_current else None
+
+        # Get current agent ID safely
+        if keep_current:
+            if current_agent_id:
+                current_agent_id = sanitize_slug(current_agent_id)
+            else:
+                # Try to get from persistent file, don't generate new one
+                current_agent_id = get_or_create_agent_id_file()
 
         print(f"🧹 Cleaning up agent directories in {memory_branch}")
         if current_agent_id:
@@ -815,24 +921,38 @@ def create_handoff_prompt(
         return False
 
 
-def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool = True) -> bool:
+def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool = True, current_agent_id: str = None) -> bool:
     """
-    Clean up old agent memory branches, optionally keeping the current agent's branch.
+    DEPRECATED: Clean up old agent memory branches from multi-branch era.
+
+    NOTE: This function is deprecated since we now use single memory branch architecture.
+    Use cleanup_agent_directories() instead for the new directory-based approach.
 
     Args:
         keep_current: If True, keeps the current agent's memory branch
         cleanup_local: If True, also cleans up local memory branches
+        current_agent_id: Explicit current agent ID (prevents generating wrong ID)
 
     Returns:
         True if cleanup was successful, False otherwise
     """
+    import warnings
+    warnings.warn(
+        "cleanup_agent_memory_branches() is deprecated. Use cleanup_agent_directories() instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+
     try:
         import subprocess
 
-        # Get current agent ID if we want to keep it
-        current_agent_id = None
+        # Get current agent ID safely - don't generate new one
         if keep_current:
-            current_agent_id = generate_agent_id()
+            if current_agent_id:
+                current_agent_id = sanitize_slug(current_agent_id)
+            else:
+                # Try to get from persistent file
+                current_agent_id = get_or_create_agent_id_file()
             print(f"🆔 Current agent ID: {current_agent_id}")
 
         branches_deleted = 0

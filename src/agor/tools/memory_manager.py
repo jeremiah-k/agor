@@ -267,6 +267,40 @@ def commit_to_memory_branch(
         return False
 
 
+def sanitize_agent_id(agent_id: str) -> str:
+    """
+    Sanitize agent ID to prevent injection attacks and path traversal.
+
+    Args:
+        agent_id: Raw agent ID
+
+    Returns:
+        Sanitized agent ID safe for use in file paths and branch names
+    """
+    import re
+
+    if not agent_id:
+        return "unknown"
+
+    # Remove or replace unsafe characters
+    # Keep only alphanumerics, dashes, and underscores
+    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(agent_id))
+
+    # Remove multiple consecutive underscores/dashes
+    sanitized = re.sub(r'[_\-]+', '_', sanitized)
+
+    # Remove leading/trailing underscores/dashes
+    sanitized = sanitized.strip('_-')
+
+    # Ensure it's not empty and not too long
+    if not sanitized:
+        sanitized = "unknown"
+    elif len(sanitized) > 50:
+        sanitized = sanitized[:50].rstrip('_-')
+
+    return sanitized
+
+
 def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_branch: str = None) -> bool:
     """
     Automatically commit content to agent-specific memory branch with standardized naming.
@@ -274,23 +308,27 @@ def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_bra
     Args:
         content: Memory content to commit
         memory_type: Type of memory (e.g., 'session_start', 'progress', 'completion')
-        agent_id: Agent identifier
+        agent_id: Agent identifier (will be sanitized for security)
         memory_branch: Optional specific memory branch. If not provided, uses agent-specific branch.
 
     Returns:
         True if successful, False otherwise
     """
-    print(f"💾 Auto-committing memory: {memory_type} for {agent_id}")
+    # Sanitize agent ID to prevent injection attacks
+    safe_agent_id = sanitize_agent_id(agent_id)
+    safe_memory_type = sanitize_agent_id(memory_type)
+
+    print(f"💾 Auto-committing memory: {safe_memory_type} for {safe_agent_id}")
 
     # Use agent-specific memory branch if not provided
     if memory_branch is None:
-        memory_branch = f"agor/mem/{agent_id}"
+        memory_branch = f"agor/mem/{safe_agent_id}"
 
-    # Create standardized file name with .agor prefix
-    file_name = f".agor/{agent_id}-memory.md"
+    # Create standardized file name with sanitized components
+    file_name = f"agents/{safe_agent_id}/{safe_agent_id}-memory.md"
 
-    # Create commit message
-    commit_message = f"Memory update: {memory_type} for {agent_id}"
+    # Create commit message with sanitized components
+    commit_message = f"Memory update: {safe_memory_type} for {safe_agent_id}"
 
     # Commit to agent-specific memory branch
     return commit_to_memory_branch(
