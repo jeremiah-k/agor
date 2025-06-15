@@ -481,10 +481,10 @@ This agent should use the following identifiers:
 """
 
         success = commit_to_memory_branch(
-            content=initial_content,
-            memory_type="agent_initialization",
-            agent_id=agent_id,
-            memory_branch=memory_branch,
+            file_content=initial_content,
+            file_name=f".agor/agent_{agent_id}_init.md",
+            branch_name=memory_branch,
+            commit_message=f"Initialize agent memory branch for {agent_id}",
         )
 
         if success:
