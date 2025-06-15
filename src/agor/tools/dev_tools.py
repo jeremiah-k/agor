@@ -433,7 +433,7 @@ def get_or_create_agent_id_file(agent_id: str = None) -> str:
 
         print(f"📝 Created new agent ID file: {agent_id_file}")
         print(f"🆔 Agent ID: {sanitized_id}")
-        print(f"⚠️  Note: Agent identification has limitations and should not be relied upon heavily")
+        print("⚠️  Note: Agent identification has limitations and should not be relied upon heavily")
 
         return sanitized_id
 
@@ -506,13 +506,12 @@ def get_main_memory_branch(custom_branch: str = None) -> str:
     return "agor/mem/main"
 
 
-def get_agent_directory_path(agent_id: str, custom_branch: str = None) -> str:
+def get_agent_directory_path(agent_id: str) -> str:
     """
-    Get the agent's directory path within the main memory branch.
+    Get the agent's directory path within the memory branch.
 
     Args:
         agent_id: Agent identifier
-        custom_branch: Optional custom memory branch
 
     Returns:
         A string path like 'agents/agent_{hash}_{timestamp}/' for the agent's directory.
@@ -624,7 +623,7 @@ Use this file for cross-agent communication and coordination.
             print(f"🆔 Agent ID: {agent_id}")
             print(f"📁 Agent Directory: {agent_dir}")
         else:
-            print(f"❌ Failed to initialize agent workspace")
+            print("❌ Failed to initialize agent workspace")
 
         return agent_success and shared_success, agent_id, memory_branch
 
@@ -681,7 +680,7 @@ def cleanup_agent_directories(
         )
 
         if original_branch_result.returncode != 0:
-            print(f"❌ Could not determine current branch")
+            print("❌ Could not determine current branch")
             return False
 
         original_branch = original_branch_result.stdout.strip()
@@ -815,7 +814,7 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
         )
 
         if original_branch_result.returncode != 0:
-            print(f"❌ Could not determine current branch")
+            print("❌ Could not determine current branch")
             return []
 
         original_branch = original_branch_result.stdout.strip()
@@ -836,7 +835,7 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
             # Check for pending handoffs
             pending_dir = "handoffs/pending"
             if not os.path.exists(pending_dir):
-                print(f"📁 No pending handoffs directory found")
+                print("📁 No pending handoffs directory found")
                 return []
 
             pending_handoffs = []
@@ -849,7 +848,7 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
                 for handoff in pending_handoffs:
                     print(f"   - {handoff}")
             else:
-                print(f"📭 No pending handoffs found")
+                print("📭 No pending handoffs found")
 
             return pending_handoffs
 
@@ -952,7 +951,7 @@ def create_handoff_prompt(
         if success:
             print(f"✅ Created handoff: {handoff_filename}")
         else:
-            print(f"❌ Failed to create handoff")
+            print("❌ Failed to create handoff")
 
         return success
 

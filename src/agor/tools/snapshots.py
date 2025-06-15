@@ -70,21 +70,23 @@ def create_snapshot(
     title: str, context: str, agent_id: str = None, custom_branch: str = None
 ) -> bool:
     """Create development snapshot in agent's directory within main memory branch."""
+    # Import all required functions at the top to avoid per-call overhead
+    from agor.utils import sanitize_slug
+    from agor.tools.dev_tools import (
+        generate_agent_id,
+        get_agent_directory_path,
+        get_main_memory_branch,
+    )
+
     timestamp_str = get_file_timestamp()
 
     # Generate agent ID if not provided
-    from agor.utils import sanitize_slug
-
     if agent_id is None:
-        from agor.tools.dev_tools import generate_agent_id
-
         agent_id = generate_agent_id()
     else:
         agent_id = sanitize_slug(agent_id)
 
     # Get memory branch and agent directory
-    from agor.tools.dev_tools import get_agent_directory_path, get_main_memory_branch
-
     memory_branch = get_main_memory_branch(custom_branch)
     agent_dir = get_agent_directory_path(agent_id)
 
