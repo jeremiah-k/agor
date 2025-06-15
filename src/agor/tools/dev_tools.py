@@ -754,7 +754,8 @@ def cleanup_agent_directories(
             if directories_removed > 0:
                 # Stage only the specific directories that were removed
                 for removed_dir in removed_directories:
-                    subprocess.run(["git", "add", removed_dir], cwd=".")
+-                    subprocess.run(["git", "add", removed_dir], cwd=".")
++                    subprocess.run(["git", "rm", "-r", "--cached", removed_dir], cwd=".")
 
                 subprocess.run([
                     "git", "commit", "-m",
