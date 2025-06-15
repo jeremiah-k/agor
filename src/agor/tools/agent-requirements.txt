@@ -10,4 +10,4 @@ jinja2>=3.0.0
 httpx>=0.24.0
 
 # Note: These are NOT the same as requirements.txt in the root directory
-# requirements.txt is for the CLI application, this file is for agent dev tools
+# requirements.txt is for the CLI application, this file is for agent dev tools.

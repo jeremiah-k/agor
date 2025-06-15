@@ -98,7 +98,7 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
 3. **Use AGOR Development Tools**: Import and use functions from `src/agor/tools/dev_tools.py`:
    - `create_development_snapshot()` for work snapshots
    - `generate_session_end_prompt()` for agent transitions
-   - `generate_pr_description_snapshot()` for PR descriptions
+   - `generate_pr_description_output()` for PR descriptions
    - `quick_commit_and_push()` for git operations
 
 4. **OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tools functions:
@@ -205,10 +205,10 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_tooling, get_current_timestamp_formatted
+from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
 
 # Verify tooling works
-test_tooling()
+test_all_tools()
 print(f'Session started at: {get_current_timestamp_formatted()}')
 "
 
@@ -356,11 +356,11 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_tooling, get_timestamp
+from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
 
 # Verify tooling works
-test_tooling()
-print(f'Session started at: {get_timestamp()}')
+test_all_tools()
+print(f'Session started at: {get_current_timestamp_formatted()}')
 "
 
 # Review development guide

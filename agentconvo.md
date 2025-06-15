@@ -33,9 +33,9 @@
 
 ### 3. Dev Tools Output Illiteracy
 
-**Problem**: Agents don't read/understand what dev tools tells them.
+**Problem**: Agents don't read/understand what dev tools tell them.
 
-**Example**: When dev tools says "✅ Snapshot committed to memory branch: agor/mem/agent_abc123", agents should understand that's where it went, not expect it on working branch.
+**Example**: When dev tools says, "✅ Snapshot committed to memory branch: agor/mem/agent_abc123", agents should understand that's where it went, not expect it on working branch.
 
 **Solution Needed**: Better agent education about reading dev tools output.
 

@@ -141,7 +141,18 @@ def commit_memory_to_branch(
 
 
 def test_development_tools() -> bool:
-    """Test development tools wrapper."""
+    """
+    Test development tools wrapper.
+
+    DEPRECATED: Use test_all_tools() instead.
+    This function will be removed in a future version.
+    """
+    import warnings
+    warnings.warn(
+        "test_development_tools() is deprecated. Use test_all_tools() instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
     return test_tooling()
 
 
@@ -681,7 +692,7 @@ def get_available_functions_reference() -> str:
     output.append("**Analysis & Status:**")
     output.append("- get_workspace_status() - Project and git status")
     output.append("- detect_environment() - Environment detection")
-    output.append("- test_tools() - Verify all functions work")
+    output.append("- test_all_tools() - Verify all functions work")
     output.append("")
     output.append("**CRITICAL**: Always use these functions instead of manual git commands")
     output.append("for memory operations and cross-branch commits.")
