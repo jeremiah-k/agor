@@ -303,8 +303,11 @@ def create_seamless_handoff(
         brief_context = ""
 
     # Generate agent ID for this handoff
-    from agor.tools.dev_tools import generate_agent_id
+    from agor.tools.dev_tools import generate_agent_id, get_agent_directory_path
     agent_id = generate_agent_id()
+
+    # Get agent directory path for proper file structure
+    agent_dir = get_agent_directory_path(agent_id)
 
     # Generate comprehensive snapshot using snapshot_templates
     snapshot_content = generate_snapshot_document(
@@ -320,18 +323,18 @@ def create_seamless_handoff(
         agent_id=agent_id,
     )
 
-    # Attempt to commit snapshot to agent-specific memory branch
+    # Attempt to commit snapshot to main memory branch with agent directory structure
     memory_branch = None
     try:
-        # Use agent-specific memory branch
+        # Use main memory branch with agent directory structure
         memory_branch = "agor/mem/main"
         timestamp_str = get_file_timestamp()
 
         success = commit_to_memory_branch(
             file_content=snapshot_content,
-            file_name=f".agor/snapshots/{timestamp_str}_handoff_snapshot.md",
+            file_name=f"{agent_dir}snapshots/{timestamp_str}_handoff_snapshot.md",
             branch_name=memory_branch,
-            commit_message="📸 Handoff snapshot",
+            commit_message=f"📸 Handoff snapshot for {agent_id}",
         )
 
         if success:

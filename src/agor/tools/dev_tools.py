@@ -52,6 +52,7 @@ from agor.tools.snapshots import (
     generate_agent_handoff_prompt,
     generate_mandatory_session_end_prompt,
 )
+from agor.utils import sanitize_slug
 
 # Handle imports for both installed and development environments
 try:
@@ -384,40 +385,7 @@ def display_git_workflow_status() -> str:
 # ==============================
 
 
-def sanitize_slug(input_string: str) -> str:
-    """
-    Sanitize input string to create safe slugs for file names and branch names.
-
-    Prevents path traversal, injection attacks, and illegal characters.
-
-    Args:
-        input_string: Input string to sanitize
-
-    Returns:
-        Sanitized string containing only safe characters (alphanumerics, dashes, underscores)
-    """
-    import re
-
-    if not input_string:
-        return "unknown"
-
-    # Remove or replace unsafe characters
-    # Keep only alphanumerics, dashes, and underscores
-    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(input_string))
-
-    # Remove multiple consecutive underscores/dashes
-    sanitized = re.sub(r'[_\-]+', '_', sanitized)
-
-    # Remove leading/trailing underscores/dashes
-    sanitized = sanitized.strip('_-')
-
-    # Ensure it's not empty and not too long
-    if not sanitized:
-        sanitized = "unknown"
-    elif len(sanitized) > 50:
-        sanitized = sanitized[:50].rstrip('_-')
-
-    return sanitized
+# sanitize_slug function now imported from agor.utils
 
 
 def get_or_create_agent_id_file(agent_id: str = None) -> str:
@@ -739,6 +707,8 @@ def cleanup_agent_directories(
                 return True
 
             directories_removed = 0
+            removed_directories = []  # Track removed directories for specific git staging
+
             for agent_dir in os.listdir(agents_dir):
                 agent_path = os.path.join(agents_dir, agent_dir)
 
@@ -776,12 +746,16 @@ def cleanup_agent_directories(
                     shutil.rmtree(agent_path)
                     print(f"✅ Removed agent directory: {agent_dir}")
                     directories_removed += 1
+                    removed_directories.append(agent_path)  # Track for git staging
                 except Exception as e:
                     print(f"❌ Failed to remove {agent_dir}: {e}")
 
-            # Commit the cleanup
+            # Commit the cleanup - only stage specific removed directories
             if directories_removed > 0:
-                subprocess.run(["git", "add", "-A"], cwd=".")
+                # Stage only the specific directories that were removed
+                for removed_dir in removed_directories:
+                    subprocess.run(["git", "add", removed_dir], cwd=".")
+
                 subprocess.run([
                     "git", "commit", "-m",
                     f"🧹 Cleanup: Removed {directories_removed} agent directories"

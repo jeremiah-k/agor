@@ -280,19 +280,8 @@ def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_bra
     Returns:
         True if successful, False otherwise
     """
-    # Import sanitization function from dev_tools to avoid duplication
-    try:
-        from agor.tools.dev_tools import sanitize_slug
-    except ImportError:
-        # Fallback sanitization if import fails
-        import re
-        def sanitize_slug(s):
-            if not s:
-                return "unknown"
-            sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(s))
-            sanitized = re.sub(r'[_\-]+', '_', sanitized)
-            sanitized = sanitized.strip('_-')
-            return sanitized[:50].rstrip('_-') if sanitized else "unknown"
+    # Import sanitization function from utils (centralized location)
+    from agor.utils import sanitize_slug
 
     # Sanitize inputs to prevent injection attacks
     safe_agent_id = sanitize_slug(agent_id)
