@@ -479,7 +479,8 @@ def generate_unique_agent_id() -> str:
     # Format: agent_{hash}_{timestamp} with full timestamp for datetime compatibility
     agent_id = f"agent_{agent_hash}_{full_timestamp}"
 
-    return agent_id
+    # Sanitize the agent ID before returning to ensure it's safe for use
+    return sanitize_slug(agent_id)
 
 
 def generate_agent_id() -> str:
@@ -806,37 +807,66 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
 
         memory_branch = get_main_memory_branch(custom_branch)
 
-        # Switch to memory branch to check handoffs
-        checkout_result = subprocess.run(
-            ["git", "checkout", memory_branch],
+        # Capture current branch before switching
+        original_branch_result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
             capture_output=True,
             text=True,
             cwd="."
         )
 
-        if checkout_result.returncode != 0:
-            print(f"❌ Could not checkout memory branch {memory_branch}")
+        if original_branch_result.returncode != 0:
+            print(f"❌ Could not determine current branch")
             return []
 
-        # Check for pending handoffs
-        pending_dir = "handoffs/pending"
-        if not os.path.exists(pending_dir):
-            print(f"📁 No pending handoffs directory found")
-            return []
+        original_branch = original_branch_result.stdout.strip()
 
-        pending_handoffs = []
-        for handoff_file in os.listdir(pending_dir):
-            if handoff_file.endswith('.md'):
-                pending_handoffs.append(os.path.join(pending_dir, handoff_file))
+        try:
+            # Switch to memory branch to check handoffs
+            checkout_result = subprocess.run(
+                ["git", "checkout", memory_branch],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
 
-        if pending_handoffs:
-            print(f"📬 Found {len(pending_handoffs)} pending handoffs:")
-            for handoff in pending_handoffs:
-                print(f"   - {handoff}")
-        else:
-            print(f"📭 No pending handoffs found")
+            if checkout_result.returncode != 0:
+                print(f"❌ Could not checkout memory branch {memory_branch}")
+                return []
 
-        return pending_handoffs
+            # Check for pending handoffs
+            pending_dir = "handoffs/pending"
+            if not os.path.exists(pending_dir):
+                print(f"📁 No pending handoffs directory found")
+                return []
+
+            pending_handoffs = []
+            for handoff_file in os.listdir(pending_dir):
+                if handoff_file.endswith('.md'):
+                    pending_handoffs.append(os.path.join(pending_dir, handoff_file))
+
+            if pending_handoffs:
+                print(f"📬 Found {len(pending_handoffs)} pending handoffs:")
+                for handoff in pending_handoffs:
+                    print(f"   - {handoff}")
+            else:
+                print(f"📭 No pending handoffs found")
+
+            return pending_handoffs
+
+        finally:
+            # Always switch back to original branch
+            try:
+                restore_result = subprocess.run(
+                    ["git", "checkout", original_branch],
+                    capture_output=True,
+                    text=True,
+                    cwd="."
+                )
+                if restore_result.returncode != 0:
+                    print(f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}")
+            except Exception as restore_error:
+                print(f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}")
 
     except Exception as e:
         print(f"❌ Error checking pending handoffs: {e}")
@@ -865,6 +895,9 @@ def create_handoff_prompt(
     """
     try:
         from agor.tools.memory_manager import commit_to_memory_branch
+
+        # Sanitize agent_id to ensure it's safe for use in paths
+        agent_id = sanitize_slug(agent_id)
 
         memory_branch = get_main_memory_branch(custom_branch)
         agent_dir = get_agent_directory_path(agent_id)

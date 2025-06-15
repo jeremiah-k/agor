@@ -40,7 +40,7 @@ _This gives the agent direct access to all AGOR documentation and tools_
 
 - In Augment Chat, click the **Context menu** or use **@-mention**
 - Select **User Guidelines**
-- Copy and paste the complete User Guidelines from: [docs/augment_user_guidelines.md](augment_user_guidelines.md)
+- Copy and paste the complete User Guidelines from: [docs/augment_user_guidelines.md](docs/augment_user_guidelines.md)
 
 _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 
@@ -96,7 +96,7 @@ After reading these files, help me initialize AGOR for this project and select t
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
 
-**Note: First copy and paste the User Guidelines from [docs/augment_user_guidelines.md](augment_user_guidelines.md) into your AugmentCode extension, if you have not already, then proceed with the rest.**
+**Note: First copy and paste the User Guidelines from [docs/augment_user_guidelines.md](docs/augment_user_guidelines.md) into your AugmentCode extension, if you have not already, then proceed with the rest.**
 
 **Agent Initialization Prompt (Copy & Paste to Remote Agent):**
 
@@ -221,68 +221,6 @@ agor bundle your-project -f tar.gz
 > **Likely Mode:** Standalone Mode with enhanced capabilities
 
 </details>
-
-## 💬 Example User Prompts
-
-**📖 For comprehensive examples with emphasis on using AGOR tools, see: [Agent Prompt Examples](agent-prompt-examples.md)**
-
-Here are key examples of how to ask agents to use AGOR tools:
-
-### 📸 Creating Snapshots & Handoffs
-
-**End of work session:**
-
-> "**Use AGOR's snapshot tools** to create a development snapshot of our progress, then **generate a handoff prompt** so another agent can continue this work. **Wrap the output in a single codeblock** so I can copy and paste easily for a clean transition."
-
-**Before switching tasks:**
-
-> "**Use `create_development_snapshot()`** to save our current progress, then **use AGOR's PR tools** to generate a description for this work. **Run both through dev tools and wrap each in separate codeblocks** for easy copy-paste."
-
-**Regular progress saving:**
-
-> "**Use AGOR's `quick_commit_and_push()`** to commit our progress and **create an AGOR snapshot** in case we need to hand this off later. **Wrap the snapshot output in a single codeblock.**"
-
-### 🚀 Release & PR Management
-
-**After completing a feature:**
-
-> "**Use AGOR's `quick_commit_and_push()`** to commit our authentication feature changes, then **use the dev tools to generate release notes** for this update. **Wrap the release notes in a single codeblock** for easy copy-paste."
-
-**When work is ready for review:**
-
-> "**Use `generate_pr_description_output()`** to create a properly formatted PR description that explains what we built and why. **Wrap the final output in a single codeblock** so I can copy and paste it directly."
-
-**For bug fixes:**
-
-> "**Use AGOR's commit tools** to save this login fix, then **generate release notes using AGOR tools** about what was resolved. **Format the output in a single codeblock.**"
-
-### 🔄 Agent Coordination
-
-**Starting work from a handoff:**
-
-> "I received a handoff from another agent. Can you load the latest snapshot and show me what needs to be done next?"
-
-**Checking project status:**
-
-> "What's the current status of this project? Can you create a progress snapshot so I understand where we are?"
-
-**Multi-agent collaboration:**
-
-> "Another agent will be working on the frontend while I handle the backend. Can you create a coordination snapshot and update the agent conversation log?"
-
-### 🛠️ Development Workflow
-
-**Before major changes:**
-
-> "I'm about to refactor the database layer. Let's create a snapshot first so we can roll back if needed."
-
-**After testing:**
-
-> "All tests are passing now. Can you commit our changes and generate release notes for the QA team?"
-
-**Code review preparation:**
-
-> "This branch is ready for code review. Generate a PR description that highlights the key changes and testing approach."
 
 <details>
 <summary><b>Google AI Studio Pro (Free Tier Phase-Out)</b></summary>

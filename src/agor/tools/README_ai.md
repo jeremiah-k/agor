@@ -107,6 +107,7 @@ Based on your environment detection:
 
 **Core Development Functions**:
 
+- `get_available_functions_reference()` - **MANDATORY**: List all available AGOR development functions
 - `create_development_snapshot()` - Create comprehensive work snapshots
 - `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
 - `generate_pr_description_snapshot()` - Create PR descriptions for completed work
