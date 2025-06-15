@@ -17,6 +17,59 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ---
 
+## Protocol v0.5.0 (2025-06-15)
+
+### 🆔 **MAJOR FEATURE: Agent Unique Identification System**
+
+**Agent Identity Management**
+
+- **Persistent Agent IDs**: Each agent gets a unique, persistent identifier (e.g., `agent_7cb9e6d4`)
+- **Agent-Specific Memory Branches**: Agents use dedicated memory branches (`agor/mem/{agent_id}`)
+- **Isolated Agent Storage**: Prevents agents from interfering with each other's snapshots
+- **Cross-Agent Communication**: Enhanced agentconvo.md protocol with agent IDs
+
+### 🔧 Technical Implementation
+
+**New Functions** (`src/agor/tools/dev_tools.py`)
+
+- `get_or_create_agent_id()`: Creates persistent agent ID stored in `.agor/agent_id`
+- `cleanup_agent_memory_branches()`: Cleans up old memory branches
+- `generate_agent_memory_branch(agent_id)`: Creates agent-specific memory branch names
+
+**Enhanced Snapshot System**
+
+- All snapshots now include agent ID in metadata
+- Snapshots automatically commit to agent-specific memory branches
+- Enhanced handoff prompts with agent context
+
+### 📚 Documentation Improvements
+
+**User Experience Enhancements**
+
+- **Agent Prompt Examples** (`docs/agent-prompt-examples.md`): Comprehensive examples with emphasis on using AGOR tools
+- **Platform Reorganization**: AugmentCode moved to top, Google AI Studio to bottom (free tier being phased out)
+- **CLI vs Agent Tool Distinction**: Clear separation between developer CLI commands and agent development tools
+- **Linked User Guidelines**: Replaced large codeblocks with links to `augment_user_guidelines.md`
+
+### 🎯 Protocol Compatibility
+
+**Breaking Changes**: None - all changes are backward compatible
+
+**New Capabilities**:
+
+- Agents maintain persistent identity across sessions
+- Isolated memory branches prevent agent conflicts
+- Enhanced agent coordination with unique identification
+- Better user guidance with explicit tool usage examples
+
+**Agent Responsibilities Added**:
+
+- Agents should look for opportunities to update the dev tools index
+- Agents should look for opportunities to add useful prompts to example prompts
+- Agents should use persistent agent IDs for all memory operations
+
+---
+
 ## Protocol v0.4.0 (2024-12-27)
 
 ### 🔄 **BREAKING CHANGE: Handoff → Snapshot Terminology**
@@ -160,7 +213,7 @@ This changelog documents changes to AGOR's coordination protocols, agent instruc
 
 ## Quick Protocol Check
 
-**Current Protocol Version**: `0.4.0`
+**Current Protocol Version**: `0.5.0`
 
 **Check Your Version**:
 

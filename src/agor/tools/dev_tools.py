@@ -387,32 +387,54 @@ def display_git_workflow_status() -> str:
 # Note: read_from_memory_branch and list_memory_branches available if needed
 
 
-def generate_agent_id() -> str:
+def get_or_create_agent_id() -> str:
     """
-    Generate a unique agent identifier using environment and timestamp.
+    Get existing agent ID from .agor/agent_id file or create a new persistent one.
 
-    Creates a consistent agent ID that persists across sessions for the same environment.
-    Uses a combination of environment detection and timestamp for uniqueness.
+    This ensures the same agent uses the same ID across sessions.
 
     Returns:
         A string agent ID in format 'agent_{hash}' for identifying this agent instance.
     """
     import hashlib
-    import time
     import os
+    from pathlib import Path
 
-    # Get environment-specific identifiers
+    # Check for existing agent ID file
+    agent_id_file = Path(".agor/agent_id")
+
+    if agent_id_file.exists():
+        try:
+            agent_id = agent_id_file.read_text().strip()
+            if agent_id.startswith("agent_") and len(agent_id) == 14:  # agent_ + 8 chars
+                return agent_id
+        except:
+            pass  # Fall through to create new ID
+
+    # Create new agent ID
     env_info = detect_environment()
     env_signature = f"{env_info.get('mode', 'unknown')}_{env_info.get('platform', 'unknown')}"
 
-    # Add some system-specific info for uniqueness
-    system_info = f"{os.getcwd()}_{time.time()}"
+    # Use consistent system info (not timestamp!)
+    system_info = f"{os.getcwd()}_{os.getenv('USER', 'unknown')}"
 
     # Create hash from environment and system info
     agent_hash = hashlib.md5(f"{env_signature}_{system_info}".encode()).hexdigest()[:8]
     agent_id = f"agent_{agent_hash}"
 
+    # Save agent ID to file
+    os.makedirs(".agor", exist_ok=True)
+    agent_id_file.write_text(agent_id)
+
     return agent_id
+
+
+def generate_agent_id() -> str:
+    """
+    DEPRECATED: Use get_or_create_agent_id() instead.
+    This function is kept for backward compatibility.
+    """
+    return get_or_create_agent_id()
 
 
 def generate_agent_memory_branch(agent_id: str = None) -> str:
@@ -426,7 +448,7 @@ def generate_agent_memory_branch(agent_id: str = None) -> str:
         A string in the format 'agor/mem/{agent_id}' for uniquely identifying an agent's memory branch.
     """
     if agent_id is None:
-        agent_id = generate_agent_id()
+        agent_id = get_or_create_agent_id()
 
     memory_branch = f"agor/mem/{agent_id}"
     return memory_branch
@@ -443,7 +465,7 @@ def create_agent_memory_branch(agent_id: str = None) -> tuple[bool, str, str]:
         A tuple containing (success, agent_id, memory_branch) for tracking agent identity.
     """
     if agent_id is None:
-        agent_id = generate_agent_id()
+        agent_id = get_or_create_agent_id()
 
     memory_branch = generate_agent_memory_branch(agent_id)
 
@@ -498,6 +520,66 @@ This agent should use the following identifiers:
     except Exception as e:
         print(f"❌ Error creating agent memory branch: {e}")
         return False, agent_id, memory_branch
+
+
+def cleanup_agent_memory_branches(keep_current: bool = True) -> bool:
+    """
+    Clean up old agent memory branches, optionally keeping the current agent's branch.
+
+    Args:
+        keep_current: If True, keeps the current agent's memory branch
+
+    Returns:
+        True if cleanup was successful, False otherwise
+    """
+    try:
+        import subprocess
+
+        # Get current agent ID if we want to keep it
+        current_agent_id = None
+        if keep_current:
+            current_agent_id = get_or_create_agent_id()
+
+        # Get all memory branches
+        result = subprocess.run(
+            ["git", "branch", "-r", "--list", "origin/agor/mem/*"],
+            capture_output=True,
+            text=True,
+            cwd="."
+        )
+
+        if result.returncode != 0:
+            print("No remote memory branches found to clean up")
+            return True
+
+        branches_to_delete = []
+        for line in result.stdout.strip().split('\n'):
+            if line.strip():
+                branch = line.strip().replace('origin/', '')
+                # Skip current agent's branch if keeping it
+                if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                    continue
+                branches_to_delete.append(branch)
+
+        # Delete remote branches
+        for branch in branches_to_delete:
+            delete_result = subprocess.run(
+                ["git", "push", "origin", "--delete", branch],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
+            if delete_result.returncode == 0:
+                print(f"✅ Deleted memory branch: {branch}")
+            else:
+                print(f"❌ Failed to delete memory branch: {branch}")
+
+        print(f"🧹 Cleaned up {len(branches_to_delete)} memory branches")
+        return True
+
+    except Exception as e:
+        print(f"❌ Error cleaning up memory branches: {e}")
+        return False
 
 
 def validate_output_formatting(content: str) -> dict:

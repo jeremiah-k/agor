@@ -23,7 +23,8 @@
 ### "I need to check protocol updates or compatibility"
 
 - **[docs/protocol-changelog.md](../../../docs/protocol-changelog.md)** - Protocol version history and compatibility guide
-  - Current: Protocol v0.4.0 with snapshot system and standalone mode
+  - Current: Protocol v0.5.0 with agent unique identification system
+  - Agent-specific memory branches, persistent agent IDs, enhanced coordination
   - Breaking changes, new capabilities, and migration notes
   - Reference commits and specific line numbers for changes
 
@@ -127,7 +128,7 @@
 
 | File                                                     | Purpose                                                                                         | Key Functions                                                                      | Lines  |
 | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------ |
-| **[dev_tools.py](dev_tools.py)**                     | Main interface for dev utilities                                                                | Orchestrates functionalities from submodules (git_operations, memory_manager etc.) | ~1000+ |
+| **[dev_tools.py](dev_tools.py)**                     | Main interface for dev utilities + agent identification                                         | get_or_create_agent_id(), cleanup_agent_memory_branches(), create_development_snapshot() | ~1000+ |
 | **[git_operations.py](git_operations.py)**               | Handles core Git command execution, safety checks (safe_git_push), and timestamp utilities.     | run_git_command, safe_git_push, get_current_timestamp                              | ~200   |
 | **[memory_manager.py](memory_manager.py)**               | Manages memory branch creation and commits (commit_to_memory_branch) ensuring clean separation. | commit_to_memory_branch, auto_commit_memory                                        | ~300   |
 | **[agent_handoffs.py](agent_handoffs.py)**               | Provides utilities for agent coordination, including prompt generation and backtick processing. | generate_handoff_prompt_only, detick_content                                       | ~150   |
