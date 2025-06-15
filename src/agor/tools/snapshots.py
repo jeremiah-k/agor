@@ -71,9 +71,12 @@ def create_snapshot(title: str, context: str, agent_id: str = None, custom_branc
     timestamp_str = get_file_timestamp()
 
     # Generate agent ID if not provided
+    from agor.utils import sanitize_slug
     if agent_id is None:
         from agor.tools.dev_tools import generate_agent_id
         agent_id = generate_agent_id()
+    else:
+        agent_id = sanitize_slug(agent_id)
 
     # Get memory branch and agent directory
     from agor.tools.dev_tools import get_main_memory_branch, get_agent_directory_path
@@ -83,7 +86,6 @@ def create_snapshot(title: str, context: str, agent_id: str = None, custom_branc
     # Snapshot file path within agent's directory
     snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
     snapshot_file = f"{agent_dir}snapshots/{snapshot_filename}"
-
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
     current_branch = current_branch_val.strip() if success_branch else "unknown"
