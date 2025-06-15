@@ -411,15 +411,13 @@ def get_or_create_agent_id() -> str:
         except:
             pass  # Fall through to create new ID
 
-    # Create new agent ID
-    env_info = detect_environment()
-    env_signature = f"{env_info.get('mode', 'unknown')}_{env_info.get('platform', 'unknown')}"
+    # Create new agent ID using simple, consistent approach
+    # Use just the current working directory for consistency
+    # This ensures the same agent ID for the same project
+    project_path = os.getcwd()
 
-    # Use consistent system info (not timestamp!)
-    system_info = f"{os.getcwd()}_{os.getenv('USER', 'unknown')}"
-
-    # Create hash from environment and system info
-    agent_hash = hashlib.md5(f"{env_signature}_{system_info}".encode()).hexdigest()[:8]
+    # Create hash from project path only (most consistent identifier)
+    agent_hash = hashlib.md5(project_path.encode()).hexdigest()[:8]
     agent_id = f"agent_{agent_hash}"
 
     # Save agent ID to file
@@ -522,12 +520,13 @@ This agent should use the following identifiers:
         return False, agent_id, memory_branch
 
 
-def cleanup_agent_memory_branches(keep_current: bool = True) -> bool:
+def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool = True) -> bool:
     """
     Clean up old agent memory branches, optionally keeping the current agent's branch.
 
     Args:
         keep_current: If True, keeps the current agent's memory branch
+        cleanup_local: If True, also cleans up local memory branches
 
     Returns:
         True if cleanup was successful, False otherwise
@@ -539,42 +538,74 @@ def cleanup_agent_memory_branches(keep_current: bool = True) -> bool:
         current_agent_id = None
         if keep_current:
             current_agent_id = get_or_create_agent_id()
+            print(f"🆔 Current agent ID: {current_agent_id}")
 
-        # Get all memory branches
-        result = subprocess.run(
+        branches_deleted = 0
+
+        # Clean up local branches first
+        if cleanup_local:
+            print("🧹 Cleaning up local memory branches...")
+            local_result = subprocess.run(
+                ["git", "branch", "--list", "agor/mem/*"],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
+
+            if local_result.returncode == 0 and local_result.stdout.strip():
+                for line in local_result.stdout.strip().split('\n'):
+                    if line.strip():
+                        branch = line.strip().replace('* ', '').strip()
+                        # Skip current agent's branch if keeping it
+                        if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                            print(f"⏭️  Keeping current agent branch: {branch}")
+                            continue
+
+                        # Delete local branch
+                        delete_result = subprocess.run(
+                            ["git", "branch", "-D", branch],
+                            capture_output=True,
+                            text=True,
+                            cwd="."
+                        )
+                        if delete_result.returncode == 0:
+                            print(f"✅ Deleted local memory branch: {branch}")
+                            branches_deleted += 1
+                        else:
+                            print(f"❌ Failed to delete local memory branch: {branch}")
+
+        # Clean up remote branches
+        print("🧹 Cleaning up remote memory branches...")
+        remote_result = subprocess.run(
             ["git", "branch", "-r", "--list", "origin/agor/mem/*"],
             capture_output=True,
             text=True,
             cwd="."
         )
 
-        if result.returncode != 0:
-            print("No remote memory branches found to clean up")
-            return True
+        if remote_result.returncode == 0 and remote_result.stdout.strip():
+            for line in remote_result.stdout.strip().split('\n'):
+                if line.strip():
+                    branch = line.strip().replace('origin/', '')
+                    # Skip current agent's branch if keeping it
+                    if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                        print(f"⏭️  Keeping current agent remote branch: {branch}")
+                        continue
 
-        branches_to_delete = []
-        for line in result.stdout.strip().split('\n'):
-            if line.strip():
-                branch = line.strip().replace('origin/', '')
-                # Skip current agent's branch if keeping it
-                if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
-                    continue
-                branches_to_delete.append(branch)
+                    # Delete remote branch
+                    delete_result = subprocess.run(
+                        ["git", "push", "origin", "--delete", branch],
+                        capture_output=True,
+                        text=True,
+                        cwd="."
+                    )
+                    if delete_result.returncode == 0:
+                        print(f"✅ Deleted remote memory branch: {branch}")
+                        branches_deleted += 1
+                    else:
+                        print(f"❌ Failed to delete remote memory branch: {branch}")
 
-        # Delete remote branches
-        for branch in branches_to_delete:
-            delete_result = subprocess.run(
-                ["git", "push", "origin", "--delete", branch],
-                capture_output=True,
-                text=True,
-                cwd="."
-            )
-            if delete_result.returncode == 0:
-                print(f"✅ Deleted memory branch: {branch}")
-            else:
-                print(f"❌ Failed to delete memory branch: {branch}")
-
-        print(f"🧹 Cleaned up {len(branches_to_delete)} memory branches")
+        print(f"🧹 Cleaned up {branches_deleted} memory branches total")
         return True
 
     except Exception as e:
