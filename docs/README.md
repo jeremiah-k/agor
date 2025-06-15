@@ -41,8 +41,8 @@ Think of it as the difference between having one really smart developer versus h
 AGOR involves different types of interactions and commands, depending on whether you are a developer using the AGOR CLI, or an AI agent operating within the AGOR framework:
 
 1.  **Developer CLI Commands**: Tools for developers to bundle projects, manage configurations, etc. (e.g., `agor bundle`).
-2.  **AI Conversational Hotkeys**: Interactive commands (e.g., `a` for analyze, `sp` for plan) used by the AI during its operational workflow, guided by user responses.
-3.  **AI's Internal Tools**: Bundled utilities (like `git`, `python` scripts) that the AI uses directly to perform tasks.
+2.  **Agent Development Tools**: Programmatic functions used by AI agents for context transfer, snapshot creation, and coordination (e.g., `create_development_snapshot()`).
+3.  **Agent Runtime Utilities**: Bundled utilities (like `git`, `python` scripts) that agents use directly to perform tasks.
 
 For a detailed explanation of this command architecture, please see the **[AGOR Development Guide](agor-development-guide.md#agor-architecture-understanding)**.
 

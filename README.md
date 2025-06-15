@@ -18,7 +18,7 @@ AGOR supports multiple deployment modes for different AI platforms and workflows
 **🚀 Standalone Mode** - Direct git access - AugmentCode Remote, Jules by Google (limited support), Codex (currently untested)
 **🏠 Local Integration** - Workspace integration (AugmentCode Local Agent)
 
-AGOR facilitates AI-driven development through a distinct set of interactions. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. These interactions include: commands for developers using the AGOR CLI (e.g., `agor bundle`), conversational hotkeys for AI-user collaboration (e.g., `sp`, `edit`), and internal tools (like a bundled `git`) used directly by the AI agent. Understanding these layers is key to leveraging AGOR effectively, whether working alone or in a team.
+AGOR facilitates AI-driven development through seamless context transfer and programmatic coordination tools. While the name "Orchestrator" suggests a multi-agent focus, AGOR's robust protocols for structured work, context management (especially via its snapshot capabilities), and tool integration are highly valuable even for **solo developers**. The core value lies in **transferring context between agents with minimal friction** and using development tools to programmatically guide agents through common tasks, reducing the need for specific instructions each time. Understanding these coordination capabilities is key to leveraging AGOR effectively, whether working alone or in a team.
 
 **For installation instructions and platform-specific setup, see the [Usage Guide](docs/usage-guide.md).**
 

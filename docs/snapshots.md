@@ -59,7 +59,7 @@ AGENT → USER/PROJECT COORDINATOR (Task Complete)
 
 ### Creating a Snapshot
 
-**Step 1: Use the `snapshot` hotkey**
+**Step 1: Use the snapshot development tool**
 
 ```
 snapshot
@@ -83,7 +83,7 @@ snapshot
 
 ### Receiving a Snapshot
 
-**Step 1: Use the `load_snapshot` hotkey**
+**Step 1: Use the load_snapshot development tool**
 
 ```
 load_snapshot
@@ -231,7 +231,7 @@ Each snapshot document includes the AGOR version used to create it. This is crit
 ### Why Version Matters
 
 - **Protocol Evolution**: AGOR coordination protocols evolve over time
-- **Hotkey Changes**: New hotkeys and commands are added in different versions
+- **Tool Changes**: New development tools and commands are added in different versions
 - **Template Updates**: Snapshot templates and procedures may change
 - **Feature Compatibility**: New features may not be available in older versions
 
@@ -255,7 +255,7 @@ pipx upgrade agor
 **Same Major.Minor Version**: ✅ Fully compatible
 
 - Example: 0.2.0 ↔️ 0.2.1
-- All protocols and hotkeys should work identically
+- All protocols and development tools should work identically
 
 **Different Minor Version**: ⚠️ Mostly compatible
 
@@ -345,4 +345,4 @@ Snapshots are the foundation of AGOR's seamless agent coordination:
 
 ---
 
-**Ready to create your first snapshot?** Use the `snapshot` hotkey and experience seamless agent transitions! 🚀
+**Ready to create your first snapshot?** Use AGOR's snapshot development tools and experience seamless agent transitions! 🚀

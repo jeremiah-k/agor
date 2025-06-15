@@ -7,31 +7,6 @@
 This section provides detailed setup instructions for initializing AGOR agents on different platforms. Choose the platform that matches your environment.
 
 <details>
-<summary><b>Google AI Studio Pro</b></summary>
-
-### Google AI Studio Pro
-
-**Setup:**
-
-- Use **Bundled Mode** with `.zip` format
-- **Any role works** - choose based on your workflow needs
-- Enable Function Calling in your project settings
-- Memory synchronization works automatically
-
-**Workflow:**
-
-```bash
-agor bundle your-project -f zip
-# Upload to Google AI Studio Pro
-# Select role based on your needs:
-# - Worker Agent: For code analysis and implementation
-# - Project Coordinator: For planning and strategy
-# All roles work with copy-paste workflow
-```
-
-</details>
-
-<details>
 <summary><b>AugmentCode Local Agent</b></summary>
 
 ### AugmentCode Local Agent
@@ -295,6 +270,33 @@ agor bundle your-project -f tar.gz
 > - Integration with existing OpenAI ecosystem
 >
 > **Likely Mode:** Standalone Mode with enhanced capabilities
+
+</details>
+
+<details>
+<summary><b>Google AI Studio Pro (Free Tier Being Phased Out)</b></summary>
+
+### Google AI Studio Pro
+
+**⚠️ Note**: The free version of Google AI Studio Pro is being phased out. Most users currently rely on the free tier.
+
+**Setup:**
+
+- Use **Bundled Mode** with `.zip` format
+- **Any role works** - choose based on your workflow needs
+- Enable Function Calling in your project settings
+- Memory synchronization works automatically
+
+**Workflow:**
+
+```bash
+agor bundle your-project -f zip
+# Upload to Google AI Studio Pro
+# Select role based on your needs:
+# - Worker Agent: For code analysis and implementation
+# - Project Coordinator: For planning and strategy
+# All roles work with copy-paste workflow
+```
 
 </details>
 
