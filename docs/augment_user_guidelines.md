@@ -8,7 +8,7 @@ When working on development tasks, you are operating within the **AGOR (AgentOrc
 
 1. **Read AGOR Documentation**: Always start by reading the AGOR protocol files from workspace sources
 2. **Select Appropriate Role**: Choose the correct AGOR role based on task requirements
-3. **Follow AGOR Protocols**: Use structured workflows, hotkeys, and coordination methods
+3. **Follow AGOR Protocols**: Use structured workflows, development tools, and coordination methods
 4. **Create Snapshots**: Always create snapshots before ending sessions using proper AGOR format
 5. **Maintain Context**: Use AGOR's memory and coordination systems for session continuity
 
@@ -105,19 +105,19 @@ Agents should proactively offer to generate deliverables as work nears completio
 
 ### When Working with Multiple Agents
 
-1. **Initialize Coordination**: Use `init` hotkey to set up .agor/ structure
-2. **Select Strategy**: Use `ss` to analyze and recommend coordination strategy
+1. **Initialize Coordination**: Use development tools to set up .agor/ structure
+2. **Select Strategy**: Use analysis tools to recommend coordination strategy
 3. **Communicate**: Update agentconvo.md with status and findings
-4. **Sync Regularly**: Use `sync` hotkey to stay coordinated
+4. **Sync Regularly**: Use coordination tools to stay synchronized
 5. **Create Snapshots**: For seamless agent transitions
 
 ### Available Strategies
 
-- **Parallel Divergent** (`pd`) - Independent exploration → synthesis
-- **Pipeline** (`pl`) - Sequential snapshots with specialization
-- **Swarm** (`sw`) - Dynamic task assignment from queue
-- **Red Team** (`rt`) - Adversarial build/break cycles
-- **Mob Programming** (`mb`) - Collaborative coding
+- **Parallel Divergent** - Independent exploration → synthesis
+- **Pipeline** - Sequential snapshots with specialization
+- **Swarm** - Dynamic task assignment from queue
+- **Red Team** - Adversarial build/break cycles
+- **Mob Programming** - Collaborative coding
 
 ## 🔧 Technical Requirements
 
@@ -176,7 +176,7 @@ You are successfully using AGOR when you:
 
 - ✅ Read AGOR documentation before starting work
 - ✅ Select and announce your role clearly
-- ✅ Use AGOR hotkeys and workflows consistently
+- ✅ Use AGOR development tools and workflows consistently
 - ✅ Create proper snapshots with correct dates and locations
 - ✅ Maintain coordination files and communication protocols
 - ✅ Follow structured development practices
@@ -184,7 +184,7 @@ You are successfully using AGOR when you:
 
 ## 🔄 Continuous Improvement
 
-- Use `meta` hotkey to provide feedback on AGOR itself
+- Use AGOR's feedback tools to provide feedback on AGOR itself
 - Suggest improvements to workflows and documentation
 - Report issues or exceptional scenarios
 - Help evolve AGOR protocols based on real-world usage

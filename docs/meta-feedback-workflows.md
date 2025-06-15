@@ -47,7 +47,7 @@ The enhanced AGOR Meta Feedback System enables agents to provide structured, act
 
 ```python
 # Using the enhanced meta feedback system
-from agor.tools.hotkeys import quick_meta_feedback_bug
+from agor.tools.dev_tools import quick_meta_feedback_bug
 
 # Report a bug with structured information
 bug_report = quick_meta_feedback_bug(
@@ -65,11 +65,11 @@ bug_report = quick_meta_feedback_bug(
 ### Scenario 2: Suggesting an Enhancement
 
 ```python
-from agor.tools.hotkeys import quick_meta_feedback_enhancement
+from agor.tools.dev_tools import quick_meta_feedback_enhancement
 
 enhancement = quick_meta_feedback_enhancement(
-    enhancement_idea="Add auto-completion for hotkey commands to improve agent efficiency",
-    component="hotkeys"
+    enhancement_idea="Add auto-completion for development tools to improve agent efficiency",
+    component="dev_tools"
 )
 ```
 
@@ -103,10 +103,10 @@ detailed_feedback = generate_meta_feedback(
 ### Regular Health Checks
 
 ```python
-from agor.tools.hotkeys import system_health_check_hotkey
+from agor.tools.dev_tools import system_health_check
 
 # Comprehensive system status
-health_report = system_health_check_hotkey()
+health_report = system_health_check()
 
 # Provides:
 # - Git and workspace status
@@ -157,9 +157,9 @@ Memory stuff doesn't work
 ✅ **Good Example**:
 
 ```
-Component: hotkeys
+Component: dev_tools
 Severity: medium
-Description: Add input validation and auto-completion for hotkey commands
+Description: Add input validation and auto-completion for development tools
 
 Benefits:
 - Reduces agent errors from typos

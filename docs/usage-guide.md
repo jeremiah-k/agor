@@ -7,31 +7,6 @@
 This section provides detailed setup instructions for initializing AGOR agents on different platforms. Choose the platform that matches your environment.
 
 <details>
-<summary><b>Google AI Studio Pro</b></summary>
-
-### Google AI Studio Pro
-
-**Setup:**
-
-- Use **Bundled Mode** with `.zip` format
-- **Any role works** - choose based on your workflow needs
-- Enable Function Calling in your project settings
-- Memory synchronization works automatically
-
-**Workflow:**
-
-```bash
-agor bundle your-project -f zip
-# Upload to Google AI Studio Pro
-# Select role based on your needs:
-# - Worker Agent: For code analysis and implementation
-# - Project Coordinator: For planning and strategy
-# All roles work with copy-paste workflow
-```
-
-</details>
-
-<details>
 <summary><b>AugmentCode Local Agent</b></summary>
 
 ### AugmentCode Local Agent
@@ -298,6 +273,33 @@ Here are key examples of how to ask agents to use AGOR tools:
 
 **Code review preparation:**
 > "This branch is ready for code review. Generate a PR description that highlights the key changes and testing approach."
+
+<details>
+<summary><b>Google AI Studio Pro (Free Tier Phase-Out)</b></summary>
+
+### Google AI Studio Pro
+
+**⚠️ Note**: The free version of Google AI Studio Pro is being phased out. Most existing users rely on the free tier.
+
+**Setup:**
+
+- Use **Bundled Mode** with `.zip` format
+- **Any role works** - choose based on your workflow needs
+- To enable Function Calling in your project settings
+- Memory synchronization works automatically
+
+**Workflow:**
+
+```bash
+agor bundle your-project -f zip
+# Upload to Google AI Studio Pro
+# Select role based on your needs:
+# • Worker Agent: For code analysis and implementation
+# • Project Coordinator: For planning and strategy
+# All roles work with copy-paste workflow
+```
+
+</details>
 
 ## 🎯 Understanding AGOR's Dual Nature
 
