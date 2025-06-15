@@ -656,7 +656,7 @@ def get_available_functions_reference() -> str:
                 not name.startswith('_') and
                 hasattr(obj, '__doc__') and
                 obj.__doc__ and
-                not name in ['Optional', 'Path', 'Tuple', 'datetime']):
+                name not in ['Optional', 'Path', 'Tuple', 'datetime']):
 
                 # Get first line of docstring
                 doc = obj.__doc__.strip()

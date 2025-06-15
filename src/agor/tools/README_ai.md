@@ -16,7 +16,8 @@ First, detect your environment and install required dependencies:
 # Detect environment and install dependencies
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import detect_environment, get_agent_dependency_install_commands
+from agor.tools.dev_tools import detect_environment
+from agor.tools.dev_testing import get_agent_dependency_install_commands
 
 # Detect current environment
 env = detect_environment()
