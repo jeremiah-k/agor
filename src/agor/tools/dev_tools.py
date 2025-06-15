@@ -387,52 +387,43 @@ def display_git_workflow_status() -> str:
 # Note: read_from_memory_branch and list_memory_branches available if needed
 
 
-def get_or_create_agent_id() -> str:
+def generate_unique_agent_id() -> str:
     """
-    Get existing agent ID from .agor/agent_id file or create a new persistent one.
+    Generate a truly unique agent identifier for each agent session.
 
-    This ensures the same agent uses the same ID across sessions.
+    IMPORTANT: This creates a NEW unique ID each time, which is correct behavior.
+    Each agent session should have its own unique identity and memory branch.
 
     Returns:
-        A string agent ID in format 'agent_{hash}' for identifying this agent instance.
+        A string agent ID in format 'agent_{timestamp}_{hash}' for unique identification.
     """
     import hashlib
+    import time
     import os
-    from pathlib import Path
+    import uuid
 
-    # Check for existing agent ID file
-    agent_id_file = Path(".agor/agent_id")
+    # Create truly unique identifier using multiple sources
+    timestamp = str(int(time.time() * 1000))  # millisecond precision
+    random_component = str(uuid.uuid4())[:8]  # random component
+    process_id = str(os.getpid())  # process ID
 
-    if agent_id_file.exists():
-        try:
-            agent_id = agent_id_file.read_text().strip()
-            if agent_id.startswith("agent_") and len(agent_id) == 14:  # agent_ + 8 chars
-                return agent_id
-        except:
-            pass  # Fall through to create new ID
+    # Combine for uniqueness
+    unique_string = f"{timestamp}_{random_component}_{process_id}"
+    agent_hash = hashlib.md5(unique_string.encode()).hexdigest()[:8]
 
-    # Create new agent ID using simple, consistent approach
-    # Use just the current working directory for consistency
-    # This ensures the same agent ID for the same project
-    project_path = os.getcwd()
-
-    # Create hash from project path only (most consistent identifier)
-    agent_hash = hashlib.md5(project_path.encode()).hexdigest()[:8]
-    agent_id = f"agent_{agent_hash}"
-
-    # Save agent ID to file
-    os.makedirs(".agor", exist_ok=True)
-    agent_id_file.write_text(agent_id)
+    # Format: agent_{timestamp}_{hash} for readability and uniqueness
+    agent_id = f"agent_{timestamp[-6:]}_{agent_hash}"
 
     return agent_id
 
 
 def generate_agent_id() -> str:
     """
-    DEPRECATED: Use get_or_create_agent_id() instead.
-    This function is kept for backward compatibility.
+    Generate a unique agent ID for this agent session.
+
+    Each agent session gets a unique ID - this is the correct behavior.
     """
-    return get_or_create_agent_id()
+    return generate_unique_agent_id()
 
 
 def generate_agent_memory_branch(agent_id: str = None) -> str:
@@ -446,7 +437,7 @@ def generate_agent_memory_branch(agent_id: str = None) -> str:
         A string in the format 'agor/mem/{agent_id}' for uniquely identifying an agent's memory branch.
     """
     if agent_id is None:
-        agent_id = get_or_create_agent_id()
+        agent_id = generate_agent_id()
 
     memory_branch = f"agor/mem/{agent_id}"
     return memory_branch
@@ -463,7 +454,7 @@ def create_agent_memory_branch(agent_id: str = None) -> tuple[bool, str, str]:
         A tuple containing (success, agent_id, memory_branch) for tracking agent identity.
     """
     if agent_id is None:
-        agent_id = get_or_create_agent_id()
+        agent_id = generate_agent_id()
 
     memory_branch = generate_agent_memory_branch(agent_id)
 
@@ -537,7 +528,7 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
         # Get current agent ID if we want to keep it
         current_agent_id = None
         if keep_current:
-            current_agent_id = get_or_create_agent_id()
+            current_agent_id = generate_agent_id()
             print(f"🆔 Current agent ID: {current_agent_id}")
 
         branches_deleted = 0

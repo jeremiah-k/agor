@@ -1,3 +1,13 @@
+# AGOR CRITICAL ARCHITECTURE ENFORCEMENT
+# .agor/ directories must NEVER exist on working branches
+# This forces agents to use memory branches via dev tools
+# Any .agor content belongs ONLY on memory branches (agor/mem/*)
+/.agor/
+.agor/
+**/.agor/
+.agor
+*.agor
+
 .venv
 .pyenv
 __pycache__
@@ -10,13 +20,3 @@ build/
 .vscode/
 .coverage
 htmlcov/
-
-# AGOR CRITICAL ARCHITECTURE ENFORCEMENT
-# .agor/ directories must NEVER exist on working branches
-# This forces agents to use memory branches via dev tools
-# Any .agor content belongs ONLY on memory branches (agor/mem/*)
-/.agor/
-.agor/
-**/.agor/
-.agor
-*.agor
