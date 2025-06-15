@@ -103,6 +103,11 @@ Then generate a snapshot and a handoff prompt to another agent. Explain in detai
 Use AGOR tools to commit our current progress, then create a development snapshot titled 'Feature X Implementation Complete'. Generate a handoff prompt for the QA agent, instructing them to run tests, document any issues in agentconvo.md, and create their own handoff back to development if fixes are needed. Wrap each output (commit confirmation, snapshot, and handoff prompt) in separate codeblocks for easy copy-paste.
 ```
 
+**Cleanup after project completion:**
+```
+We've finished this sprint. Use AGOR dev tools to create a final project snapshot, then generate release notes and a PR description. After that, use the intelligent cleanup tools to remove agent directories older than 7 days, keeping only recent work. Wrap each output in separate codeblocks for easy copy-paste.
+```
+
 ## 🛠️ Development Workflow
 
 ### ✅ Good Examples
@@ -131,9 +136,10 @@ Use AGOR's PR generation tools to create a comprehensive PR description that exp
 ## 🎯 Specific Tool Usage
 
 ### Memory & Snapshots
-- `create_development_snapshot(title, context)`
-- `generate_session_end_prompt()`
-- `create_agent_memory_branch()`
+- `initialize_agent_workspace()` - creates agent directory in main memory branch
+- `create_development_snapshot(title, context)` - saves snapshot in agent's directory
+- `check_pending_handoffs()` - finds work from other agents
+- `create_handoff_prompt()` - creates structured handoffs
 
 ### Git & Release Management
 - `quick_commit_and_push(message)`
@@ -141,9 +147,10 @@ Use AGOR's PR generation tools to create a comprehensive PR description that exp
 - `generate_release_notes_output()`
 
 ### Agent Coordination
-- Update `.agor/agentconvo.md` with agent ID
-- Use agent-specific memory branches
-- Reference snapshots in handoffs
+- Update `shared/agentconvo.md` for cross-agent communication
+- Use main memory branch with agent directories
+- Create handoffs in `handoffs/pending/` directory
+- Reference other agents via their directories
 
 ## 💡 Pro Tips
 
@@ -155,6 +162,8 @@ Use AGOR's PR generation tools to create a comprehensive PR description that exp
 6. **Reference the agent's memory branch** for continuity
 7. **For multi-agent work**: Tell the next agent what AGOR actions to take
 8. **Stack multiple requests** efficiently in one prompt
+9. **Use intelligent cleanup** to manage agent directories
+10. **Check for pending handoffs** when starting work
 
 ## 🚫 Common Mistakes
 
