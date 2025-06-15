@@ -66,17 +66,23 @@ class HandoffRequest:
             self.brief_context = ""
 
 
-def create_snapshot(title: str, context: str, agent_id: str = None) -> bool:
-    """Create development snapshot with agent-specific memory branch support."""
+def create_snapshot(title: str, context: str, agent_id: str = None, custom_branch: str = None) -> bool:
+    """Create development snapshot in agent's directory within main memory branch."""
     timestamp_str = get_file_timestamp()
-    snapshot_file = (
-        f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
-    )
 
     # Generate agent ID if not provided
     if agent_id is None:
         from agor.tools.dev_tools import generate_agent_id
         agent_id = generate_agent_id()
+
+    # Get memory branch and agent directory
+    from agor.tools.dev_tools import get_main_memory_branch, get_agent_directory_path
+    memory_branch = get_main_memory_branch(custom_branch)
+    agent_dir = get_agent_directory_path(agent_id)
+
+    # Snapshot file path within agent's directory
+    snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+    snapshot_file = f"{agent_dir}snapshots/{snapshot_filename}"
 
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
@@ -132,15 +138,13 @@ If you're picking up this work:
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
     snapshot_path.write_text(snapshot_content)
 
-    # Commit snapshot to agent-specific memory branch using cross-branch commit (NEVER switches branches)
-    agent_memory_branch = f"agor/mem/{agent_id}"
-    snapshot_filename = f"{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
-    commit_message = f"📸 Create development snapshot: {title}"
+    # Commit snapshot to agent's directory in main memory branch (NEVER switches branches)
+    commit_message = f"📸 Create development snapshot: {title} (Agent: {agent_id})"
 
     success = commit_to_memory_branch(
         file_content=snapshot_content,
-        file_name=f".agor/snapshots/{snapshot_filename}",
-        branch_name=agent_memory_branch,
+        file_name=snapshot_file,
+        branch_name=memory_branch,
         commit_message=commit_message,
     )
 
