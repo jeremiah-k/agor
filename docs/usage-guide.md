@@ -249,6 +249,54 @@ agor bundle your-project -f tar.gz
 
 </details>
 
+## 💬 Example User Prompts
+
+Here are natural language examples of how to ask agents to use AGOR tools:
+
+### 📸 Creating Snapshots & Handoffs
+
+**End of work session:**
+> "I'm wrapping up for today. Can you create a snapshot of our progress and generate a handoff prompt so another agent can pick up where we left off?"
+
+**Before switching tasks:**
+> "Before we move on to the next issue, let's save our current progress. Create a snapshot and generate a PR description for the work we've done."
+
+**Regular progress saving:**
+> "Let's commit our progress so far and create a quick snapshot in case we need to hand this off later."
+
+### 🚀 Release & PR Management
+
+**After completing a feature:**
+> "We just finished implementing the user authentication feature. Can you commit our changes and create some release notes for this update?"
+
+**When work is ready for review:**
+> "This feature is ready for review. Can you generate a PR description that explains what we built and why?"
+
+**For bug fixes:**
+> "We've fixed the login issue. Can you commit this fix and generate a brief release note about what was resolved?"
+
+### 🔄 Agent Coordination
+
+**Starting work from a handoff:**
+> "I received a handoff from another agent. Can you load the latest snapshot and show me what needs to be done next?"
+
+**Checking project status:**
+> "What's the current status of this project? Can you create a progress snapshot so I understand where we are?"
+
+**Multi-agent collaboration:**
+> "Another agent will be working on the frontend while I handle the backend. Can you create a coordination snapshot and update the agent conversation log?"
+
+### 🛠️ Development Workflow
+
+**Before major changes:**
+> "I'm about to refactor the database layer. Let's create a snapshot first so we can roll back if needed."
+
+**After testing:**
+> "All tests are passing now. Can you commit our changes and generate release notes for the QA team?"
+
+**Code review preparation:**
+> "This branch is ready for code review. Generate a PR description that highlights the key changes and testing approach."
+
 ## 🎯 Understanding AGOR's Dual Nature
 
 ### From AgentGrunt to AgentOrchestrator
