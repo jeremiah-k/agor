@@ -357,15 +357,8 @@ def read_from_memory_branch(
 def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
     """
     Lists all memory branches in the repository without switching the current branch.
-
-    If available, uses the MemorySync class to retrieve both local and remote memory branches.
-    Falls back to parsing Git branch output if MemorySync is unavailable or fails.
-
-    Args:
-        repo_path: Optional path to the repository. Defaults to the current working directory.
-
-    Returns:
-        A sorted list of memory branch names, or an empty list if none are found or on failure.
+    
+    Attempts to use MemorySyncManager to retrieve both local and remote memory branches, combining and sorting them. If this fails, falls back to parsing the output of `git branch -a` to identify memory branches. Returns a sorted list of memory branch names, or an empty list if none are found or on failure.
     """
     if repo_path is None:
         repo_path = Path.cwd()

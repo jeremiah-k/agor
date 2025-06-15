@@ -353,7 +353,11 @@ git log --oneline -10
 ```"""
 
     def _get_handoff_template(self) -> str:
-        """Get the default handoff prompt template."""
+        """
+        Returns the default handoff prompt template as a Jinja2-formatted string.
+        
+        The template provides a structured session end report for agent handoff, including sections for work accomplished, project status, files modified, next agent instructions, critical context, handoff requirements, and immediate next steps.
+        """
         return """# 📋 MANDATORY SESSION END REPORT
 
 **Generated**: {{ current_timestamp() }}

@@ -153,19 +153,19 @@ def generate_agent_handoff_prompt(
     brief_context: str = None,
 ) -> str:
     """
-    Generates a formatted agent handoff prompt for seamless transitions between agents.
-
-    Creates a comprehensive prompt including environment details, setup instructions, memory branch access, task overview, brief context, and previous work context if provided. Applies automatic backtick processing to ensure safe embedding within single codeblocks.
-
+    Generates a comprehensive handoff prompt for transitioning tasks between agents.
+    
+    The prompt includes environment details, setup instructions, memory branch access (if applicable), task overview, brief context, and previous work context. It ensures safe formatting for embedding within a single code block.
+    
     Args:
         task_description: Description of the task for the next agent.
-        snapshot_content: Optional content summarizing previous agent work.
+        snapshot_content: Optional summary of previous agent work.
         memory_branch: Optional name of the memory branch for coordination.
         environment: Optional environment information; auto-detected if not provided.
         brief_context: Optional brief background for quick orientation.
-
+    
     Returns:
-        A processed prompt string ready for use in a single codeblock.
+        A formatted prompt string ready for agent handoff.
     """
     if environment is None:
         environment = detect_environment()

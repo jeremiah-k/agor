@@ -33,7 +33,9 @@ def auto_commit_memory_wrapper(
 
 
 def test_tooling_wrapper() -> bool:
-    """Test all development tools functions."""
+    """
+    Runs tests on all development tools and returns True if successful, False otherwise.
+    """
     return test_tooling()
 
 
@@ -282,8 +284,8 @@ def generate_meta_feedback_hotkey(
 def system_health_check_hotkey() -> str:
     """
     Performs a comprehensive system health check and returns a detailed markdown report.
-
-    The report summarizes workspace health, project status, development tools, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
+    
+    The report includes workspace health, project status, development tools status, memory system availability, detected issues and warnings, and actionable recommendations for maintaining AGOR performance. Returns a formatted error message if the health check fails.
     """
     try:
         # Get workspace health

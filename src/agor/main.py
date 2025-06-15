@@ -928,9 +928,9 @@ def detick(
     ),
 ):
     """
-    Converts triple backticks to double backticks in the provided content or clipboard.
-
-    If no content is given, reads from the clipboard, processes it, and updates the clipboard with the result. Optionally displays the processed content.
+    Replaces all triple backticks with double backticks in the provided content or clipboard.
+    
+    If no content is specified, processes the current clipboard content and updates the clipboard with the result. Optionally displays the processed content.
     """
     try:
         import pyperclip
@@ -992,9 +992,9 @@ def retick(
     ),
 ):
     """
-    Converts double backticks in the provided content or clipboard to triple backticks and updates the clipboard.
-
-    If no content is given, reads from the clipboard, processes it, and writes the result back to the clipboard. Optionally displays the processed content.
+    Converts double backticks to triple backticks in the provided content or clipboard and updates the clipboard.
+    
+    If no content is provided, reads from the clipboard, processes it, and writes the result back to the clipboard. Optionally displays the processed content if requested.
     """
     try:
         import pyperclip
