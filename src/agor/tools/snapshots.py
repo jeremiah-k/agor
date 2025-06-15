@@ -324,7 +324,7 @@ def create_seamless_handoff(
     memory_branch = None
     try:
         # Use agent-specific memory branch
-        memory_branch = f"agor/mem/{agent_id}"
+        memory_branch = "agor/mem/main"
         timestamp_str = get_file_timestamp()
 
         success = commit_to_memory_branch(

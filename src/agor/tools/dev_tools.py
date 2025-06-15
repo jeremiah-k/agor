@@ -500,7 +500,7 @@ def generate_unique_agent_id() -> str:
     import uuid
 
     # Create truly unique identifier using multiple sources
-    timestamp = str(int(time.time()))[-6:]  # last 6 digits of timestamp
+    full_timestamp = str(int(time.time()))  # full epoch seconds for proper datetime conversion
     random_component = str(uuid.uuid4())[:8]  # random component
     process_id = str(os.getpid())  # process ID
 
@@ -508,8 +508,8 @@ def generate_unique_agent_id() -> str:
     unique_string = f"{random_component}_{process_id}_{time.time()}"
     agent_hash = hashlib.md5(unique_string.encode()).hexdigest()[:8]
 
-    # Format: agent_{hash}_{timestamp} as requested
-    agent_id = f"agent_{agent_hash}_{timestamp}"
+    # Format: agent_{hash}_{timestamp} with full timestamp for datetime compatibility
+    agent_id = f"agent_{agent_hash}_{full_timestamp}"
 
     return agent_id
 
@@ -704,78 +704,110 @@ def cleanup_agent_directories(
         if current_agent_id:
             print(f"🆔 Keeping current agent: {current_agent_id}")
 
-        # Switch to memory branch to examine directories
-        checkout_result = subprocess.run(
-            ["git", "checkout", memory_branch],
+        # SAFETY: Capture current branch before any checkout operations
+        original_branch_result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
             capture_output=True,
             text=True,
             cwd="."
         )
 
-        if checkout_result.returncode != 0:
-            print(f"❌ Could not checkout memory branch {memory_branch}")
+        if original_branch_result.returncode != 0:
+            print(f"❌ Could not determine current branch")
             return False
 
-        # List agent directories
-        agents_dir = "agents"
-        if not os.path.exists(agents_dir):
-            print(f"📁 No agents directory found in {memory_branch}")
-            return True
+        original_branch = original_branch_result.stdout.strip()
+        print(f"🔒 Current branch: {original_branch} (will restore after cleanup)")
 
-        directories_removed = 0
-        for agent_dir in os.listdir(agents_dir):
-            agent_path = os.path.join(agents_dir, agent_dir)
+        try:
+            # Switch to memory branch to examine directories
+            checkout_result = subprocess.run(
+                ["git", "checkout", memory_branch],
+                capture_output=True,
+                text=True,
+                cwd="."
+            )
 
-            # Skip if not a directory
-            if not os.path.isdir(agent_path):
-                continue
+            if checkout_result.returncode != 0:
+                print(f"❌ Could not checkout memory branch {memory_branch}")
+                return False
 
-            # Skip current agent if keeping it
-            if keep_current and current_agent_id and agent_dir == current_agent_id:
-                print(f"⏭️  Keeping current agent directory: {agent_dir}")
-                continue
+            # List agent directories
+            agents_dir = "agents"
+            if not os.path.exists(agents_dir):
+                print(f"📁 No agents directory found in {memory_branch}")
+                return True
 
-            # Check pattern matching
-            if agent_pattern and not agent_dir.startswith(agent_pattern.replace("*", "")):
-                continue
+            directories_removed = 0
+            for agent_dir in os.listdir(agents_dir):
+                agent_path = os.path.join(agents_dir, agent_dir)
 
-            # Check age if specified
-            if days_old:
-                try:
-                    # Extract timestamp from agent_id (assuming agent_{hash}_{timestamp} format)
-                    timestamp_str = agent_dir.split("_")[-1]
-                    agent_timestamp = datetime.fromtimestamp(int(timestamp_str))
-                    cutoff_date = datetime.now() - timedelta(days=days_old)
-
-                    if agent_timestamp > cutoff_date:
-                        print(f"⏭️  Keeping recent agent directory: {agent_dir}")
-                        continue
-                except (ValueError, IndexError):
-                    print(f"⚠️  Could not parse timestamp for {agent_dir}, skipping")
+                # Skip if not a directory
+                if not os.path.isdir(agent_path):
                     continue
 
-            # Remove the directory
-            import shutil
+                # Skip current agent if keeping it
+                if keep_current and current_agent_id and agent_dir == current_agent_id:
+                    print(f"⏭️  Keeping current agent directory: {agent_dir}")
+                    continue
+
+                # Check pattern matching
+                if agent_pattern and not agent_dir.startswith(agent_pattern.replace("*", "")):
+                    continue
+
+                # Check age if specified
+                if days_old:
+                    try:
+                        # Extract timestamp from agent_id (assuming agent_{hash}_{timestamp} format)
+                        timestamp_str = agent_dir.split("_")[-1]
+                        agent_timestamp = datetime.fromtimestamp(int(timestamp_str))
+                        cutoff_date = datetime.now() - timedelta(days=days_old)
+
+                        if agent_timestamp > cutoff_date:
+                            print(f"⏭️  Keeping recent agent directory: {agent_dir}")
+                            continue
+                    except (ValueError, IndexError):
+                        print(f"⚠️  Could not parse timestamp for {agent_dir}, skipping")
+                        continue
+
+                # Remove the directory
+                import shutil
+                try:
+                    shutil.rmtree(agent_path)
+                    print(f"✅ Removed agent directory: {agent_dir}")
+                    directories_removed += 1
+                except Exception as e:
+                    print(f"❌ Failed to remove {agent_dir}: {e}")
+
+            # Commit the cleanup
+            if directories_removed > 0:
+                subprocess.run(["git", "add", "-A"], cwd=".")
+                subprocess.run([
+                    "git", "commit", "-m",
+                    f"🧹 Cleanup: Removed {directories_removed} agent directories"
+                ], cwd=".")
+
+                # Push the cleanup
+                subprocess.run(["git", "push", "origin", memory_branch], cwd=".")
+
+            print(f"🧹 Cleanup complete: Removed {directories_removed} agent directories")
+            return True
+
+        finally:
+            # SAFETY: Always restore original branch regardless of success/failure
             try:
-                shutil.rmtree(agent_path)
-                print(f"✅ Removed agent directory: {agent_dir}")
-                directories_removed += 1
-            except Exception as e:
-                print(f"❌ Failed to remove {agent_dir}: {e}")
-
-        # Commit the cleanup
-        if directories_removed > 0:
-            subprocess.run(["git", "add", "-A"], cwd=".")
-            subprocess.run([
-                "git", "commit", "-m",
-                f"🧹 Cleanup: Removed {directories_removed} agent directories"
-            ], cwd=".")
-
-            # Push the cleanup
-            subprocess.run(["git", "push", "origin", memory_branch], cwd=".")
-
-        print(f"🧹 Cleanup complete: Removed {directories_removed} agent directories")
-        return True
+                restore_result = subprocess.run(
+                    ["git", "checkout", original_branch],
+                    capture_output=True,
+                    text=True,
+                    cwd="."
+                )
+                if restore_result.returncode == 0:
+                    print(f"🔒 Restored original branch: {original_branch}")
+                else:
+                    print(f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}")
+            except Exception as restore_error:
+                print(f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}")
 
     except Exception as e:
         print(f"❌ Error during cleanup: {e}")
@@ -1507,7 +1539,7 @@ def get_workflow_optimization_tips() -> str:
 # Generate optimized prompt
 prompt = generate_workflow_prompt_template(
     task_description="Your task",
-    memory_branch="agor/mem/agent_12345678"
+    memory_branch="agor/mem/main"
 )
 
 # Validate completion

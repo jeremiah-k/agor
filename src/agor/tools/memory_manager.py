@@ -267,70 +267,50 @@ def commit_to_memory_branch(
         return False
 
 
-def sanitize_agent_id(agent_id: str) -> str:
-    """
-    Sanitize agent ID to prevent injection attacks and path traversal.
-
-    Args:
-        agent_id: Raw agent ID
-
-    Returns:
-        Sanitized agent ID safe for use in file paths and branch names
-    """
-    import re
-
-    if not agent_id:
-        return "unknown"
-
-    # Remove or replace unsafe characters
-    # Keep only alphanumerics, dashes, and underscores
-    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(agent_id))
-
-    # Remove multiple consecutive underscores/dashes
-    sanitized = re.sub(r'[_\-]+', '_', sanitized)
-
-    # Remove leading/trailing underscores/dashes
-    sanitized = sanitized.strip('_-')
-
-    # Ensure it's not empty and not too long
-    if not sanitized:
-        sanitized = "unknown"
-    elif len(sanitized) > 50:
-        sanitized = sanitized[:50].rstrip('_-')
-
-    return sanitized
-
-
 def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_branch: str = None) -> bool:
     """
-    Automatically commit content to agent-specific memory branch with standardized naming.
+    Automatically commit content to main memory branch with agent directory structure.
 
     Args:
         content: Memory content to commit
         memory_type: Type of memory (e.g., 'session_start', 'progress', 'completion')
         agent_id: Agent identifier (will be sanitized for security)
-        memory_branch: Optional specific memory branch. If not provided, uses agent-specific branch.
+        memory_branch: Optional specific memory branch. If not provided, uses main memory branch.
 
     Returns:
         True if successful, False otherwise
     """
-    # Sanitize agent ID to prevent injection attacks
-    safe_agent_id = sanitize_agent_id(agent_id)
-    safe_memory_type = sanitize_agent_id(memory_type)
+    # Import sanitization function from dev_tools to avoid duplication
+    try:
+        from agor.tools.dev_tools import sanitize_slug
+    except ImportError:
+        # Fallback sanitization if import fails
+        import re
+        def sanitize_slug(s):
+            if not s:
+                return "unknown"
+            sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(s))
+            sanitized = re.sub(r'[_\-]+', '_', sanitized)
+            sanitized = sanitized.strip('_-')
+            return sanitized[:50].rstrip('_-') if sanitized else "unknown"
+
+    # Sanitize inputs to prevent injection attacks
+    safe_agent_id = sanitize_slug(agent_id)
+    safe_memory_type = sanitize_slug(memory_type)
 
     print(f"💾 Auto-committing memory: {safe_memory_type} for {safe_agent_id}")
 
-    # Use agent-specific memory branch if not provided
+    # Use main memory branch with agent directory structure
     if memory_branch is None:
-        memory_branch = f"agor/mem/{safe_agent_id}"
+        memory_branch = "agor/mem/main"
 
-    # Create standardized file name with sanitized components
+    # Create standardized file name with sanitized components in agent directory
     file_name = f"agents/{safe_agent_id}/{safe_agent_id}-memory.md"
 
     # Create commit message with sanitized components
     commit_message = f"Memory update: {safe_memory_type} for {safe_agent_id}"
 
-    # Commit to agent-specific memory branch
+    # Commit to main memory branch with agent directory structure
     return commit_to_memory_branch(
         file_content=content,
         file_name=file_name,

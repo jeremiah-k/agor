@@ -137,7 +137,7 @@ Based on your environment detection:
 
 **ALWAYS read and understand what dev tools tell you:**
 
-- "✅ Snapshot committed to memory branch: agor/mem/agent_abc123" means SUCCESS
+- "✅ Snapshot committed to memory branch: agor/mem/main" means SUCCESS
 - "📁 Snapshot file: .agor/snapshots/filename.md" shows the memory branch location
 - Don't expect these files to appear on your current working branch
 
