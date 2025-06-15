@@ -112,7 +112,7 @@ AGOR will ask you to choose a role. Pick based on what you want to do:
 
 ## 🎼 Step 5: Start Coordinating
 
-Once initialized, you'll see a hotkey menu. Try these commands:
+Once initialized, you'll see a capabilities menu. Try these functions:
 
 ```
 # Analyze your codebase
@@ -187,7 +187,7 @@ You can change roles by re-initializing:
 
 ### Provide Feedback
 
-Use the `meta` hotkey to help improve AGOR:
+Use AGOR's feedback tools to help improve AGOR:
 
 ```
 meta
@@ -219,7 +219,7 @@ Now that you have AGOR running, explore these advanced topics:
 
 **Something not working?**
 
-- Use the `meta` hotkey to report issues
+- Use AGOR's feedback tools to report issues
 - Visit [GitHub Issues](https://github.com/jeremiah-k/agor/issues)
 - Check [Bundle Mode Guide](bundle-mode.md) for platform-specific help
 
