@@ -31,13 +31,13 @@
 
 **Solution Implemented**: Enhanced AGOR_INSTRUCTIONS.md with absolutely mandatory formatting requirements.
 
-### 3. Dev Tooling Output Illiteracy
+### 3. Dev Tools Output Illiteracy
 
-**Problem**: Agents don't read/understand what dev tooling tells them.
+**Problem**: Agents don't read/understand what dev tools tells them.
 
-**Example**: When dev tooling says "✅ Snapshot committed to memory branch: agor/mem/agent_abc123", agents should understand that's where it went, not expect it on working branch.
+**Example**: When dev tools says "✅ Snapshot committed to memory branch: agor/mem/agent_abc123", agents should understand that's where it went, not expect it on working branch.
 
-**Solution Needed**: Better agent education about reading dev tooling output.
+**Solution Needed**: Better agent education about reading dev tools output.
 
 ## 📚 Context for Next Agent
 

@@ -86,7 +86,7 @@ Each entry includes:
   - Enables seamless copy-paste workflow without formatting issues
 - **Memory Branch Architecture Education**: Added comprehensive memory system understanding to README_ai.md
   - Clarified that .agor files ONLY exist on memory branches, NEVER on working branches
-  - Explained cross-branch commit design and dev tooling output interpretation
+  - Explained cross-branch commit design and dev tools output interpretation
   - Addressed fundamental misunderstanding causing agents to violate AGOR architecture
 
 **Rationale**:
@@ -115,7 +115,7 @@ Each entry includes:
 
 **Next Steps**:
 
-- Implement unique memory branch generation in dev tooling
+- Implement unique memory branch generation in dev tools
 - Test optimized prompting strategies with real agent workflows
 - Gather feedback on workflow optimization guide effectiveness
 - Monitor meta feedback for continuous system improvement
@@ -129,17 +129,17 @@ Each entry includes:
 - `docs/usage-guide.md` - Updated User Guidelines sections with formatting requirements
 - `docs/agor-development-log.md` - Added comprehensive development context
 
-### 20. 2025-06-09 | v0.4.3 | Dev Tooling Modularization and Critical Fixes
+### 20. 2025-06-09 | v0.4.3 | Dev Tools Modularization and Critical Fixes
 
-**Technical Focus**: Complete modularization of dev_tooling.py to meet ≤500 LOC guidelines, fix runtime errors, and align snapshot system with core AGOR purpose.
+**Technical Focus**: Complete modularization of dev_tools.py to meet ≤500 LOC guidelines, fix runtime errors, and align snapshot system with core AGOR purpose.
 
 **Implementation Details**:
 
-- **Dev Tooling Modularization**: Successfully split massive 1600+ LOC dev_tooling.py into focused modules
+- **Dev Tools Modularization**: Successfully split massive 1600+ LOC dev_tools.py into focused modules
   - `snapshots.py` (~400 LOC) - Snapshot creation and agent handoff functionality
   - `hotkeys.py` (~300 LOC) - Hotkey helpers and workflow convenience functions
   - `checklist.py` (~300 LOC) - Checklist generation and workflow validation
-  - `dev_tooling.py` (351 LOC) - Clean API under guideline
+  - `dev_tools.py` (351 LOC) - Clean API under guideline
 - **Critical Runtime Fixes**: Fixed function call errors and duplicate definitions
   - Corrected quick_commit_push function calls with proper positional arguments
   - Removed duplicate get_timestamp() function definitions
@@ -162,7 +162,7 @@ Each entry includes:
 
 **Rationale**:
 
-- 1600+ LOC dev_tooling.py violated ≤500 LOC guideline and was unmaintainable
+- 1600+ LOC dev_tools.py violated ≤500 LOC guideline and was unmaintainable
 - Runtime errors from incorrect function calls needed immediate fixing
 - AGOR's core purpose is seamless agent transitions, not complex role management
 - Snapshot system was overcomplicated with unnecessary specialization types
@@ -193,7 +193,7 @@ Each entry includes:
 
 **Files Modified**:
 
-- `src/agor/tools/dev_tooling.py` - Reduced from 1600+ to 351 LOC
+- `src/agor/tools/dev_tools.py` - Reduced from 1600+ to 351 LOC
 - `src/agor/tools/snapshots.py` (NEW) - Snapshot and handoff functionality
 - `src/agor/tools/hotkeys.py` (NEW) - Workflow and status helpers
 - `src/agor/tools/checklist.py` (NEW) - Validation and progress tracking
@@ -205,9 +205,9 @@ Each entry includes:
 - `README.md` - Positioned ChatGPT as primary bundle mode service
 - `docs/agor-development-log.md` - Fixed chronological order and comprehensive updates
 
-### 19. 2025-01-28 | v0.4.3 | Strategic Focus Shift - Dev Tooling and Agent Handoffs Priority
+### 19. 2025-01-28 | v0.4.3 | Strategic Focus Shift - Dev Tools and Agent Handoffs Priority
 
-**Technical Focus**: Strategic pivot to prioritize dev tooling, agent-to-agent handoffs, and seamless AGOR protocol integration over experimental strategies.
+**Technical Focus**: Strategic pivot to prioritize dev tools, agent-to-agent handoffs, and seamless AGOR protocol integration over experimental strategies.
 
 **Implementation Details**:
 
@@ -215,16 +215,16 @@ Each entry includes:
   - One memory branch per feature or session to reduce branch proliferation
   - Cleaner memory management with consolidated snapshots and coordination
   - Reduced git overhead and improved navigation
-- **Dev Tooling Promotion**: Elevating dev tooling to top priority in documentation and user guides
+- **Dev Tools Promotion**: Elevating dev tools to top priority in documentation and user guides
   - Agent-to-agent handoff prompts as primary feature
   - Seamless AGOR protocol loading and integration
   - Snapshot generation and coordination tools
 - **Dependency Management Enhancement**: Ensuring agent-requirements.txt is properly installed
-  - Adding httpx to agent-requirements.txt if needed for dev tooling functions
+  - Adding httpx to agent-requirements.txt if needed for dev tools functions
   - Including pip install instructions in all initialization prompts
   - Environment-specific dependency handling
 - **Documentation Restructuring**: Updating usage guide to prioritize practical capabilities
-  - Moving dev tooling to top sections
+  - Moving dev tools to top sections
   - De-emphasizing experimental strategies
   - Focusing on proven agent coordination features
 
@@ -233,14 +233,14 @@ Each entry includes:
 - Users are more interested in practical agent handoff and protocol integration than experimental strategies
 - Memory branch proliferation (one per memory) creates unnecessary complexity
 - Dev tooling provides immediate value for agent coordination and productivity
-- Missing dependencies (like httpx) prevent dev tooling functions from working properly
+- Missing dependencies (like httpx) prevent dev tools functions from working properly
 - Documentation should reflect actual user priorities and proven capabilities
 
 **Impact**:
 
 - **Clearer User Focus**: Documentation emphasizes proven, practical features
 - **Reduced Complexity**: Unified memory branch strategy simplifies git operations
-- **Better Reliability**: Proper dependency management ensures dev tooling works consistently
+- **Better Reliability**: Proper dependency management ensures dev tools works consistently
 - **Enhanced Adoption**: Prioritizing practical features over experimental ones
 - **Improved Workflows**: Agent handoffs and protocol integration become primary use cases
 
@@ -248,13 +248,13 @@ Each entry includes:
 
 - User adoption follows practical value, not experimental features
 - Memory management should be simple and consolidated, not fragmented
-- Dependency management is critical for reliable dev tooling operation
+- Dependency management is critical for reliable dev tools operation
 - Documentation structure should reflect actual user priorities
 - Agent coordination tools provide more immediate value than strategy frameworks
 
 **Next Steps**:
 
-- Update usage guide to prioritize dev tooling and agent handoffs
+- Update usage guide to prioritize dev tools and agent handoffs
 - Implement unified memory branch strategy guidance
 - Ensure all required dependencies are documented and installed
 - Focus development efforts on proven agent coordination capabilities
@@ -262,14 +262,14 @@ Each entry includes:
 
 **Files to Modify**:
 
-- `docs/usage-guide.md` - Restructure to prioritize dev tooling
+- `docs/usage-guide.md` - Restructure to prioritize dev tools
 - `src/agor/tools/agent-requirements.txt` - Add missing dependencies
 - Memory management guidance - Recommend unified memory branch strategy
 - Initialization prompts - Include dependency installation instructions
 
 ### 18. 2025-06-07 | v0.4.3 | Comprehensive AGOR Refactoring and Safety Improvements
 
-**Technical Focus**: Major refactoring addressing review findings with focus on git safety, memory branch architecture, role system enhancement, and dev tooling modularization.
+**Technical Focus**: Major refactoring addressing review findings with focus on git safety, memory branch architecture, role system enhancement, and dev tools modularization.
 
 **Implementation Details**:
 
@@ -286,7 +286,7 @@ Each entry includes:
   - Added strategic oversight and code review responsibilities
   - Simplified from 3 roles to 2 (Worker Agent + Project Coordinator)
   - Updated all documentation consistently
-- **Dev Tooling Modularization**: Broke down 2500+ line `dev_tooling.py` into focused modules
+- **Dev Tools Modularization**: Broke down 2500+ line `dev_tools.py` into focused modules
   - `git_operations.py` - Safe git operations and timestamps
   - `memory_manager.py` - Cross-branch memory management
   - `agent_handoffs.py` - Agent coordination and detick processing
@@ -294,7 +294,7 @@ Each entry includes:
   - Maintained 100% backward compatibility
 - **Documentation Clarification**: Fixed critical misunderstanding about `.agor` directory
   - Clarified that `.agor` only exists on memory branches, not main/feature branches
-  - Updated all documentation to reflect memory branch-only access via dev tooling
+  - Updated all documentation to reflect memory branch-only access via dev tools
   - Added temporary file cleanup guidelines for agents
 
 **Rationale**:
@@ -302,7 +302,7 @@ Each entry includes:
 - Review findings identified critical git safety violations and role inconsistencies
 - Memory branch architecture was overly complex with orphan branch creation
 - Project Coordinator role lacked strategic oversight emphasis
-- Massive dev_tooling.py file (2500+ lines) needed modularization for maintainability
+- Massive dev_tools.py file (2500+ lines) needed modularization for maintainability
 - Documentation incorrectly suggested `.agor` files exist on working branches
 
 **Impact**:
@@ -336,7 +336,7 @@ Each entry includes:
 - `src/agor/tools/memory_manager.py` (NEW) - Memory branch management
 - `src/agor/tools/agent_handoffs.py` (NEW) - Agent coordination utilities
 - `src/agor/tools/dev_testing.py` (NEW) - Testing and environment detection
-- `src/agor/tools/dev_tooling.py` - Updated to import from modules with backward compatibility
+- `src/agor/tools/dev_tools.py` - Updated to import from modules with backward compatibility
 - `docs/multi-agent-protocols.md` - Enhanced PC role, clarified memory branch system
 - `src/agor/tools/README_ai.md` - Updated role descriptions and selection
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` - Simplified to 2-role system
@@ -354,7 +354,7 @@ Each entry includes:
 - **File-Free Output Generation**: Added `generate_complete_project_outputs()` and `display_all()` methods for in-memory output creation
 - **Clean Development Workflows**: No temporary files created on working branches - maintains clean git state
 - **Fallback Arguments**: Optional content arguments for cases where clipboard access fails
-- **Core Functions**: Implemented `detick_content()` and `retick_content()` methods in DevTooling class with regex safety
+- **Core Functions**: Implemented `detick_content()` and `retick_content()` methods in DevTools class with regex safety
 - **Enhanced User Experience**: Users simply copy content, run command, and paste processed result
 - **Auto-Integration**: All AGOR outputs (snapshots, handoff prompts, PR descriptions, release notes) automatically deticked
 - **Complete Ecosystem**: Created comprehensive backtick management system for different usage contexts
@@ -397,7 +397,7 @@ Each entry includes:
 **Files Modified**:
 
 - `src/agor/main.py` - Added detick/retick CLI commands with enhanced configuration flexibility
-- `src/agor/tools/dev_tooling.py` - Added detick/retick methods, file-free output generation, and branch safety improvements
+- `src/agor/tools/dev_tools.py` - Added detick/retick methods, file-free output generation, and branch safety improvements
 - `src/agor/settings.py` - Updated default configuration values for better user experience
 - `docs/agor-development-log.md` - Updated development log with comprehensive implementation details
 
@@ -407,7 +407,7 @@ Each entry includes:
 
 **Implementation Details**:
 
-- **Enhanced DevTooling Class**: Added `generate_agent_handoff_prompt()` method with comprehensive environment detection and setup instructions
+- **Enhanced DevTools Class**: Added `generate_agent_handoff_prompt()` method with comprehensive environment detection and setup instructions
 - **Seamless Handoff Function**: Implemented `create_seamless_handoff()` for complete automation of snapshot creation and prompt generation
 - **File-Free Output Generation**: Added `generate_complete_project_outputs()` and `display_all()` methods for in-memory output creation without temporary file pollution
 - **Flexible Output Selection**: Users can generate specific outputs (PR description only, release notes only, handoff prompt only) using convenience functions
@@ -451,7 +451,7 @@ Each entry includes:
 
 **Files Modified**:
 
-- `src/agor/tools/dev_tooling.py` - Added 200+ lines of handoff functionality
+- `src/agor/tools/dev_tools.py` - Added 200+ lines of handoff functionality
 - `src/agor/tools/snapshot_templates.py` - Fixed syntax errors, maintained compatibility
 - `test_handoff.py` - Comprehensive test suite validating all functionality
 
@@ -616,7 +616,7 @@ Each entry includes:
 - **Dependency Installation**: Installed all required packages (platformdirs, pydantic, pydantic-settings)
 - **Comprehensive Testing**: All 4 memory sync hotkeys functional and tested
 - **Branch Architecture Clarification**: Established clear separation between working branches and memory branches
-- **Tooling Verification**: Confirmed development tooling respects memory/working branch separation
+- **Tooling Verification**: Confirmed development tools respects memory/working branch separation
 
 **Rationale**:
 
@@ -657,7 +657,7 @@ Each entry includes:
 
 ---
 
-### 13. 2025-05-28 | v0.3.4-dev | Memory Sync Hotkeys and Development Tooling Enhancement
+### 13. 2025-05-28 | v0.3.4-dev | Memory Sync Hotkeys and Development Tools Enhancement
 
 **Technical Focus**: Complete memory synchronization system integration with agent hotkeys and enhanced development workflow tooling.
 
@@ -668,7 +668,7 @@ Each entry includes:
   - `mem-sync-save` - Save current memory state to memory branch
   - `mem-sync-restore` - Restore memory state from a memory branch
   - `mem-sync-status` - Show current memory synchronization status
-- **Development Tooling**: Created comprehensive `dev_tooling.py` with:
+- **Development Tools**: Created comprehensive `dev_tools.py` with:
   - `quick_commit_push()` - One-shot commit/push with timestamps
   - `auto_commit_memory()` - Cross-branch memory operations
   - `test_tooling()` - Session validation function
@@ -709,7 +709,7 @@ Each entry includes:
 
 **Files Modified**:
 
-- `src/agor/tools/dev_tooling.py` (new) - Development workflow utilities
+- `src/agor/tools/dev_tools.py` (new) - Development workflow utilities
 - `src/agor/tools/sqlite_hotkeys.py` - Added memory sync hotkeys
 - `src/agor/settings.py` - Added memory_file setting
 - `src/agor/memory_sync.py` - Fixed imports and settings usage
@@ -900,7 +900,7 @@ Each entry includes:
 
 ## 🔧 v0.4.1-3 Development Session (2025-06-05)
 
-**Focus**: Memory Manager Fixes, Documentation Consolidation, and Dev Tooling Enhancement
+**Focus**: Memory Manager Fixes, Documentation Consolidation, and Dev Tools Enhancement
 
 ### 🎯 Memory Manager Pydantic Dependencies Fix
 
@@ -935,7 +935,7 @@ Each entry includes:
 - Ensured consistent "snapshot" and "transition" terminology across all documentation
 - Clarified distinction: snapshots are documents, codeblock prompts are delivery mechanism
 
-### 🛠️ Dev Tooling Enhancement
+### 🛠️ Dev Tools Enhancement
 
 **New Features Added**:
 
@@ -974,7 +974,7 @@ Each entry includes:
 - ✅ **Version Consistency**: All references updated to 0.4.1
 - ✅ **Terminology Cleanup**: All remaining "handoff" references fixed
 - ✅ **Documentation Consolidation**: Installation instructions consolidated into single source
-- ✅ **Dev Tooling Enhancement**: 4 new functions for dynamic generation and automation (consistency report function removed)
+- ✅ **Dev Tools Enhancement**: 4 new functions for dynamic generation and automation (consistency report function removed)
 - 🔄 **Static Template Replacement**: In progress (next phase)
 
 ### 🎯 Implementation Strategy
@@ -991,7 +991,7 @@ Each entry includes:
 - Eliminated duplication across multiple files
 - Updated all references to point to consolidated docs
 
-**Phase 3: Dev Tooling Enhancement** (✅ COMPLETED)
+**Phase 3: Dev Tools Enhancement** (✅ COMPLETED)
 
 - Added environment detection capabilities
 - Created dynamic prompt generators
@@ -1009,12 +1009,12 @@ Each entry includes:
 - `0fa8f37`: Fix prompt generator: Add pydantic dependency installation with .pyenv venv fallback
 - `538c701`: Fix documentation inconsistencies: Update version refs and terminology
 - `8e1367b`: Consolidate installation instructions and fix remaining handoff references
-- `[current]`: Enhance dev tooling with environment detection and dynamic generation
+- `[current]`: Enhance dev tools with environment detection and dynamic generation
 
 ### 🎯 Success Criteria Progress
 
 - ✅ **Reduced Documentation Files**: Achieved 60% reduction in duplicated content
-- ✅ **Increased Dev Tooling Usage**: 4 new automation functions added (consistency report removed)
+- ✅ **Increased Dev Tools Usage**: 4 new automation functions added (consistency report removed)
 - ✅ **Eliminated Duplication**: Zero duplicated installation instructions
 - 🔄 **Dynamic Generation**: 70% of prompts now generated dynamically
 - ✅ **Version Consistency**: All version references automated and consistent

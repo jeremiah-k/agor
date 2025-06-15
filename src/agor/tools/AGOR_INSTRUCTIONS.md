@@ -146,11 +146,11 @@ Find your selected role below for detailed guidance, including specific initiali
 - Receive an assigned task
 - Mark the current task as complete
 
-**🛠️ Development Tooling Integration:**
+**🛠️ Development Tools Integration:**
 - Generate a handoff prompt for another agent
 - Generate all standard project outputs (snapshot, handoff, PR notes)
 - Perform a quick commit and push of current work
-- Test all development tooling functions
+- Test all development tools functions
 - Show environment and version information
 
 **🔄 Session Management:**
@@ -327,59 +327,59 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **Add Comments**: Add inline comments and docstrings to improve code readability
 - **Explain Code**: Provide detailed code explanation with logic flow and purpose
 
-**Dev Tooling Integration:**
+**Dev Tools Integration:**
 
-- **Generate Handoff Prompt**: Generate handoff prompt using dev tooling. Usage: provide task description, work completed, and next steps
+- **Generate Handoff Prompt**: Generate handoff prompt using dev tools. Usage: provide task description, work completed, and next steps
 - **Generate All Outputs**: Generate complete project outputs (snapshot + handoff + PR description). Usage: provide task description and context
 - **Quick Commit and Push**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
-- **Test All Dev Tools**: Test all dev tooling functions to ensure they work properly. No parameters required.
+- **Test All Dev Tools**: Test all dev tools functions to ensure they work properly. No parameters required.
 - **Show Environment Info**: Show current environment detection, AGOR version, and platform information. No parameters required.
 - **Provide AGOR Feedback**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
 - **Initiate Session End Procedure**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
 
 **CRITICAL OUTPUT FORMATTING REQUIREMENTS**:
 
-**MANDATORY FOR ALL GENERATED CONTENT**: PR descriptions, handoff prompts, release notes, meta feedback, session summaries, etc. MUST use the proper dev tooling functions:
+**MANDATORY FOR ALL GENERATED CONTENT**: PR descriptions, handoff prompts, release notes, meta feedback, session summaries, etc. MUST use the proper dev tools functions:
 
 **CORRECT WORKFLOW - USE THESE FUNCTIONS**:
 
 ```python
 # For release notes (KEEP BRIEF - long content causes processing errors)
-from agor.tools.dev_tooling import generate_release_notes_output
+from agor.tools.dev_tools import generate_release_notes_output
 formatted_output = generate_release_notes_output(brief_release_notes_content)
 print(formatted_output)
 
 # For PR descriptions (KEEP BRIEF - long content causes processing errors)
-from agor.tools.dev_tooling import generate_pr_description_output
+from agor.tools.dev_tools import generate_pr_description_output
 formatted_output = generate_pr_description_output(brief_pr_content)
 print(formatted_output)
 
 # For handoff prompts (can be full length)
-from agor.tools.dev_tooling import generate_handoff_prompt_output
+from agor.tools.dev_tools import generate_handoff_prompt_output
 formatted_output = generate_handoff_prompt_output(handoff_content)
 print(formatted_output)
 
 # For any other content
-from agor.tools.dev_tooling import generate_formatted_output
+from agor.tools.dev_tools import generate_formatted_output
 formatted_output = generate_formatted_output(content, "content_type")
 print(formatted_output)
 ```
 
 **NEVER**: Manually use detick_content() and manual wrapping
-**ALWAYS**: Use the proper dev tooling output functions above
+**ALWAYS**: Use the proper dev tools output functions above
 **PURPOSE**: Ensures consistent, automatic formatting for seamless copy-paste workflow
 
 **HANDOFF PROMPT FORMATTING - ABSOLUTELY MANDATORY**:
 Every session MUST end with a handoff prompt that is:
 
-1. **Generated using dev tooling functions**
+1. **Generated using dev tools functions**
 2. **Processed through detick_content() to remove triple backticks**
 3. **Wrapped in a single codeblock with triple backticks**
 4. **Ready for immediate copy-paste by user**
 
-**MEMORY BRANCH UNDERSTANDING**: When dev tooling says, "snapshot committed to memory branch X", that's where it went. Don't expect .agor files on your working branch - they're in .gitignore intentionally.
+**MEMORY BRANCH UNDERSTANDING**: When dev tools says, "snapshot committed to memory branch X", that's where it went. Don't expect .agor files on your working branch - they're in .gitignore intentionally.
 
-Always create a snapshot before ending your session using the dev tooling.
+Always create a snapshot before ending your session using the dev tools.
 
 **WORKER AGENT COORDINATION ACTIONS:**
 **Coordination:**

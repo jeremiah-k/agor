@@ -1,8 +1,8 @@
 """
-Memory Manager Module for AGOR Development Tooling
+Memory Manager Module for AGOR Development Tools
 
 This module contains all memory branch operations and cross-branch commit functionality
-extracted from dev_tooling.py for better organization and maintainability.
+extracted from dev_tools.py for better organization and maintainability.
 
 Functions:
 - commit_to_memory_branch: Cross-branch memory commits

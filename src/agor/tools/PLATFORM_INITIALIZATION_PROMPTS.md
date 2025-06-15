@@ -77,7 +77,7 @@ Mode: Bundle Mode (copy-paste workflow)
 3. Add this to your User Guidelines:
 
 ```
-When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Worker Agent or Project Coordinator) and follow the appropriate workflows and development tooling for efficient development.
+When working on development projects, utilize the AGOR (AgentOrchestrator) framework for structured development coordination. Read the AGOR documentation from the workspace sources to understand role selection (Worker Agent or Project Coordinator) and follow the appropriate workflows and development tools for efficient development.
 ```
 
 ### Session Initialization Prompt
@@ -118,7 +118,7 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install dependencies and test development tooling
+# Install dependencies and test development tools
 pip install -r requirements.txt
 
 # Install additional dependencies for memory manager types
@@ -135,11 +135,11 @@ pip install pydantic pydantic-settings || {
     fi
 }
 
-# Test AGOR development tooling
+# Test AGOR development tools
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling, get_timestamp
+from agor.tools.dev_tools import test_tooling, get_timestamp
 
 # Verify tooling works
 test_tooling()

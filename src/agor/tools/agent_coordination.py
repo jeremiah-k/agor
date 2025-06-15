@@ -913,7 +913,7 @@ def check_strategy_status() -> str:
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
     """Process hotkey and update internal checklist."""
-    from agor.tools.dev_tooling import get_checklist_status, mark_checklist_complete
+    from agor.tools.dev_tools import get_checklist_status, mark_checklist_complete
 
     # Map hotkeys to checklist items
     hotkey_mapping = {
@@ -953,7 +953,7 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
 
 def detect_session_end(user_input: str) -> bool:
     """Detect if user is indicating session end and enforce procedures."""
-    from agor.tools.dev_tooling import enforce_session_end
+    from agor.tools.dev_tools import enforce_session_end
 
     end_indicators = [
         "thanks",

@@ -1,11 +1,11 @@
 """
-Development Testing Module for AGOR Development Tooling
+Development Testing Module for AGOR Development Tools
 
 This module contains all testing utilities and environment detection functionality
-extracted from dev_tooling.py for better organization and maintainability.
+extracted from dev_tools.py for better organization and maintainability.
 
 Functions:
-- test_tooling: Comprehensive development tooling tests
+- test_tooling: Comprehensive development tools tests
 - detect_environment: Environment detection and configuration
 - Environment validation and setup utilities
 """
@@ -85,7 +85,7 @@ def detect_environment() -> Dict[str, Any]:
 
 def test_tooling() -> bool:
     """
-    Test all development tooling functions to ensure they work correctly.
+    Test all development tools functions to ensure they work correctly.
 
     This function validates:
     - Timestamp generation
@@ -96,10 +96,10 @@ def test_tooling() -> bool:
     Returns:
         True if all tests pass, False otherwise
     """
-    print("🧪 Testing AGOR Development Tooling...")
+    print("🧪 Testing AGOR Development Tools...")
 
     try:
-        print("Testing dev tooling functions...")
+        print("Testing dev tools functions...")
 
         # Test timestamp functions
         current_ts = get_current_timestamp()
@@ -148,13 +148,13 @@ def test_tooling() -> bool:
 
 def get_agent_dependency_install_commands() -> str:
     """
-    Returns shell commands for installing agent development tooling dependencies,
+    Returns shell commands for installing agent development tools dependencies,
     with automatic fallback to a `.pyenv` virtual environment if standard installation fails.
 
     Returns:
         Shell commands for dependency installation
     """
-    return """# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
+    return """# Install ONLY the dependencies needed for agent dev tools (NOT requirements.txt)
 python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
@@ -205,7 +205,7 @@ python3 -m pip install -r requirements.txt
 
 {dev_install_commands}
 
-# Test development tooling
+# Test development tools
 python3 -c "
 import sys
 sys.path.insert(0, 'src')

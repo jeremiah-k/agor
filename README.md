@@ -8,7 +8,7 @@ Transform AI assistants into sophisticated development coordinators. Plan comple
 
 > **🔬 Alpha Protocol**: AGOR coordination strategies are actively evolving based on real-world usage. [Contribute feedback](https://github.com/jeremiah-k/agor/issues) to help shape AI coordination patterns.
 
-> **🚧 Under Construction**: We're still figuring out what works and what doesn't for the dev tooling, so be warned some functionality might be broken.
+> **🚧 Under Construction**: We're still figuring out what works and what doesn't for the dev tools, so be warned some functionality might be broken.
 
 ## 🚀 Installation & Deployment
 

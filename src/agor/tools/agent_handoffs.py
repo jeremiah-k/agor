@@ -1,8 +1,8 @@
 """
-Agent Handoffs Module for AGOR Development Tooling
+Agent Handoffs Module for AGOR Development Tools
 
 This module contains all agent coordination and handoff functionality
-extracted from dev_tooling.py for better organization and maintainability.
+extracted from dev_tools.py for better organization and maintainability.
 
 Functions:
 - generate_handoff_prompt_only: Generate handoff prompts for agent coordination
@@ -153,7 +153,7 @@ def validate_feedback_input(
 
     # Validate component
     common_components = [
-        "dev_tooling",
+        "dev_tools",
         "memory_system",
         "hotkeys",
         "coordination",
@@ -404,7 +404,7 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt
 
 1. **Review this session's work** - Understand what was completed
 2. **Continue from current status** - Don't restart or duplicate work
-3. **Use our dev tooling** - All coordination must use our backtick processing
+3. **Use our dev tools** - All coordination must use our backtick processing
 4. **Create return prompts** - Every session must end with coordination output
 5. **Focus on productivity** - Substantial progress, not just note-passing
 
@@ -413,7 +413,7 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt
 1. Review completed work and current status
 2. Continue development from where this session left off
 3. Make substantial progress on remaining tasks
-4. Generate return prompt using our dev tooling before ending
+4. Generate return prompt using our dev tools before ending
 
 ## 📞 COORDINATION PROTOCOL
 
@@ -508,7 +508,7 @@ The next agent should:
 2. **Install dependencies**: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
 3. **Review this report**: Understand completed work and current status
 4. **Continue from current state**: Don't restart or duplicate work
-5. **Use dev tooling**: All coordination must use AGOR dev tooling functions
+5. **Use dev tools**: All coordination must use AGOR dev tools functions
 6. **Create session end report**: Before ending their session
 
 ## 🚀 IMMEDIATE NEXT STEPS
@@ -844,7 +844,7 @@ git show {memory_branch}:.agor/snapshots/
 4. Review any previous work context provided
 5. Begin work following AGOR protocols
 
-Remember: Always create a snapshot before ending your session using the dev tooling.
+Remember: Always create a snapshot before ending your session using the dev tools.
 
 ---
 *This handoff prompt was generated automatically with environment detection and backtick processing*

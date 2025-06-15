@@ -19,22 +19,22 @@ AGOR supports structured multi-agent coordination through:
 
 1. **Read Documentation First**: README_ai.md, AGOR_INSTRUCTIONS.md, agent-start-here.md
 2. **Select Appropriate Role**: Worker Agent or Project Coordinator
-3. **Use Dev Tooling**: All coordination via our backtick processing functions
+3. **Use Dev Tools**: All coordination via our backtick processing functions
 4. **Generate Session End Prompts**: Mandatory before ending any session
 5. **Follow Git Protocols**: Pull before work, commit frequently, push regularly
 
 ### Communication Protocol
 
-**IMPORTANT**: The `.agor` directory does NOT exist on main or feature branches. It only exists on dedicated memory branches and is accessed exclusively through our dev tooling functions.
+**IMPORTANT**: The `.agor` directory does NOT exist on main or feature branches. It only exists on dedicated memory branches and is accessed exclusively through our dev tools functions.
 
 **Memory Branch System**:
 
-- **Memory branches**: Created automatically by dev tooling (e.g., `agor/mem/2025-06-07_1300`)
+- **Memory branches**: Created automatically by dev tools (e.g., `agor/mem/2025-06-07_1300`)
 - **Cross-branch commits**: Dev tooling commits to memory branches without switching your working branch
-- **Coordination files**: Stored on memory branches, accessed via dev tooling functions
+- **Coordination files**: Stored on memory branches, accessed via dev tools functions
 - **No direct file access**: Never manually create/edit `.agor` files
 
-**Coordination Through Dev Tooling**:
+**Coordination Through Dev Tools**:
 
 ```python
 # Create snapshots and memories (auto-commits to memory branches)
@@ -42,7 +42,7 @@ auto_commit_memory(content, "session_progress", "agent_id")
 generate_mandatory_session_end_prompt(work_completed, status, instructions, context)
 
 # Load previous snapshots/memories (reads from memory branches)
-# Use dev tooling functions to access coordination data
+# Use dev tools functions to access coordination data
 ```
 
 **Required Functions**:
@@ -79,7 +79,7 @@ generate_meta_feedback(
 
 ```python
 # Coordinator initializes
-from agor.tools.dev_tooling import generate_handoff_prompt_only
+from agor.tools.dev_tools import generate_handoff_prompt_only
 
 # Phase 1: Divergent Work (No Coordination)
 outputs = generate_handoff_prompt_only(
@@ -102,7 +102,7 @@ outputs = generate_handoff_prompt_only(
 
 1. **Divergent Phase**: Work independently on assigned branch
 2. **Signal Completion**: Use `auto_commit_memory()` to record "PHASE1_COMPLETE" status
-3. **Review Phase**: Use dev tooling to access other agents' progress from memory branches
+3. **Review Phase**: Use dev tools to access other agents' progress from memory branches
 4. **Synthesis Phase**: Collaborate using snapshots and memory-based coordination
 
 ### 2. Pipeline Strategy
@@ -205,9 +205,9 @@ generate_handoff_prompt_only(
 **Every agent session MUST start with**:
 
 1. `git pull origin [branch-name]` - Get latest changes
-2. Use dev tooling to check for previous session memories and coordination status
+2. Use dev tools to check for previous session memories and coordination status
 3. Install dependencies: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
-4. Initialize dev tooling and test functionality
+4. Initialize dev tools and test functionality
 
 ### Session Termination
 
@@ -220,7 +220,7 @@ generate_handoff_prompt_only(
 
 ### Handoff Generation
 
-**Use our dev tooling functions**:
+**Use our dev tools functions**:
 
 - `generate_handoff_prompt_only()` - Quick handoffs
 - `generate_mandatory_session_end_prompt()` - Full session end
@@ -228,7 +228,7 @@ generate_handoff_prompt_only(
 
 ### Temporary Files and Cleanup
 
-**If you must create temporary files for dev tooling execution**:
+**If you must create temporary files for dev tools execution**:
 
 1. **Chain commands** to minimize tool calls:
 
@@ -236,19 +236,19 @@ generate_handoff_prompt_only(
 # Good: One-shot execution with cleanup
 python temp_script.py && rm temp_script.py
 
-# Better: Use dev tooling functions directly without temp files
+# Better: Use dev tools functions directly without temp files
 python3 -c "
 import sys; sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import quick_commit_push
+from agor.tools.dev_tools import quick_commit_push
 quick_commit_push('Your message', '🔧')
 "
 ```
 
 2. **Immediate cleanup**: Always remove temporary files in the same command chain
-3. **Minimize file creation**: Prefer direct dev tooling function calls over temporary scripts
+3. **Minimize file creation**: Prefer direct dev tools function calls over temporary scripts
 4. **Document cleanup**: If other agents need to create temp files, remind them to clean up immediately
 
-**Best Practice**: Use dev tooling functions directly rather than creating temporary files whenever possible.
+**Best Practice**: Use dev tools functions directly rather than creating temporary files whenever possible.
 
 ## 🎯 Role-Specific Protocols
 
@@ -301,15 +301,15 @@ quick_commit_push('Your message', '🔧')
 
 ## 🔧 Technical Implementation
 
-### Dev Tooling Integration
+### Dev Tools Integration
 
-**All coordination MUST use our dev tooling**:
+**All coordination MUST use our dev tools**:
 
 ```python
-# Import dev tooling
+# Import dev tools
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import (
+from agor.tools.dev_tools import (
     generate_handoff_prompt_only,
     generate_mandatory_session_end_prompt,
     generate_meta_feedback,
@@ -342,13 +342,13 @@ from agor.tools.dev_tooling import (
 
 ✅ **Direct Instructions**: Work orders TO agents, not ABOUT agents
 ✅ **Mandatory Session End**: Automatic coordination prompt generation
-✅ **Dev Tooling Usage**: Consistent backtick processing
+✅ **Dev Tools Usage**: Consistent backtick processing
 ✅ **Substantial Progress**: Focus on real work, not just coordination
 ✅ **Role Clarity**: 2-role system eliminates confusion
 
 ### What Fails
 
-❌ **Manual Coordination**: Creating prompts without dev tooling
+❌ **Manual Coordination**: Creating prompts without dev tools
 ❌ **Missing Handoffs**: Ending sessions without return prompts
 ❌ **Confusing Instructions**: Meta-instructions about telling other agents
 ❌ **Premature Celebration**: Declaring completion without substantial work
@@ -374,8 +374,8 @@ from agor.tools.dev_tooling import (
 - `src/agor/tools/README_ai.md` - Role selection and initialization
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` - Operational guide with hotkeys
 - `docs/strategies.md` - Strategy decision matrix and examples
-- `src/agor/tools/dev_tooling.py` - Memory and coordination functions
-- Memory branches (accessed via dev tooling) - Session memories and coordination data
+- `src/agor/tools/dev_tools.py` - Memory and coordination functions
+- Memory branches (accessed via dev tools) - Session memories and coordination data
 
 ---
 

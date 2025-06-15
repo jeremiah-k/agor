@@ -16,7 +16,7 @@ First, detect your environment and install required dependencies:
 # Detect environment and install dependencies
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import detect_environment, get_agent_dependency_install_commands
+from agor.tools.dev_tools import detect_environment, get_agent_dependency_install_commands
 
 # Detect current environment
 env = detect_environment()
@@ -78,7 +78,7 @@ Based on your environment detection:
 **Development Mode** (local AGOR development):
 
 - Read `AGOR_INSTRUCTIONS.md` for complete development guide
-- Access to all dev tooling and testing capabilities
+- Access to all dev tools and testing capabilities
 
 **AugmentCode Local/Remote** (integrated environments):
 
@@ -127,14 +127,14 @@ Based on your environment detection:
 
 ### Critical Understanding Points
 
-1. **When dev tooling says, "snapshot committed to memory branch X"** - that's where it went, don't look for it on your working branch
-2. **Memory branches are accessed via dev tooling functions** - not direct file operations
+1. **When dev tools says, "snapshot committed to memory branch X"** - that's where it went, don't look for it on your working branch
+2. **Memory branches are accessed via dev tools functions** - not direct file operations
 3. **Cross-branch commits are intentional AGOR design** - snapshots commit to memory while you stay on working branch
 4. **If you try to create .agor files on working branch** - you're violating AGOR architecture
 
-### Reading Dev Tooling Output
+### Reading Dev Tools Output
 
-**ALWAYS read and understand what dev tooling tells you:**
+**ALWAYS read and understand what dev tools tells you:**
 
 - "✅ Snapshot committed to memory branch: agor/mem/agent_abc123" means SUCCESS
 - "📁 Snapshot file: .agor/snapshots/filename.md" shows the memory branch location
@@ -142,7 +142,7 @@ Based on your environment detection:
 
 **Development Tools**:
 
-- `src/agor/tools/dev_tooling.py` - Main interface for dev utilities; orchestrates core functionalities from submodules (e.g., `git_operations.py`, `memory_manager.py`).
+- `src/agor/tools/dev_tools.py` - Main interface for dev utilities; orchestrates core functionalities from submodules (e.g., `git_operations.py`, `memory_manager.py`).
 - `src/agor/tools/git_operations.py` - Core Git commands and safety checks.
 - `src/agor/tools/memory_manager.py` - Core functions for committing to memory branches.
 - `src/agor/tools/snapshot_templates.py` - Snapshot generation system.

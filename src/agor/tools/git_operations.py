@@ -1,7 +1,7 @@
 """
-Git Operations Module for AGOR Development Tooling
+Git Operations Module for AGOR Development Tools
 
-This module contains all git-related functionality extracted from dev_tooling.py
+This module contains all git-related functionality extracted from dev_tools.py
 for better organization and maintainability.
 
 Functions:
@@ -192,7 +192,7 @@ def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     of this function to ensure proper cross-branch memory system operation.
 
     IMPORTANT: PR descriptions, handoff prompts, release notes, etc. all need to be
-    run through dev tooling to remove triple backticks in codeblocks and then
+    run through dev tools to remove triple backticks in codeblocks and then
     WRAPPED into a single codeblock so the user can copy & paste.
 
     Args:

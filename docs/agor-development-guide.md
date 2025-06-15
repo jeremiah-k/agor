@@ -45,7 +45,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 - **Hotkeys**: e.g., `a` (analyze), `f` (full files), `edit`, `commit`, `snapshot`. For comprehensive, role-specific lists, see `src/agor/tools/AGOR_INSTRUCTIONS.md` or `src/agor/tools/README_ai.md`.
 - These are menu options/verbal commands in agent workflow instructions
-- They are implemented as Python functions in `src/agor/tools/` (many orchestrated by `dev_tooling.py`)
+- They are implemented as Python functions in `src/agor/tools/` (many orchestrated by `dev_tools.py`)
 - They are NOT CLI commands - they're protocol directives
 - They work within agent coordination workflows and `.agor/` files
 - They are documented in `README_ai.md` and `AGOR_INSTRUCTIONS.md` as workflow options
@@ -130,7 +130,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
 
 - **`src/agor/`**: Core AGOR package code
 - **`src/agor/tools/`**: Agent coordination tools and templates. This directory now includes:
-  - `dev_tooling.py`: Main interface for development utilities.
+  - `dev_tools.py`: Main interface for development utilities.
   - `git_operations.py`: Handles core Git command execution and safety.
   - `memory_manager.py`: Manages memory branch operations.
   - `agent_handoffs.py`: Utilities for agent coordination and prompt generation.
@@ -163,12 +163,12 @@ This guide ensures consistency, quality, and proper protocol management when dev
 git add . && git commit -m "🔧 Descriptive message" && git push
 ```
 
-**🛠️ Development Tooling Available**:
+**🛠️ Development Tools Available**:
 
-For streamlined development, use the new dev tooling functions in `src/agor/tools/dev_tooling.py`. These functions in `dev_tooling.py` now primarily act as interfaces to specialized modules like `git_operations.py` and `memory_manager.py`.
+For streamlined development, use the new dev tools functions in `src/agor/tools/dev_tools.py`. These functions in `dev_tools.py` now primarily act as interfaces to specialized modules like `git_operations.py` and `memory_manager.py`.
 
 ```python
-from agor.tools.dev_tooling import quick_commit_push, auto_commit_memory, create_snapshot
+from agor.tools.dev_tools import quick_commit_push, auto_commit_memory, create_snapshot
 
 # Quick commit and push in one operation
 quick_commit_push("Fix memory sync integration", "🔧")
@@ -230,15 +230,15 @@ cat docs/protocol-changelog.md
 ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 ```
 
-### 🧪 **CRITICAL: Test Development Tooling During Initialization**
+### 🧪 **CRITICAL: Test Development Tools During Initialization**
 
-**⚠️ ALWAYS test our development tooling at the start of each session:**
+**⚠️ ALWAYS test our development tools at the start of each session:**
 
 ```python
 # Test all development utilities
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling, get_timestamp
+from agor.tools.dev_tools import test_tooling, get_timestamp
 
 # Verify tooling works
 test_tooling()
@@ -426,7 +426,7 @@ Based on comprehensive audit findings, the following documentation improvements 
 
 - **Target**: `src/agor/tools/README_ai.md` (Hotkey Actions section)
 - **Issue**: Some hotkeys lack clear behavior descriptions and parameter details (ensure descriptions reflect snapshot terminology where applicable).
-- **Examples**: Project Coordinator `init`, Worker Agent development tooling functions. Development functions like snapshot creation, handoff prompts, and release notes generation are key.
+- **Examples**: Project Coordinator `init`, Worker Agent development tools functions. Development functions like snapshot creation, handoff prompts, and release notes generation are key.
 - **Action**: ✅ Enhanced all hotkey descriptions with detailed behavior, parameters, and usage examples, reflecting snapshot terminology.
 
 #### 2. Undocumented Hotkey Functionality ✅ COMPLETED

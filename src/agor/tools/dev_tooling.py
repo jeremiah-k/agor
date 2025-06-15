@@ -1,5 +1,5 @@
 """
-AGOR Development Tooling - Main Interface Module
+AGOR Development Tools - Main Interface Module
 
 This module provides the main interface for AGOR development utilities.
 It imports functionality from specialized modules for better organization:
@@ -13,6 +13,8 @@ It imports functionality from specialized modules for better organization:
 - dev_testing: Testing utilities and environment detection
 
 Provides a clean API interface while keeping individual modules under 500 LOC.
+
+TODO: Rename this file to dev_tools.py in next version for consistency
 """
 
 from typing import Dict, List, Tuple
@@ -140,8 +142,8 @@ def commit_memory_to_branch(
     return auto_commit_memory(content, memory_type, agent_id)
 
 
-def test_development_tooling() -> bool:
-    """Test development tooling wrapper."""
+def test_development_tools() -> bool:
+    """Test development tools wrapper."""
     return test_tooling()
 
 
@@ -604,7 +606,7 @@ def detect_current_environment() -> dict:
 
 def get_available_functions_reference() -> str:
     """
-    Generate comprehensive reference of all AGOR development functions.
+    Generate comprehensive reference of all AGOR development tools functions.
 
     This function dynamically inspects all AGOR modules and generates a complete
     reference guide that agents MUST call to understand available functionality.
@@ -617,19 +619,19 @@ def get_available_functions_reference() -> str:
     from agor.tools import memory_manager, git_operations, snapshot_templates
 
     output = []
-    output.append("# 🛠️ AGOR Development Functions Reference")
+    output.append("# 🛠️ AGOR Development Tools Functions Reference")
     output.append("")
-    output.append("**MANDATORY READING: All available AGOR development functions**")
+    output.append("**MANDATORY READING: All available AGOR development tools functions**")
     output.append("")
     output.append("This reference is generated dynamically from actual code.")
     output.append("Call this function to see all available capabilities.")
     output.append("")
 
-    # Current module (dev_tooling)
+    # Current module (dev_tools)
     current_module = sys.modules[__name__]
 
     modules = [
-        ('dev_tooling', current_module, 'Main development interface - START HERE'),
+        ('dev_tools', current_module, 'Main development interface - START HERE'),
         ('memory_manager', memory_manager, 'Memory branch operations - Cross-branch commits'),
         ('git_operations', git_operations, 'Git command utilities - Safe git operations'),
         ('snapshot_templates', snapshot_templates, 'Snapshot generation - Work state capture')
@@ -681,7 +683,7 @@ def get_available_functions_reference() -> str:
     output.append("**Analysis & Status:**")
     output.append("- get_workspace_status() - Project and git status")
     output.append("- detect_environment() - Environment detection")
-    output.append("- test_tooling() - Verify all functions work")
+    output.append("- test_tools() - Verify all functions work")
     output.append("")
     output.append("**CRITICAL**: Always use these functions instead of manual git commands")
     output.append("for memory operations and cross-branch commits.")
@@ -689,9 +691,9 @@ def get_available_functions_reference() -> str:
     return '\n'.join(output)
 
 
-def test_all_tooling() -> bool:
+def test_all_tools() -> bool:
     """
-    Runs comprehensive tests on all development tooling components.
+    Runs comprehensive tests on all development tools components.
 
     Returns:
         True if all tests pass successfully, otherwise False.
@@ -769,7 +771,7 @@ Your response MUST end with:
 
 ```python
 # Required session end code:
-from agor.tools.dev_tooling import create_development_snapshot
+from agor.tools.dev_tools import create_development_snapshot
 from agor.tools.agent_handoffs import generate_session_end_prompt, detick_content
 
 # Create snapshot

@@ -142,7 +142,7 @@ load_snapshot
 
 ## 📁 Snapshot Storage
 
-**Important:** The `.agor/snapshots` directory and its contents are stored on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`), not typically on your main working branch. This is managed by AGOR's dev tooling and Memory Synchronization System.
+**Important:** The `.agor/snapshots` directory and its contents are stored on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`), not typically on your main working branch. This is managed by AGOR's dev tools and Memory Synchronization System.
 
 Snapshots are stored in:
 
