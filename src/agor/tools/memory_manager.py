@@ -371,10 +371,10 @@ def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
         repo_path = Path.cwd()
 
     try:
-        from agor.memory_sync import MemorySync
+        from agor.memory_sync import MemorySyncManager
 
-        # Create MemorySync instance with current repo path
-        memory_sync = MemorySync(repo_path=str(repo_path))
+        # Create MemorySyncManager instance with current repo path
+        memory_sync = MemorySyncManager(repo_path=repo_path)
 
         # Get both local and remote memory branches
         local_branches = memory_sync.list_memory_branches(remote=False)

@@ -602,6 +602,93 @@ def detect_current_environment() -> dict:
     return detect_environment()
 
 
+def get_available_functions_reference() -> str:
+    """
+    Generate comprehensive reference of all AGOR development functions.
+
+    This function dynamically inspects all AGOR modules and generates a complete
+    reference guide that agents MUST call to understand available functionality.
+
+    Returns:
+        Formatted string containing all function references with descriptions
+    """
+    import inspect
+    import sys
+    from agor.tools import memory_manager, git_operations, snapshot_templates
+
+    output = []
+    output.append("# 🛠️ AGOR Development Functions Reference")
+    output.append("")
+    output.append("**MANDATORY READING: All available AGOR development functions**")
+    output.append("")
+    output.append("This reference is generated dynamically from actual code.")
+    output.append("Call this function to see all available capabilities.")
+    output.append("")
+
+    # Current module (dev_tooling)
+    current_module = sys.modules[__name__]
+
+    modules = [
+        ('dev_tooling', current_module, 'Main development interface - START HERE'),
+        ('memory_manager', memory_manager, 'Memory branch operations - Cross-branch commits'),
+        ('git_operations', git_operations, 'Git command utilities - Safe git operations'),
+        ('snapshot_templates', snapshot_templates, 'Snapshot generation - Work state capture')
+    ]
+
+    for module_name, module, description in modules:
+        output.append(f"## {module_name} - {description}")
+        output.append("")
+
+        functions = []
+        for name, obj in inspect.getmembers(module):
+            if (callable(obj) and
+                not name.startswith('_') and
+                hasattr(obj, '__doc__') and
+                obj.__doc__ and
+                not name in ['Optional', 'Path', 'Tuple', 'datetime']):
+
+                # Get first line of docstring
+                doc = obj.__doc__.strip()
+                first_line = doc.split('\n')[0].strip()
+
+                # Skip type hints and imports
+                if (first_line and
+                    not first_line.startswith('Optional') and
+                    not first_line.startswith('Path') and
+                    not first_line.startswith('Tuple') and
+                    not first_line.startswith('datetime')):
+                    functions.append((name, first_line))
+
+        # Sort functions alphabetically
+        functions.sort()
+
+        for func_name, description in functions:
+            output.append(f"- **{func_name}()**: {description}")
+        output.append("")
+
+    output.append("## 🎯 Key Functions for Agents")
+    output.append("")
+    output.append("**Memory Operations:**")
+    output.append("- commit_to_memory_branch() - Cross-branch memory commits")
+    output.append("- list_memory_branches() - Find existing memory branches")
+    output.append("- read_from_memory_branch() - Read from memory without switching")
+    output.append("")
+    output.append("**Development Workflow:**")
+    output.append("- create_development_snapshot() - Comprehensive work snapshots")
+    output.append("- generate_session_end_prompt() - Agent handoff prompts")
+    output.append("- quick_commit_and_push() - Fast commit with timestamp")
+    output.append("")
+    output.append("**Analysis & Status:**")
+    output.append("- get_workspace_status() - Project and git status")
+    output.append("- detect_environment() - Environment detection")
+    output.append("- test_tooling() - Verify all functions work")
+    output.append("")
+    output.append("**CRITICAL**: Always use these functions instead of manual git commands")
+    output.append("for memory operations and cross-branch commits.")
+
+    return '\n'.join(output)
+
+
 def test_all_tooling() -> bool:
     """
     Runs comprehensive tests on all development tooling components.
