@@ -912,7 +912,11 @@ def check_strategy_status() -> str:
 
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
-    """Process hotkey and update internal checklist."""
+    """
+    Processes a given hotkey and updates the internal checklist status.
+    
+    If the hotkey corresponds to a recognized checklist item, marks the checklist as updated and prints a confirmation message. Returns a dictionary indicating the hotkey processed and whether the checklist was updated.
+    """
     # TODO: Implement checklist functions when needed
 
     # Map hotkeys to checklist items
@@ -950,7 +954,11 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
 
 
 def detect_session_end(user_input: str) -> bool:
-    """Detect if user is indicating session end and enforce procedures."""
+    """
+    Detects if the user input indicates the end of a session.
+    
+    Checks for common session-ending keywords in the input and prints a reminder if detected. Always returns True.
+    """
     # TODO: Implement enforce_session_end when needed
 
     end_indicators = [

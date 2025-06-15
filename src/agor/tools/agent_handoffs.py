@@ -100,9 +100,9 @@ def validate_feedback_input(
     component: str = "general",
 ) -> dict:
     """
-    Validates meta feedback input for type, severity, content quality, and component.
-
-    Checks if the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and suggests improvements based on feedback type. Returns a dictionary indicating validity, detected issues, suggestions for improvement, and normalized values for type, severity, and component.
+    Validates feedback metadata for type, severity, content quality, and component.
+    
+    Checks if the feedback type and severity are among accepted values, ensures the content is sufficiently descriptive, and provides suggestions for improvement based on feedback type and content. Returns a dictionary with validity status, detected issues, suggestions, and normalized values for type, severity, and component.
     """
     validation = {
         "is_valid": True,
@@ -332,17 +332,17 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generates a formatted handoff prompt for agent coordination in AGOR development sessions.
-
-    Creates a structured prompt summarizing completed work, current status, instructions for the next agent, critical context, and files modified. Includes environment setup commands, coordination protocol instructions, and immediate next steps. Applies detick processing to ensure clean codeblock rendering for agent-to-agent communication.
-
+    Generates a markdown-formatted handoff prompt for agent coordination in AGOR dev tool sessions.
+    
+    Summarizes completed work, current project status, instructions for the next agent, critical context, and files modified. Includes environment setup commands, coordination protocol, and immediate next steps. Applies detick processing to ensure codeblocks render correctly during agent-to-agent communication.
+    
     Args:
         work_completed: List of completed work items for the session.
         current_status: Description of the current project status.
         next_agent_instructions: Instructions or tasks for the next agent or session.
         critical_context: Essential context that must be preserved for continuity.
         files_modified: List of files modified during the session.
-
+    
     Returns:
         A markdown-formatted handoff prompt with deticked content for seamless agent coordination.
     """
@@ -452,20 +452,19 @@ def generate_mandatory_session_end_prompt(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generate mandatory session end prompt for agent coordination.
-
-    This function creates the required session end documentation with
-    deticked content for proper codeblock rendering in agent handoffs.
-
+    Generates a mandatory session end report prompt for agent coordination.
+    
+    Creates a formatted markdown report summarizing completed work, current project status, next agent instructions, critical context, and files modified. Includes handoff requirements and immediate next steps to ensure seamless agent-to-agent coordination. Applies detick processing to prevent codeblock rendering issues.
+    
     Args:
-        work_completed: List of completed work items
-        current_status: Current project status
-        next_agent_instructions: Instructions for next agent
-        critical_context: Critical context to preserve
-        files_modified: List of modified files
-
+        work_completed: List of completed work items during the session.
+        current_status: Description of the current project status.
+        next_agent_instructions: Instructions for the next agent to follow.
+        critical_context: Essential context that must be preserved for continuity.
+        files_modified: Optional list of files modified in the session.
+    
     Returns:
-        Formatted session end prompt with deticked content
+        A markdown-formatted session end prompt with deticked content for safe embedding.
     """
     if files_modified is None:
         files_modified = []
@@ -749,19 +748,19 @@ def generate_agent_handoff_prompt_extended(
     brief_context: str = None,
 ) -> str:
     """
-    Generates a comprehensive agent handoff prompt with environment, task, and context details.
-
-    The prompt includes environment information, setup instructions, memory branch access commands, task overview, optional brief context, and previous work context if provided. It is formatted for seamless agent transitions and applies backtick processing to ensure safe embedding within single codeblocks.
-
+    Generates a detailed agent handoff prompt including environment details, task overview, setup instructions, memory branch access, and prior context.
+    
+    The prompt is formatted for seamless agent transitions, providing all necessary information for the next agent to continue work efficiently. Backtick processing is applied to ensure safe embedding within single codeblocks.
+    
     Args:
         task_description: Description of the task for the next agent.
         snapshot_content: Optional summary of previous agent work.
         memory_branch: Optional name of the memory branch for coordination.
         environment: Optional environment details; auto-detected if not provided.
         brief_context: Optional brief background for quick orientation.
-
+    
     Returns:
-        A formatted prompt string ready for use in a single codeblock.
+        A markdown-formatted prompt string ready for use in a single codeblock.
     """
     if environment is None:
         from agor.tools.dev_testing import detect_environment

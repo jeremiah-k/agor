@@ -85,16 +85,9 @@ def detect_environment() -> Dict[str, Any]:
 
 def test_tooling() -> bool:
     """
-    Test all development tools functions to ensure they work correctly.
-
-    This function validates:
-    - Timestamp generation
-    - Git operations
-    - Environment detection
-    - Import functionality
-
-    Returns:
-        True if all tests pass, False otherwise
+    Runs a series of tests to verify the functionality of AGOR development tools.
+    
+    Validates timestamp generation, git operations, and related utility functions. Returns True if all tests pass and git is available; otherwise, returns False.
     """
     print("🧪 Testing AGOR Development Tools...")
 
@@ -148,11 +141,12 @@ def test_tooling() -> bool:
 
 def get_agent_dependency_install_commands() -> str:
     """
-    Returns shell commands for installing agent development tools dependencies,
-    with automatic fallback to a `.pyenv` virtual environment if standard installation fails.
-
+    Generates shell commands to install agent development tools dependencies.
+    
+    The returned script installs dependencies from `src/agor/tools/agent-requirements.txt`. If the initial pip installation fails, it attempts to activate or create a `.pyenv` virtual environment and retries the installation.
+    
     Returns:
-        Shell commands for dependency installation
+        A shell script string for installing agent development tools dependencies with fallback logic.
     """
     return """# Install ONLY the dependencies needed for agent dev tools (NOT requirements.txt)
 python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
@@ -171,13 +165,13 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
 
 def generate_dynamic_installation_prompt(environment: Dict[str, Any]) -> str:
     """
-    Generate dynamic installation instructions based on detected environment.
-
+    Generates installation instructions tailored to the detected AGOR development environment.
+    
     Args:
-        environment: Environment configuration from detect_environment()
-
+        environment: A dictionary describing the current environment, as returned by detect_environment().
+    
     Returns:
-        Formatted installation instructions
+        A formatted multi-line string with environment details and step-by-step installation instructions appropriate for the detected mode, including troubleshooting tips.
     """
     base_instructions = """
 ## Detected Environment

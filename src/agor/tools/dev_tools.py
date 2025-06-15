@@ -136,16 +136,28 @@ def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
 def commit_memory_to_branch(
     content: str, memory_type: str, agent_id: str = "dev"
 ) -> bool:
-    """Auto-commit memory wrapper."""
+    """
+    Commits memory content to a dedicated branch for the specified agent and memory type.
+    
+    Args:
+        content: The memory content to commit.
+        memory_type: The type or category of memory being committed.
+        agent_id: Identifier for the agent (default is "dev").
+    
+    Returns:
+        True if the commit was successful, False otherwise.
+    """
     return auto_commit_memory(content, memory_type, agent_id)
 
 
 def test_development_tools() -> bool:
     """
-    Test development tools wrapper.
-
-    DEPRECATED: Use test_all_tools() instead.
-    This function will be removed in a future version.
+    Deprecated wrapper for testing AGOR development tools.
+    
+    Issues a deprecation warning and calls `test_tooling()`. Use `test_all_tools()` instead.
+    
+    Returns:
+        True if all tests pass, False otherwise.
     """
     import warnings
     warnings.warn(
@@ -609,19 +621,20 @@ def generate_handoff_prompt_output(handoff_content: str) -> str:
 
 
 def detect_current_environment() -> dict:
-    """Detect current development environment."""
+    """
+    Detects and returns information about the current development environment.
+    
+    Returns:
+        A dictionary containing details about the detected environment.
+    """
     return detect_environment()
 
 
 def get_available_functions_reference() -> str:
     """
-    Generate comprehensive reference of all AGOR development tools functions.
-
-    This function dynamically inspects all AGOR modules and generates a complete
-    reference guide that agents MUST call to understand available functionality.
-
-    Returns:
-        Formatted string containing all function references with descriptions
+    Generates a comprehensive, dynamically assembled reference guide of all available AGOR development tools functions.
+    
+    Inspects key AGOR modules to list all public functions with their first-line descriptions, providing agents with an up-to-date overview of available capabilities. Returns a formatted string suitable for display or documentation.
     """
     import inspect
     import sys
@@ -702,10 +715,10 @@ def get_available_functions_reference() -> str:
 
 def test_all_tools() -> bool:
     """
-    Runs comprehensive tests on all development tools components.
-
+    Runs comprehensive tests on all AGOR development tools components.
+    
     Returns:
-        True if all tests pass successfully, otherwise False.
+        True if all tests pass; otherwise, False.
     """
     return test_tooling()
 
@@ -721,18 +734,18 @@ def generate_workflow_prompt_template(
     include_explicit_requirements: bool = True,
 ) -> str:
     """
-    Generates an optimized workflow prompt template for AGOR agent tasks.
-
-    Creates a detailed prompt incorporating the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements (with example code), and success criteria. Supports options to include the bookend approach and explicit handoff requirements for seamless agent coordination.
-
+    Generates a comprehensive workflow prompt template for AGOR agent tasks.
+    
+    The template includes the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements with example code, and success criteria. Options allow inclusion of bookend requirements and explicit handoff instructions to ensure seamless agent coordination.
+    
     Args:
-        task_description: Description of the agent's task.
+        task_description: The description of the agent's task.
         memory_branch: Optional memory branch name for context continuity; generated if not provided.
-        include_bookend: Whether to include session start and end requirements.
-        include_explicit_requirements: Whether to include explicit handoff and formatting requirements.
-
+        include_bookend: If True, includes session start and end requirements.
+        include_explicit_requirements: If True, includes explicit handoff and formatting requirements.
+    
     Returns:
-        A formatted prompt template string ready for agent use.
+        A formatted string containing the workflow prompt template for agent use.
     """
     if memory_branch is None:
         memory_branch = generate_agent_memory_branch()
