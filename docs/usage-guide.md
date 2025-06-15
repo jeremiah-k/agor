@@ -95,13 +95,13 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
    - **Worker Agent**: Code analysis, implementation, debugging, task execution
    - **Project Coordinator**: Planning, architecture, multi-agent coordination
 
-3. **Use AGOR Development Tooling**: Import and use functions from `src/agor/tools/dev_tooling.py`:
+3. **Use AGOR Development Tools**: Import and use functions from `src/agor/tools/dev_tools.py`:
    - `create_development_snapshot()` for work snapshots
    - `generate_session_end_prompt()` for agent transitions
-   - `generate_pr_description_snapshot()` for PR descriptions
+   - `generate_pr_description_output()` for PR descriptions
    - `quick_commit_and_push()` for git operations
 
-4. **OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tooling functions:
+4. **OUTPUT FORMATTING**: ALL generated outputs MUST use proper dev tools functions:
    - `generate_release_notes_output()` for **brief** release notes (keep concise to avoid processing errors)
    - `generate_pr_description_output()` for **brief** PR descriptions (keep concise to avoid processing errors)
    - `generate_handoff_prompt_output()` for handoff prompts (can be full length)
@@ -123,7 +123,7 @@ You are working with the AGOR (AgentOrchestrator) development coordination platf
 
 2. Select your role (Worker Agent or Project Coordinator)
 
-3. Use AGOR development tooling for snapshots, PR descriptions, and handoffs
+3. Use AGOR development tools for snapshots, PR descriptions, and handoffs
 
 4. Always end sessions with proper snapshots for continuity
 
@@ -187,7 +187,7 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
+# Install ONLY the dependencies needed for agent dev tools (NOT requirements.txt)
 python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
@@ -201,14 +201,14 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     python3 -m pip install -r src/agor/tools/agent-requirements.txt
 }
 
-# Test AGOR development tooling
+# Test AGOR development tools
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling, get_current_timestamp_formatted
+from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
 
 # Verify tooling works
-test_tooling()
+test_all_tools()
 print(f'Session started at: {get_current_timestamp_formatted()}')
 "
 
@@ -338,7 +338,7 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to your project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install ONLY the dependencies needed for agent dev tooling (NOT requirements.txt)
+# Install ONLY the dependencies needed for agent dev tools (NOT requirements.txt)
 python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     echo "⚠️ pip install failed, trying .pyenv venv fallback"
     if [ -d ".pyenv" ]; then
@@ -352,15 +352,15 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
     python3 -m pip install -r src/agor/tools/agent-requirements.txt
 }
 
-# Test AGOR development tooling
+# Test AGOR development tools
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling, get_timestamp
+from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
 
 # Verify tooling works
-test_tooling()
-print(f'Session started at: {get_timestamp()}')
+test_all_tools()
+print(f'Session started at: {get_current_timestamp_formatted()}')
 "
 
 # Review development guide
@@ -439,7 +439,7 @@ agor bundle https://github.com/your-username/your-project
 1. Analyze codebase using detailed prompts and context
 2. Explore specific code areas based on requirements
 3. Implement changes or provide detailed explanations
-4. Use development tooling for snapshots and documentation
+4. Use development tools for snapshots and documentation
 
 **Why Use AGOR as a Worker Agent?**
 

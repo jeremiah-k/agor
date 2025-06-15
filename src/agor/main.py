@@ -935,7 +935,7 @@ def detick(
     try:
         import pyperclip
 
-        from .tools.dev_tooling import detick_content
+        from .tools.dev_tools import detick_content
 
         # Get content from clipboard if not provided as argument
         if content is None:
@@ -999,7 +999,7 @@ def retick(
     try:
         import pyperclip
 
-        from .tools.dev_tooling import retick_content
+        from .tools.dev_tools import retick_content
 
         # Get content from clipboard if not provided as argument
         if content is None:

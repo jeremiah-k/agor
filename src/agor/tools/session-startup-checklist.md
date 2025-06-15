@@ -33,11 +33,11 @@ git branch
 ## ✅ Step 3: Development Environment
 
 ```bash
-# Test AGOR development tooling
+# Test AGOR development tools
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tooling import test_tooling
+from agor.tools.dev_tools import test_tooling
 test_tooling()
 "
 ```

@@ -1,8 +1,8 @@
 """
-Memory Manager Module for AGOR Development Tooling
+Memory Manager Module for AGOR Development Tools
 
 This module contains all memory branch operations and cross-branch commit functionality
-extracted from dev_tooling.py for better organization and maintainability.
+extracted from dev_tools.py for better organization and maintainability.
 
 Functions:
 - commit_to_memory_branch: Cross-branch memory commits
@@ -371,10 +371,10 @@ def list_memory_branches(repo_path: Optional[Path] = None) -> list[str]:
         repo_path = Path.cwd()
 
     try:
-        from agor.memory_sync import MemorySync
+        from agor.memory_sync import MemorySyncManager
 
-        # Create MemorySync instance with current repo path
-        memory_sync = MemorySync(repo_path=str(repo_path))
+        # Create MemorySyncManager instance with current repo path
+        memory_sync = MemorySyncManager(repo_path=repo_path)
 
         # Get both local and remote memory branches
         local_branches = memory_sync.list_memory_branches(remote=False)

@@ -47,7 +47,7 @@ for the next agent, properly formatted in a single codeblock.
 
 ```
 Remember: End your session by creating a snapshot and generating
-a handoff prompt for the next agent. Process through dev tooling
+a handoff prompt for the next agent. Process through dev tools
 and wrap in a single codeblock for copy-paste.
 ```
 
@@ -126,7 +126,7 @@ End with handoff prompt in single codeblock.
 **Successful Pattern Used:**
 
 ```
-Refactor dev_tooling.py by moving functions to specialized modules.
+Refactor dev_tools.py by moving functions to specialized modules.
 Follow the <500 LOC guideline. Document your process as you work.
 
 COORDINATION REQUIREMENTS:
@@ -262,13 +262,13 @@ END: "Create handoff prompt now, deticked, in codeblock"
 "Read previous work from agor/mem/[branch]. Continue from there."
 ```
 
-### "Agent Forgot to Use Dev Tooling"
+### "Agent Forgot to Use Dev Tools"
 
 **Solution:** Include import statements in prompt:
 
-```
+```python
 Use these functions:
-from agor.tools.dev_tooling import create_development_snapshot
+from agor.tools.dev_tools import create_development_snapshot
 from agor.tools.agent_handoffs import detick_content
 ```
 

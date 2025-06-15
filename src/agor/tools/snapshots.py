@@ -243,7 +243,7 @@ git show {memory_branch}:.agor/snapshots/
 4. Review any previous work context provided
 5. Begin work following AGOR protocols
 
-Remember: Always create a snapshot before ending your session using the dev tooling.
+Remember: Always create a snapshot before ending your session using the dev tools.
 
 ---
 *This handoff prompt was generated automatically with environment detection and backtick processing*

@@ -33,7 +33,7 @@ def auto_commit_memory_wrapper(
 
 
 def test_tooling_wrapper() -> bool:
-    """Test all development tooling functions."""
+    """Test all development tools functions."""
     return test_tooling()
 
 
@@ -283,7 +283,7 @@ def system_health_check_hotkey() -> str:
     """
     Performs a comprehensive system health check and returns a detailed markdown report.
 
-    The report summarizes workspace health, project status, development tooling, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
+    The report summarizes workspace health, project status, development tools, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
     """
     try:
         # Get workspace health
@@ -292,7 +292,7 @@ def system_health_check_hotkey() -> str:
         # Get project status
         project_status = get_project_status()
 
-        # Check dev tooling
+        # Check dev tools
         tooling_status = "✅ Available"
         try:
             test_result = test_tooling()
@@ -331,7 +331,7 @@ def system_health_check_hotkey() -> str:
 - **AGOR Version**: {project_status.get('agor_version', 'unknown')}
 
 ### Development Tools
-- **Dev Tooling**: {tooling_status}
+- **Dev Tools**: {tooling_status}
 - **Memory System**: {memory_status}
 - **Environment Detection**: {'✅ Working' if 'environment_error' not in project_status else '❌ Failed'}
 
@@ -362,7 +362,7 @@ Based on the health check:
 2. **Branch Management**: Use feature branches for development work
 3. **Memory Sync**: Ensure memory branches are accessible for coordination
 4. **Environment Monitoring**: Keep development environment stable
-5. **Tool Maintenance**: Test dev tooling regularly for reliability
+5. **Tool Maintenance**: Test dev tools regularly for reliability
 
 ---
 

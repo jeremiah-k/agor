@@ -388,7 +388,7 @@ The next agent should:
 2. **Install dependencies**: `python3 -m pip install -r src/agor/tools/agent-requirements.txt`
 3. **Review this report**: Understand completed work and current status
 4. **Continue from current state**: Don't restart or duplicate work
-5. **Use dev tooling**: All coordination must use AGOR dev tooling functions
+5. **Use dev tools**: All coordination must use AGOR dev tools functions
 6. **Create session end report**: Before ending their session
 
 ## 🚀 IMMEDIATE NEXT STEPS

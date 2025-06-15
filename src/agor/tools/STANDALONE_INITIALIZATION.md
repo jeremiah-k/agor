@@ -77,14 +77,14 @@ Before starting any work, familiarize yourself with AGOR's snapshot system:
    }
    ```
 
-5. **Test Development Tooling**:
+5. **Test Development Tools**:
 
    ```bash
-   # Test the AGOR development tooling to ensure everything works
+   # Test the AGOR development tools to ensure everything works
    python3 -c "
    import sys
    sys.path.insert(0, 'src')
-   from agor.tools.dev_tooling import test_tooling, get_timestamp
+   from agor.tools.dev_tools import test_tooling, get_timestamp
 
    # Verify tooling works
    test_tooling()

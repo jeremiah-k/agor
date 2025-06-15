@@ -52,7 +52,7 @@ You are operating in **AugmentCode Local Agent** environment with:
 - Persistent User Guidelines across sessions
 - Enhanced memory through Augment system
 
-## 🛠️ AGOR Development Tooling
+## 🛠️ AGOR Development Tools
 
 ### Available Functions
 
@@ -65,7 +65,7 @@ AGOR provides powerful development functions through Python imports:
 - `get_workspace_status()` - Check project and git status
 - `create_development_checklist()` - Generate task-specific checklists
 
-**OUTPUT FORMATTING**: ALL generated outputs MUST use the proper dev tooling functions for formatting:
+**OUTPUT FORMATTING**: ALL generated outputs MUST use the proper dev tools functions for formatting:
 
 - `generate_release_notes_output()` for **brief** release notes (keep concise to avoid processing errors)
 - `generate_pr_description_output()` for **brief** PR descriptions (keep concise to avoid processing errors)

@@ -59,7 +59,7 @@ IMPORTANT: You MUST provide a comprehensive snapshot in a single codeblock befor
 ```
 I need comprehensive code review and analysis using AGOR's structured approach.
 
-Please read README_ai.md (select Worker Agent) and AGOR_INSTRUCTIONS.md (focus on development tooling functions).
+Please read README_ai.md (select Worker Agent) and AGOR_INSTRUCTIONS.md (focus on development tools functions).
 
 Initialize as Worker Agent and help me analyze the codebase for quality, structure, and improvement opportunities.
 
@@ -135,7 +135,7 @@ Initialize team coordination and help me establish the development workflow.
 ```
 I need to generate comprehensive documentation using AGOR's structured approach.
 
-Please read README_ai.md (select Worker Agent) and AGOR_INSTRUCTIONS.md (focus on development tooling functions).
+Please read README_ai.md (select Worker Agent) and AGOR_INSTRUCTIONS.md (focus on development tools functions).
 
 Initialize as Worker Agent and help me create thorough documentation for the codebase.
 
