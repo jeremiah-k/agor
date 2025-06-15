@@ -108,6 +108,7 @@ def generate_snapshot_document(
     # Generate agent ID if not provided
     if agent_id is None:
         from agor.tools.dev_tools import generate_agent_id
+
         agent_id = generate_agent_id()
 
     return f"""# 📸 Agent Snapshot Document

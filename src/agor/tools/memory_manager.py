@@ -267,7 +267,9 @@ def commit_to_memory_branch(
         return False
 
 
-def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_branch: str = None) -> bool:
+def auto_commit_memory(
+    content: str, memory_type: str, agent_id: str, memory_branch: str = None
+) -> bool:
     """
     Automatically commit content to main memory branch with agent directory structure.
 
@@ -304,7 +306,7 @@ def auto_commit_memory(content: str, memory_type: str, agent_id: str, memory_bra
         file_content=content,
         file_name=file_name,
         branch_name=memory_branch,
-        commit_message=commit_message
+        commit_message=commit_message,
     )
 
 

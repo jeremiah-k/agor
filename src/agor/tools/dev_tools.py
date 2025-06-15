@@ -463,8 +463,8 @@ def generate_unique_agent_id() -> str:
         A string agent ID in format 'agent_{hash}_{timestamp}' for unique identification.
     """
     import hashlib
-    import time
     import os
+    import time
     import uuid
 
     # Create truly unique identifier using multiple sources
@@ -654,8 +654,8 @@ def cleanup_agent_directories(
         True if cleanup was successful, False otherwise
     """
     try:
-        import subprocess
         import os
+        import subprocess
         from datetime import datetime, timedelta
 
         memory_branch = get_main_memory_branch(custom_branch)
@@ -800,8 +800,8 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
         List of pending handoff files
     """
     try:
-        import subprocess
         import os
+        import subprocess
 
         memory_branch = get_main_memory_branch(custom_branch)
 
@@ -1204,7 +1204,8 @@ def get_available_functions_reference() -> str:
     """
     import inspect
     import sys
-    from agor.tools import memory_manager, git_operations, snapshot_templates
+
+    from agor.tools import git_operations, memory_manager, snapshot_templates
 
     output = []
     output.append("# 🛠️ AGOR Development Tools Functions Reference")

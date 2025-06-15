@@ -100,31 +100,37 @@ AGOR provides tools designed to facilitate seamless development and effective co
 AGOR empowers users and AI agents with a range of functionalities accessible through a conversational interface. Instead of cryptic shortcuts, AGOR focuses on the actions you can perform:
 
 **Strategic Project Management:**
+
 - Develop comprehensive strategic plans for projects.
 - Break down large projects into manageable tasks and phases.
 - Conduct architectural reviews and plan for system improvements.
 
 **Coordination and Team Setup (for multi-agent scenarios):**
+
 - Select and initialize various multi-agent coordination strategies (such as Parallel Divergent, Pipeline, etc.).
 - Design and create specialized agent teams with defined roles.
 - Prepare snapshot procedures and prompts for effective agent handoffs.
 
 **Codebase Interaction and Analysis:**
+
 - Perform in-depth analysis of the existing codebase.
 - View the full content of project files.
 - Display only the changes made to files for focused review.
 - Generate detailed snapshots of work for context sharing or backup.
 
 **Memory and Context Management:**
+
 - Add information to the persistent memory system.
 - Search the existing memory for relevant information.
 
 **Development and Version Control:**
+
 - Modify project files with an integrated editing capability.
 - Commit changes to the version control system with descriptive messages.
 - View differences between versions of files.
 
 **Session and System Management:**
+
 - Initialize the AGOR environment for a new project or session.
 - Check the current status of the project and AGOR system.
 - Synchronize work with the main repository or other agents.

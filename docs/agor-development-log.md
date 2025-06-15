@@ -9,12 +9,14 @@
 ### Critical Security Improvements
 
 **Agent ID Sanitization System**
+
 - Added `sanitize_slug()` and `sanitize_agent_id()` functions to prevent injection attacks
 - Protection against path traversal (`../../../etc/passwd`) and command injection (`agent; rm -rf /`)
 - All agent IDs sanitized before use in file paths and branch names
 - Comprehensive input validation for all agent operations
 
 **Secure Agent Identification**
+
 - Optional persistent agent IDs via `/tmp/agor/agent_id` file
 - Clear warnings about platform limitations and reliability
 - Fixed cleanup functions that could delete wrong agent directories
@@ -23,12 +25,14 @@
 ### Single Memory Branch Architecture (Production Ready)
 
 **Stable Directory Structure**
+
 - Main memory branch: `agor/mem/main` with organized subdirectories
 - Agent isolation: `agents/agent_{hash}_{timestamp}/` for each agent session
 - Shared coordination: `shared/agentconvo.md` for cross-agent communication
 - Structured handoffs: `handoffs/pending/` and `handoffs/completed/` directories
 
 **New Security Functions**
+
 - `initialize_agent_workspace()` - Creates secure agent directories
 - `check_pending_handoffs()` - Automated handoff discovery
 - `create_handoff_prompt()` - Structured agent transitions
@@ -37,12 +41,14 @@
 ### Enhanced User Experience
 
 **Comprehensive Documentation**
+
 - Complete agent prompt examples with security awareness
 - Codeblock formatting requirements for all outputs
 - Platform prioritization (AugmentCode first, deprecated platforms last)
 - Security-conscious development patterns and best practices
 
 **Protocol Updates**
+
 - Protocol v0.5.1 with security fixes and architecture improvements
 - Updated tools index with new security functions
 - Enhanced documentation alignment across all files
@@ -50,6 +56,7 @@
 ### Testing and Validation
 
 **Security Testing**
+
 - All sanitization functions tested with malicious inputs
 - Agent ID persistence verified across sessions
 - Workspace initialization and directory structure validated
@@ -57,6 +64,7 @@
 - Cleanup tools safety mechanisms verified
 
 **Backward Compatibility**
+
 - All existing workflows continue to work
 - Enhanced security through automatic sanitization
 - Optional features available but not required

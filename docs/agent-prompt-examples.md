@@ -16,80 +16,90 @@ This guide shows you exactly how to ask agents to use AGOR tools. **Emphasis is 
 ### ✅ Good Examples
 
 **End of work session:**
+
 ```
 Use AGOR's snapshot tools to create a development snapshot of our progress, then generate a handoff prompt so another agent can continue this work. Wrap the output in a single codeblock so I can copy and paste easily for a clean transition. Be verbose in your explanation of your work.
 ```
 
 **Before major changes:**
+
 ```
 Before we refactor this code, use `create_development_snapshot()` to save our current state with the title 'Pre-refactor baseline'. Use AGOR dev tools to format the output and wrap it in a single codeblock for easy copy-paste.
 ```
 
 **Regular progress saving:**
+
 ```
 Create an AGOR snapshot of our current progress and commit it to your memory branch so we don't lose this work. Use dev tools to format the snapshot output and wrap it in a single codeblock.
 ```
 
 ### ❌ Avoid These
 
-> "Save our progress" *(too vague - agent might use its own methods)*
-> "Create a backup" *(agent won't use AGOR tools)*
-> "Document what we've done" *(agent will write text, not use snapshots)*
-> "Generate a handoff prompt" *(missing codeblock request - output won't be copy-pasteable)*
+> "Save our progress" _(too vague - agent might use its own methods)_
+> "Create a backup" _(agent won't use AGOR tools)_
+> "Document what we've done" _(agent will write text, not use snapshots)_
+> "Generate a handoff prompt" _(missing codeblock request - output won't be copy-pasteable)_
 
 ## 🚀 Git Operations & Release Management
 
 ### ✅ Good Examples
 
 **Committing work:**
+
 ```
 Use AGOR's `quick_commit_and_push()` to commit our changes with a proper message about the authentication feature we just built. Wrap the output in a single codeblock so I can copy and paste easily.
 ```
 
 **Creating release notes:**
+
 ```
 Use the AGOR dev tools to generate release notes for this update. Include the bug fixes and new features we implemented. Run it through our dev tools formatting and wrap the output in a single codeblock for easy copy-paste.
 ```
 
 **PR descriptions:**
+
 ```
 Use `generate_pr_description_output()` to create a properly formatted PR description for this branch. Wrap the final output in a single codeblock so I can copy and paste it directly.
 ```
 
 ### ❌ Avoid These
 
-> "Commit our changes" *(agent might use basic git)*
-> "Write release notes" *(agent will write manually, won't format properly)*
-> "Create a PR description" *(agent won't use AGOR formatting or codeblock)*
+> "Commit our changes" _(agent might use basic git)_
+> "Write release notes" _(agent will write manually, won't format properly)_
+> "Create a PR description" _(agent won't use AGOR formatting or codeblock)_
 
 ## 🔄 Agent Coordination & Handoffs
 
 ### ✅ Good Examples
 
 **Creating handoffs:**
+
 ```
 Use AGOR's handoff tools to create a comprehensive snapshot and generate a session end prompt for the next agent. In the handoff prompt, instruct the next agent to generate their own snapshot when they complete their work and create a return handoff prompt using AGOR dev tools. Wrap the output in a single codeblock so I can copy and paste easily for a clean transition.
 ```
 
 **Loading previous work:**
+
 ```
 Use AGOR's snapshot loading tools to understand what the previous agent accomplished and what needs to be done next. When you complete your analysis, create your own snapshot using AGOR tools and wrap the output in a single codeblock.
 ```
 
 **Multi-agent coordination:**
+
 ```
 Update the agentconvo.md file using AGOR protocols to let other agents know we're working on the backend API. Include instructions for the next agent to update the conversation log when they start their work. Format the output in a single codeblock for easy copy-paste.
 ```
 
 ### ❌ Avoid These
 
-> "Hand this off to another agent" *(too vague, no codeblock request)*
-> "Check what was done before" *(agent won't use AGOR tools)*
-> "Coordinate with other agents" *(agent will improvise, no AGOR guidance)*
+> "Hand this off to another agent" _(too vague, no codeblock request)_
+> "Check what was done before" _(agent won't use AGOR tools)_
+> "Coordinate with other agents" _(agent will improvise, no AGOR guidance)_
 
 ## 🔗 Stacking Multiple Requests
 
 **Complex workflow example:**
+
 ```
 First refactor the authentication module and then update our unit tests. Create a PR description, run it through our dev tools so it's formatted properly, then wrap the output in a single codeblock.
 
@@ -99,11 +109,13 @@ Then generate a snapshot and a handoff prompt to another agent. Explain in detai
 ```
 
 **Multi-step coordination:**
+
 ```
 Use AGOR tools to commit our current progress, then create a development snapshot titled 'Feature X Implementation Complete'. Generate a handoff prompt for the QA agent, instructing them to run tests, document any issues in agentconvo.md, and create their own handoff back to development if fixes are needed. Wrap each output (commit confirmation, snapshot, and handoff prompt) in separate codeblocks for easy copy-paste.
 ```
 
 **Cleanup after project completion:**
+
 ```
 We've finished this sprint. Use AGOR dev tools to create a final project snapshot, then generate release notes and a PR description. After that, use the intelligent cleanup tools to remove agent directories older than 7 days, keeping only recent work. Wrap each output in separate codeblocks for easy copy-paste.
 ```
@@ -113,40 +125,46 @@ We've finished this sprint. Use AGOR dev tools to create a final project snapsho
 ### ✅ Good Examples
 
 **Starting work:**
+
 ```
 Use AGOR tools to initialize this project workspace and create your agent memory branch before we begin coding. Wrap any initialization output in a single codeblock for easy reference.
 ```
 
 **Testing and validation:**
+
 ```
 After running the tests, use AGOR's commit tools to save our changes and create a snapshot titled 'Tests passing - ready for review'. Use dev tools to format the snapshot and wrap it in a single codeblock.
 ```
 
 **Code review preparation:**
+
 ```
 Use AGOR's PR generation tools to create a comprehensive PR description that explains our implementation approach and testing strategy. Run it through generate_pr_description_output() and wrap the final result in a single codeblock so I can copy and paste it directly.
 ```
 
 ### ❌ Avoid These
 
-> "Set up the workspace" *(agent won't use AGOR initialization)*
-> "Save our work" *(too vague, no codeblock request)*
-> "Prepare for code review" *(agent will improvise, no formatting specified)*
+> "Set up the workspace" _(agent won't use AGOR initialization)_
+> "Save our work" _(too vague, no codeblock request)_
+> "Prepare for code review" _(agent will improvise, no formatting specified)_
 
 ## 🎯 Specific Tool Usage
 
 ### Memory & Snapshots
+
 - `initialize_agent_workspace()` - creates agent directory in main memory branch
 - `create_development_snapshot(title, context)` - saves snapshot in agent's directory
 - `check_pending_handoffs()` - finds work from other agents
 - `create_handoff_prompt()` - creates structured handoffs
 
 ### Git & Release Management
+
 - `quick_commit_and_push(message)`
 - `generate_pr_description_output()`
 - `generate_release_notes_output()`
 
 ### Agent Coordination
+
 - Update `shared/agentconvo.md` for cross-agent communication
 - Use main memory branch with agent directories
 - Create handoffs in `handoffs/pending/` directory
@@ -167,11 +185,11 @@ Use AGOR's PR generation tools to create a comprehensive PR description that exp
 
 ## 🚫 Common Mistakes
 
-- Asking agents to "figure out the best way" *(they'll avoid AGOR tools)*
-- Using vague language like "save" or "document" *(not specific enough)*
-- Assuming agents know to use AGOR tools *(they need explicit direction)*
-- **Not requesting single codeblock output** *(output won't be copy-pasteable)*
-- Not telling the next agent what AGOR actions to take *(breaks agent-to-agent flow)*
-- Forgetting to specify dev tools formatting *(output won't be properly formatted)*
+- Asking agents to "figure out the best way" _(they'll avoid AGOR tools)_
+- Using vague language like "save" or "document" _(not specific enough)_
+- Assuming agents know to use AGOR tools _(they need explicit direction)_
+- **Not requesting single codeblock output** _(output won't be copy-pasteable)_
+- Not telling the next agent what AGOR actions to take _(breaks agent-to-agent flow)_
+- Forgetting to specify dev tools formatting _(output won't be properly formatted)_
 
 Remember: **Agents need clear, explicit instructions to use AGOR tools effectively AND format output properly!**

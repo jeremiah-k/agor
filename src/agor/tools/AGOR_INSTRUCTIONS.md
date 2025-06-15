@@ -116,6 +116,7 @@ Find your selected role below for detailed guidance, including specific initiali
 **Worker Agent Capabilities Menu:**
 
 **📊 Analysis & Display:**
+
 - Analyze codebase comprehensively
 - Display full file contents
 - Show only changed sections of files
@@ -123,20 +124,24 @@ Find your selected role below for detailed guidance, including specific initiali
 - Show differences in code (Git diff)
 
 **🔍 Code Exploration:**
+
 - Perform a breadth-first search for files
 - Search for specific patterns within files (grep)
 - Display the directory structure (tree)
 
 **✏️ Editing & Changes:**
+
 - Modify file contents
 - Save current changes (commit)
 
 **📋 Documentation:**
+
 - Generate documentation for code
 - Add comments to code
 - Explain code segments
 
 **🤝 Coordination (Multi-Agent):**
+
 - Check current coordination status
 - Synchronize with the main project repository
 - Create a planning checkpoint
@@ -147,6 +152,7 @@ Find your selected role below for detailed guidance, including specific initiali
 - Mark the current task as complete
 
 **🛠️ Development Tools Integration:**
+
 - Generate a handoff prompt for another agent
 - Generate all standard project outputs (snapshot, handoff, PR notes)
 - Perform a quick commit and push of current work
@@ -154,24 +160,29 @@ Find your selected role below for detailed guidance, including specific initiali
 - Show environment and version information
 
 **🔄 Session Management:**
+
 - Initiate the mandatory session end procedure for agent coordination
 
 **📸 Snapshot Procedures:**
+
 - Create a snapshot document for another agent
 - Create a progress report snapshot
 - Generate a Pull Request description for the current work
 - Receive a snapshot from another agent
 
 **💾 Memory Synchronization (Advanced/Developer Use):**
+
 - Start memory synchronization
 - Save the current memory state
 - Restore memory from a saved state
 - Show current memory synchronization status
 
 **🔄 Meta-Development:**
+
 - Provide feedback on the AGOR system itself
 
 **⚙️ Session Navigation:**
+
 - Show this capabilities menu
 - Show current operational status
 - Refresh available options
@@ -206,6 +217,7 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 **Project Coordinator Capabilities Menu:**
 
 **🎯 Strategic Planning:**
+
 - Create a strategic plan for the project
 - Break down the project into manageable tasks
 - Conduct an architecture review
@@ -213,6 +225,7 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 - Identify and plan for project risks
 
 **⚡ Strategy Selection & Implementation:**
+
 - Analyze the project and select an optimal multi-agent strategy
 - Implement the Parallel Divergent strategy
 - Implement the Pipeline strategy
@@ -221,6 +234,7 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 - Implement the Mob Programming strategy
 
 **👥 Team Design & Management:**
+
 - Create and define the structure for an agent team
 - Generate a team manifest with roles and responsibilities
 - Design snapshot prompts and procedures for team handoffs
@@ -228,16 +242,19 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 - Configure team coordination parameters
 
 **🔄 Coordination & Workflow:**
+
 - Design the overall project workflow
 - Define quality gates and validation checkpoints
 - Determine the execution order for tasks
 - Initialize the coordination system for the project
 
 **📊 Basic Analysis:**
+
 - Analyze the project codebase
 - Generate a detailed snapshot of current work or project state
 
 **📸 Snapshot Procedures:**
+
 - Create a snapshot document for another agent or for archival
 - Create a work order snapshot for task assignment
 - Create a progress report snapshot for status updates
@@ -245,15 +262,18 @@ See `MENU_FLOW_GUIDE.md` for detailed templates and examples.
 - Receive a snapshot from another agent
 
 **💾 Memory Synchronization (Advanced/Developer Use):**
+
 - Start memory synchronization
 - Save the current memory state
 - Restore memory from a saved state
 - Show current memory synchronization status
 
 **🔄 Meta-Development:**
+
 - Provide feedback on the AGOR system itself
 
 **⚙️ Session Navigation:**
+
 - Show a quick help summary
 - Refresh this capabilities menu
 - Perform a clean restart of the session

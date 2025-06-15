@@ -37,19 +37,19 @@ def sanitize_slug(input_string: str) -> str:
 
     # Remove or replace unsafe characters
     # Keep only alphanumerics, dashes, and underscores
-    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', str(input_string))
+    sanitized = re.sub(r"[^a-zA-Z0-9\-_]", "_", str(input_string))
 
     # Remove multiple consecutive underscores/dashes
-    sanitized = re.sub(r'[_\-]+', '_', sanitized)
+    sanitized = re.sub(r"[_\-]+", "_", sanitized)
 
     # Remove leading/trailing underscores/dashes
-    sanitized = sanitized.strip('_-')
+    sanitized = sanitized.strip("_-")
 
     # Ensure it's not empty and not too long
     if not sanitized:
         sanitized = "unknown"
     elif len(sanitized) > 50:
-        sanitized = sanitized[:50].rstrip('_-')
+        sanitized = sanitized[:50].rstrip("_-")
 
     return sanitized
 
