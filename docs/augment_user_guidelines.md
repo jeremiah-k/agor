@@ -52,27 +52,59 @@ You are operating in **AugmentCode Local Agent** environment with:
 - Persistent User Guidelines across sessions
 - Enhanced memory through Augment system
 
+### Step 4: External Project Integration (CRITICAL)
+
+**If working on external projects** (where AGOR is installed separately from the project):
+
+```python
+# ALWAYS use external integration system instead of direct imports
+from agor.tools.external_integration import get_agor_tools
+
+# Initialize with automatic AGOR detection
+tools = get_agor_tools()
+tools.print_status()  # Check integration status
+
+# Use AGOR functions through the tools object
+tools.generate_pr_description_output("content")
+tools.create_development_snapshot("title", "context")
+```
+
+**Why this is critical**: Direct imports fail when AGOR is installed separately. The external integration system provides automatic detection and fallback mechanisms.
+
+**See**: src/agor/tools/EXTERNAL_INTEGRATION_GUIDE.md for complete setup instructions.
+
 ## 🛠️ AGOR Development Tools
 
 ### Available Functions
 
-AGOR provides powerful development functions through Python imports:
+AGOR provides powerful development functions. **Choose the correct access method**:
 
-- `create_development_snapshot()` - Create comprehensive work snapshots
-- `generate_session_end_prompt()` - Generate handoff prompts for agent transitions
-- `generate_pr_description_snapshot()` - Create PR descriptions for completed work
-- `quick_commit_and_push()` - Commit and push changes with descriptive messages
-- `get_workspace_status()` - Check project and git status
-- `create_development_checklist()` - Generate task-specific checklists
+**For External Projects (Recommended)**:
+```python
+from agor.tools.external_integration import get_agor_tools
+tools = get_agor_tools()
 
-**OUTPUT FORMATTING**: ALL generated outputs MUST use the proper dev tools functions for formatting:
+# Available functions through tools object:
+tools.create_development_snapshot("title", "context")
+tools.generate_pr_description_output("content")  # Brief content only
+tools.generate_handoff_prompt_output("content")  # Can be full length
+tools.generate_release_notes_output("content")   # Brief content only
+tools.quick_commit_and_push("message", "emoji")
+tools.get_workspace_status()
+tools.test_all_tools()
+```
 
-- `generate_release_notes_output()` for **brief** release notes (keep concise to avoid processing errors)
-- `generate_pr_description_output()` for **brief** PR descriptions (keep concise to avoid processing errors)
-- `generate_handoff_prompt_output()` for handoff prompts (can be full length)
-- `generate_formatted_output()` for any other content
+**For AGOR Development Only**:
+```python
+# Only use direct imports when working ON AGOR itself
+from agor.tools.dev_tools import (
+    create_development_snapshot,
+    generate_pr_description_output,
+    # ... other functions
+)
+```
 
-These functions automatically handle deticking and codeblock wrapping. NEVER manually process or wrap content - ALWAYS use these functions.
+**OUTPUT FORMATTING**: ALL generated outputs MUST use the proper functions for formatting. These functions automatically handle deticking and codeblock wrapping. NEVER manually process or wrap content - ALWAYS use these functions.
 
 ### Agent Workflow Guidance
 
@@ -149,6 +181,7 @@ Agents should proactively offer to generate deliverables as work nears completio
 - **Role Selection**: src/agor/tools/README_ai.md
 - **Complete Guide**: src/agor/tools/AGOR_INSTRUCTIONS.md
 - **Documentation Index**: src/agor/tools/index.md
+- **External Integration**: src/agor/tools/EXTERNAL_INTEGRATION_GUIDE.md (CRITICAL for external projects)
 - **Snapshot Guide**: src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md
 - **Strategy Guide**: docs/strategies.md
 - **Development Guide**: docs/agor-development-guide.md (when working on AGOR itself)

@@ -46,6 +46,27 @@ Execute this sequence until a valid git repository is found:
 6. **Persistence**: Continue searching until a valid repository with tracked files is located
 7. **Never assume failure** - the git repository is always present in bundles
 
+### 1.1.1. External Project Integration (CRITICAL for Augment Local Agents)
+
+**If you are working on an external project** (where AGOR is installed separately from the project):
+
+```python
+# ALWAYS use external integration system instead of direct imports
+from agor.tools.external_integration import get_agor_tools
+
+# Initialize with automatic AGOR detection
+tools = get_agor_tools()
+tools.print_status()  # Check integration status
+
+# Use AGOR functions through the tools object
+tools.generate_pr_description_output("content")
+tools.create_development_snapshot("title", "context")
+```
+
+**Why this is critical**: Direct imports (`from agor.tools.dev_tools import ...`) fail when AGOR is installed separately. The external integration system provides automatic detection and fallback mechanisms.
+
+**See**: [EXTERNAL_INTEGRATION_GUIDE.md](EXTERNAL_INTEGRATION_GUIDE.md) for complete setup instructions.
+
 ### 1.2. Git Configuration Setup
 
 **IMPORTANT: Set up git identity before making commits**
@@ -363,8 +384,28 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 
 **CORRECT WORKFLOW - USE THESE FUNCTIONS**:
 
+**For External Projects (Augment Local Agents, etc.)**:
 ```python
+# ALWAYS use external integration for projects where AGOR is installed separately
+from agor.tools.external_integration import get_agor_tools
+tools = get_agor_tools()
+
 # For release notes (KEEP BRIEF - long content causes processing errors)
+formatted_output = tools.generate_release_notes_output(brief_release_notes_content)
+print(formatted_output)
+
+# For PR descriptions (KEEP BRIEF - long content causes processing errors)
+formatted_output = tools.generate_pr_description_output(brief_pr_content)
+print(formatted_output)
+
+# For handoff prompts (can be full length)
+formatted_output = tools.generate_handoff_prompt_output(handoff_content)
+print(formatted_output)
+```
+
+**For AGOR Development Projects Only**:
+```python
+# Only use direct imports when working ON AGOR itself
 from agor.tools.dev_tools import generate_release_notes_output
 formatted_output = generate_release_notes_output(brief_release_notes_content)
 print(formatted_output)
@@ -377,11 +418,6 @@ print(formatted_output)
 # For handoff prompts (can be full length)
 from agor.tools.dev_tools import generate_handoff_prompt_output
 formatted_output = generate_handoff_prompt_output(handoff_content)
-print(formatted_output)
-
-# For any other content
-from agor.tools.dev_tools import generate_formatted_output
-formatted_output = generate_formatted_output(content, "content_type")
 print(formatted_output)
 ```
 
