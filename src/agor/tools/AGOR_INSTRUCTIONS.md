@@ -48,7 +48,7 @@ Execute this sequence until a valid git repository is found:
 
 ### 1.1.1. External Project Integration (CRITICAL for Augment Local Agents)
 
-**If you are working on an external project** (where AGOR is installed separately from the project):
+**If you are working with an external project** (where AGOR is installed separately from the project):
 
 ```python
 # ALWAYS use external integration system instead of direct imports

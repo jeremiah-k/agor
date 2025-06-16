@@ -20,12 +20,10 @@ Usage:
     tools.create_development_snapshot("Title", "Context")
 """
 
-import os
 import sys
 import importlib.util
 from pathlib import Path
 from typing import Optional, Dict, Any, Callable
-import warnings
 
 
 class AgorExternalTools:
@@ -136,7 +134,12 @@ class AgorExternalTools:
             
             # Try to import dev_tools
             spec = importlib.util.spec_from_file_location("agor.tools.dev_tools", dev_tools_path)
+            if spec is None:
+                return False
+
             dev_tools_module = importlib.util.module_from_spec(spec)
+            # Insert module into sys.modules to prevent duplicate reloads
+            sys.modules["agor.tools.dev_tools"] = dev_tools_module
             spec.loader.exec_module(dev_tools_module)
             
             self.dev_tools = dev_tools_module
@@ -239,8 +242,8 @@ class AgorExternalTools:
             if self.agor_path:
                 print(f"📁 AGOR Path: {self.agor_path}")
             return True
-        
-        return self._call_with_fallback("test_tooling", fallback)
+
+        return self._call_with_fallback("test_all_tools", fallback)
     
     # Utility Methods
     # ===============

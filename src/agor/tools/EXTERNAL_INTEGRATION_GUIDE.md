@@ -6,7 +6,7 @@ This guide addresses the critical integration issues identified in meta feedback
 
 ## 🎯 Problem Statement
 
-When AGOR is installed separately from the project being worked on (e.g., Augment local agent working on Meshtastic-Android with AGOR installed elsewhere), agents encounter:
+When AGOR is installed separately from the project being worked on (e.g., Augment local agent working on an external project with AGOR installed elsewhere), agents encounter:
 
 1. **Tool Location Issues**: Cannot find AGOR tools in separate directory
 2. **Module Import Failures**: Internal dependencies fail even when path is found  

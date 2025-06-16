@@ -65,10 +65,8 @@ def main():
     # Initialize AGOR tools
     try:
         # Add current directory to path for development environment
-        import sys
-        from pathlib import Path
-        current_dir = Path(__file__).parent.parent.parent
-        if str(current_dir) not in sys.path:
+        current_dir = Path(__file__).resolve().parents[2]  # …/src
+        if current_dir.is_dir() and str(current_dir) not in sys.path:
             sys.path.insert(0, str(current_dir))
 
         from agor.tools.external_integration import get_agor_tools
@@ -80,46 +78,60 @@ def main():
         print(f"💡 Script location: {Path(__file__).parent}")
         return 1
     
-    # Execute commands
+    # Command dispatch table
+    def handle_status():
+        tools.print_status()
+        return 0
+
+    def handle_test():
+        success = tools.test_all_tools()
+        return 0 if success else 1
+
+    def handle_pr():
+        output = tools.generate_pr_description_output(args.content)
+        print(output)
+        return 0
+
+    def handle_handoff():
+        output = tools.generate_handoff_prompt_output(args.content)
+        print(output)
+        return 0
+
+    def handle_snapshot():
+        success = tools.create_development_snapshot(
+            args.title,
+            args.context,
+            args.agent_id
+        )
+        if success:
+            print(f"✅ Created snapshot: {args.title}")
+        else:
+            print(f"❌ Failed to create snapshot: {args.title}")
+        return 0 if success else 1
+
+    def handle_commit():
+        success = tools.quick_commit_and_push(args.message, args.emoji)
+        if success:
+            print(f"✅ Committed and pushed: {args.emoji} {args.message}")
+        else:
+            print(f"❌ Failed to commit: {args.message}")
+        return 0 if success else 1
+
+    # Dispatch table mapping commands to handlers
+    command_handlers = {
+        'status': handle_status,
+        'test': handle_test,
+        'pr': handle_pr,
+        'handoff': handle_handoff,
+        'snapshot': handle_snapshot,
+        'commit': handle_commit,
+    }
+
+    # Execute command using dispatch table
     try:
-        if args.command == 'status':
-            tools.print_status()
-            return 0
-            
-        elif args.command == 'test':
-            success = tools.test_all_tools()
-            return 0 if success else 1
-            
-        elif args.command == 'pr':
-            output = tools.generate_pr_description_output(args.content)
-            print(output)
-            return 0
-            
-        elif args.command == 'handoff':
-            output = tools.generate_handoff_prompt_output(args.content)
-            print(output)
-            return 0
-            
-        elif args.command == 'snapshot':
-            success = tools.create_development_snapshot(
-                args.title, 
-                args.context, 
-                args.agent_id
-            )
-            if success:
-                print(f"✅ Created snapshot: {args.title}")
-            else:
-                print(f"❌ Failed to create snapshot: {args.title}")
-            return 0 if success else 1
-            
-        elif args.command == 'commit':
-            success = tools.quick_commit_and_push(args.message, args.emoji)
-            if success:
-                print(f"✅ Committed and pushed: {args.emoji} {args.message}")
-            else:
-                print(f"❌ Failed to commit: {args.message}")
-            return 0 if success else 1
-            
+        handler = command_handlers.get(args.command)
+        if handler:
+            return handler()
         else:
             print(f"❌ Unknown command: {args.command}")
             return 1
@@ -132,7 +144,6 @@ def main():
 def install_wrapper():
     """Install wrapper script to a convenient location."""
     import shutil
-    import os
     
     script_path = Path(__file__).resolve()
     
@@ -163,6 +174,8 @@ def show_usage_examples():
     print("""
 🛠️  AGOR Wrapper Usage Examples:
 
+## Development Usage (from source):
+
 # Check integration status
 python agor_wrapper.py status
 
@@ -180,6 +193,26 @@ python agor_wrapper.py snapshot "Feature Implementation" "Added OAuth and user m
 
 # Quick commit and push
 python agor_wrapper.py commit "Implement OAuth authentication" --emoji "✨"
+
+## Installed Usage (after running --install):
+
+# Check integration status
+agor-tools status
+
+# Test all tools
+agor-tools test
+
+# Generate PR description
+agor-tools pr "Added authentication system with OAuth support"
+
+# Generate handoff prompt
+agor-tools handoff "Completed feature X, next agent should work on Y"
+
+# Create development snapshot
+agor-tools snapshot "Feature Implementation" "Added OAuth and user management"
+
+# Quick commit and push
+agor-tools commit "Implement OAuth authentication" --emoji "✨"
 
 # Install wrapper for easier access
 python agor_wrapper.py --install

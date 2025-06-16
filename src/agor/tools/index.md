@@ -25,7 +25,7 @@
 - **[EXTERNAL_INTEGRATION_GUIDE.md](EXTERNAL_INTEGRATION_GUIDE.md)** - **ESSENTIAL** - Integration when AGOR is installed separately
   - Addresses critical meta feedback: tool location, module import failures, missing integration patterns
   - Automatic AGOR detection, fallback mechanisms, standardized workflows
-  - Required for Augment local agents working on external projects (e.g., Meshtastic-Android)
+  - Required for Augment local agents working on external projects
 - **[external_integration.py](external_integration.py)** - External integration system implementation
 - **[agor_wrapper.py](agor_wrapper.py)** - Command-line wrapper for external project usage
 
