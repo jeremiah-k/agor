@@ -20,7 +20,7 @@
 - **[AUGMENT_INITIALIZATION.md](AUGMENT_INITIALIZATION.md)** - Local Augment setup and integration
 - **[CHAINABLE_PROMPTS.md](CHAINABLE_PROMPTS.md)** - Token-efficient initialization prompts
 
-### "I need external project integration" (CRITICAL for Augment Local Agents)
+### "I need external project integration" (CRITICAL for Augment local agents)
 
 - **[EXTERNAL_INTEGRATION_GUIDE.md](EXTERNAL_INTEGRATION_GUIDE.md)** - **ESSENTIAL** - Integration when AGOR is installed separately
   - Addresses critical meta feedback: tool location, module import failures, missing integration patterns

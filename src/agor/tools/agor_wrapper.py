@@ -65,7 +65,18 @@ def main():
     # Initialize AGOR tools
     try:
         # Add current directory to path for development environment
-        current_dir = Path(__file__).resolve().parents[2]  # …/src
+        try:
+            # Try to get the src directory (2 levels up from this file)
+            script_path = Path(__file__).resolve()
+            if len(script_path.parents) >= 2:
+                current_dir = script_path.parents[2]  # …/src
+            else:
+                # Fallback: use the directory containing this script
+                current_dir = script_path.parent
+        except (IndexError, OSError):
+            # Fallback: use current working directory
+            current_dir = Path.cwd()
+
         if current_dir.is_dir() and str(current_dir) not in sys.path:
             sys.path.insert(0, str(current_dir))
 
@@ -132,9 +143,8 @@ def main():
         handler = command_handlers.get(args.command)
         if handler:
             return handler()
-        else:
-            print(f"❌ Unknown command: {args.command}")
-            return 1
+        print(f"❌ Unknown command: {args.command}")
+        return 1
             
     except Exception as e:
         print(f"❌ Error executing command '{args.command}': {e}")

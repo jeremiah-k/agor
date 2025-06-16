@@ -46,7 +46,7 @@ Execute this sequence until a valid git repository is found:
 6. **Persistence**: Continue searching until a valid repository with tracked files is located
 7. **Never assume failure** - the git repository is always present in bundles
 
-### 1.1.1. External Project Integration (CRITICAL for Augment Local Agents)
+### 1.1.1. External Project Integration (CRITICAL for Augment local agents)
 
 **If you are working with an external project** (where AGOR is installed separately from the project):
 

@@ -22,6 +22,7 @@ Usage:
 
 import sys
 import importlib.util
+import logging
 from pathlib import Path
 from typing import Optional, Dict, Any, Callable
 
@@ -29,15 +30,15 @@ from typing import Optional, Dict, Any, Callable
 class AgorExternalTools:
     """
     External project integration for AGOR tools.
-    
+
     Provides access to AGOR development functions with automatic fallback
     when AGOR tools are not available or have import issues.
     """
-    
+
     def __init__(self, agor_path: Optional[str] = None):
         """
         Initialize external AGOR tools integration.
-        
+
         Args:
             agor_path: Optional explicit path to AGOR installation.
                       If not provided, will attempt automatic detection.
@@ -46,7 +47,8 @@ class AgorExternalTools:
         self.agor_available = False
         self.dev_tools = None
         self.fallback_mode = False
-        
+        self.logger = logging.getLogger(__name__)
+
         # Attempt to initialize AGOR tools
         self._initialize_agor_tools()
     
@@ -69,8 +71,8 @@ class AgorExternalTools:
                 return
                 
         except Exception as e:
-            print(f"⚠️  AGOR tools initialization failed: {e}")
-        
+            self.logger.warning(f"AGOR tools initialization failed: {e}")
+
         # If all methods fail, enable fallback mode
         self._enable_fallback_mode()
     
@@ -80,7 +82,7 @@ class AgorExternalTools:
             import agor.tools.dev_tools as dev_tools
             self.dev_tools = dev_tools
             self.agor_available = True
-            print("✅ AGOR tools loaded via direct import")
+            self.logger.info("AGOR tools loaded via direct import")
         except ImportError:
             pass
     
@@ -102,7 +104,7 @@ class AgorExternalTools:
             if self._try_load_from_path(path):
                 self.agor_path = str(path)
                 self.agor_available = True
-                print(f"✅ AGOR tools loaded from: {path}")
+                self.logger.info(f"AGOR tools loaded from: {path}")
                 return
     
     def _try_common_locations(self):
@@ -115,7 +117,7 @@ class AgorExternalTools:
                 if self._try_load_from_path(agor_path):
                     self.agor_path = str(agor_path)
                     self.agor_available = True
-                    print(f"✅ AGOR tools loaded from site-packages: {agor_path}")
+                    self.logger.info(f"AGOR tools loaded from site-packages: {agor_path}")
                     return
         except Exception:
             pass
@@ -146,14 +148,14 @@ class AgorExternalTools:
             return True
             
         except Exception as e:
-            print(f"⚠️  Failed to load AGOR from {path}: {e}")
+            self.logger.debug(f"Failed to load AGOR from {path}: {e}")
             return False
     
     def _enable_fallback_mode(self):
         """Enable fallback mode with manual implementations."""
         self.fallback_mode = True
-        print("⚠️  AGOR tools not available - using fallback mode")
-        print("💡 Some functions will have limited functionality")
+        self.logger.warning("AGOR tools not available - using fallback mode")
+        self.logger.info("Some functions will have limited functionality")
     
     def _call_with_fallback(self, func_name: str, fallback_func: Callable, *args, **kwargs):
         """Call AGOR function with fallback if not available."""
@@ -162,8 +164,8 @@ class AgorExternalTools:
                 func = getattr(self.dev_tools, func_name)
                 return func(*args, **kwargs)
             except Exception as e:
-                print(f"⚠️  AGOR function {func_name} failed: {e}")
-                print("🔄 Falling back to manual implementation")
+                self.logger.warning(f"AGOR function {func_name} failed: {e}")
+                self.logger.info("Falling back to manual implementation")
         
         return fallback_func(*args, **kwargs)
     
@@ -198,8 +200,8 @@ class AgorExternalTools:
     def create_development_snapshot(self, title: str, context: str, agent_id: str = None) -> bool:
         """Create development snapshot."""
         def fallback(title: str, context: str, agent_id: str = None) -> bool:
-            print(f"📸 Fallback: Would create snapshot '{title}' with context")
-            print(f"📝 Context: {context[:100]}...")
+            self.logger.info(f"Fallback: Would create snapshot '{title}' with context")
+            self.logger.debug(f"Context: {context[:100]}...")
             return True
         
         return self._call_with_fallback("create_development_snapshot", fallback, title, context, agent_id)
@@ -211,14 +213,28 @@ class AgorExternalTools:
             try:
                 # Basic git operations
                 subprocess.run(["git", "add", "."], check=True)
-                subprocess.run(["git", "commit", "-m", f"{emoji} {message}"], check=True)
+
+                # Try to commit - handle empty commit scenario
+                try:
+                    subprocess.run(["git", "commit", "-m", f"{emoji} {message}"], check=True)
+                    commit_made = True
+                except subprocess.CalledProcessError as e:
+                    if e.returncode == 1:
+                        # Check if it's a "nothing to commit" scenario
+                        result = subprocess.run(["git", "status", "--porcelain"],
+                                              capture_output=True, text=True)
+                        if not result.stdout.strip():
+                            self.logger.info(f"No changes to commit: {emoji} {message}")
+                            return True  # Success - nothing to commit is not an error
+                    raise  # Re-raise if it's a different error
+
                 subprocess.run(["git", "push"], check=True)
-                print(f"✅ Fallback commit and push: {emoji} {message}")
+                self.logger.info(f"Fallback commit and push: {emoji} {message}")
                 return True
             except subprocess.CalledProcessError as e:
-                print(f"❌ Fallback git operation failed: {e}")
+                self.logger.error(f"Fallback git operation failed: {e}")
                 return False
-        
+
         return self._call_with_fallback("quick_commit_and_push", fallback, message, emoji)
     
     def get_workspace_status(self) -> dict:
@@ -236,11 +252,11 @@ class AgorExternalTools:
     def test_all_tools(self) -> bool:
         """Test all available tools."""
         def fallback() -> bool:
-            print("🧪 Testing fallback mode...")
-            print(f"✅ AGOR Available: {self.agor_available}")
-            print(f"🔄 Fallback Mode: {self.fallback_mode}")
+            self.logger.info("Testing fallback mode...")
+            self.logger.info(f"AGOR Available: {self.agor_available}")
+            self.logger.info(f"Fallback Mode: {self.fallback_mode}")
             if self.agor_path:
-                print(f"📁 AGOR Path: {self.agor_path}")
+                self.logger.info(f"AGOR Path: {self.agor_path}")
             return True
 
         return self._call_with_fallback("test_all_tools", fallback)
