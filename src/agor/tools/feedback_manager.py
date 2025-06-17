@@ -211,17 +211,9 @@ class FeedbackManager:
         component: str = "general",
     ) -> str:
         """
-        Generate formatted meta feedback for AGOR improvement.
-
-        Args:
-            feedback_type: Type of feedback
-            feedback_content: Main feedback content
-            suggestions: List of improvement suggestions
-            severity: Severity level
-            component: Component affected
-
-        Returns:
-            Formatted meta feedback content
+        Generates a formatted meta feedback report for AGOR improvement.
+        
+        Collects feedback details, stores them, and produces a structured template including feedback content, suggestions, action items, and instructions for submitting the feedback as a GitHub issue. The output includes suggested labels and contextual information for effective issue tracking.
         """
         # Collect the feedback
         entry = self.collect_feedback(

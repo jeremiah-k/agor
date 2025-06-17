@@ -15,15 +15,15 @@ from agor.tools.git_operations import get_current_timestamp, run_git_command
 
 def generate_development_checklist(task_type: str = "general") -> str:
     """
-    Generates a formatted development checklist tailored to the specified task type.
-
-    The checklist includes sections for pre-development, development process, testing and validation, documentation, and completion. Additional task-specific items are appended for "feature", "bugfix", or "refactor" task types. The checklist includes a generation timestamp.
-
+    Generates a formatted development checklist string for a specified task type.
+    
+    The checklist covers pre-development, development, testing, documentation, and completion steps, with additional sections for "feature", "bugfix", or "refactor" tasks. A generation timestamp is included in the checklist.
+    
     Args:
         task_type: The type of development task ("general", "feature", "bugfix", or "refactor").
-
+    
     Returns:
-        A formatted checklist string for the specified development task type.
+        A formatted checklist string tailored to the specified development task type.
     """
     timestamp = get_current_timestamp()
 
@@ -96,9 +96,9 @@ def generate_development_checklist(task_type: str = "general") -> str:
 def create_agent_transition_checklist() -> str:
     """
     Generates a formatted checklist for agent transition procedures.
-
-    The checklist covers snapshot creation, memory management, handoff preparation, technical handoff, documentation handoff, and final verification, and includes a generation timestamp.
-
+    
+    The checklist includes sections for snapshot creation, memory management, handoff preparation, technical and documentation handoff, and final verification, along with a generation timestamp.
+    
     Returns:
         A string containing the agent transition checklist.
     """

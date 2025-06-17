@@ -779,8 +779,8 @@ cat .agor/{role_info.get('agent_id', 'agentX')}-memory.md
 def check_strategy_status() -> str:
     """
     Returns a formatted summary of the current AGOR strategy status and recent agent activity.
-
-    Provides an overview including the active strategy type, task, phase, and the last few lines of agent communication. If no coordination or strategy is active, returns an appropriate message.
+    
+    Provides an overview of the active strategy, including its type, task, phase, and the latest agent communications. If no coordination or strategy is active, returns an appropriate message.
     """
 
     helper = AgentCoordinationHelper()
@@ -824,9 +824,9 @@ def check_strategy_status() -> str:
 
     def _init_agent_memory_sync(self) -> None:
         """
-        Initializes memory synchronization for agent workflows if the coordination directory exists.
-
-        Attempts to set up memory sync using the MemorySyncManager. Prints status messages indicating whether memory sync is active, initialized, unavailable, or pending coordination setup. Does not interrupt agent discovery if initialization fails.
+        Initializes agent memory synchronization if the coordination directory exists.
+        
+        Attempts to set up memory sync for agent workflows using MemorySyncManager. Prints status messages about memory sync availability and active branches. Does not interrupt agent discovery if initialization fails.
         """
         try:
             # Import and initialize MemorySyncManager for memory sync
@@ -859,9 +859,9 @@ def check_strategy_status() -> str:
         self, agent_id: str, completion_message: str = "Agent work completed"
     ) -> bool:
         """
-        Completes the agent's work and attempts to synchronize memory state.
-
-        If memory synchronization is available and an active memory branch exists, saves the agent's memory state with a commit and push. Returns True if the operation succeeds or if memory sync is unavailable; returns False if an error occurs or memory sync fails.
+        Finalizes the agent's work and attempts to save and synchronize its memory state.
+        
+        If memory synchronization is available and an active memory branch exists, commits and pushes the agent's memory state. Returns True if the operation succeeds or if memory sync is unavailable; returns False if an error occurs or memory sync fails.
         """
         try:
             # Import and use MemorySyncManager for completion sync
@@ -909,14 +909,14 @@ def check_strategy_status() -> str:
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
     """
-    Processes an agent hotkey and updates the internal checklist status.
-
+    Processes an agent-issued hotkey and updates the checklist status if applicable.
+    
     Args:
-        hotkey: The hotkey command issued by the agent.
-        context: Optional context string for future checklist integration.
-
+        hotkey: The command or shortcut triggered by the agent.
+        context: Optional additional context for future checklist integration.
+    
     Returns:
-        A dictionary indicating the processed hotkey and whether the checklist was updated.
+        A dictionary with the processed hotkey and a flag indicating if the checklist was updated.
     """
     # TODO: Future: Integrate with a checklist system for more detailed hotkey effect tracking.
 
@@ -956,15 +956,9 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
 
 def detect_session_end(user_input: str) -> bool:
     """
-    Detects if the user input indicates the end of a session.
-
-    Checks for common session-ending phrases in the user input and prompts for snapshot and handoff if detected.
-
-    Args:
-        user_input: The user's input string.
-
-    Returns:
-        True if a session-ending phrase is detected or by default.
+    Determines whether the user input signals the end of a session.
+    
+    Checks for common session-ending phrases in the input and, if detected, prompts for snapshot and handoff. Always returns True.
     """
 
     end_indicators = [

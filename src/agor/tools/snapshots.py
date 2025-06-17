@@ -73,14 +73,23 @@ def create_snapshot(
     agent_id: str = None,
     custom_branch: str = None,
 ) -> bool:
-    """Create development snapshot in agent's directory within main memory branch.
-
+    """
+    Creates a development snapshot file in the agent's directory within the main memory branch.
+    
+    The snapshot includes metadata, development context, next steps, and git status. It is saved locally and committed to the memory branch without switching branches. Returns True if the commit succeeds, otherwise False.
+    
     Args:
-        title: Title for the snapshot
-        context: Development context and description
-        next_steps: List of next steps for continuing the work (required)
-        agent_id: Optional agent ID
-        custom_branch: Optional custom memory branch
+        title: Title for the snapshot.
+        context: Description of the current development context.
+        next_steps: List of actionable next steps for continuing the work (required).
+        agent_id: Optional agent identifier; generated if not provided.
+        custom_branch: Optional custom memory branch name.
+    
+    Returns:
+        True if the snapshot was successfully committed to the memory branch, otherwise False.
+    
+    Raises:
+        ValueError: If next_steps is not provided.
     """
     if next_steps is None:
         raise ValueError(
@@ -477,18 +486,20 @@ def generate_mandatory_session_end_prompt(
 
 def create_snapshot_legacy(title: str, context: str, next_steps: list = None) -> bool:
     """
-    Create development snapshot using legacy format.
-
-    This function maintains compatibility with older snapshot creation patterns
-    while using the new modular architecture.
-
+    Creates a development snapshot using the legacy format for backward compatibility.
+    
+    Generates a markdown snapshot file containing development context, next steps, and git status, then commits and pushes it using the legacy workflow. Returns True if the operation succeeds, otherwise False.
+    
     Args:
-        title: Snapshot title
-        context: Snapshot context
-        next_steps: List of next steps for continuing the work (required)
-
+        title: The title of the snapshot.
+        context: Description of the current development context.
+        next_steps: List of actionable next steps for continuing the work.
+    
     Returns:
-        True if successful, False otherwise
+        True if the snapshot was successfully created and committed, False otherwise.
+    
+    Raises:
+        ValueError: If next_steps is not provided.
     """
     if next_steps is None:
         raise ValueError(
