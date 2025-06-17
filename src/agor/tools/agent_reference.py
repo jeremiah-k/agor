@@ -370,16 +370,24 @@ from agor.tools.external_integration import get_agor_tools
 
 
 def _env_flag(name: str) -> bool:
-    """Helper to check environment variable as boolean flag."""
+    """
+    Return True if the specified environment variable is set to a recognized truthy value.
+    
+    Parameters:
+        name (str): The name of the environment variable to check.
+    
+    Returns:
+        bool: True if the environment variable is set to a truthy value ('1', 'true', 'yes', 'on', 'y', 't'), otherwise False.
+    """
     return os.environ.get(name, '').lower() in {'1', 'true', 'yes', 'on', 'y', 't'}
 
 
 def detect_platform() -> str:
     """
-    Detect the current AI platform environment.
-
+    Detects the current AI platform environment based on environment variables.
+    
     Returns:
-        Platform identifier: 'augment_local', 'augment_remote', 'chatgpt', or 'unknown'
+        str: One of 'augment_local', 'augment_remote', 'chatgpt', or 'unknown' indicating the detected platform.
     """
     # Check for AugmentCode environment indicators with tolerant boolean parsing
     if _env_flag('AUGMENT_LOCAL'):
@@ -400,13 +408,12 @@ def detect_platform() -> str:
 
 def detect_project_type() -> str:
     """
-    Detect if working on AGOR itself or external project.
-
-    Walks upwards from current directory to filesystem root checking for AGOR indicators
-    at each level. This handles mono-repo and nested directory scenarios.
-
+    Determine whether the current working directory is part of the AGOR development environment or an external project.
+    
+    Walks upward from the current directory to the filesystem root, checking for AGOR-specific indicators such as the presence of certain directories, files, or a `pyproject.toml` with the project name 'agor'. Returns 'agor_development' if any indicator is found; otherwise, returns 'external_project'.
+    
     Returns:
-        'agor_development' or 'external_project'
+        str: 'agor_development' if working within the AGOR development environment, otherwise 'external_project'.
     """
     current_dir = Path.cwd()
 
@@ -451,14 +458,14 @@ def detect_project_type() -> str:
 
 def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> Dict[str, str]:
     """
-    Resolve AGOR file paths based on project type and environment.
-
-    Args:
-        project_type: 'agor_development' or 'external_project'
-        custom_path: Optional custom AGOR installation path (supports ~ and relative paths)
-
+    Resolve absolute paths to AGOR documentation and tool files based on the project type and optional custom installation path.
+    
+    Parameters:
+        project_type (str): Indicates the environment type, either 'agor_development' or 'external_project'.
+        custom_path (Optional[str]): Optional custom path to the AGOR installation; supports user home and relative paths.
+    
     Returns:
-        Dictionary with resolved paths for documentation files
+        Dict[str, str]: A dictionary mapping documentation and tool file names to their resolved absolute POSIX paths.
     """
     if custom_path:
         # Expand user home directory and resolve to absolute path
@@ -517,16 +524,10 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
 @functools.lru_cache(maxsize=None)
 def get_platform_specific_instructions(platform: str, project_type: str) -> str:
     """
-    Get platform-specific setup instructions and quirks.
-
-    Cached for performance with large constant dictionary lookups.
-
-    Args:
-        platform: Platform identifier
-        project_type: Project type identifier
-
+    Retrieve setup instructions tailored to the specified platform and project type.
+    
     Returns:
-        Platform-specific instruction text
+        str: Instruction text specific to the given platform and project type, or a default if not found.
     """
     return PLATFORM_INSTRUCTIONS.get(platform, PLATFORM_INSTRUCTIONS['unknown']).get(
         project_type, PLATFORM_INSTRUCTIONS['unknown']['external_project']
@@ -539,17 +540,19 @@ def generate_deployment_prompt(platform: Optional[str] = None,
                              custom_base_path: Optional[str] = None,
                              custom_paths: Optional[Dict[str, str]] = None) -> str:
     """
-    Generate complete deployment prompt for AI agents.
-
-    Args:
-        platform: Platform identifier (auto-detected if None)
-        project_type: Project type (auto-detected if None)
-        custom_base_path: Custom base path for AGOR installation (alternative to custom_paths)
-        custom_paths: Custom path overrides for individual files
-
-    Returns:
-        Complete deployment prompt ready for copy-paste
-    """
+                             Generates a comprehensive deployment prompt for AI agents working with the AGOR framework.
+                             
+                             This prompt includes references to essential AGOR documentation files, platform- and project-type-specific setup instructions, and reminders about required deliverables and dev tools usage. Platform and project type are auto-detected if not provided. File paths are resolved based on the detected environment, with support for custom path overrides. The generated prompt is ready for direct use in agent initialization workflows.
+                             
+                             Parameters:
+                                 platform (Optional[str]): Platform identifier. If None, the platform is auto-detected.
+                                 project_type (Optional[str]): Project type. If None, the project type is auto-detected.
+                                 custom_base_path (Optional[str]): Custom base path for AGOR installation, used if custom_paths is not provided.
+                                 custom_paths (Optional[Dict[str, str]]): Dictionary of custom path overrides for AGOR documentation files.
+                             
+                             Returns:
+                                 str: A fully formatted deployment prompt tailored to the current environment and configuration.
+                             """
     # Auto-detect if not provided
     if platform is None:
         platform = detect_platform()
@@ -603,10 +606,7 @@ Platform: {platform} | Project: {project_type} | Generated: {datetime.now(timezo
 
 def get_memory_branch_guide() -> str:
     """
-    Comprehensive guide to AGOR memory branch system.
-
-    Returns:
-        Formatted guide explaining memory branches and cross-branch operations
+    Returns a detailed guide explaining the AGOR memory branch system, including architecture, operations, cross-branch commit design, rationale, and common mistakes to avoid. The guide emphasizes the exclusive use of memory branches for coordination files and the importance of using development tools for all memory operations.
     """
     guide = """
 🧠 AGOR MEMORY BRANCH SYSTEM - CRITICAL UNDERSTANDING
@@ -653,10 +653,9 @@ def get_memory_branch_guide() -> str:
 
 def get_coordination_guide() -> str:
     """
-    Multi-agent coordination patterns and requirements.
-
-    Returns:
-        Formatted guide for agent coordination and communication
+    Returns a comprehensive guide on multi-agent coordination within the AGOR framework.
+    
+    The guide covers coordination principles, agent communication patterns, snapshot handoff requirements, various coordination strategies, and best practices for handoff prompts to ensure effective collaboration and context preservation among agents.
     """
     guide = """
 🤝 AGOR MULTI-AGENT COORDINATION GUIDE
@@ -702,40 +701,37 @@ def get_coordination_guide() -> str:
 
 def get_role_selection_guide() -> str:
     """
-    Decision tree and guidance for selecting appropriate AGOR role.
-
-    Returns:
-        Formatted guide for Worker Agent vs Project Coordinator selection
+    Return a formatted guide to help agents choose between the Worker Agent and Project Coordinator roles in the AGOR framework.
+    
+    The guide provides a decision tree and criteria for selecting the most appropriate role based on project needs and agent responsibilities.
     """
     return ROLE_SELECTION_GUIDE_CONTENT
 
 
 def get_external_integration_guide() -> str:
     """
-    Comprehensive guide for external project integration.
-
-    Returns:
-        Formatted guide for setting up AGOR with external projects
+    Return a formatted guide with instructions for integrating AGOR into external projects.
+    
+    The guide includes setup steps, troubleshooting tips, and notes on installation locations to assist with external project integration.
     """
     return EXTERNAL_INTEGRATION_GUIDE_CONTENT
 
 
 def get_dev_tools_reference() -> str:
     """
-    Complete AGOR dev tools function reference with examples.
-
+    Return the complete AGOR development tools reference guide with usage examples.
+    
     Returns:
-        Formatted reference guide for all dev tools functions
+        str: A formatted string containing detailed documentation and examples for all AGOR dev tools functions.
     """
     return DEV_TOOLS_REFERENCE_CONTENT
 
 
 def get_output_formatting_requirements() -> str:
     """
-    Critical output formatting requirements for AGOR deliverables.
-
-    Returns:
-        Formatted guide for proper output formatting and copy-paste workflow
+    Returns the mandatory output formatting requirements guide for AGOR deliverables.
+    
+    The guide details the required formatting workflow, content length constraints, common mistakes to avoid, and CLI commands for ensuring consistent markdown structure and copy-paste compatibility.
     """
     return OUTPUT_FORMATTING_REQUIREMENTS_CONTENT
 
