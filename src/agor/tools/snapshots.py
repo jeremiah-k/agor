@@ -67,7 +67,11 @@ class HandoffRequest:
 
 
 def create_snapshot(
-    title: str, context: str, next_steps: list = None, agent_id: str = None, custom_branch: str = None
+    title: str,
+    context: str,
+    next_steps: list = None,
+    agent_id: str = None,
+    custom_branch: str = None,
 ) -> bool:
     """Create development snapshot in agent's directory within main memory branch.
 
@@ -79,7 +83,9 @@ def create_snapshot(
         custom_branch: Optional custom memory branch
     """
     if next_steps is None:
-        raise ValueError("next_steps parameter is required - agents must provide meaningful next steps")
+        raise ValueError(
+            "next_steps parameter is required - agents must provide meaningful next steps"
+        )
     # Import all required functions at the top to avoid per-call overhead
     from agor.tools.dev_tools import (
         generate_agent_id,
@@ -485,7 +491,9 @@ def create_snapshot_legacy(title: str, context: str, next_steps: list = None) ->
         True if successful, False otherwise
     """
     if next_steps is None:
-        raise ValueError("next_steps parameter is required - agents must provide meaningful next steps")
+        raise ValueError(
+            "next_steps parameter is required - agents must provide meaningful next steps"
+        )
     from agor.tools.dev_testing import detect_environment
 
     # Generate agent ID for legacy compatibility

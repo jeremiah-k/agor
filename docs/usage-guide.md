@@ -65,6 +65,7 @@ After reading these files, help me initialize AGOR for this project and select t
 
 **Step 6: Local Environment Setup (Optional - For Using AGOR's Python Tools Directly)**
 If you (the user) want to run AGOR's bundled Python development tools directly on your machine (e.g., for testing or advanced scripting), you'll need to set up a Python virtual environment:
+
 ```bash
 # Navigate to your cloned AGOR directory
 cd ~/agor
@@ -90,6 +91,7 @@ python3 -c "import sys; sys.path.insert(0, 'src'); from agor.tools.dev_tools imp
 # To deactivate the virtual environment when done:
 # deactivate
 ```
+
 **Note**: This local Python environment setup is for users who want to directly execute AGOR's Python scripts. Your AI agent, especially in AugmentCode, typically interacts with these tools through its own means after reading the protocol files.
 
 **Workflow:**
@@ -294,8 +296,6 @@ AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgru
 4. Multiple agents can work on the same repository simultaneously
 5. Full git history and branch management available
 
-
-
 ### 📦 Bundled Mode (Upload-Based Platforms)
 
 **When to Use:**
@@ -338,6 +338,7 @@ AGOR defines distinct roles that agents (and by extension, users guiding them) c
 **Summary:** The Worker Agent focuses on deep codebase analysis, implementation, debugging, and solo development tasks. It excels at technical deep-dives and can manage complex tasks by preserving detailed progress and context across sessions using snapshots, even for individual use. It operates in both Standalone and Bundled modes.
 
 **Key Uses:**
+
 - Analyzing code, implementing features, debugging.
 - Solo development with structured context management (self-snapshots).
 - Executing specific tasks within a multi-agent team.
@@ -347,6 +348,7 @@ AGOR defines distinct roles that agents (and by extension, users guiding them) c
 **Summary:** The Project Coordinator is responsible for strategic planning, designing multi-agent workflows, breaking down complex requirements, and orchestrating team activities. It initializes coordination strategies and monitors team progress. It operates in both Standalone and Bundled modes.
 
 **Key Uses:**
+
 - Planning new features or projects.
 - Designing and initiating multi-agent coordination strategies.
 - Creating specialized agent teams and managing their workflow.

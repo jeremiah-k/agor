@@ -25,11 +25,11 @@ ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
 
 # Feedback type to label mapping
 FEEDBACK_TYPE_LABELS = {
-    'bug': 'bug',
-    'enhancement': 'enhancement',
-    'workflow_issue': 'workflow',
-    'success_story': 'success',
-    'general': 'feedback'
+    "bug": "bug",
+    "enhancement": "enhancement",
+    "workflow_issue": "workflow",
+    "success_story": "success",
+    "general": "feedback",
 }
 
 
@@ -240,7 +240,7 @@ class FeedbackManager:
             "severity": severity,
             "component": component,
             "timestamp": entry.timestamp,
-            "type_label": FEEDBACK_TYPE_LABELS.get(feedback_type, 'feedback'),
+            "type_label": FEEDBACK_TYPE_LABELS.get(feedback_type, "feedback"),
         }
 
         template = """# 🔄 AGOR Meta Feedback
