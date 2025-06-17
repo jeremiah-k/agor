@@ -167,7 +167,7 @@ def generate_snapshot_document(
 
 ## 🔄 Next Steps
 
-{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps)) if next_steps else "1. Review current progress and understand the work completed\n2. Continue with any remaining tasks or improvements\n3. Test the implemented changes thoroughly\n4. Update documentation if needed\n5. Create appropriate commits and push changes"}
+{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
 
 ## 🧠 Context & Important Notes
 

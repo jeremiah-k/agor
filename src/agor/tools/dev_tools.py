@@ -78,10 +78,18 @@ except ImportError:
 
 
 def create_development_snapshot(
-    title: str, context: str, agent_id: str = None, custom_branch: str = None
+    title: str, context: str, next_steps: list = None, agent_id: str = None, custom_branch: str = None
 ) -> bool:
-    """Create development snapshot in agent's directory within main memory branch."""
-    return create_snapshot(title, context, agent_id, custom_branch)
+    """Create development snapshot in agent's directory within main memory branch.
+
+    Args:
+        title: Title for the snapshot
+        context: Development context and description
+        next_steps: List of next steps for continuing the work (required)
+        agent_id: Optional agent ID
+        custom_branch: Optional custom memory branch
+    """
+    return create_snapshot(title, context, next_steps, agent_id, custom_branch)
 
 
 def generate_seamless_agent_handoff(
