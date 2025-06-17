@@ -1489,6 +1489,109 @@ def get_available_functions_reference() -> str:
     return "\n".join(output)
 
 
+def get_agor_initialization_guide() -> str:
+    """
+    Programmatic AGOR initialization guide for agents.
+
+    This function provides comprehensive initialization information that agents
+    can call to get complete setup instructions without skimming documentation.
+
+    Returns:
+        Complete initialization guide as formatted string
+    """
+    guide = """
+🚀 AGOR INITIALIZATION GUIDE FOR AGENTS
+
+═══════════════════════════════════════════════════════════════════
+
+📋 STEP 1: UNDERSTAND YOUR ENVIRONMENT
+You are working with AGOR (AgentOrchestrator) - a multi-agent development coordination platform.
+
+📋 STEP 2: READ CORE DOCUMENTATION
+MANDATORY - Read these files from workspace sources:
+• src/agor/tools/README_ai.md (role selection and initialization)
+• src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
+• src/agor/tools/agent-start-here.md (quick startup guide)
+• src/agor/tools/index.md (documentation index)
+
+📋 STEP 3: SELECT YOUR ROLE
+🔍 Worker Agent: Codebase analysis, feature implementation, debugging, direct development
+📋 Project Coordinator: Strategic planning, multi-agent coordination, architecture design
+
+📋 STEP 4: UNDERSTAND MEMORY SYSTEM
+• .agor/ directory exists ONLY on memory branches (never on working branches)
+• Memory branches store snapshots, agent coordination files
+• Use dev tools to access memory system - never create .agor/ manually
+
+📋 STEP 5: UNDERSTAND SNAPSHOT SYSTEM
+• EVERY session MUST end with a snapshot
+• Snapshots require meaningful next_steps (never leave empty)
+• Use create_development_snapshot() with title, context, and next_steps
+• Save to memory branches only via dev tools
+
+📋 STEP 6: PREPARE FOR DELIVERABLES
+At session end, be ready to provide (each in single codeblocks):
+• PR descriptions using generate_pr_description_output()
+• Release notes using generate_release_notes_output()
+• Handoff prompts using generate_handoff_prompt_output()
+• All outputs automatically formatted - never manually wrap
+
+📋 STEP 7: TEST YOUR SETUP
+Run test_all_tools() to verify everything works correctly.
+
+═══════════════════════════════════════════════════════════════════
+✅ INITIALIZATION COMPLETE - You are ready to use AGOR effectively
+"""
+    return guide
+
+
+def get_snapshot_requirements() -> str:
+    """
+    Programmatic snapshot requirements for agents.
+
+    Returns critical snapshot information that agents must follow.
+    """
+    requirements = """
+📸 SNAPSHOT REQUIREMENTS - CRITICAL FOR ALL AGENTS
+
+═══════════════════════════════════════════════════════════════════
+
+🚨 MANDATORY: Every session MUST end with a snapshot
+
+📋 SNAPSHOT CREATION PROCESS:
+1. Check current date: Use `date` command to get correct date
+2. Use AGOR tools: Call create_development_snapshot() function
+3. Provide ALL required parameters:
+   • title: Clear description of work completed
+   • context: Detailed explanation of changes and decisions
+   • next_steps: List of specific actions for continuing agent
+
+📋 NEXT STEPS REQUIREMENT:
+• NEVER leave next_steps empty or use placeholders
+• Each agent fills out their OWN snapshots completely
+• Provide specific, actionable steps for continuation
+• Example next_steps:
+  - "Review the PR and ensure all changes are correct"
+  - "Test the new feature with edge cases"
+  - "Update documentation to reflect API changes"
+
+📋 MEMORY BRANCH SYSTEM:
+• Snapshots saved to .agor/snapshots/ directory
+• Only exists on memory branches (never working branches)
+• Dev tools handle memory branch operations automatically
+• Never manually create .agor/ directories
+
+📋 SNAPSHOT FORMAT:
+• Single codeblock format required for processing
+• Automatic formatting via dev tools
+• Include complete context for seamless handoffs
+
+═══════════════════════════════════════════════════════════════════
+✅ Follow these requirements for successful agent coordination
+"""
+    return requirements
+
+
 def test_all_tools() -> bool:
     """
     Runs comprehensive tests on all development tools components.

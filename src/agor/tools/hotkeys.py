@@ -294,10 +294,11 @@ def _get_generate_meta_feedback_func():
         _msg = f"Could not import generate_meta_feedback: {import_err}"
 
         def _raiser(msg=_msg):
-            Raises an ImportError with the provided message.
-            
+            """Raises an ImportError with the provided message.
+
             Args:
                 msg: The error message to include in the ImportError.
+            """
             raise ImportError(msg)
         return _raiser
 

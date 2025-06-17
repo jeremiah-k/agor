@@ -128,6 +128,47 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 25. 2025-06-17 | v0.6.2-dev | Critical Snapshot System Architecture Fix & Documentation Improvements
+
+**Technical Focus**: Fixed critical snapshot system bug where agents weren't providing next steps, improved deployment prompts, and enhanced documentation consistency.
+
+**Implementation Details**:
+
+- **Critical Snapshot System Fix**: Resolved architectural issue where templates contained hardcoded content instead of requiring agents to provide meaningful next steps
+  - Fixed `create_development_snapshot()` and `create_snapshot_legacy()` to require `next_steps` parameter
+  - Updated templates to use provided content without hardcoded fallbacks
+  - Added validation to ensure agents must provide meaningful next steps when creating snapshots
+  - Maintains clean separation: templates for structure, agents for content
+- **Documentation Consistency Improvements**: Fixed broken links and dev tools function inconsistencies across all documentation
+  - Updated all `test_tooling()` references to `test_all_tools()` for consistent public API usage
+  - Fixed `get_timestamp()` references to `get_current_timestamp_formatted()`
+  - Fixed relative links to `augment_user_guidelines.md` (removed extra `docs/` prefix)
+  - Updated files: session-startup-checklist.md, PLATFORM_INITIALIZATION_PROMPTS.md, STANDALONE_INITIALIZATION.md, agor-development-guide.md
+- **Repository Cleanup**: Removed build/ directory and eliminated generated files from version control
+- **Syntax Error Fix**: Fixed invalid dictionary assignment and self-reference in `feedback_manager.py`
+  - Removed assignment inside dictionary literal and self-reference to `FEEDBACK_TYPE_LABELS`
+  - Cleaned up duplicate type mappings and improved code organization
+
+**Rationale**: The snapshot system had a fundamental architectural flaw where templates contained business logic instead of being pure templates. This violated the principle that each agent should fill out their own snapshots completely. Documentation inconsistencies were causing confusion about which functions to use.
+
+**Impact**:
+- **Proper Agent Handoffs**: Snapshots now contain complete, agent-provided next steps information
+- **Clean Architecture**: Templates remain templates without hardcoded content
+- **Documentation Consistency**: All links work correctly and function references use proper public API
+- **Better User Experience**: Agents are forced to think about and provide meaningful continuation steps
+
+**Lessons Learned**: Templates should be pure structure without business logic. Agents must be required to provide meaningful content rather than relying on fallbacks. Consistent API usage across documentation is critical for agent understanding.
+
+**Files Modified**:
+- `src/agor/tools/snapshots.py` - Fixed snapshot creation functions to require next_steps
+- `src/agor/tools/dev_tools.py` - Updated create_development_snapshot signature
+- `src/agor/tools/snapshot_templates.py` - Removed hardcoded fallbacks from templates
+- `src/agor/tools/feedback_manager.py` - Fixed syntax error in dictionary definition
+- `docs/usage-guide.md` - Fixed broken links and removed redundant content
+- Multiple documentation files - Updated function references for consistency
+
+---
+
 ### 24. 2025-06-18 | v0.6.2-dev | Housekeeping: Documentation & Code Cleanup
 
 **Technical Focus**: Housekeeping: Documentation & Code Cleanup for Clarity and Maintainability.
