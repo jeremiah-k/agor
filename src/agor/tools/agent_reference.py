@@ -99,8 +99,8 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
                 base_path = expanded_path.as_posix()
                 break
         else:
-            # Fallback to relative path assumption
-            base_path = 'src/agor'
+            # Fallback to relative path assumption, resolved to absolute
+            base_path = Path('src/agor').resolve().as_posix()
 
     base = Path(base_path)
     return {
@@ -223,17 +223,20 @@ from agor.tools.external_integration import get_agor_tools
                                                                    instructions['unknown']['external_project'])
 
 
-def generate_deployment_prompt(platform: Optional[str] = None, 
+def generate_deployment_prompt(platform: Optional[str] = None,
                              project_type: Optional[str] = None,
+                             *,
+                             custom_base_path: Optional[str] = None,
                              custom_paths: Optional[Dict[str, str]] = None) -> str:
     """
     Generate complete deployment prompt for AI agents.
-    
+
     Args:
         platform: Platform identifier (auto-detected if None)
-        project_type: Project type (auto-detected if None)  
-        custom_paths: Custom path overrides
-        
+        project_type: Project type (auto-detected if None)
+        custom_base_path: Custom base path for AGOR installation (alternative to custom_paths)
+        custom_paths: Custom path overrides for individual files
+
     Returns:
         Complete deployment prompt ready for copy-paste
     """
@@ -244,7 +247,7 @@ def generate_deployment_prompt(platform: Optional[str] = None,
         project_type = detect_project_type()
     
     # Resolve paths with fallback to defaults
-    default_paths = resolve_agor_paths(project_type)
+    default_paths = resolve_agor_paths(project_type, custom_base_path)
     paths = {**default_paths, **custom_paths} if custom_paths else default_paths
     
     # Get platform-specific instructions

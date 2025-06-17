@@ -25,8 +25,8 @@ from agor.tools.agent_reference import (
 )
 
 
-class TestAgentReference(unittest.TestCase):
-    """Test cases for agent education functions."""
+class TestDetection(unittest.TestCase):
+    """Test cases for platform and project detection functions."""
 
     def test_detect_platform_augment_local(self):
         """Test platform detection for AugmentCode Local."""
@@ -65,10 +65,14 @@ class TestAgentReference(unittest.TestCase):
             project_type = detect_project_type()
             self.assertEqual(project_type, 'external_project')
 
+
+class TestPathResolution(unittest.TestCase):
+    """Test cases for path resolution functions."""
+
     def test_resolve_agor_paths_development(self):
         """Test path resolution for AGOR development."""
         paths = resolve_agor_paths('agor_development')
-        
+
         self.assertEqual(paths['tools_path'], 'src/agor/tools')
         self.assertEqual(paths['readme_ai'], 'src/agor/tools/README_ai.md')
         self.assertEqual(paths['instructions'], 'src/agor/tools/AGOR_INSTRUCTIONS.md')
@@ -80,25 +84,29 @@ class TestAgentReference(unittest.TestCase):
             paths = resolve_agor_paths('external_project')
 
             # Should fallback to relative path or find existing AGOR installation
-            # Use Path for cross-platform path checking
+            # Use Path for cross-platform path checking with ** wildcard for nested paths
             tools_path = Path(paths['tools_path'])
-            self.assertTrue(tools_path.match('*/agor/tools') or tools_path.name == 'tools')
+            self.assertTrue(tools_path.match('**/agor/tools') or tools_path.name == 'tools')
 
     def test_resolve_agor_paths_custom(self):
         """Test path resolution with custom path."""
         custom_path = '/custom/agor/path'
         paths = resolve_agor_paths('external_project', custom_path)
-        
+
         self.assertEqual(paths['tools_path'], f'{custom_path}/tools')
         self.assertEqual(paths['readme_ai'], f'{custom_path}/tools/README_ai.md')
 
     def test_get_platform_specific_instructions(self):
         """Test platform-specific instruction generation."""
         instructions = get_platform_specific_instructions('augment_local', 'external_project')
-        
+
         self.assertIn('AugmentCode Local Agent', instructions)
         self.assertIn('external integration system', instructions)
         self.assertIn('get_agor_tools', instructions)
+
+
+class TestDeploymentPrompt(unittest.TestCase):
+    """Test cases for deployment prompt generation."""
 
     def test_generate_deployment_prompt_basic(self):
         """Test basic deployment prompt generation."""
@@ -153,6 +161,22 @@ class TestAgentReference(unittest.TestCase):
         # Should contain default paths for missing keys
         self.assertIn('src/agor/tools/agent-start-here.md', prompt)
         self.assertIn('src/agor/tools/index.md', prompt)
+
+    def test_generate_deployment_prompt_custom_base_path(self):
+        """Test deployment prompt generation with custom base path."""
+        custom_base = '/opt/my-agor'
+
+        prompt = generate_deployment_prompt(
+            platform='test',
+            project_type='external_project',
+            custom_base_path=custom_base
+        )
+
+        # Should use custom base path for all files
+        self.assertIn(f'{custom_base}/tools/README_ai.md', prompt)
+        self.assertIn(f'{custom_base}/tools/AGOR_INSTRUCTIONS.md', prompt)
+        self.assertIn(f'{custom_base}/tools/agent-start-here.md', prompt)
+        self.assertIn(f'{custom_base}/tools/index.md', prompt)
 
     def test_get_memory_branch_guide(self):
         """Test memory branch guide generation."""
@@ -217,6 +241,10 @@ class TestAgentReference(unittest.TestCase):
         for section in required_sections:
             self.assertIn(section, prompt)
 
+
+class TestGuides(unittest.TestCase):
+    """Test cases for programmatic guide functions."""
+
     def test_get_role_selection_guide(self):
         """Test role selection guide generation."""
         guide = get_role_selection_guide()
@@ -249,6 +277,10 @@ class TestAgentReference(unittest.TestCase):
         self.assertIn('copy-paste workflow', guide.lower())
         # Should be substantial content
         self.assertGreater(len(guide), 200)
+
+
+class TestPlatformInstructions(unittest.TestCase):
+    """Test cases for platform-specific instruction functions."""
 
     def test_augment_remote_platform_instructions(self):
         """Test that augment_remote platform has proper instructions."""
