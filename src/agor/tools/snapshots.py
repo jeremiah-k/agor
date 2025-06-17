@@ -123,7 +123,11 @@ def create_snapshot(
 {context}
 
 ## 📋 Next Steps
-[To be filled by continuing agent]
+1. Review current progress and understand the work completed
+2. Continue with any remaining tasks or improvements
+3. Test the implemented changes thoroughly
+4. Update documentation if needed
+5. Create appropriate commits and push changes
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}
@@ -520,7 +524,11 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
 {context}
 
 ## 📋 Next Steps
-[To be filled by continuing agent]
+1. Review current progress and understand the work completed
+2. Continue with any remaining tasks or improvements
+3. Test the implemented changes thoroughly
+4. Update documentation if needed
+5. Create appropriate commits and push changes
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}
