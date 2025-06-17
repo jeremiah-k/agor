@@ -266,6 +266,24 @@ Priority: {{ severity }}
 
 ---
 
+## 📞 FEEDBACK SUBMISSION INSTRUCTIONS
+
+**IMPORTANT**: Copy the content above and manually create a GitHub issue:
+
+1. **Go to**: https://github.com/jeremiah-k/agor/issues/new
+2. **Title**: Use the feedback type and brief description
+3. **Body**: Paste the entire feedback content from above
+4. **Labels**: Add `meta-feedback` and appropriate component labels
+5. **Submit**: Click "Submit new issue"
+
+## 🏷️ SUGGESTED LABELS
+- `meta-feedback` (always include)
+- `{{ type_label }}` (feedback type)
+- `component: {{ component }}` (if not general)
+- `priority: {{ severity }}` (severity level)
+
+---
+
 *This feedback helps make AGOR better for all users. Thank you for contributing to the improvement process!*"""
 
         return self.template_engine.render_string(template, context)

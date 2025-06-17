@@ -700,24 +700,38 @@ Based on this {feedback_type.replace('_', ' ')} feedback, consider:"""
 - **Platform**: {environment_info.get('platform', 'unknown')}
 - **AGOR Version**: {agor_version}
 
-## 📞 FEEDBACK SUBMISSION
+## 📞 FEEDBACK SUBMISSION INSTRUCTIONS
 
-This feedback should be:
-- Reviewed by the development team
-- Tracked in the issue management system
-- Considered for future AGOR improvements
-- Used to enhance agent coordination workflows
-- Integrated into continuous improvement processes
+**IMPORTANT**: Copy the content above and manually create a GitHub issue:
+
+1. **Go to**: https://github.com/jeremiah-k/agor/issues/new
+2. **Title**: Use the feedback type and brief description (e.g., "Enhancement: Improve Git error messages")
+3. **Body**: Paste the entire feedback content from above
+4. **Labels**: Add `meta-feedback` and appropriate component labels
+5. **Submit**: Click "Submit new issue"
+
+**Why Manual Submission?**
+- Gives you control over the submission process
+- Allows you to add additional context if needed
+- Prevents automatic spam and ensures thoughtful feedback
+
+## 🏷️ SUGGESTED LABELS
+
+When creating the GitHub issue, add these labels:
+- `meta-feedback` (always include this)
+- `bug` / `enhancement` / `workflow` (based on feedback type)
+- `component: {component}` (e.g., `component: external-integration`)
+- `priority: {severity}` (e.g., `priority: medium`)
 
 ## 🔗 RELATED RESOURCES
 
 - [AGOR Development Guide](docs/agor-development-guide.md)
-- [Agent Feedback Template](.github/ISSUE_TEMPLATE/agent-feedback.md)
+- [GitHub Issues](https://github.com/jeremiah-k/agor/issues)
 - [Multi-Agent Protocols](docs/multi-agent-protocols.md)
 
 ---
 
-**Meta feedback helps evolve AGOR into a more effective coordination platform.**
+**Meta feedback helps evolve AGOR into a more effective coordination platform. Thank you for contributing!**
 """
 
     # Use new feedback manager if available
