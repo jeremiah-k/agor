@@ -69,7 +69,20 @@ class HandoffRequest:
 def create_snapshot(
     title: str, context: str, agent_id: str = None, custom_branch: str = None
 ) -> bool:
-    """Create development snapshot in agent's directory within main memory branch."""
+    """
+    Creates a development snapshot file in the agent's directory within the main memory branch.
+    
+    Generates or sanitizes the agent ID, constructs a snapshot filename with a timestamp and sanitized title, and gathers current git branch and commit information. Builds a snapshot document containing metadata, development context, and placeholders for next steps. Writes the snapshot file locally and attempts to commit it to the specified memory branch without switching branches.
+    
+    Args:
+        title: Title for the snapshot, used in the filename and document header.
+        context: Description of the current development context to include in the snapshot.
+        agent_id: Optional agent identifier; generated if not provided.
+        custom_branch: Optional memory branch name; defaults to the main memory branch if not specified.
+    
+    Returns:
+        True if the snapshot was successfully committed to the memory branch, False otherwise.
+    """
     # Import all required functions at the top to avoid per-call overhead
     from agor.tools.dev_tools import (
         generate_agent_id,
@@ -461,17 +474,16 @@ def generate_mandatory_session_end_prompt(
 
 def create_snapshot_legacy(title: str, context: str) -> bool:
     """
-    Create development snapshot using legacy format.
-
-    This function maintains compatibility with older snapshot creation patterns
-    while using the new modular architecture.
-
+    Creates a development snapshot using the legacy format for backward compatibility.
+    
+    Generates a snapshot file in the agent's directory with metadata, development context, and git status, then commits and pushes it using the legacy quick commit method.
+    
     Args:
-        title: Snapshot title
-        context: Snapshot context
-
+        title: The title of the snapshot.
+        context: The development context to include in the snapshot.
+    
     Returns:
-        True if successful, False otherwise
+        True if the snapshot was successfully committed and pushed, False otherwise.
     """
     from agor.tools.dev_testing import detect_environment
 

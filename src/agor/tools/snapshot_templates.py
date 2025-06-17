@@ -341,9 +341,13 @@ Please provide the snapshot document or its location, and I'll take over the wor
 
 
 def create_snapshot_directory() -> Path:
-    """DEPRECATED: Creates local .agor directory which should NEVER be on main branch.
-
-    Use memory branches for all .agor content instead.
+    """
+    DEPRECATED. Creates the local `.agor/snapshots` directory and initializes an index file if needed.
+    
+    This function is deprecated because `.agor` content should not be tracked on the main branch. Use memory branches for all `.agor` files instead.
+    
+    Returns:
+        Path to the created `.agor/snapshots` directory.
     """
     print("⚠️  WARNING: create_snapshot_directory() is deprecated")
     print("⚠️  This prevents .agor files from being tracked on main branch")

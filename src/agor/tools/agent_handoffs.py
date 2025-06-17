@@ -539,9 +539,23 @@ def generate_meta_feedback(
     environment_info: dict = None,
 ) -> str:
     """
-    Generates structured meta feedback for AGOR, including validation, environment details, and actionable recommendations.
-
-    Creates a formatted feedback report with severity and type indicators, affected component, AGOR version, and environment context. For bug reports, includes sections for reproduction steps, expected and actual behavior. Lists improvement suggestions, tailored recommended actions based on feedback type, and metadata for tracking. Ensures clean markdown formatting for agent communication.
+    Generates a structured meta feedback report for AGOR, including validation, environment details, actionable recommendations, and manual submission instructions.
+    
+    The report includes severity/type indicators, affected component, AGOR version, environment context, and, for bug reports, sections for reproduction steps and expected/actual behavior. It lists improvement suggestions, tailored recommended actions based on feedback type, and metadata for tracking. The output provides step-by-step instructions for submitting the feedback as a GitHub issue, including suggested labels and related resources. Markdown formatting is applied for clean agent communication.
+    
+    Args:
+        feedback_type: The category of feedback (e.g., bug, enhancement, workflow_issue).
+        feedback_content: The main feedback text.
+        suggestions: Optional list of improvement suggestions.
+        severity: Feedback severity level (default "medium").
+        component: Affected component or area (default "general").
+        reproduction_steps: Optional steps to reproduce the issue (for bugs).
+        expected_behavior: Expected outcome (for bugs).
+        actual_behavior: Actual observed outcome (for bugs).
+        environment_info: Optional environment details; auto-detected if not provided.
+    
+    Returns:
+        A markdown-formatted string containing the complete meta feedback report, ready for manual submission as a GitHub issue.
     """
     # Validate and set defaults
     if suggestions is None:

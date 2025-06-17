@@ -22,7 +22,14 @@ from pathlib import Path
 
 
 def main():
-    """Main wrapper function with command-line interface."""
+    """
+    Parses command-line arguments and dispatches AGOR tool commands for external projects.
+    
+    Initializes a CLI with subcommands for status checking, testing, PR description generation, handoff prompt creation, snapshot creation, and quick commit operations. Determines the AGOR source directory, adjusts the Python path if necessary, and invokes the appropriate command handler. Prints help or error messages as needed.
+    
+    Returns:
+        int: Exit code indicating success (0) or failure (1).
+    """
     parser = argparse.ArgumentParser(
         description="AGOR Tools Wrapper for External Projects",
         epilog="Addresses tool integration issues for external project usage",
@@ -96,7 +103,12 @@ def main():
 
 
 def install_wrapper():
-    """Install wrapper script to a convenient location."""
+    """
+    Attempts to install the wrapper script to the user's local binary directory for convenient command-line access.
+    
+    Returns:
+        True if installation succeeds, False otherwise. Prints manual installation instructions if automatic installation fails.
+    """
     import shutil
 
     script_path = Path(__file__).resolve()
@@ -124,7 +136,11 @@ def install_wrapper():
 
 
 def show_usage_examples():
-    """Show usage examples for the wrapper."""
+    """
+    Prints detailed usage examples for AGOR wrapper commands in both development and installed modes.
+    
+    Includes example invocations for all supported commands and installation instructions.
+    """
     print(
         """
 🛠️  AGOR Wrapper Usage Examples:
