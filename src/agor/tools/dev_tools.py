@@ -1405,7 +1405,7 @@ def generate_workflow_prompt_template(
         A formatted prompt template string ready for agent use.
     """
     if memory_branch is None:
-        memory_branch = generate_agent_memory_branch()
+        memory_branch = get_main_memory_branch()
 
     prompt_template = f"""# 🎯 AGOR Agent Task: {task_description}
 
@@ -1579,7 +1579,7 @@ def get_workflow_optimization_tips() -> str:
 - Include explicit handoff instructions
 
 ### 2. Memory Branch Strategy
-- Generate unique agent memory branch: `{generate_agent_memory_branch()}`
+- Generate unique agent memory branch: `{get_main_memory_branch()}`
 - Use for all snapshots and coordination
 - Reference in handoff prompts for continuity
 

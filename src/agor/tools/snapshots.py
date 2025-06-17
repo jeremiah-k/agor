@@ -474,6 +474,9 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
         True if successful, False otherwise
     """
     from agor.tools.dev_testing import detect_environment
+
+    # Generate agent ID for legacy compatibility
+    from agor.tools.dev_tools import generate_agent_id, get_agent_directory_path
     from agor.tools.git_operations import (
         get_current_timestamp,
         get_file_timestamp,
@@ -481,10 +484,11 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
         run_git_command,
     )
 
+    agent_id = generate_agent_id()
+    agent_dir = get_agent_directory_path(agent_id)
+
     timestamp_str = get_file_timestamp()
-    snapshot_file = (
-        f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
-    )
+    snapshot_file = f"{agent_dir}snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
 
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])

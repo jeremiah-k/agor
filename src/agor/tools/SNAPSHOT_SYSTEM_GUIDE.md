@@ -95,7 +95,7 @@ This will prompt you for all necessary information and generate the snapshot aut
 
 1. **Gather context** - Review your work, commits, and current state
 2. **Fill out template** - Use the format above
-3. **Save to .agor/snapshots/** - Use timestamp naming: `YYYY-MM-DD_HHMMSS_summary_snapshot.md`
+3. **Save to .agor/agents/{agent_id}/snapshots/** - Use timestamp naming: `YYYY-MM-DD_HHMMSS_summary_snapshot.md`
 4. **Update coordination logs** - Add entry to `.agor/agentconvo.md`
 
 ## 📋 Snapshot Quality Checklist
@@ -129,7 +129,7 @@ This will prompt you for all necessary information and generate the snapshot aut
 
 ### When Starting Work:
 
-1. **Check for snapshots** - Look in `.agor/snapshots/` directory
+1. **Check for snapshots** - Look in `.agor/agents/{agent_id}/snapshots/` directory
 2. **Load latest relevant snapshot** - Use `load_snapshot` hotkey or read manually
 3. **Verify repository state** - Ensure git branch and commit match snapshot
 4. **Confirm understanding** - Update `.agor/agentconvo.md` with receipt confirmation
@@ -142,16 +142,19 @@ load_snapshot
 
 ## 📁 Snapshot Storage
 
-**Important:** The `.agor/snapshots` directory and its contents are stored on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`), not typically on your main working branch. This is managed by AGOR's dev tools and Memory Synchronization System.
+**Important:** The `.agor/agents/{agent_id}/snapshots/` directory and its contents are stored on dedicated memory branches (e.g., `agor/mem/BRANCH_NAME`), not typically on your main working branch. This is managed by AGOR's dev tools and Memory Synchronization System.
 
 Snapshots are stored in:
 
 ```
 .agor/
-├── snapshots/
-│   ├── 2024-01-27_143000_auth-system_snapshot.md
-│   ├── 2024-01-27_160000_frontend-integration_snapshot.md
-│   └── index.md
+├── agents/
+│   ├── agent_abc123_1234567890/
+│   │   ├── snapshots/
+│   │   │   ├── 2024-01-27_143000_auth-system_snapshot.md
+│   │   │   └── 2024-01-27_160000_frontend-integration_snapshot.md
+│   │   ├── work_log.md
+│   │   └── agent_info.md
 ├── agentconvo.md
 └── memory.md
 ```
