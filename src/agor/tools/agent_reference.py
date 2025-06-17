@@ -10,10 +10,11 @@ access to get complete setup instructions, requirements, and guidance.
 """
 
 import functools
+import importlib.util
 import os
 import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Optional
 
 # Import TOML parser - use built-in tomllib for Python 3.11+ or fallback
@@ -125,7 +126,7 @@ from agor.tools.external_integration import get_agor_tools
 
 def _env_flag(name: str) -> bool:
     """Helper to check environment variable as boolean flag."""
-    return os.environ.get(name, '').lower() in {'1', 'true', 'yes'}
+    return os.environ.get(name, '').lower() in {'1', 'true', 'yes', 'on', 'y', 't'}
 
 
 def detect_platform() -> str:
@@ -133,13 +134,17 @@ def detect_platform() -> str:
     Detect the current AI platform environment.
 
     Returns:
-        Platform identifier: 'augment_local', 'augment_remote', or 'unknown'
+        Platform identifier: 'augment_local', 'augment_remote', 'chatgpt', or 'unknown'
     """
     # Check for AugmentCode environment indicators with tolerant boolean parsing
     if _env_flag('AUGMENT_LOCAL'):
         return 'augment_local'
     if _env_flag('AUGMENT_REMOTE'):
         return 'augment_remote'
+
+    # Native ChatGPT sandboxes often expose a CHATGPT env var
+    if _env_flag('CHATGPT'):
+        return 'chatgpt'
 
     # Check for other platform indicators
     # This can be expanded as we identify platform-specific markers
@@ -219,21 +224,35 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
         # Convert to absolute POSIX path for consistency with other branches
         base_path = Path('src/agor').resolve(strict=False).as_posix()
     else:
-        # External project - try common locations
-        common_locations = [
-            '~/agor/src/agor',
-            '~/dev/agor/src/agor',
-            '/opt/agor/src/agor'
-        ]
+        # External project - try import-driven detection first
+        try:
+            # Try to find AGOR via import system (handles pip installs in site-packages)
+            spec = importlib.util.find_spec('agor')
+            if spec and spec.origin:
+                # Get the agor package directory
+                agor_package_path = Path(spec.origin).parent
+                # Navigate to src/agor if this is a development install
+                if agor_package_path.name == 'agor' and (agor_package_path.parent / 'src').exists():
+                    base_path = (agor_package_path.parent / 'src' / 'agor').as_posix()
+                else:
+                    # Direct package install - use the package directory
+                    base_path = agor_package_path.as_posix()
+        except (ImportError, AttributeError, TypeError):
+            # Import-based detection failed, try common locations
+            common_locations = [
+                '~/agor/src/agor',
+                '~/dev/agor/src/agor',
+                '/opt/agor/src/agor'
+            ]
 
-        for location in common_locations:
-            expanded_path = Path(location).expanduser()
-            if expanded_path.exists():
-                base_path = expanded_path.as_posix()
-                break
-        else:
-            # Fallback to relative path assumption, resolved to absolute
-            base_path = Path('src/agor').resolve(strict=False).as_posix()
+            for location in common_locations:
+                expanded_path = Path(location).expanduser()
+                if expanded_path.exists():
+                    base_path = expanded_path.as_posix()
+                    break
+            else:
+                # Fallback to relative path assumption, resolved to absolute
+                base_path = Path('src/agor').resolve(strict=False).as_posix()
 
     base = Path(base_path)
     return {
@@ -290,9 +309,13 @@ def generate_deployment_prompt(platform: Optional[str] = None,
     
     # Resolve paths with fallback to defaults
     default_paths = resolve_agor_paths(project_type, custom_base_path)
-    # Guard against None values in custom_paths that would overwrite defaults
+    # Guard against None values and unknown keys in custom_paths
     if custom_paths:
-        paths = {k: v for k, v in {**default_paths, **custom_paths}.items() if v is not None}
+        valid_keys = set(default_paths)
+        unknown = set(custom_paths) - valid_keys
+        if unknown:
+            raise KeyError(f"Unknown custom path keys: {', '.join(sorted(unknown))}")
+        paths = {**default_paths, **{k: v for k, v in custom_paths.items() if v is not None}}
     else:
         paths = default_paths
     
@@ -317,7 +340,7 @@ Read as much AGOR documentation as you need to maintain a good workflow. Analyze
 **As we approach the end of our work in this branch, be prepared to use the dev tools as we finish. If asked, be prepared to create a PR summary and release notes using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting). You might also be expected to create a handoff prompt for another agent, containing full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable. Be prepared to give me these deliverables (each with its output/content wrapped in its own single codeblock) at the end of each series of changes, so I do not need to ask for everything individually.**
 
 ---
-Platform: {platform} | Project: {project_type} | Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+Platform: {platform} | Project: {project_type} | Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M %Z')}
 """
     
     return prompt
