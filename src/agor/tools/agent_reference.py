@@ -11,6 +11,7 @@ access to get complete setup instructions, requirements, and guidance.
 
 import os
 from pathlib import Path
+from datetime import datetime
 from typing import Dict, Optional
 
 
@@ -47,8 +48,18 @@ def detect_project_type() -> str:
     agor_indicators = [
         'src/agor/tools',
         'docs/agor-development-guide.md',
-        'pyproject.toml'  # with AGOR-specific content
     ]
+    
+    # Check pyproject.toml for AGOR-specific content
+    pyproject_file = current_dir / 'pyproject.toml'
+    if pyproject_file.exists():
+        try:
+            with open(pyproject_file, 'r', encoding='utf-8') as f:
+                pyproject_content = f.read()
+                if 'name = "agor"' in pyproject_content:
+                    agor_indicators.append('pyproject.toml')
+        except (IOError, UnicodeDecodeError):
+            pass
     
     for indicator in agor_indicators:
         if (current_dir / indicator).exists():
@@ -89,13 +100,14 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
             # Fallback to relative path assumption
             base_path = 'src/agor'
     
+    base = Path(base_path)
     return {
-        'tools_path': f'{base_path}/tools',
-        'readme_ai': f'{base_path}/tools/README_ai.md',
-        'instructions': f'{base_path}/tools/AGOR_INSTRUCTIONS.md',
-        'start_here': f'{base_path}/tools/agent-start-here.md',
-        'index': f'{base_path}/tools/index.md',
-        'external_guide': f'{base_path}/tools/EXTERNAL_INTEGRATION_GUIDE.md'
+        'tools_path': str(base / 'tools'),
+        'readme_ai': str(base / 'tools' / 'README_ai.md'),
+        'instructions': str(base / 'tools' / 'AGOR_INSTRUCTIONS.md'),
+        'start_here': str(base / 'tools' / 'agent-start-here.md'),
+        'index': str(base / 'tools' / 'index.md'),
+        'external_guide': str(base / 'tools' / 'EXTERNAL_INTEGRATION_GUIDE.md')
     }
 
 
@@ -224,7 +236,7 @@ Read as much AGOR documentation as you need to maintain a good workflow. Analyze
 **As we approach the end of our work in this branch, be prepared to use the dev tools as we finish. If asked, be prepared to create a PR summary and release notes using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting). You might also be expected to create a handoff prompt for another agent, containing full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable. Be prepared to give me these deliverables (each with its output/content wrapped in its own single codeblock) at the end of each series of changes, so I do not need to ask for everything individually.**
 
 ---
-Platform: {platform} | Project: {project_type} | Generated: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M')}
+Platform: {platform} | Project: {project_type} | Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}
 """
     
     return prompt

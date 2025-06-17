@@ -10,7 +10,7 @@ from pathlib import Path
 import tempfile
 import os
 
-from agor.tools.agent_education import (
+from agor.tools.agent_reference import (
     detect_platform,
     detect_project_type,
     resolve_agor_paths,
@@ -22,7 +22,7 @@ from agor.tools.agent_education import (
 )
 
 
-class TestAgentEducation(unittest.TestCase):
+class TestAgentReference(unittest.TestCase):
     """Test cases for agent education functions."""
 
     def test_detect_platform_augment_local(self):
@@ -97,15 +97,15 @@ class TestAgentEducation(unittest.TestCase):
 
     def test_generate_deployment_prompt_basic(self):
         """Test basic deployment prompt generation."""
-        with patch('agor.tools.agent_education.detect_platform', return_value='augment_local'):
-            with patch('agor.tools.agent_education.detect_project_type', return_value='external_project'):
-                prompt = generate_deployment_prompt()
-                
-                self.assertIn('AGOR (AgentOrchestrator)', prompt)
-                self.assertIn('README_ai.md', prompt)
-                self.assertIn('AGOR_INSTRUCTIONS.md', prompt)
-                self.assertIn('AugmentCode Local Agent', prompt)
-                self.assertIn('deliverables', prompt)
+        with patch('agor.tools.agent_reference.detect_platform', return_value='augment_local'), \
+             patch('agor.tools.agent_reference.detect_project_type', return_value='external_project'):
+            prompt = generate_deployment_prompt()
+
+            self.assertIn('AGOR (AgentOrchestrator)', prompt)
+            self.assertIn('README_ai.md', prompt)
+            self.assertIn('AGOR_INSTRUCTIONS.md', prompt)
+            self.assertIn('AugmentCode Local Agent', prompt)
+            self.assertIn('deliverables', prompt)
 
     def test_generate_deployment_prompt_custom_params(self):
         """Test deployment prompt generation with custom parameters."""

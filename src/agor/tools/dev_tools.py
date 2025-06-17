@@ -57,8 +57,8 @@ from agor.tools.snapshots import (
     generate_agent_handoff_prompt,
     generate_mandatory_session_end_prompt,
 )
-# Note: agent_education functions available via direct import
-# from agor.tools.agent_education import function_name
+# Note: agent_reference functions available via direct import
+# from agor.tools.agent_reference import function_name
 from agor.utils import sanitize_slug
 
 # Handle imports for both installed and development environments
