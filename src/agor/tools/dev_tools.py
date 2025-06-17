@@ -70,7 +70,12 @@ except ImportError:
 
     class FallbackGitManager:
         def get_git_binary(self):
-            """Get git binary path for operations."""
+            """
+            Returns the file system path to the git executable.
+            
+            Raises:
+                RuntimeError: If the git binary is not found in the system PATH.
+            """
             import shutil
 
             git_path = shutil.which("git")
@@ -1387,13 +1392,12 @@ def detect_current_environment() -> dict:
 
 def get_available_functions_reference() -> str:
     """
-    Generate comprehensive reference of all AGOR development tools functions.
-
-    This function dynamically inspects all AGOR modules and generates a complete
-    reference guide that agents MUST call to understand available functionality.
-
+    Generates a dynamically assembled reference guide of all available AGOR development tools functions.
+    
+    Inspects core AGOR modules to list all public functions with their descriptions, providing agents with a comprehensive overview of available capabilities. The output includes key workflow, memory, and analysis functions, and is intended as a mandatory reference for agents using AGOR tools.
+    
     Returns:
-        Formatted string containing all function references with descriptions
+        str: Formatted reference guide listing all functions and their summaries.
     """
     import inspect
     import sys
@@ -1495,13 +1499,9 @@ def get_available_functions_reference() -> str:
 
 def get_agor_initialization_guide() -> str:
     """
-    Programmatic AGOR initialization guide for agents.
-
-    This function provides comprehensive initialization information that agents
-    can call to get complete setup instructions without skimming documentation.
-
-    Returns:
-        Complete initialization guide as formatted string
+    Returns a comprehensive, formatted initialization guide for agents using the AGOR platform.
+    
+    The guide outlines required documentation, agent roles, memory and snapshot systems, deliverable preparation, and testing steps to ensure proper setup and workflow adherence.
     """
     guide = textwrap.dedent("""
         🚀 AGOR INITIALIZATION GUIDE FOR AGENTS
@@ -1551,9 +1551,9 @@ Run test_all_tools() to verify everything works correctly.
 
 def get_snapshot_requirements() -> str:
     """
-    Programmatic snapshot requirements for agents.
-
-    Returns critical snapshot information that agents must follow.
+    Returns the critical requirements and guidelines for agent snapshot creation.
+    
+    Provides a detailed, formatted summary of mandatory steps, formatting rules, and best practices that agents must follow when creating session snapshots, including next steps completion and memory branch usage.
     """
     requirements = textwrap.dedent("""
         📸 SNAPSHOT REQUIREMENTS - CRITICAL FOR ALL AGENTS

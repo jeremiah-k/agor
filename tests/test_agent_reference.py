@@ -41,13 +41,17 @@ class TestDetection(unittest.TestCase):
             self.assertEqual(platform, 'augment_remote')
 
     def test_detect_platform_unknown(self):
-        """Test platform detection fallback."""
+        """
+        Test that platform detection returns 'unknown' when no relevant environment variables are set.
+        """
         with patch.dict(os.environ, {}, clear=True):
             platform = detect_platform()
             self.assertEqual(platform, 'unknown')
 
     def test_detect_project_type_agor_development(self):
-        """Test project type detection for AGOR development."""
+        """
+        Test that `detect_project_type()` correctly identifies an AGOR development project when the expected directory structure exists.
+        """
         with tempfile.TemporaryDirectory() as temp_dir, \
              patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
             # Create AGOR project structure
@@ -58,7 +62,9 @@ class TestDetection(unittest.TestCase):
             self.assertEqual(project_type, 'agor_development')
 
     def test_detect_project_type_external(self):
-        """Test project type detection for external project."""
+        """
+        Test that `detect_project_type()` identifies a directory without AGOR structure as an external project.
+        """
         with tempfile.TemporaryDirectory() as temp_dir, \
              patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
             # Create non-AGOR project structure
@@ -66,7 +72,9 @@ class TestDetection(unittest.TestCase):
             self.assertEqual(project_type, 'external_project')
 
     def test_detect_project_type_nested_directory(self):
-        """Test project type detection from nested directory within AGOR project."""
+        """
+        Test that project type detection correctly identifies an AGOR development project when executed from a nested subdirectory within the project structure.
+        """
         with tempfile.TemporaryDirectory() as temp_dir:
             # Create AGOR project structure in temp directory
             agor_root = Path(temp_dir) / 'agor-project'
@@ -83,7 +91,9 @@ class TestDetection(unittest.TestCase):
                 self.assertEqual(project_type, 'agor_development')
 
     def test_detect_project_type_pyproject_in_parent(self):
-        """Test project type detection with pyproject.toml in parent directory."""
+        """
+        Test that project type detection identifies 'agor_development' when a pyproject.toml with AGOR content exists in a parent directory, even when called from a nested subdirectory.
+        """
         with tempfile.TemporaryDirectory() as temp_dir:
             # Create project structure
             project_root = Path(temp_dir) / 'project'
@@ -191,7 +201,11 @@ class TestDeploymentPrompt(unittest.TestCase):
         self.assertIn('Project: agor_development', prompt)
 
     def test_generate_deployment_prompt_partial_custom_paths(self):
-        """Test deployment prompt generation with partial custom paths (should merge with defaults)."""
+        """
+        Test that deployment prompt generation correctly merges partial custom paths with default paths.
+        
+        Verifies that when only some custom paths are provided, the generated deployment prompt includes the custom paths for specified keys and default paths for missing keys.
+        """
         # Only provide some custom paths, others should fall back to defaults
         partial_custom_paths = {
             'readme_ai': '/custom/README_ai.md',
@@ -247,7 +261,9 @@ class TestDeploymentPrompt(unittest.TestCase):
         self.assertIn('Parallel Divergent', guide)
 
     def test_get_dev_tools_reference(self):
-        """Test dev tools reference generation."""
+        """
+        Test that the developer tools reference guide is generated with all expected sections and tool references.
+        """
         reference = get_dev_tools_reference()
         
         self.assertIn('DEV TOOLS COMPLETE REFERENCE', reference)
@@ -256,7 +272,9 @@ class TestDeploymentPrompt(unittest.TestCase):
         self.assertIn('test_all_tools', reference)
 
     def test_programmatic_guides_are_comprehensive(self):
-        """Test that programmatic guides contain comprehensive information."""
+        """
+        Verify that programmatic guide functions return comprehensive, well-structured content with visual separators, section icons, and non-empty bodies.
+        """
         guides = [
             get_memory_branch_guide(),
             get_coordination_guide(),
@@ -272,7 +290,9 @@ class TestDeploymentPrompt(unittest.TestCase):
             self.assertTrue(len(guide.strip()) > 0, "Guide should not be empty")
 
     def test_deployment_prompt_contains_all_sections(self):
-        """Test that deployment prompt contains all required sections."""
+        """
+        Verifies that the generated deployment prompt includes all essential sections and identifiers required for AGOR agent deployment.
+        """
         prompt = generate_deployment_prompt()
         
         required_sections = [
