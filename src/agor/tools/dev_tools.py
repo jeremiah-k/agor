@@ -56,6 +56,12 @@ from agor.tools.snapshots import (
     generate_agent_handoff_prompt,
     generate_mandatory_session_end_prompt,
 )
+from agor.tools.agent_education import (
+    generate_deployment_prompt,
+    get_memory_branch_guide,
+    get_coordination_guide,
+    get_dev_tools_reference,
+)
 from agor.utils import sanitize_slug
 
 # Handle imports for both installed and development environments

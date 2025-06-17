@@ -1,0 +1,416 @@
+"""
+AGOR Agent Education System
+
+Programmatic documentation and guidance functions for AI agents.
+Agents take programmatic output more seriously than markdown documentation,
+reducing skimming and ensuring comprehensive understanding.
+
+This module provides structured, callable documentation that agents can
+access to get complete setup instructions, requirements, and guidance.
+"""
+
+import os
+import sys
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+
+def detect_platform() -> str:
+    """
+    Detect the current AI platform environment.
+    
+    Returns:
+        Platform identifier: 'augment_local', 'augment_remote', 'chatgpt', 'claude', etc.
+    """
+    # Check for AugmentCode environment indicators
+    if os.environ.get('AUGMENT_LOCAL'):
+        return 'augment_local'
+    elif os.environ.get('AUGMENT_REMOTE'):
+        return 'augment_remote'
+    
+    # Check for other platform indicators
+    # This can be expanded as we identify platform-specific markers
+    
+    # Default fallback
+    return 'unknown'
+
+
+def detect_project_type() -> str:
+    """
+    Detect if working on AGOR itself or external project.
+    
+    Returns:
+        'agor_development' or 'external_project'
+    """
+    current_dir = Path.cwd()
+    
+    # Check if we're in AGOR directory structure
+    agor_indicators = [
+        'src/agor/tools',
+        'docs/agor-development-guide.md',
+        'pyproject.toml'  # with AGOR-specific content
+    ]
+    
+    for indicator in agor_indicators:
+        if (current_dir / indicator).exists():
+            return 'agor_development'
+    
+    return 'external_project'
+
+
+def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> Dict[str, str]:
+    """
+    Resolve AGOR file paths based on project type and environment.
+    
+    Args:
+        project_type: 'agor_development' or 'external_project'
+        custom_path: Optional custom AGOR installation path
+        
+    Returns:
+        Dictionary with resolved paths for documentation files
+    """
+    if custom_path:
+        base_path = custom_path
+    elif project_type == 'agor_development':
+        base_path = 'src/agor'
+    else:
+        # External project - try common locations
+        common_locations = [
+            '~/agor/src/agor',
+            '~/dev/agor/src/agor',
+            '/opt/agor/src/agor'
+        ]
+        
+        for location in common_locations:
+            expanded_path = Path(location).expanduser()
+            if expanded_path.exists():
+                base_path = str(expanded_path)
+                break
+        else:
+            # Fallback to relative path assumption
+            base_path = 'src/agor'
+    
+    return {
+        'tools_path': f'{base_path}/tools',
+        'readme_ai': f'{base_path}/tools/README_ai.md',
+        'instructions': f'{base_path}/tools/AGOR_INSTRUCTIONS.md',
+        'start_here': f'{base_path}/tools/agent-start-here.md',
+        'index': f'{base_path}/tools/index.md',
+        'external_guide': f'{base_path}/tools/EXTERNAL_INTEGRATION_GUIDE.md'
+    }
+
+
+def get_platform_specific_instructions(platform: str, project_type: str) -> str:
+    """
+    Get platform-specific setup instructions and quirks.
+    
+    Args:
+        platform: Platform identifier
+        project_type: Project type identifier
+        
+    Returns:
+        Platform-specific instruction text
+    """
+    instructions = {
+        'augment_local': {
+            'external_project': '''
+### AugmentCode Local Agent - External Project Setup
+
+**CRITICAL**: Use external integration system for projects outside AGOR:
+
+```python
+from agor.tools.external_integration import get_agor_tools
+tools = get_agor_tools()
+tools.print_status()  # Verify integration works
+```
+
+**Environment**: Direct workspace access, persistent guidelines, full file system access.
+**Memory**: Enhanced through Augment system with persistent User Guidelines.
+**Dependencies**: May need venv setup for AGOR tools if using development functions.
+            ''',
+            'agor_development': '''
+### AugmentCode Local Agent - AGOR Development
+
+**Direct Access**: Working on AGOR itself, use direct imports:
+
+```python
+from agor.tools.dev_tools import create_development_snapshot, test_all_tools
+```
+
+**Environment**: Full AGOR development environment with all tools available.
+**Memory**: Persistent User Guidelines and direct access to all AGOR documentation.
+            '''
+        },
+        'chatgpt': {
+            'external_project': '''
+### ChatGPT - External Project Setup
+
+**File Upload**: Upload AGOR documentation files to conversation.
+**Memory**: Limited to conversation context, use snapshots for continuity.
+**Integration**: Use external integration system if AGOR installed separately.
+            ''',
+            'agor_development': '''
+### ChatGPT - AGOR Development
+
+**File Upload**: Upload AGOR source files and documentation.
+**Memory**: Use conversation memory and file uploads for context.
+**Development**: Limited code execution, focus on analysis and planning.
+            '''
+        },
+        'unknown': {
+            'external_project': '''
+### Unknown Platform - External Project
+
+**Integration**: Try external integration system first:
+```python
+from agor.tools.external_integration import get_agor_tools
+```
+
+**Fallback**: If integration fails, request AGOR documentation upload or access.
+            ''',
+            'agor_development': '''
+### Unknown Platform - AGOR Development
+
+**Access**: Ensure access to AGOR source code and documentation.
+**Integration**: Use direct imports if working within AGOR environment.
+            '''
+        }
+    }
+    
+    return instructions.get(platform, instructions['unknown']).get(project_type, 
+                                                                   instructions['unknown']['external_project'])
+
+
+def generate_deployment_prompt(platform: Optional[str] = None, 
+                             project_type: Optional[str] = None,
+                             custom_paths: Optional[Dict[str, str]] = None) -> str:
+    """
+    Generate complete deployment prompt for AI agents.
+    
+    Args:
+        platform: Platform identifier (auto-detected if None)
+        project_type: Project type (auto-detected if None)  
+        custom_paths: Custom path overrides
+        
+    Returns:
+        Complete deployment prompt ready for copy-paste
+    """
+    # Auto-detect if not provided
+    if platform is None:
+        platform = detect_platform()
+    if project_type is None:
+        project_type = detect_project_type()
+    
+    # Resolve paths
+    if custom_paths:
+        paths = custom_paths
+    else:
+        paths = resolve_agor_paths(project_type)
+    
+    # Get platform-specific instructions
+    platform_instructions = get_platform_specific_instructions(platform, project_type)
+    
+    # Generate complete prompt
+    prompt = f"""I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+Please read these key files from workspace sources to understand the system:
+- {paths['readme_ai']} (role selection and initialization)
+- {paths['instructions']} (comprehensive operational guide)
+- {paths['start_here']} (quick startup guide)
+- {paths['index']} (documentation index for efficient lookup)
+
+Read as much AGOR documentation as you need to maintain a good workflow. Analyze the snapshot system and its templates. Understand memory branches and how they operate.
+
+{platform_instructions}
+
+# <--- Add your detailed step-by-step instructions below --->
+
+**As we approach the end of our work in this branch, be prepared to use the dev tools as we finish. If asked, be prepared to create a PR summary and release notes using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting). You might also be expected to create a handoff prompt for another agent, containing full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable. Be prepared to give me these deliverables (each with its output/content wrapped in its own single codeblock) at the end of each series of changes, so I do not need to ask for everything individually.**
+
+---
+Platform: {platform} | Project: {project_type} | Generated: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M')}
+"""
+    
+    return prompt
+
+
+def get_memory_branch_guide() -> str:
+    """
+    Comprehensive guide to AGOR memory branch system.
+
+    Returns:
+        Formatted guide explaining memory branches and cross-branch operations
+    """
+    guide = """
+🧠 AGOR MEMORY BRANCH SYSTEM - CRITICAL UNDERSTANDING
+
+═══════════════════════════════════════════════════════════════════
+
+🚨 FUNDAMENTAL RULE: .agor/ directories exist ONLY on memory branches
+
+📋 MEMORY BRANCH ARCHITECTURE:
+• Memory branches: agor/mem/main, agor/mem/feature-name, etc.
+• Working branches: main, feature-branches, development branches
+• .agor/ directory structure exists exclusively on memory branches
+• Cross-branch commits: Memory operations commit to memory branch while staying on working branch
+
+📋 MEMORY BRANCH OPERATIONS:
+• Dev tools automatically handle memory branch creation and switching
+• Snapshots saved to .agor/snapshots/ on memory branches
+• Agent coordination files in .agor/agents/ on memory branches
+• Never manually create .agor/ directories on working branches
+
+📋 CROSS-BRANCH COMMIT DESIGN:
+• You work on feature-branch-A
+• Dev tools commit snapshot to agor/mem/main
+• You remain on feature-branch-A throughout
+• Memory and working branches stay synchronized but separate
+
+📋 WHY THIS ARCHITECTURE:
+• Keeps working branches clean of coordination files
+• Enables seamless agent handoffs without polluting project history
+• Allows multiple agents to coordinate without merge conflicts
+• Maintains clear separation between project code and agent coordination
+
+📋 COMMON MISTAKES TO AVOID:
+• Never create .agor/ directories manually on working branches
+• Don't try to access memory files directly - use dev tools
+• Don't commit .agor/ files to working branches
+• Don't switch to memory branches manually for file access
+
+═══════════════════════════════════════════════════════════════════
+✅ Use dev tools for all memory operations - they handle the complexity
+"""
+    return guide
+
+
+def get_coordination_guide() -> str:
+    """
+    Multi-agent coordination patterns and requirements.
+
+    Returns:
+        Formatted guide for agent coordination and communication
+    """
+    guide = """
+🤝 AGOR MULTI-AGENT COORDINATION GUIDE
+
+═══════════════════════════════════════════════════════════════════
+
+📋 COORDINATION PRINCIPLES:
+• Each agent creates their own snapshots with complete context
+• Use agentconvo.md for cross-agent communication
+• Handoff prompts contain full initialization instructions
+• Memory branches enable seamless context preservation
+
+📋 AGENT COMMUNICATION PATTERNS:
+• Update .agor/shared/agentconvo.md with status and findings
+• Include current work, decisions made, and blockers encountered
+• Reference specific snapshots and commits for context
+• Provide clear handoff instructions for continuing agents
+
+📋 SNAPSHOT HANDOFF REQUIREMENTS:
+• Every snapshot must include meaningful next_steps
+• Provide specific, actionable continuation instructions
+• Include context about decisions made and rationale
+• Reference relevant files, functions, and documentation
+
+📋 COORDINATION STRATEGIES:
+• Parallel Divergent: Independent exploration → synthesis
+• Pipeline: Sequential snapshots with specialization
+• Swarm: Dynamic task assignment from shared queue
+• Red Team: Adversarial build/break cycles
+• Mob Programming: Collaborative real-time coding
+
+📋 HANDOFF BEST PRACTICES:
+• Generate handoff prompts with full initialization context
+• Include platform-specific setup instructions
+• Provide clear success criteria and validation steps
+• Reference all relevant snapshots and coordination files
+
+═══════════════════════════════════════════════════════════════════
+✅ Effective coordination enables seamless multi-agent development
+"""
+    return guide
+
+
+def get_dev_tools_reference() -> str:
+    """
+    Complete AGOR dev tools function reference with examples.
+
+    Returns:
+        Formatted reference guide for all dev tools functions
+    """
+    guide = """
+🛠️ AGOR DEV TOOLS COMPLETE REFERENCE
+
+═══════════════════════════════════════════════════════════════════
+
+📋 SNAPSHOT FUNCTIONS:
+• create_development_snapshot(title, context, next_steps)
+  - Creates comprehensive development snapshot
+  - Requires meaningful next_steps list
+  - Saves to memory branch automatically
+
+• generate_handoff_prompt_output(content)
+  - Formats handoff prompts for agent transitions
+  - Includes full initialization instructions
+  - Output wrapped in single codeblock for copy-paste
+
+📋 OUTPUT FORMATTING FUNCTIONS:
+• generate_pr_description_output(content) - Brief content only
+• generate_release_notes_output(content) - Brief content only
+• generate_handoff_prompt_output(content) - Can be full length
+• All functions handle deticking and codeblock wrapping automatically
+
+📋 WORKSPACE FUNCTIONS:
+• get_workspace_status() - Git status, branch info, recent commits
+• quick_commit_and_push(message, emoji) - Commit and push with formatting
+• test_all_tools() - Verify all dev tools work correctly
+
+📋 MEMORY MANAGEMENT:
+• cleanup_memory_branches() - Remove old memory branches
+• initialize_agent_workspace() - Set up agent directories
+• check_pending_handoffs() - Find pending agent transitions
+
+📋 EDUCATION FUNCTIONS:
+• get_agor_initialization_guide() - Complete setup instructions
+• get_snapshot_requirements() - Critical snapshot information
+• get_memory_branch_guide() - Memory system understanding
+• get_coordination_guide() - Multi-agent coordination patterns
+
+📋 USAGE EXAMPLES:
+```python
+# Create snapshot with proper next steps
+create_development_snapshot(
+    title="Implement user authentication",
+    context="Added JWT auth with bcrypt hashing...",
+    next_steps=[
+        "Test authentication with edge cases",
+        "Add rate limiting to login endpoint",
+        "Update API documentation"
+    ]
+)
+
+# Generate formatted PR description
+pr_content = "Brief description of changes..."
+formatted_pr = generate_pr_description_output(pr_content)
+print(formatted_pr)  # Ready for copy-paste
+```
+
+═══════════════════════════════════════════════════════════════════
+✅ Use these functions for all AGOR operations - never manual processes
+"""
+    return guide
+
+
+# Export main functions for easy access
+__all__ = [
+    'generate_deployment_prompt',
+    'detect_platform',
+    'detect_project_type',
+    'resolve_agor_paths',
+    'get_platform_specific_instructions',
+    'get_memory_branch_guide',
+    'get_coordination_guide',
+    'get_dev_tools_reference'
+]

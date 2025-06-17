@@ -2,6 +2,46 @@
 
 **Technical development history for developers and AI agents**
 
+---
+
+## 🚧 ACTIVE DEVELOPMENT PLAN: Programmatic Agent Documentation System
+
+**Status**: In Progress | **Target**: v0.6.3 | **Started**: 2025-06-17
+
+### 📋 Phase 1: Programmatic Deployment Prompt Generation
+- [x] Create `generate_deployment_prompt()` function with platform detection
+- [x] Implement platform detection logic (augment_local, chatgpt, claude, etc.)
+- [x] Add project type detection (external vs agor_development)
+- [x] Create path resolution system (src/agor vs ~/agor/src/agor vs custom)
+- [x] Handle platform-specific quirks and requirements
+- [ ] Test with AugmentCode Local environment first
+
+### 📋 Phase 2: Core Programmatic Documentation Functions
+- [x] `get_agor_initialization_guide()` - Comprehensive setup guide
+- [x] `get_snapshot_requirements()` - Critical snapshot information
+- [x] `get_memory_branch_guide()` - Memory system and cross-branch commits
+- [x] `get_coordination_guide()` - Multi-agent coordination patterns
+- [x] `get_dev_tools_reference()` - Complete function reference with examples
+- [x] Create `agent_education.py` module for scalable organization
+
+### 📋 Phase 3: Platform Deployment Optimization
+- [ ] Test programmatic vs markdown documentation effectiveness
+- [ ] Gather agent behavior feedback and metrics
+- [ ] Roll out to additional platforms with adaptations
+- [ ] Create platform-specific deployment variations
+- [ ] Establish maintenance process for documentation updates
+
+### 🎯 Success Metrics
+- Agents follow instructions more consistently (reduced skimming)
+- Faster agent initialization and setup
+- Better snapshot quality and completeness
+- Improved agent handoff success rates
+- Reduced user intervention in coordination
+
+**This section will be removed when Phase 3 is complete and moved to regular development entries below.**
+
+---
+
 > **Note**: This log contains historical references to experimental SQLite memory features that were removed in v0.3.5. AGOR now uses the Memory Synchronization System with git branches as the primary memory management approach.
 
 ## 🔒 Version 0.6.0 - Security-First Release (2025-06-15)
