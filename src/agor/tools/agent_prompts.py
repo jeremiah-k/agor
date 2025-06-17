@@ -1,14 +1,10 @@
 """
-Agent Prompts Module for AGOR Development Tools
+AGOR Agent Prompts Module
 
-This module contains all agent coordination and prompt generation functionality
-extracted from dev_tools.py for better organization and maintainability.
-
-Functions:
-- generate_handoff_prompt_only: Generate handoff prompts for agent coordination
-- generate_mandatory_session_end_prompt: Session end coordination
-- detick_content/retick_content: Backtick processing for clean codeblocks
-- Snapshot generation and agent coordination utilities
+This module provides utilities for generating various structured prompts
+for agent coordination, feedback, and session transitions. It also includes
+text processing functions like detick/retick for ensuring clean codeblock
+formatting in agent communications.
 """
 
 import re

@@ -96,7 +96,7 @@ def create_agent_transition_checklist() -> str:
     Generate a checklist for agent transition procedures.
 
     Returns:
-        Formatted handoff checklist string.
+        Formatted agent transition checklist string.
     """
     timestamp = get_current_timestamp()
 

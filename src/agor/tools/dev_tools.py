@@ -72,6 +72,54 @@ except ImportError:
 
     git_manager = FallbackGitManager()
 
+_SNAPSHOT_GUIDELINES_TEXT = """\
+# 📸 AGOR Snapshot Guidelines Summary
+Core Purpose: Ensure seamless agent transitions and context preservation.
+---
+Key Functions for Snapshots & Handoffs:
+  - `create_development_snapshot(title, context, next_steps)`: Creates the main snapshot document.
+  - `generate_session_end_prompt(task_description, brief_context)`: Generates the text prompt for handoff.
+  - `generate_project_handoff_prompt(...)`: Generates a more detailed project-level handoff prompt.
+  - `quick_commit_and_push(message, emoji)`: Useful for saving work before/after snapshot.
+  - `commit_memory_to_branch(content, memory_type, agent_id)`: For saving snapshot content to memory.
+---
+Critical Formatting Requirements for Handoff Prompts:
+  - Generated text (e.g., from `generate_session_end_prompt`) MUST be processed by `detick_content()`.
+  - The processed text MUST then be wrapped in a single codeblock (typically ```markdown ... ``` or using `` for AGOR output functions).
+  - Refer to `generate_formatted_output()` and its variants (`generate_pr_description_output`, `generate_handoff_prompt_output`) for the standard way to produce final formatted output.
+---
+Storage:
+  - Snapshots are stored in `.agor/snapshots/` (or agent-specific subdirectories like `.agor/agents/{agent_id}/snapshots/`).
+  - This directory is located on the relevant memory branch (e.g., `agor/mem/main`, `agor/mem/agent_...`), NOT the working branch.
+---
+REMEMBER: Always end your session with a snapshot and a correctly formatted handoff prompt.
+Refer to `SNAPSHOT_SYSTEM_GUIDE.md` for full details or call `get_available_functions_reference()`.
+"""
+
+_MEMORY_ARCH_SUMMARY_TEXT = """\
+# 🧠 AGOR Memory Architecture Summary
+Fundamental Rule: `.agor/` files ONLY exist on memory branches, NEVER on working branches.
+---
+Memory Branch Naming:
+  - Main project memory: `agor/mem/main`
+  - Agent-specific memory (older approach): `agor/mem/agent_...` (less common now)
+  - Snapshots and agent-specific work are often in subdirectories on `agor/mem/main` (e.g., `.agor/agents/AGENT_ID/snapshots/`)
+---
+Interpreting Dev Tool Messages:
+  - If a tool says 'snapshot committed to memory branch agor/mem/main':
+    The snapshot IS on `agor/mem/main` in a path like `.agor/snapshots/...` or `.agor/agents/AGENT_ID/snapshots/...`
+    It will NOT be directly visible on your current working branch's file system.
+  - Files in `.agor/` are generally ignored by the project's main `.gitignore` for working branches.
+---
+Key Dev Tools for Memory Interaction:
+  - `auto_commit_memory(content, memory_type, agent_id)`: Commits content to the standard memory branch (`agor/mem/main`).
+  - `commit_to_memory_branch(file_content, file_name, branch_name, commit_message)`: More general function for committing to specific memory branches/paths.
+  - `initialize_agent_workspace()`: Sets up agent-specific directories on the memory branch.
+  - `create_development_snapshot()`: Often handles committing its own output to the correct memory location.
+---
+Key Takeaway: Trust the dev tools. Memory operations are designed to happen on separate branches to keep your working branch clean.
+Refer to `AGOR_INSTRUCTIONS.md` (Memory System Understanding) for more details.
+"""
 
 # Main API Functions - Core Interface
 # ===================================
@@ -152,68 +200,26 @@ def commit_memory_to_branch(
     return auto_commit_memory(content, memory_type, agent_id)
 
 
-def get_current_timestamp_formatted() -> str:
-    """Get formatted timestamp wrapper."""
-    return get_current_timestamp()
+def get_snapshot_guidelines_summary(print_output: bool = True) -> str:
+    """
+    Returns a summary of AGOR snapshot guidelines and optionally prints it.
+    Content is sourced from a module-level constant.
+    """
+    summary_string = _SNAPSHOT_GUIDELINES_TEXT
+    if print_output:
+        print(summary_string)
+    return summary_string
 
 
-def get_snapshot_guidelines_summary() -> str:
-    """Prints a summary of AGOR snapshot guidelines for agents."""
-    output = [
-        "# 📸 AGOR Snapshot Guidelines Summary",
-        "Core Purpose: Ensure seamless agent transitions and context preservation.",
-        "---",
-        "Key Functions for Snapshots & Handoffs:",
-        "  - `create_development_snapshot(title, context, next_steps)`: Creates the main snapshot document.",
-        "  - `generate_session_end_prompt(task_description, brief_context)`: Generates the text prompt for handoff.",
-        "  - `generate_project_handoff_prompt(...)`: Generates a more detailed project-level handoff prompt.",
-        "  - `quick_commit_and_push(message, emoji)`: Useful for saving work before/after snapshot.",
-        "  - `commit_memory_to_branch(content, memory_type, agent_id)`: For saving snapshot content to memory.",
-        "---",
-        "Critical Formatting Requirements for Handoff Prompts:",
-        "  - Generated text (e.g., from `generate_session_end_prompt`) MUST be processed by `detick_content()`.",
-        "  - The processed text MUST then be wrapped in a single codeblock (typically ```markdown ... ``` or using `` for AGOR output functions).",
-        "  - Refer to `generate_formatted_output()` and its variants (`generate_pr_description_output`, `generate_handoff_prompt_output`) for the standard way to produce final formatted output.",
-        "---",
-        "Storage:",
-        "  - Snapshots are stored in `.agor/snapshots/` (or agent-specific subdirectories like `.agor/agents/{agent_id}/snapshots/`).",
-        "  - This directory is located on the relevant memory branch (e.g., `agor/mem/main`, `agor/mem/agent_...`), NOT the working branch.",
-        "---",
-        "REMEMBER: Always end your session with a snapshot and a correctly formatted handoff prompt.",
-        "Refer to `SNAPSHOT_SYSTEM_GUIDE.md` for full details or call `get_available_functions_reference()`."
-    ]
-    print("\n".join(output))
-    return "\n".join(output)
-
-
-def display_memory_architecture_info() -> str:
-    """Prints a summary of AGOR's memory architecture."""
-    output = [
-        "# 🧠 AGOR Memory Architecture Summary",
-        "Fundamental Rule: `.agor/` files ONLY exist on memory branches, NEVER on working branches.",
-        "---",
-        "Memory Branch Naming:",
-        "  - Main project memory: `agor/mem/main`",
-        "  - Agent-specific memory (older approach): `agor/mem/agent_...` (less common now)",
-        "  - Snapshots and agent-specific work are often in subdirectories on `agor/mem/main` (e.g., `.agor/agents/AGENT_ID/snapshots/`)",
-        "---",
-        "Interpreting Dev Tool Messages:",
-        "  - If a tool says 'snapshot committed to memory branch agor/mem/main':",
-        "    The snapshot IS on `agor/mem/main` in a path like `.agor/snapshots/...` or `.agor/agents/AGENT_ID/snapshots/...`",
-        "    It will NOT be directly visible on your current working branch's file system.",
-        "  - Files in `.agor/` are generally ignored by the project's main `.gitignore` for working branches.",
-        "---",
-        "Key Dev Tools for Memory Interaction:",
-        "  - `auto_commit_memory(content, memory_type, agent_id)`: Commits content to the standard memory branch (`agor/mem/main`).",
-        "  - `commit_to_memory_branch(file_content, file_name, branch_name, commit_message)`: More general function for committing to specific memory branches/paths.",
-        "  - `initialize_agent_workspace()`: Sets up agent-specific directories on the memory branch.",
-        "  - `create_development_snapshot()`: Often handles committing its own output to the correct memory location.",
-        "---",
-        "Key Takeaway: Trust the dev tools. Memory operations are designed to happen on separate branches to keep your working branch clean.",
-        "Refer to `AGOR_INSTRUCTIONS.md` (Memory System Understanding) for more details."
-    ]
-    print("\n".join(output))
-    return "\n".join(output)
+def display_memory_architecture_info(print_output: bool = True) -> str:
+    """
+    Returns a summary of AGOR's memory architecture and optionally prints it.
+    Content is sourced from a module-level constant.
+    """
+    summary_string = _MEMORY_ARCH_SUMMARY_TEXT
+    if print_output:
+        print(summary_string)
+    return summary_string
 
 
 def process_content_for_codeblock(content: str) -> str:

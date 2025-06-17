@@ -8,6 +8,7 @@ All functions use absolute imports for better reliability.
 """
 
 from pathlib import Path
+from functools import lru_cache
 
 from agor.tools.dev_testing import detect_environment, test_tooling
 
@@ -264,12 +265,13 @@ def generate_meta_feedback_hotkey(
     If no feedback content is provided, a default prompt is used. Returns an error message if feedback generation fails.
     """
     try:
-        from agor.tools.agent_prompts import generate_meta_feedback
+        # Lazy load generate_meta_feedback using lru_cache
+        generate_meta_feedback_func = _get_generate_meta_feedback_func()
 
         if not feedback_content:
             feedback_content = "Please provide specific feedback about AGOR functionality, workflow, or user experience."
 
-        return generate_meta_feedback(
+        return generate_meta_feedback_func(
             feedback_type=feedback_type,
             feedback_content=feedback_content,
             severity=severity,
@@ -278,6 +280,17 @@ def generate_meta_feedback_hotkey(
     except Exception as e:
         return f"❌ Failed to generate meta feedback: {e}"
 
+@lru_cache(maxsize=1)
+def _get_generate_meta_feedback_func():
+    """Helper function to lazy-load and cache the generate_meta_feedback function."""
+    try:
+        from agor.tools.agent_prompts import generate_meta_feedback
+        return generate_meta_feedback
+    except ImportError as e:
+        # This makes the function return a function that will raise the import error if called
+        def _raiser():
+            raise ImportError(f"Could not import generate_meta_feedback: {e}")
+        return _raiser
 
 def system_health_check_hotkey() -> str:
     """

@@ -238,11 +238,12 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 # Test all development utilities
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
+from agor.tools.dev_tools import test_all_tools
+from agor.tools.git_operations import get_current_timestamp # Import directly
 
 # Verify tooling works
 test_all_tools()
-print(f"Session started at: {get_current_timestamp_formatted()}")
+print(f"Session started at: {get_current_timestamp()}") # Use direct import
 ```
 
 **Why this is essential:**
