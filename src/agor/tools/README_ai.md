@@ -10,7 +10,31 @@ Welcome to AGOR v0.4.4. The first step is to select your operational role and in
 
 ### STEP 1: ENVIRONMENT DETECTION & DEPENDENCY SETUP
 
-First, detect your environment and install required dependencies:
+**CRITICAL: Choose the correct initialization method based on your environment**
+
+**Option A: External Project Integration (Augment Local Agents, etc.)**
+
+If you are working on a project where AGOR is installed separately:
+
+```python
+# Use external integration system (handles path detection and fallbacks)
+from agor.tools.external_integration import get_agor_tools
+
+# Initialize with automatic detection
+tools = get_agor_tools()
+tools.print_status()  # Check what was detected
+
+# Test functionality
+tools.test_all_tools()
+
+# Get environment info
+status = tools.get_workspace_status()
+print(f"Integration Status: {status}")
+```
+
+**Option B: AGOR Development Environment**
+
+If you are working ON AGOR itself or have direct access:
 
 ```python
 # Detect environment and install dependencies
@@ -30,6 +54,8 @@ install_cmd = get_agent_dependency_install_commands()
 print("Installing dependencies...")
 subprocess.run(install_cmd, shell=True)
 ```
+
+**How to Choose**: If you get import errors with Option B, use Option A. The external integration system provides automatic fallbacks and handles path resolution issues.
 
 ### STEP 2: ROLE SELECTION
 
