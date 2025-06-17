@@ -471,6 +471,17 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
         # Expand user home directory and resolve to absolute path
         # Make strict=False explicit for version-agnostic behavior
         resolved_path = Path(custom_path).expanduser().resolve(strict=False)
+
+        # Check if the custom path exists and warn if it doesn't
+        if not resolved_path.exists():
+            import warnings
+            warnings.warn(
+                f"Custom AGOR path '{resolved_path}' does not exist. "
+                f"This may lead to file-not-found errors when accessing AGOR documentation.",
+                UserWarning,
+                stacklevel=2
+            )
+
         base_path = resolved_path.as_posix()
     elif project_type == 'agor_development':
         # Convert to absolute POSIX path for consistency with other branches
@@ -549,6 +560,7 @@ def generate_deployment_prompt(platform: Optional[str] = None,
                                  project_type (Optional[str]): Project type. If None, the project type is auto-detected.
                                  custom_base_path (Optional[str]): Custom base path for AGOR installation, used if custom_paths is not provided.
                                  custom_paths (Optional[Dict[str, str]]): Dictionary of custom path overrides for AGOR documentation files.
+                                     Keys with None values will use default paths; keys with empty strings will be treated as explicit empty paths.
                              
                              Returns:
                                  str: A fully formatted deployment prompt tailored to the current environment and configuration.
@@ -572,7 +584,13 @@ def generate_deployment_prompt(platform: Optional[str] = None,
         unknown = set(custom_paths) - valid_keys
         if unknown:
             raise KeyError(f"Unknown custom path keys: {', '.join(sorted(unknown))}")
-        paths = {**default_paths, **{k: v for k, v in custom_paths.items() if v is not None}}
+        # Merge custom paths with defaults, preserving None values as defaults
+        # This allows callers to explicitly set None to use default paths for specific keys
+        paths = {**default_paths}
+        for key, value in custom_paths.items():
+            if value is not None:
+                paths[key] = value
+            # If value is None, keep the default path (no action needed)
     else:
         paths = default_paths
     

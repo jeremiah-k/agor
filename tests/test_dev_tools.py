@@ -14,22 +14,16 @@ Testing Framework: pytest (as specified in pyproject.toml)
 """
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock, call
 import os
 import sys
-import tempfile
-import shutil
 from pathlib import Path
-from datetime import datetime, timedelta
-import subprocess
 
 # Add the src directory to Python path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-# Import the dev_tools module - adjust import path as needed
+# Import the dev_tools module using module import to avoid namespace pollution
 try:
-    from agor.tools.dev_tools import *
-    from agor.tools import dev_tools
+    import agor.tools.dev_tools as dev_tools
 except ImportError:
     # Fallback import path
     import dev_tools
@@ -119,7 +113,7 @@ class TestMainAPIFunctions:
     @patch('agor.tools.dev_tools.create_snapshot')
     def test_create_development_snapshot_success(self, mock_create_snapshot, sample_snapshot_data):
         mock_create_snapshot.return_value = True
-        result = create_development_snapshot(
+        result = dev_tools.create_development_snapshot(
             title=sample_snapshot_data["title"],
             context=sample_snapshot_data["context"],
             next_steps=sample_snapshot_data["next_steps"],
@@ -137,7 +131,7 @@ class TestMainAPIFunctions:
     @patch('agor.tools.dev_tools.create_snapshot')
     def test_create_development_snapshot_failure(self, mock_create_snapshot, sample_snapshot_data):
         mock_create_snapshot.return_value = False
-        result = create_development_snapshot(
+        result = dev_tools.create_development_snapshot(
             title=sample_snapshot_data["title"],
             context=sample_snapshot_data["context"]
         )
@@ -147,14 +141,14 @@ class TestMainAPIFunctions:
     def test_create_development_snapshot_with_empty_title(self):
         with patch('agor.tools.dev_tools.create_snapshot') as mock_create:
             mock_create.return_value = True
-            _ = create_development_snapshot(title="", context="Test context")
+            _ = dev_tools.create_development_snapshot(title="", context="Test context")
             mock_create.assert_called_once_with("", "Test context", None, None, None)
     
     @patch('agor.tools.dev_tools.create_seamless_handoff')
     def test_generate_seamless_agent_handoff_success(self, mock_handoff, sample_handoff_data):
         expected = ("handoff_content", "formatted_prompt")
         mock_handoff.return_value = expected
-        result = generate_seamless_agent_handoff(
+        result = dev_tools.generate_seamless_agent_handoff(
             task_description=sample_handoff_data["task_description"],
             work_completed=sample_handoff_data["work_completed"],
             next_steps=sample_handoff_data["next_steps"],
@@ -175,14 +169,14 @@ class TestMainAPIFunctions:
     @patch('agor.tools.dev_tools.generate_mandatory_session_end_prompt')
     def test_generate_session_end_prompt_with_defaults(self, mock_prompt):
         mock_prompt.return_value = "Session completed successfully"
-        result = generate_session_end_prompt()
+        result = dev_tools.generate_session_end_prompt()
         assert result == "Session completed successfully"
         mock_prompt.assert_called_once_with("Session completion", "Work session completed")
-    
+
     @patch('agor.tools.dev_tools.generate_mandatory_session_end_prompt')
     def test_generate_session_end_prompt_with_custom_params(self, mock_prompt):
         mock_prompt.return_value = "Custom session end prompt"
-        result = generate_session_end_prompt(
+        result = dev_tools.generate_session_end_prompt(
             task_description="Custom task completed",
             brief_context="Custom context provided"
         )
@@ -218,21 +212,21 @@ class TestConvenienceFunctions:
     @patch('agor.tools.dev_tools.quick_commit_push')
     def test_quick_commit_and_push_success(self, mock_commit_push):
         mock_commit_push.return_value = True
-        result = quick_commit_and_push("Test commit message", "🚀")
+        result = dev_tools.quick_commit_and_push("Test commit message", "🚀")
         assert result is True
         mock_commit_push.assert_called_once_with("Test commit message", "🚀")
-    
+
     @patch('agor.tools.dev_tools.quick_commit_push')
     def test_quick_commit_and_push_with_default_emoji(self, mock_commit_push):
         mock_commit_push.return_value = True
-        result = quick_commit_and_push("Test commit")
+        result = dev_tools.quick_commit_and_push("Test commit")
         assert result is True
         mock_commit_push.assert_called_once_with("Test commit", "🔧")
-    
+
     @patch('agor.tools.dev_tools.quick_commit_push')
     def test_quick_commit_and_push_failure(self, mock_commit_push):
         mock_commit_push.return_value = False
-        result = quick_commit_and_push("Failed commit")
+        result = dev_tools.quick_commit_and_push("Failed commit")
         assert result is False
         mock_commit_push.assert_called_once()
     

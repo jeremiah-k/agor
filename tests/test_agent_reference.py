@@ -362,8 +362,6 @@ class TestPlatformInstructions(unittest.TestCase):
         self.assertNotIn('Unknown Platform', instructions)
 
 
-if __name__ == '__main__':
-    unittest.main()
 class TestDetectionEdgeCases(unittest.TestCase):
     """Test edge cases and error conditions for detection functions."""
 
@@ -670,7 +668,7 @@ class TestGuideContentValidation(unittest.TestCase):
                 decoded = encoded.decode('utf-8')
                 self.assertEqual(guide, decoded)
             except UnicodeError:
-                self.fail(f"Guide contains problematic Unicode characters")
+                self.fail("Guide contains problematic Unicode characters")
 
 
 class TestIntegrationScenarios(unittest.TestCase):
@@ -782,3 +780,7 @@ class TestErrorHandlingAndRobustness(unittest.TestCase):
         except IOError:
             # If error propagates, that's also valid behavior
             pass
+
+
+if __name__ == '__main__':
+    unittest.main()

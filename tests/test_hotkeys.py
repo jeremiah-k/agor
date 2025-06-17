@@ -4,14 +4,12 @@ Tests HotkeyManager class and global hotkey functions using pytest framework.
 """
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock, call
 import threading
-import time
 import sys
 import os
 
 # Add the source directory to Python path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'git', 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from agor.tools.hotkeys import (
     HotkeyManager,
