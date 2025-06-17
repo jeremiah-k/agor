@@ -6,7 +6,7 @@ Extracted to reduce cyclomatic complexity in the main wrapper script.
 """
 
 from typing import Dict, Callable, Any
-from .external_integration import get_agor_tools
+from agor.tools.external_integration import get_agor_tools
 
 
 class CommandHandlers:

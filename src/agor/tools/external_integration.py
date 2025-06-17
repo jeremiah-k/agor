@@ -20,9 +20,11 @@ Usage:
     tools.create_development_snapshot("Title", "Context")
 """
 
+import os
 import sys
 import importlib.util
 import logging
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Optional, Dict, Any, Callable
 
@@ -122,31 +124,39 @@ class AgorExternalTools:
         except Exception:
             pass
     
+    @contextmanager
+    def _temp_sys_path(self, path: str):
+        """Temporarily add path to sys.path."""
+        sys.path.insert(0, path)
+        try:
+            yield
+        finally:
+            if path in sys.path:
+                sys.path.remove(path)
+
     def _try_load_from_path(self, path: Path) -> bool:
         """Try to load AGOR tools from a specific path."""
         try:
             dev_tools_path = path / "src" / "agor" / "tools" / "dev_tools.py"
             if not dev_tools_path.exists():
                 return False
-            
-            # Add path to sys.path temporarily
-            src_path = str(path / "src")
-            if src_path not in sys.path:
-                sys.path.insert(0, src_path)
-            
-            # Try to import dev_tools
-            spec = importlib.util.spec_from_file_location("agor.tools.dev_tools", dev_tools_path)
-            if spec is None:
-                return False
 
-            dev_tools_module = importlib.util.module_from_spec(spec)
-            # Insert module into sys.modules to prevent duplicate reloads
-            sys.modules["agor.tools.dev_tools"] = dev_tools_module
-            spec.loader.exec_module(dev_tools_module)
-            
-            self.dev_tools = dev_tools_module
-            return True
-            
+            # Add path to sys.path temporarily with context manager
+            src_path = str(path / "src")
+            with self._temp_sys_path(src_path):
+                # Try to import dev_tools
+                spec = importlib.util.spec_from_file_location("agor.tools.dev_tools", dev_tools_path)
+                if spec is None:
+                    return False
+
+                dev_tools_module = importlib.util.module_from_spec(spec)
+                # Insert module into sys.modules to prevent duplicate reloads
+                sys.modules["agor.tools.dev_tools"] = dev_tools_module
+                spec.loader.exec_module(dev_tools_module)
+
+                self.dev_tools = dev_tools_module
+                return True
+
         except Exception as e:
             self.logger.debug(f"Failed to load AGOR from {path}: {e}")
             return False
@@ -211,25 +221,44 @@ class AgorExternalTools:
         def fallback(message: str, emoji: str = "🔧") -> bool:
             import subprocess
             try:
-                # Basic git operations
-                subprocess.run(["git", "add", "."], check=True)
+                # Environment to disable interactive prompts
+                git_env = {
+                    **dict(os.environ),
+                    'GIT_TERMINAL_PROMPT': '0',
+                    'GIT_EDITOR': 'true',  # Use 'true' as no-op editor
+                }
+
+                # Basic git operations with timeout
+                subprocess.run(["git", "add", "."],
+                             check=True, timeout=30, env=git_env)
 
                 # Try to commit - handle empty commit scenario
                 try:
-                    subprocess.run(["git", "commit", "-m", f"{emoji} {message}"], check=True)
+                    subprocess.run([
+                        "git", "commit",
+                        "--no-edit",      # Don't open editor
+                        "--no-gpg-sign",  # Don't prompt for GPG signing
+                        "-m", f"{emoji} {message}"
+                    ], check=True, timeout=30, env=git_env)
                 except subprocess.CalledProcessError as e:
                     if e.returncode == 1:
                         # Check if it's a "nothing to commit" scenario
                         result = subprocess.run(["git", "status", "--porcelain"],
-                                              capture_output=True, text=True)
+                                              capture_output=True, text=True,
+                                              timeout=10, env=git_env)
                         if not result.stdout.strip():
                             self.logger.info(f"No changes to commit: {emoji} {message}")
                             return True  # Success - nothing to commit is not an error
                     raise  # Re-raise if it's a different error
 
-                subprocess.run(["git", "push"], check=True)
+                subprocess.run(["git", "push"],
+                             check=True, timeout=60, env=git_env)
                 self.logger.info(f"Fallback commit and push: {emoji} {message}")
                 return True
+
+            except subprocess.TimeoutExpired as e:
+                self.logger.error(f"Git operation timed out: {e}")
+                return False
             except subprocess.CalledProcessError as e:
                 self.logger.error(f"Fallback git operation failed: {e}")
                 return False
