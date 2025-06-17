@@ -5,7 +5,7 @@ Tests the programmatic documentation and deployment prompt generation functions.
 """
 
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from pathlib import Path
 import tempfile
 import os
@@ -45,22 +45,22 @@ class TestAgentEducation(unittest.TestCase):
 
     def test_detect_project_type_agor_development(self):
         """Test project type detection for AGOR development."""
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir, \
+             patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
             # Create AGOR project structure
             agor_dir = Path(temp_dir) / 'src' / 'agor' / 'tools'
             agor_dir.mkdir(parents=True)
-            
-            with patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
-                project_type = detect_project_type()
-                self.assertEqual(project_type, 'agor_development')
+
+            project_type = detect_project_type()
+            self.assertEqual(project_type, 'agor_development')
 
     def test_detect_project_type_external(self):
         """Test project type detection for external project."""
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir, \
+             patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
             # Create non-AGOR project structure
-            with patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
-                project_type = detect_project_type()
-                self.assertEqual(project_type, 'external_project')
+            project_type = detect_project_type()
+            self.assertEqual(project_type, 'external_project')
 
     def test_resolve_agor_paths_development(self):
         """Test path resolution for AGOR development."""
@@ -72,12 +72,12 @@ class TestAgentEducation(unittest.TestCase):
 
     def test_resolve_agor_paths_external(self):
         """Test path resolution for external project."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            with patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
-                paths = resolve_agor_paths('external_project')
+        with tempfile.TemporaryDirectory() as temp_dir, \
+             patch('pathlib.Path.cwd', return_value=Path(temp_dir)):
+            paths = resolve_agor_paths('external_project')
 
-                # Should fallback to relative path or find existing AGOR installation
-                self.assertTrue(paths['tools_path'].endswith('agor/tools'))
+            # Should fallback to relative path or find existing AGOR installation
+            self.assertTrue(paths['tools_path'].endswith('agor/tools'))
 
     def test_resolve_agor_paths_custom(self):
         """Test path resolution with custom path."""

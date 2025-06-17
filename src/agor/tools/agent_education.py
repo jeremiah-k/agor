@@ -10,9 +10,8 @@ access to get complete setup instructions, requirements, and guidance.
 """
 
 import os
-import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional
 
 
 def detect_platform() -> str:
@@ -25,7 +24,7 @@ def detect_platform() -> str:
     # Check for AugmentCode environment indicators
     if os.environ.get('AUGMENT_LOCAL'):
         return 'augment_local'
-    elif os.environ.get('AUGMENT_REMOTE'):
+    if os.environ.get('AUGMENT_REMOTE'):
         return 'augment_remote'
     
     # Check for other platform indicators
@@ -202,10 +201,7 @@ def generate_deployment_prompt(platform: Optional[str] = None,
         project_type = detect_project_type()
     
     # Resolve paths
-    if custom_paths:
-        paths = custom_paths
-    else:
-        paths = resolve_agor_paths(project_type)
+    paths = custom_paths if custom_paths else resolve_agor_paths(project_type)
     
     # Get platform-specific instructions
     platform_instructions = get_platform_specific_instructions(platform, project_type)

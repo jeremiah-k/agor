@@ -23,7 +23,7 @@ MANDATORY: Read these files from workspace sources before starting any developme
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
 
-Read as much AGOR documentation as you need to maintain a good workflow. Analyze the snapshot system and its templates. Understand memory branches and how they operate.
+Read as much AGOR documentation as necessary to maintain an effective workflow. Analyze the snapshot system and its templates. Understand memory branches and how they operate.
 ```
 
 ### Step 2: Role Selection

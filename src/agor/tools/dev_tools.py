@@ -15,6 +15,7 @@ It imports functionality from specialized modules for better organization:
 Provides a clean API interface while keeping individual modules under 500 LOC.
 """
 
+import textwrap
 from typing import Dict, List, Tuple
 
 from agor.tools.agent_prompts import detick_content, retick_content
@@ -56,12 +57,8 @@ from agor.tools.snapshots import (
     generate_agent_handoff_prompt,
     generate_mandatory_session_end_prompt,
 )
-from agor.tools.agent_education import (
-    generate_deployment_prompt,
-    get_memory_branch_guide,
-    get_coordination_guide,
-    get_dev_tools_reference,
-)
+# Note: agent_education functions available via direct import
+# from agor.tools.agent_education import function_name
 from agor.utils import sanitize_slug
 
 # Handle imports for both installed and development environments
@@ -1505,8 +1502,8 @@ def get_agor_initialization_guide() -> str:
     Returns:
         Complete initialization guide as formatted string
     """
-    guide = """
-🚀 AGOR INITIALIZATION GUIDE FOR AGENTS
+    guide = textwrap.dedent("""
+        🚀 AGOR INITIALIZATION GUIDE FOR AGENTS
 
 ═══════════════════════════════════════════════════════════════════
 
@@ -1545,9 +1542,9 @@ At session end, be ready to provide (each in single codeblocks):
 📋 STEP 7: TEST YOUR SETUP
 Run test_all_tools() to verify everything works correctly.
 
-═══════════════════════════════════════════════════════════════════
-✅ INITIALIZATION COMPLETE - You are ready to use AGOR effectively
-"""
+        ═══════════════════════════════════════════════════════════════════
+        ✅ INITIALIZATION COMPLETE - You are ready to use AGOR effectively
+        """)
     return guide
 
 
@@ -1557,8 +1554,8 @@ def get_snapshot_requirements() -> str:
 
     Returns critical snapshot information that agents must follow.
     """
-    requirements = """
-📸 SNAPSHOT REQUIREMENTS - CRITICAL FOR ALL AGENTS
+    requirements = textwrap.dedent("""
+        📸 SNAPSHOT REQUIREMENTS - CRITICAL FOR ALL AGENTS
 
 ═══════════════════════════════════════════════════════════════════
 
@@ -1592,9 +1589,9 @@ def get_snapshot_requirements() -> str:
 • Automatic formatting via dev tools
 • Include complete context for seamless handoffs
 
-═══════════════════════════════════════════════════════════════════
-✅ Follow these requirements for successful agent coordination
-"""
+        ═══════════════════════════════════════════════════════════════════
+        ✅ Follow these requirements for successful agent coordination
+        """)
     return requirements
 
 
