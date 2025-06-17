@@ -4,7 +4,7 @@
 
 ---
 
-## ✅ COMPLETED: Comprehensive Programmatic Agent Documentation System
+### 26. 2025-06-17 | v0.6.3 | Comprehensive Programmatic Agent Documentation System
 
 **Status**: Complete | **Version**: v0.6.3 | **Completed**: 2025-06-17
 
@@ -37,14 +37,14 @@
 
 ---
 
-## 📅 2025-06-17 | **NEW MODULE**: Agent Reference System (agent_reference.py)
+## 📅 2025-06-17 | **NEW MODULE**: Agent Reference System (src/agor/tools/agent_reference.py)
 
 ### 🎯 **Major Addition**: Programmatic Agent Documentation System
 - **Created**: `src/agor/tools/agent_reference.py` (750+ lines)
 - **Purpose**: Replace static markdown with dynamic, programmatic agent guidance
 - **Impact**: Agents take programmatic documentation more seriously than markdown files
 
-### 🚀 **Key Features Delivered**:
+### 🚀 **Key Features Delivered**
 - **8 Programmatic Documentation Functions** providing comprehensive agent guidance
 - **Import-driven AGOR detection** for pip installations and site-packages
 - **Extended platform support** including ChatGPT environment detection
@@ -53,7 +53,7 @@
 - **Performance optimized** with module-level constants and function caching
 - **Cross-platform compatible** with comprehensive error handling
 
-### 📊 **Technical Metrics**:
+### 📊 **Technical Metrics**
 - **24 Unit Tests**: Comprehensive test coverage across 5 test classes
 - **Performance**: 1000 function calls in 0.21ms (module-level constants)
 - **Compatibility**: Python 3.8+ with graceful fallbacks

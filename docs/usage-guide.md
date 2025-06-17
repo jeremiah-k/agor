@@ -224,9 +224,7 @@ agor bundle your-project -f tar.gz
 
 **Setup:**
 
-> **🚧 Instructions Coming Soon**
->
-> OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
+> **Note**: OpenAI Codex is a new software engineering agent that provides terminal access and direct code execution capabilities. AGOR integration instructions will be added once the platform is more widely available.
 >
 > **Expected Features:**
 >
