@@ -121,8 +121,8 @@ class AgorExternalTools:
                     self.agor_available = True
                     self.logger.info(f"AGOR tools loaded from site-packages: {agor_path}")
                     return
-        except Exception:
-            pass
+        except (ImportError, OSError) as e:
+            self.logger.debug(f"Site-packages probing failed: {e}")
     
     @contextmanager
     def _temp_sys_path(self, path: str):
@@ -258,6 +258,9 @@ class AgorExternalTools:
 
             except subprocess.TimeoutExpired as e:
                 self.logger.error(f"Git operation timed out: {e}")
+                return False
+            except FileNotFoundError as e:
+                self.logger.error(f"Git not found in PATH - please install Git: {e}")
                 return False
             except subprocess.CalledProcessError as e:
                 self.logger.error(f"Fallback git operation failed: {e}")
