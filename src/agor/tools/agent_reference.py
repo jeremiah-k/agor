@@ -71,16 +71,18 @@ def detect_project_type() -> str:
 def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> Dict[str, str]:
     """
     Resolve AGOR file paths based on project type and environment.
-    
+
     Args:
         project_type: 'agor_development' or 'external_project'
-        custom_path: Optional custom AGOR installation path
-        
+        custom_path: Optional custom AGOR installation path (supports ~ and relative paths)
+
     Returns:
         Dictionary with resolved paths for documentation files
     """
     if custom_path:
-        base_path = custom_path
+        # Expand user home directory and resolve to absolute path
+        resolved_path = Path(custom_path).expanduser().resolve()
+        base_path = resolved_path.as_posix()
     elif project_type == 'agor_development':
         base_path = 'src/agor'
     else:
@@ -90,16 +92,16 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
             '~/dev/agor/src/agor',
             '/opt/agor/src/agor'
         ]
-        
+
         for location in common_locations:
             expanded_path = Path(location).expanduser()
             if expanded_path.exists():
-                base_path = str(expanded_path)
+                base_path = expanded_path.as_posix()
                 break
         else:
             # Fallback to relative path assumption
             base_path = 'src/agor'
-    
+
     base = Path(base_path)
     return {
         'tools_path': (base / 'tools').as_posix(),
@@ -150,6 +152,35 @@ from agor.tools.dev_tools import create_development_snapshot, test_all_tools
 
 **Environment**: Full AGOR development environment with all tools available.
 **Memory**: Persistent User Guidelines and direct access to all AGOR documentation.
+            '''
+        },
+        'augment_remote': {
+            'external_project': '''
+### AugmentCode Remote Agent - External Project Setup
+
+**CRITICAL**: Use external integration system for projects outside AGOR:
+
+```python
+from agor.tools.external_integration import get_agor_tools
+tools = get_agor_tools()
+tools.print_status()  # Verify integration works
+```
+
+**Environment**: Remote execution environment with workspace access.
+**Memory**: Session-based memory, use snapshots for continuity.
+**Dependencies**: AGOR tools should be pre-installed in remote environment.
+            ''',
+            'agor_development': '''
+### AugmentCode Remote Agent - AGOR Development
+
+**Direct Access**: Working on AGOR itself, use direct imports:
+
+```python
+from agor.tools.dev_tools import create_development_snapshot, test_all_tools
+```
+
+**Environment**: Remote AGOR development environment with all tools available.
+**Memory**: Session-based memory, create comprehensive snapshots for handoffs.
             '''
         },
         'chatgpt': {
@@ -214,11 +245,7 @@ def generate_deployment_prompt(platform: Optional[str] = None,
     
     # Resolve paths with fallback to defaults
     default_paths = resolve_agor_paths(project_type)
-    if custom_paths:
-        # Merge defaults with custom paths, custom paths override defaults
-        paths = {**default_paths, **custom_paths}
-    else:
-        paths = default_paths
+    paths = {**default_paths, **custom_paths} if custom_paths else default_paths
     
     # Get platform-specific instructions
     platform_instructions = get_platform_specific_instructions(platform, project_type)

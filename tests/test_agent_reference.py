@@ -19,6 +19,9 @@ from agor.tools.agent_reference import (
     get_memory_branch_guide,
     get_coordination_guide,
     get_dev_tools_reference,
+    get_role_selection_guide,
+    get_external_integration_guide,
+    get_output_formatting_requirements,
 )
 
 
@@ -213,6 +216,49 @@ class TestAgentReference(unittest.TestCase):
         
         for section in required_sections:
             self.assertIn(section, prompt)
+
+    def test_get_role_selection_guide(self):
+        """Test role selection guide generation."""
+        guide = get_role_selection_guide()
+
+        self.assertIn('ROLE SELECTION GUIDE', guide)
+        self.assertIn('WORKER AGENT', guide)
+        self.assertIn('PROJECT COORDINATOR', guide)
+        self.assertIn('decision tree', guide.lower())
+        # Should be substantial content
+        self.assertGreater(len(guide), 200)
+
+    def test_get_external_integration_guide(self):
+        """Test external integration guide generation."""
+        guide = get_external_integration_guide()
+
+        self.assertIn('EXTERNAL PROJECT INTEGRATION', guide)
+        self.assertIn('get_agor_tools', guide)
+        self.assertIn('external integration', guide.lower())
+        self.assertIn('ModuleNotFoundError', guide)
+        # Should be substantial content
+        self.assertGreater(len(guide), 200)
+
+    def test_get_output_formatting_requirements(self):
+        """Test output formatting requirements generation."""
+        guide = get_output_formatting_requirements()
+
+        self.assertIn('OUTPUT FORMATTING REQUIREMENTS', guide)
+        self.assertIn('detick', guide)
+        self.assertIn('retick', guide)
+        self.assertIn('copy-paste workflow', guide.lower())
+        # Should be substantial content
+        self.assertGreater(len(guide), 200)
+
+    def test_augment_remote_platform_instructions(self):
+        """Test that augment_remote platform has proper instructions."""
+        instructions = get_platform_specific_instructions('augment_remote', 'external_project')
+
+        self.assertIn('AugmentCode Remote Agent', instructions)
+        self.assertIn('Remote execution environment', instructions)
+        self.assertIn('external integration system', instructions)
+        # Should not fall back to unknown platform
+        self.assertNotIn('Unknown Platform', instructions)
 
 
 if __name__ == '__main__':
