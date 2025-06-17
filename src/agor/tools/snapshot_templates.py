@@ -341,7 +341,12 @@ Please provide the snapshot document or its location, and I'll take over the wor
 
 
 def create_snapshot_directory() -> Path:
-    """Create snapshot directory structure in .agor/"""
+    """DEPRECATED: Creates local .agor directory which should NEVER be on main branch.
+
+    Use memory branches for all .agor content instead.
+    """
+    print("⚠️  WARNING: create_snapshot_directory() is deprecated")
+    print("⚠️  This prevents .agor files from being tracked on main branch")
 
     snapshot_dir = Path(".agor/snapshots")
     snapshot_dir.mkdir(parents=True, exist_ok=True)

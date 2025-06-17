@@ -145,8 +145,8 @@
 | **[code_exploration.py](code_exploration.py)**           | Codebase analysis                                                                               | bfs_find, grep, tree, analyze_file_structure                               | ~300   |
 | **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation                                                                              | Function reference, examples                                               | 179    |
 | **[snapshot_templates.py](snapshot_templates.py)**       | Snapshot generation                                                                             | generate_snapshot_document, git_context                                    | ~400   |
-| **[external_integration.py](external_integration.py)**   | **External project integration system** - addresses critical meta feedback                     | AgorExternalTools, get_agor_tools, automatic detection with fallbacks     | ~300   |
-| **[agor_wrapper.py](agor_wrapper.py)**                   | Command-line wrapper for external projects                                                     | CLI interface for AGOR tools when installed separately                     | ~200   |
+| **[external_integration.py](external_integration.py)**   | **External project integration system** - addresses critical meta feedback                      | AgorExternalTools, get_agor_tools, automatic detection with fallbacks      | ~300   |
+| **[agor_wrapper.py](agor_wrapper.py)**                   | Command-line wrapper for external projects                                                      | CLI interface for AGOR tools when installed separately                     | ~200   |
 
 | **[agent_prompt_templates.py](agent_prompt_templates.py)** | Role prompts | Specialized agent prompts | ~200 |
 | **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates | ~300 |

@@ -80,6 +80,7 @@ tools.create_development_snapshot("title", "context")
 AGOR provides powerful development functions. **Choose the correct access method**:
 
 **For External Projects (Recommended)**:
+
 ```python
 from agor.tools.external_integration import get_agor_tools
 tools = get_agor_tools()
@@ -95,6 +96,7 @@ tools.test_all_tools()
 ```
 
 **For AGOR Development Only**:
+
 ```python
 # Only use direct imports when working ON AGOR itself
 from agor.tools.dev_tools import (

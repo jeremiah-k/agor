@@ -71,12 +71,12 @@ def create_snapshot(
 ) -> bool:
     """Create development snapshot in agent's directory within main memory branch."""
     # Import all required functions at the top to avoid per-call overhead
-    from agor.utils import sanitize_slug
     from agor.tools.dev_tools import (
         generate_agent_id,
         get_agent_directory_path,
         get_main_memory_branch,
     )
+    from agor.utils import sanitize_slug
 
     timestamp_str = get_file_timestamp()
 
@@ -142,7 +142,7 @@ If you're picking up this work:
 **Remember**: Use quick_commit_push() for frequent commits during development.
 """
 
-    # Write snapshot file locally for reference
+    # Write snapshot file locally for reference (will be ignored by .gitignore)
     repo_path = Path.cwd()
     snapshot_path = repo_path / snapshot_file
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
