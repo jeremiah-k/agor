@@ -483,12 +483,14 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
         quick_commit_push,
         run_git_command,
     )
+    from agor.utils import sanitize_slug
 
     agent_id = generate_agent_id()
     agent_dir = get_agent_directory_path(agent_id)
 
     timestamp_str = get_file_timestamp()
-    snapshot_file = f"{agent_dir}snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
+    safe_title = sanitize_slug(title.lower())
+    snapshot_file = f"{agent_dir}snapshots/{timestamp_str}_{safe_title}_snapshot.md"
 
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])

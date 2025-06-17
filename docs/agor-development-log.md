@@ -197,6 +197,8 @@ Each entry includes:
 - `src/agor/tools/EXTERNAL_INTEGRATION_GUIDE.md` - Updated with all robustness improvements and troubleshooting
 - `src/agor/tools/AGOR_INSTRUCTIONS.md` - Enhanced with production deployment guidance
 - `docs/augment_user_guidelines.md` - Updated with final integration patterns and best practices
+- `pyproject.toml` - Version bump to 0.6.1
+- `src/agor/__init__.py` - Version bump to 0.6.1
 
 ### 22. 2025-06-16 | v0.6.0 | External Project Integration System - Critical Meta Feedback Resolution
 

@@ -152,7 +152,7 @@ class AgorExternalTools:
                 spec = importlib.util.spec_from_file_location(
                     "agor.tools.dev_tools", dev_tools_path
                 )
-                if spec is None:
+                if spec is None or spec.loader is None:
                     return False
 
                 dev_tools_module = importlib.util.module_from_spec(spec)
@@ -164,7 +164,7 @@ class AgorExternalTools:
                 return True
 
         except Exception as e:
-            self.logger.debug(f"Failed to load AGOR from {path}: {e}")
+            self.logger.exception(f"Failed to load AGOR from {path}: {e}")
             return False
 
     def _enable_fallback_mode(self):

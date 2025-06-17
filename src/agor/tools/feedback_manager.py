@@ -23,6 +23,15 @@ from agor.tools.template_engine import TemplateEngine
 # Define allowed severity levels
 ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
 
+# Feedback type to label mapping
+FEEDBACK_TYPE_LABELS = {
+    'bug': 'bug',
+    'enhancement': 'enhancement',
+    'workflow_issue': 'workflow',
+    'success_story': 'success',
+    'general': 'feedback'
+}
+
 
 @dataclass
 class FeedbackEntry:
@@ -231,6 +240,7 @@ class FeedbackManager:
             "severity": severity,
             "component": component,
             "timestamp": entry.timestamp,
+            "type_label": FEEDBACK_TYPE_LABELS.get(feedback_type, 'feedback'),
         }
 
         template = """# 🔄 AGOR Meta Feedback
