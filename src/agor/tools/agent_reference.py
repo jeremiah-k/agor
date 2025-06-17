@@ -102,12 +102,12 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
     
     base = Path(base_path)
     return {
-        'tools_path': str(base / 'tools'),
-        'readme_ai': str(base / 'tools' / 'README_ai.md'),
-        'instructions': str(base / 'tools' / 'AGOR_INSTRUCTIONS.md'),
-        'start_here': str(base / 'tools' / 'agent-start-here.md'),
-        'index': str(base / 'tools' / 'index.md'),
-        'external_guide': str(base / 'tools' / 'EXTERNAL_INTEGRATION_GUIDE.md')
+        'tools_path': (base / 'tools').as_posix(),
+        'readme_ai': (base / 'tools' / 'README_ai.md').as_posix(),
+        'instructions': (base / 'tools' / 'AGOR_INSTRUCTIONS.md').as_posix(),
+        'start_here': (base / 'tools' / 'agent-start-here.md').as_posix(),
+        'index': (base / 'tools' / 'index.md').as_posix(),
+        'external_guide': (base / 'tools' / 'EXTERNAL_INTEGRATION_GUIDE.md').as_posix()
     }
 
 
@@ -212,8 +212,13 @@ def generate_deployment_prompt(platform: Optional[str] = None,
     if project_type is None:
         project_type = detect_project_type()
     
-    # Resolve paths
-    paths = custom_paths if custom_paths else resolve_agor_paths(project_type)
+    # Resolve paths with fallback to defaults
+    default_paths = resolve_agor_paths(project_type)
+    if custom_paths:
+        # Merge defaults with custom paths, custom paths override defaults
+        paths = {**default_paths, **custom_paths}
+    else:
+        paths = default_paths
     
     # Get platform-specific instructions
     platform_instructions = get_platform_specific_instructions(platform, project_type)
