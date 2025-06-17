@@ -27,6 +27,13 @@ except ImportError:
         tomllib = None  # No TOML parser available
 
 
+# Constants for AGOR directory structure
+DEFAULT_MEMORY_BRANCH = "agor/mem/main"
+AGOR_DIR = ".agor"
+AGENTS_DIR = f"{AGOR_DIR}/agents"
+SNAPSHOTS_DIR = f"{AGOR_DIR}/snapshots"
+
+
 # Platform-specific instructions dictionary - defined once at module level
 PLATFORM_INSTRUCTIONS = {
     'augment_local': {

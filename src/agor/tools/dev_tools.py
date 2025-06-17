@@ -70,6 +70,7 @@ except ImportError:
 
     class FallbackGitManager:
         def get_git_binary(self):
+            """Get git binary path for operations."""
             import shutil
 
             git_path = shutil.which("git")
