@@ -68,7 +68,7 @@ def main():
         try:
             # Try to get the src directory (2 levels up from this file)
             script_path = Path(__file__).resolve()
-            if len(script_path.parents) >= 2:
+            if len(script_path.parents) > 2:
                 current_dir = script_path.parents[2]  # …/src
             else:
                 # Fallback: use the directory containing this script
@@ -80,75 +80,15 @@ def main():
         if current_dir.is_dir() and str(current_dir) not in sys.path:
             sys.path.insert(0, str(current_dir))
 
-        from agor.tools.external_integration import get_agor_tools
-        tools = get_agor_tools()
+        from agor.tools._commands import execute_command
+        return execute_command(args)
     except ImportError as e:
-        print(f"❌ Failed to import AGOR external integration: {e}")
+        print(f"❌ Failed to import AGOR command handlers: {e}")
         print("💡 Make sure AGOR is installed and accessible")
         print(f"💡 Current working directory: {Path.cwd()}")
         print(f"💡 Script location: {Path(__file__).parent}")
         return 1
-    
-    # Command dispatch table
-    def handle_status():
-        tools.print_status()
-        return 0
 
-    def handle_test():
-        success = tools.test_all_tools()
-        return 0 if success else 1
-
-    def handle_pr():
-        output = tools.generate_pr_description_output(args.content)
-        print(output)
-        return 0
-
-    def handle_handoff():
-        output = tools.generate_handoff_prompt_output(args.content)
-        print(output)
-        return 0
-
-    def handle_snapshot():
-        success = tools.create_development_snapshot(
-            args.title,
-            args.context,
-            args.agent_id
-        )
-        if success:
-            print(f"✅ Created snapshot: {args.title}")
-        else:
-            print(f"❌ Failed to create snapshot: {args.title}")
-        return 0 if success else 1
-
-    def handle_commit():
-        success = tools.quick_commit_and_push(args.message, args.emoji)
-        if success:
-            print(f"✅ Committed and pushed: {args.emoji} {args.message}")
-        else:
-            print(f"❌ Failed to commit: {args.message}")
-        return 0 if success else 1
-
-    # Dispatch table mapping commands to handlers
-    command_handlers = {
-        'status': handle_status,
-        'test': handle_test,
-        'pr': handle_pr,
-        'handoff': handle_handoff,
-        'snapshot': handle_snapshot,
-        'commit': handle_commit,
-    }
-
-    # Execute command using dispatch table
-    try:
-        handler = command_handlers.get(args.command)
-        if handler:
-            return handler()
-        print(f"❌ Unknown command: {args.command}")
-        return 1
-            
-    except Exception as e:
-        print(f"❌ Error executing command '{args.command}': {e}")
-        return 1
 
 
 def install_wrapper():

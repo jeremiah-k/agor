@@ -217,7 +217,6 @@ class AgorExternalTools:
                 # Try to commit - handle empty commit scenario
                 try:
                     subprocess.run(["git", "commit", "-m", f"{emoji} {message}"], check=True)
-                    commit_made = True
                 except subprocess.CalledProcessError as e:
                     if e.returncode == 1:
                         # Check if it's a "nothing to commit" scenario
