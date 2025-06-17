@@ -111,9 +111,16 @@ class TestPathResolution(unittest.TestCase):
         """Test path resolution for AGOR development."""
         paths = resolve_agor_paths('agor_development')
 
-        self.assertEqual(paths['tools_path'], 'src/agor/tools')
-        self.assertEqual(paths['readme_ai'], 'src/agor/tools/README_ai.md')
-        self.assertEqual(paths['instructions'], 'src/agor/tools/AGOR_INSTRUCTIONS.md')
+        # Should use absolute paths for consistency (fixed in latest version)
+        self.assertTrue(paths['tools_path'].endswith('/src/agor/tools'))
+        self.assertTrue(paths['readme_ai'].endswith('/src/agor/tools/README_ai.md'))
+        self.assertTrue(paths['instructions'].endswith('/src/agor/tools/AGOR_INSTRUCTIONS.md'))
+
+        # All paths should be absolute
+        from pathlib import Path
+        self.assertTrue(Path(paths['tools_path']).is_absolute())
+        self.assertTrue(Path(paths['readme_ai']).is_absolute())
+        self.assertTrue(Path(paths['instructions']).is_absolute())
 
     def test_resolve_agor_paths_external(self):
         """Test path resolution for external project."""

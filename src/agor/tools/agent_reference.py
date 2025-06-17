@@ -11,6 +11,7 @@ access to get complete setup instructions, requirements, and guidance.
 
 import functools
 import os
+import re
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Optional
@@ -122,6 +123,11 @@ from agor.tools.external_integration import get_agor_tools
 }
 
 
+def _env_flag(name: str) -> bool:
+    """Helper to check environment variable as boolean flag."""
+    return os.environ.get(name, '').lower() in {'1', 'true', 'yes'}
+
+
 def detect_platform() -> str:
     """
     Detect the current AI platform environment.
@@ -129,15 +135,15 @@ def detect_platform() -> str:
     Returns:
         Platform identifier: 'augment_local', 'augment_remote', or 'unknown'
     """
-    # Check for AugmentCode environment indicators
-    if os.environ.get('AUGMENT_LOCAL'):
+    # Check for AugmentCode environment indicators with tolerant boolean parsing
+    if _env_flag('AUGMENT_LOCAL'):
         return 'augment_local'
-    if os.environ.get('AUGMENT_REMOTE'):
+    if _env_flag('AUGMENT_REMOTE'):
         return 'augment_remote'
-    
+
     # Check for other platform indicators
     # This can be expanded as we identify platform-specific markers
-    
+
     # Default fallback
     return 'unknown'
 
@@ -179,10 +185,11 @@ def detect_project_type() -> str:
                         if project_name.lower() == 'agor':
                             return 'agor_development'
                 else:
-                    # Fallback to string search if no TOML parser available
+                    # Fallback to regex search if no TOML parser available
+                    # More tolerant of whitespace variations
                     with open(pyproject_file, 'r', encoding='utf-8') as f:
                         pyproject_content = f.read()
-                        if 'name = "agor"' in pyproject_content.lower():
+                        if re.search(r'^\s*name\s*=\s*[\'"]agor[\'"]', pyproject_content, re.MULTILINE | re.IGNORECASE):
                             return 'agor_development'
             except Exception:
                 # Continue checking other indicators if file read/parse fails
@@ -205,11 +212,12 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
     """
     if custom_path:
         # Expand user home directory and resolve to absolute path
-        # Path.resolve() works on non-existent paths with strict=False (default)
-        resolved_path = Path(custom_path).expanduser().resolve()
+        # Make strict=False explicit for version-agnostic behavior
+        resolved_path = Path(custom_path).expanduser().resolve(strict=False)
         base_path = resolved_path.as_posix()
     elif project_type == 'agor_development':
-        base_path = 'src/agor'
+        # Convert to absolute POSIX path for consistency with other branches
+        base_path = Path('src/agor').resolve(strict=False).as_posix()
     else:
         # External project - try common locations
         common_locations = [
@@ -225,7 +233,7 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
                 break
         else:
             # Fallback to relative path assumption, resolved to absolute
-            base_path = Path('src/agor').resolve().as_posix()
+            base_path = Path('src/agor').resolve(strict=False).as_posix()
 
     base = Path(base_path)
     return {
@@ -282,7 +290,11 @@ def generate_deployment_prompt(platform: Optional[str] = None,
     
     # Resolve paths with fallback to defaults
     default_paths = resolve_agor_paths(project_type, custom_base_path)
-    paths = {**default_paths, **custom_paths} if custom_paths else default_paths
+    # Guard against None values in custom_paths that would overwrite defaults
+    if custom_paths:
+        paths = {k: v for k, v in {**default_paths, **custom_paths}.items() if v is not None}
+    else:
+        paths = default_paths
     
     # Get platform-specific instructions
     platform_instructions = get_platform_specific_instructions(platform, project_type)
