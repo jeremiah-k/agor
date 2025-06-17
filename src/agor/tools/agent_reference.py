@@ -15,6 +15,103 @@ from datetime import datetime
 from typing import Dict, Optional
 
 
+# Platform-specific instructions dictionary - defined once at module level
+PLATFORM_INSTRUCTIONS = {
+    'augment_local': {
+        'external_project': '''
+### AugmentCode Local Agent - External Project Setup
+
+**CRITICAL**: Use external integration system for projects outside AGOR:
+
+```python
+from agor.tools.external_integration import get_agor_tools
+tools = get_agor_tools()
+tools.print_status()  # Verify integration works
+```
+
+**Environment**: Direct workspace access, persistent guidelines, full file system access.
+**Memory**: Enhanced through Augment system with persistent User Guidelines.
+**Dependencies**: May need venv setup for AGOR tools if using development functions.
+        ''',
+        'agor_development': '''
+### AugmentCode Local Agent - AGOR Development
+
+**Direct Access**: Working on AGOR itself, use direct imports:
+
+```python
+from agor.tools.dev_tools import create_development_snapshot, test_all_tools
+```
+
+**Environment**: Full AGOR development environment with all tools available.
+**Memory**: Persistent User Guidelines and direct access to all AGOR documentation.
+        '''
+    },
+    'augment_remote': {
+        'external_project': '''
+### AugmentCode Remote Agent - External Project Setup
+
+**CRITICAL**: Use external integration system for projects outside AGOR:
+
+```python
+from agor.tools.external_integration import get_agor_tools
+tools = get_agor_tools()
+tools.print_status()  # Verify integration works
+```
+
+**Environment**: Remote execution environment with workspace access.
+**Memory**: Session-based memory, use snapshots for continuity.
+**Dependencies**: AGOR tools should be pre-installed in remote environment.
+        ''',
+        'agor_development': '''
+### AugmentCode Remote Agent - AGOR Development
+
+**Direct Access**: Working on AGOR itself, use direct imports:
+
+```python
+from agor.tools.dev_tools import create_development_snapshot, test_all_tools
+```
+
+**Environment**: Remote AGOR development environment with all tools available.
+**Memory**: Session-based memory, create comprehensive snapshots for handoffs.
+        '''
+    },
+    'chatgpt': {
+        'external_project': '''
+### ChatGPT - External Project Setup
+
+**File Upload**: Upload AGOR documentation files to conversation.
+**Memory**: Limited to conversation context, use snapshots for continuity.
+**Integration**: Use external integration system if AGOR installed separately.
+        ''',
+        'agor_development': '''
+### ChatGPT - AGOR Development
+
+**File Upload**: Upload AGOR source files and documentation.
+**Memory**: Use conversation memory and file uploads for context.
+**Development**: Limited code execution, focus on analysis and planning.
+        '''
+    },
+    'unknown': {
+        'external_project': '''
+### Unknown Platform - External Project
+
+**Integration**: Try external integration system first:
+```python
+from agor.tools.external_integration import get_agor_tools
+```
+
+**Fallback**: If integration fails, request AGOR documentation upload or access.
+        ''',
+        'agor_development': '''
+### Unknown Platform - AGOR Development
+
+**Access**: Ensure access to AGOR source code and documentation.
+**Integration**: Use direct imports if working within AGOR environment.
+        '''
+    }
+}
+
+
 def detect_platform() -> str:
     """
     Detect the current AI platform environment.
@@ -116,111 +213,17 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
 def get_platform_specific_instructions(platform: str, project_type: str) -> str:
     """
     Get platform-specific setup instructions and quirks.
-    
+
     Args:
         platform: Platform identifier
         project_type: Project type identifier
-        
+
     Returns:
         Platform-specific instruction text
     """
-    instructions = {
-        'augment_local': {
-            'external_project': '''
-### AugmentCode Local Agent - External Project Setup
-
-**CRITICAL**: Use external integration system for projects outside AGOR:
-
-```python
-from agor.tools.external_integration import get_agor_tools
-tools = get_agor_tools()
-tools.print_status()  # Verify integration works
-```
-
-**Environment**: Direct workspace access, persistent guidelines, full file system access.
-**Memory**: Enhanced through Augment system with persistent User Guidelines.
-**Dependencies**: May need venv setup for AGOR tools if using development functions.
-            ''',
-            'agor_development': '''
-### AugmentCode Local Agent - AGOR Development
-
-**Direct Access**: Working on AGOR itself, use direct imports:
-
-```python
-from agor.tools.dev_tools import create_development_snapshot, test_all_tools
-```
-
-**Environment**: Full AGOR development environment with all tools available.
-**Memory**: Persistent User Guidelines and direct access to all AGOR documentation.
-            '''
-        },
-        'augment_remote': {
-            'external_project': '''
-### AugmentCode Remote Agent - External Project Setup
-
-**CRITICAL**: Use external integration system for projects outside AGOR:
-
-```python
-from agor.tools.external_integration import get_agor_tools
-tools = get_agor_tools()
-tools.print_status()  # Verify integration works
-```
-
-**Environment**: Remote execution environment with workspace access.
-**Memory**: Session-based memory, use snapshots for continuity.
-**Dependencies**: AGOR tools should be pre-installed in remote environment.
-            ''',
-            'agor_development': '''
-### AugmentCode Remote Agent - AGOR Development
-
-**Direct Access**: Working on AGOR itself, use direct imports:
-
-```python
-from agor.tools.dev_tools import create_development_snapshot, test_all_tools
-```
-
-**Environment**: Remote AGOR development environment with all tools available.
-**Memory**: Session-based memory, create comprehensive snapshots for handoffs.
-            '''
-        },
-        'chatgpt': {
-            'external_project': '''
-### ChatGPT - External Project Setup
-
-**File Upload**: Upload AGOR documentation files to conversation.
-**Memory**: Limited to conversation context, use snapshots for continuity.
-**Integration**: Use external integration system if AGOR installed separately.
-            ''',
-            'agor_development': '''
-### ChatGPT - AGOR Development
-
-**File Upload**: Upload AGOR source files and documentation.
-**Memory**: Use conversation memory and file uploads for context.
-**Development**: Limited code execution, focus on analysis and planning.
-            '''
-        },
-        'unknown': {
-            'external_project': '''
-### Unknown Platform - External Project
-
-**Integration**: Try external integration system first:
-```python
-from agor.tools.external_integration import get_agor_tools
-```
-
-**Fallback**: If integration fails, request AGOR documentation upload or access.
-            ''',
-            'agor_development': '''
-### Unknown Platform - AGOR Development
-
-**Access**: Ensure access to AGOR source code and documentation.
-**Integration**: Use direct imports if working within AGOR environment.
-            '''
-        }
-    }
-    
-    return instructions.get(platform, instructions['unknown']).get(project_type, 
-                                                                   instructions['unknown']['external_project'])
+    return PLATFORM_INSTRUCTIONS.get(platform, PLATFORM_INSTRUCTIONS['unknown']).get(
+        project_type, PLATFORM_INSTRUCTIONS['unknown']['external_project']
+    )
 
 
 def generate_deployment_prompt(platform: Optional[str] = None,
