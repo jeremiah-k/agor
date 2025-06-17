@@ -13,34 +13,66 @@ class CommandHandlers:
     """Command handlers for AGOR wrapper CLI."""
     
     def __init__(self, args: Any):
-        """Initialize command handlers with parsed arguments."""
+        """
+        Initializes the CommandHandlers instance with parsed command-line arguments.
+        
+        Args:
+            args: Parsed command-line arguments used to configure command handling.
+        """
         self.args = args
         self.tools = get_agor_tools()
     
     def handle_status(self) -> int:
-        """Handle status command."""
+        """
+        Displays the current status of AGOR tools and returns a success exit code.
+        
+        Returns:
+            int: Exit code 0 indicating successful execution.
+        """
         self.tools.print_status()
         return 0
     
     def handle_test(self) -> int:
-        """Handle test command."""
+        """
+        Runs all available tool tests and returns an exit code indicating success.
+        
+        Returns:
+            0 if all tests pass, 1 otherwise.
+        """
         success = self.tools.test_all_tools()
         return 0 if success else 1
     
     def handle_pr(self) -> int:
-        """Handle PR description generation command."""
+        """
+        Generates and prints a pull request description based on provided content.
+        
+        Returns:
+            int: Exit code 0 after successful output.
+        """
         output = self.tools.generate_pr_description_output(self.args.content)
         print(output)
         return 0
     
     def handle_handoff(self) -> int:
-        """Handle handoff prompt generation command."""
+        """
+        Generates and prints a handoff prompt output using the provided content.
+        
+        Returns:
+            int: Exit code 0 indicating successful execution.
+        """
         output = self.tools.generate_handoff_prompt_output(self.args.content)
         print(output)
         return 0
     
     def handle_snapshot(self) -> int:
-        """Handle snapshot creation command."""
+        """
+        Creates a development snapshot using the provided title, context, and agent ID.
+        
+        Prints a success message if the snapshot is created, or a failure message otherwise.
+        
+        Returns:
+            0 if the snapshot was created successfully, 1 otherwise.
+        """
         success = self.tools.create_development_snapshot(
             self.args.title, 
             self.args.context, 
@@ -53,7 +85,12 @@ class CommandHandlers:
         return 0 if success else 1
     
     def handle_commit(self) -> int:
-        """Handle commit and push command."""
+        """
+        Attempts to commit and push changes using the provided message and emoji.
+        
+        Returns:
+            0 if the commit and push were successful, 1 otherwise.
+        """
         success = self.tools.quick_commit_and_push(self.args.message, self.args.emoji)
         if success:
             print(f"✅ Committed and pushed: {self.args.emoji} {self.args.message}")
@@ -62,7 +99,11 @@ class CommandHandlers:
         return 0 if success else 1
     
     def get_dispatch_table(self) -> Dict[str, Callable[[], int]]:
-        """Get the command dispatch table."""
+        """
+        Returns a mapping of command names to their corresponding handler methods.
+        
+        Each key is a command string, and each value is a method that executes the command and returns an exit code.
+        """
         return {
             'status': self.handle_status,
             'test': self.handle_test,
@@ -75,13 +116,15 @@ class CommandHandlers:
 
 def execute_command(args: Any) -> int:
     """
-    Execute a command using the dispatch table.
+    Executes the specified CLI command using the appropriate handler.
+    
+    Initializes command handlers with the provided arguments, dispatches the command to its handler, and returns the corresponding exit code. Prints an error message and returns 1 if the command is unknown or if an exception occurs.
     
     Args:
-        args: Parsed command line arguments
-        
+        args: Parsed command-line arguments containing the command to execute.
+    
     Returns:
-        Exit code (0 for success, 1 for failure)
+        0 if the command executes successfully; 1 on failure or unknown command.
     """
     try:
         handlers = CommandHandlers(args)

@@ -39,11 +39,9 @@ class AgorExternalTools:
 
     def __init__(self, agor_path: Optional[str] = None):
         """
-        Initialize external AGOR tools integration.
-
-        Args:
-            agor_path: Optional explicit path to AGOR installation.
-                      If not provided, will attempt automatic detection.
+        Initializes the AGOR external tools integration, attempting to locate and load AGOR tools.
+        
+        If an explicit AGOR installation path is provided, it is used; otherwise, the integration attempts automatic detection. Sets up internal state for AGOR availability, fallback mode, and logging.
         """
         self.agor_path = agor_path
         self.agor_available = False
@@ -55,7 +53,11 @@ class AgorExternalTools:
         self._initialize_agor_tools()
     
     def _initialize_agor_tools(self):
-        """Initialize AGOR tools with automatic detection and fallback."""
+        """
+        Attempts to locate and initialize AGOR development tools using multiple detection strategies.
+        
+        Tries direct import, path-based detection, and searching common installation locations. If all methods fail, enables fallback mode to provide limited functionality.
+        """
         try:
             # Method 1: Try direct import (AGOR installed in same environment)
             self._try_direct_import()
@@ -79,7 +81,11 @@ class AgorExternalTools:
         self._enable_fallback_mode()
     
     def _try_direct_import(self):
-        """Try direct import of AGOR tools."""
+        """
+        Attempts to import AGOR development tools directly and updates availability status.
+        
+        If successful, assigns the imported module to `self.dev_tools` and marks AGOR as available.
+        """
         try:
             import agor.tools.dev_tools as dev_tools
             self.dev_tools = dev_tools
@@ -89,7 +95,11 @@ class AgorExternalTools:
             pass
     
     def _try_path_detection(self):
-        """Try to detect AGOR installation via path searching."""
+        """
+        Attempts to locate and load AGOR tools by searching common installation paths.
+        
+        If an explicit AGOR path is provided, it is checked first; otherwise, several typical directories are searched. On successful detection and loading, updates internal state to reflect AGOR availability.
+        """
         if self.agor_path:
             search_paths = [Path(self.agor_path)]
         else:
@@ -110,7 +120,11 @@ class AgorExternalTools:
                 return
     
     def _try_common_locations(self):
-        """Try common AGOR installation patterns."""
+        """
+        Attempts to locate and load AGOR tools from common Python site-packages directories.
+        
+        Searches each site-packages directory for an 'agor' subdirectory and tries to load the development tools module from there. Updates internal state if successful; logs debug information on failure.
+        """
         # Look for AGOR in Python site-packages
         try:
             import site
@@ -126,7 +140,11 @@ class AgorExternalTools:
     
     @contextmanager
     def _temp_sys_path(self, path: str):
-        """Temporarily add path to sys.path."""
+        """
+        Context manager that temporarily adds a directory to the beginning of sys.path.
+        
+        Ensures the specified path is inserted into sys.path for the duration of the context and removed afterward.
+        """
         sys.path.insert(0, path)
         try:
             yield
@@ -135,7 +153,12 @@ class AgorExternalTools:
                 sys.path.remove(path)
 
     def _try_load_from_path(self, path: Path) -> bool:
-        """Try to load AGOR tools from a specific path."""
+        """
+        Attempts to load the AGOR dev_tools module from the specified path.
+        
+        Returns:
+            True if the dev_tools module is successfully loaded from the given path; False otherwise.
+        """
         try:
             dev_tools_path = path / "src" / "agor" / "tools" / "dev_tools.py"
             if not dev_tools_path.exists():
@@ -162,13 +185,28 @@ class AgorExternalTools:
             return False
     
     def _enable_fallback_mode(self):
-        """Enable fallback mode with manual implementations."""
+        """
+        Enables fallback mode, activating manual implementations for AGOR tool functions.
+        
+        Sets the fallback mode flag and logs warnings to indicate that limited functionality will be used due to unavailable AGOR tools.
+        """
         self.fallback_mode = True
         self.logger.warning("AGOR tools not available - using fallback mode")
         self.logger.info("Some functions will have limited functionality")
     
     def _call_with_fallback(self, func_name: str, fallback_func: Callable, *args, **kwargs):
-        """Call AGOR function with fallback if not available."""
+        """
+        Attempts to call a specified function from the AGOR tools module, falling back to a provided implementation if unavailable or if an error occurs.
+        
+        Args:
+            func_name: Name of the AGOR function to call.
+            fallback_func: Callable to use if the AGOR function is not available or fails.
+            *args: Positional arguments to pass to the function.
+            **kwargs: Keyword arguments to pass to the function.
+        
+        Returns:
+            The result of the AGOR function if successful, otherwise the result of the fallback implementation.
+        """
         if self.agor_available and hasattr(self.dev_tools, func_name):
             try:
                 func = getattr(self.dev_tools, func_name)
@@ -183,33 +221,99 @@ class AgorExternalTools:
     # ==================================
     
     def generate_pr_description_output(self, content: str) -> str:
-        """Generate PR description with proper formatting."""
+        """
+        Generates a formatted pull request description using AGOR tools if available, or applies basic code block formatting as a fallback.
+        
+        Args:
+            content: The content to include in the pull request description.
+        
+        Returns:
+            A string containing the formatted pull request description.
+        """
         def fallback(content: str) -> str:
             # Manual implementation for PR description formatting
+            """
+            Formats the given content as a code block, replacing triple backticks with double backticks.
+            
+            Args:
+                content: The text to be formatted.
+            
+            Returns:
+                The content wrapped in triple backticks, with all triple backticks inside replaced by double backticks.
+            """
             processed_content = content.replace("```", "``")  # Basic deticking
             return f"```\n{processed_content}\n```"
         
         return self._call_with_fallback("generate_pr_description_output", fallback, content)
     
     def generate_handoff_prompt_output(self, content: str) -> str:
-        """Generate handoff prompt with proper formatting.""" 
+        """
+        Generates a formatted handoff prompt using AGOR tools if available, or applies basic markdown formatting as a fallback.
+        
+        Args:
+            content: The handoff prompt content to be formatted.
+        
+        Returns:
+            The formatted handoff prompt as a string.
+        """ 
         def fallback(content: str) -> str:
+            """
+            Formats the given content by replacing triple backticks with double backticks and wrapping it in a code block.
+            
+            Args:
+                content: The text to be formatted.
+            
+            Returns:
+                The formatted string wrapped in triple backticks.
+            """
             processed_content = content.replace("```", "``")
             return f"```\n{processed_content}\n```"
         
         return self._call_with_fallback("generate_handoff_prompt_output", fallback, content)
     
     def generate_release_notes_output(self, content: str) -> str:
-        """Generate release notes with proper formatting."""
+        """
+        Generates formatted release notes output using AGOR tools if available, or applies basic markdown formatting as a fallback.
+        
+        Args:
+            content: The release notes content to be formatted.
+        
+        Returns:
+            A string containing the formatted release notes.
+        """
         def fallback(content: str) -> str:
+            """
+            Formats the given content by replacing triple backticks with double backticks and wrapping it in a code block.
+            
+            Args:
+                content: The text to be formatted.
+            
+            Returns:
+                The formatted string wrapped in triple backticks.
+            """
             processed_content = content.replace("```", "``")
             return f"```\n{processed_content}\n```"
         
         return self._call_with_fallback("generate_release_notes_output", fallback, content)
     
     def create_development_snapshot(self, title: str, context: str, agent_id: str = None) -> bool:
-        """Create development snapshot."""
+        """
+        Creates a development snapshot using AGOR tools if available, or a fallback implementation.
+        
+        Args:
+            title: The title of the snapshot.
+            context: Contextual information to include in the snapshot.
+            agent_id: Optional identifier for the agent associated with the snapshot.
+        
+        Returns:
+            True if the snapshot was created successfully or the fallback was executed.
+        """
         def fallback(title: str, context: str, agent_id: str = None) -> bool:
+            """
+            Fallback implementation for creating a development snapshot.
+            
+            Logs the snapshot title and a preview of the context, then returns True to indicate success.
+            """
             self.logger.info(f"Fallback: Would create snapshot '{title}' with context")
             self.logger.debug(f"Context: {context[:100]}...")
             return True
@@ -217,8 +321,19 @@ class AgorExternalTools:
         return self._call_with_fallback("create_development_snapshot", fallback, title, context, agent_id)
     
     def quick_commit_and_push(self, message: str, emoji: str = "🔧") -> bool:
-        """Quick commit and push."""
+        """
+        Performs a quick git commit and push with the provided message and emoji.
+        
+        If AGOR tools are unavailable, uses a fallback implementation that stages all changes,
+        commits with the specified message and emoji, and pushes to the current branch.
+        Returns True on success, or if there are no changes to commit; returns False on error.
+        """
         def fallback(message: str, emoji: str = "🔧") -> bool:
+            """
+            Performs a git add, commit, and push using subprocess as a fallback implementation.
+            
+            Attempts to stage all changes, commit with the provided message and emoji, and push to the remote repository. Handles the case where there are no changes to commit gracefully. Returns True on success, or False if any git operation fails or times out.
+            """
             import subprocess
             try:
                 # Environment to disable interactive prompts
@@ -269,8 +384,16 @@ class AgorExternalTools:
         return self._call_with_fallback("quick_commit_and_push", fallback, message, emoji)
     
     def get_workspace_status(self) -> dict:
-        """Get workspace status."""
+        """
+        Retrieves the current workspace status, using AGOR tools if available.
+        
+        Returns:
+            A dictionary containing workspace status information. In fallback mode, includes keys for mode, AGOR availability, git status, and a message indicating fallback usage.
+        """
         def fallback() -> dict:
+            """
+            Returns a dictionary indicating fallback mode status when AGOR tools are unavailable.
+            """
             return {
                 "mode": "fallback",
                 "agor_available": False,
@@ -281,8 +404,16 @@ class AgorExternalTools:
         return self._call_with_fallback("get_workspace_status", fallback)
     
     def test_all_tools(self) -> bool:
-        """Test all available tools."""
+        """
+        Tests the availability and functionality of all integrated AGOR tools.
+        
+        Returns:
+            True if the test completes successfully, regardless of whether AGOR tools or fallback implementations are used.
+        """
         def fallback() -> bool:
+            """
+            Logs the current integration state and returns True to indicate fallback mode is operational.
+            """
             self.logger.info("Testing fallback mode...")
             self.logger.info(f"AGOR Available: {self.agor_available}")
             self.logger.info(f"Fallback Mode: {self.fallback_mode}")
@@ -296,7 +427,9 @@ class AgorExternalTools:
     # ===============
     
     def get_status(self) -> Dict[str, Any]:
-        """Get integration status information."""
+        """
+        Returns a dictionary containing the current AGOR integration status, including availability flags, AGOR installation path, and the list of supported functions.
+        """
         return {
             "agor_available": self.agor_available,
             "fallback_mode": self.fallback_mode,
@@ -313,7 +446,9 @@ class AgorExternalTools:
         }
     
     def print_status(self):
-        """Print current integration status."""
+        """
+        Prints a summary of the current AGOR integration status, including availability, fallback mode, AGOR path, and the number of available functions.
+        """
         status = self.get_status()
         print("\n🔧 AGOR External Integration Status:")
         print(f"✅ AGOR Available: {status['agor_available']}")
@@ -326,13 +461,15 @@ class AgorExternalTools:
 # Convenience function for quick initialization
 def get_agor_tools(agor_path: Optional[str] = None) -> AgorExternalTools:
     """
-    Quick initialization of AGOR external tools.
+    Initializes and returns an AgorExternalTools instance for AGOR integration.
+    
+    If an explicit AGOR installation path is provided, it will be used for tool detection; otherwise, automatic detection strategies are applied.
     
     Args:
-        agor_path: Optional path to AGOR installation
-        
+        agor_path: Optional explicit path to the AGOR installation.
+    
     Returns:
-        AgorExternalTools instance ready for use
+        An initialized AgorExternalTools instance with AGOR tool access and fallback support.
     """
     return AgorExternalTools(agor_path)
 
