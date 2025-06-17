@@ -125,11 +125,11 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_tooling, get_timestamp
+from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
 
 # Verify tooling works
-test_tooling()
-print(f'Session started at: {get_timestamp()}')
+test_all_tools()
+print(f'Session started at: {get_current_timestamp_formatted()}')
 "
 
 # Review agent startup guide

@@ -37,8 +37,8 @@ git branch
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_tooling
-test_tooling()
+from agor.tools.dev_tools import test_all_tools
+test_all_tools()
 "
 ```
 
