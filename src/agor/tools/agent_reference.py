@@ -9,10 +9,20 @@ This module provides structured, callable documentation that agents can
 access to get complete setup instructions, requirements, and guidance.
 """
 
+import functools
 import os
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Optional
+
+# Import TOML parser - use built-in tomllib for Python 3.11+ or fallback
+try:
+    import tomllib  # Python 3.11+
+except ImportError:
+    try:
+        import tomli as tomllib  # Fallback for older Python versions
+    except ImportError:
+        tomllib = None  # No TOML parser available
 
 
 # Platform-specific instructions dictionary - defined once at module level
@@ -161,12 +171,22 @@ def detect_project_type() -> str:
         pyproject_file = directory / 'pyproject.toml'
         if pyproject_file.exists():
             try:
-                with open(pyproject_file, 'r', encoding='utf-8') as f:
-                    pyproject_content = f.read()
-                    if 'name = "agor"' in pyproject_content:
-                        return 'agor_development'
-            except (IOError, UnicodeDecodeError):
-                # Continue checking other indicators if file read fails
+                if tomllib is not None:
+                    # Use proper TOML parser for accurate parsing
+                    with open(pyproject_file, 'rb') as f:
+                        toml_data = tomllib.load(f)
+                        project_name = toml_data.get('project', {}).get('name', '')
+                        if project_name.lower() == 'agor':
+                            return 'agor_development'
+                else:
+                    # Fallback to string search if no TOML parser available
+                    with open(pyproject_file, 'r', encoding='utf-8') as f:
+                        pyproject_content = f.read()
+                        if 'name = "agor"' in pyproject_content.lower():
+                            return 'agor_development'
+            except Exception:
+                # Continue checking other indicators if file read/parse fails
+                # Catches IOError, UnicodeDecodeError, TOMLDecodeError, etc.
                 continue
 
     return 'external_project'
@@ -185,13 +205,8 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
     """
     if custom_path:
         # Expand user home directory and resolve to absolute path
-        # Use absolute() for compatibility with Python < 3.10 when path doesn't exist
-        expanded_path = Path(custom_path).expanduser()
-        try:
-            resolved_path = expanded_path.resolve()
-        except (FileNotFoundError, OSError):
-            # Fallback for non-existent paths on older Python versions
-            resolved_path = expanded_path.absolute()
+        # Path.resolve() works on non-existent paths with strict=False (default)
+        resolved_path = Path(custom_path).expanduser().resolve()
         base_path = resolved_path.as_posix()
     elif project_type == 'agor_development':
         base_path = 'src/agor'
@@ -223,9 +238,12 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
     }
 
 
+@functools.lru_cache(maxsize=None)
 def get_platform_specific_instructions(platform: str, project_type: str) -> str:
     """
     Get platform-specific setup instructions and quirks.
+
+    Cached for performance with large constant dictionary lookups.
 
     Args:
         platform: Platform identifier
