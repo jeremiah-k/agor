@@ -121,7 +121,7 @@ Based on your environment detection:
 3. **Save to Correct Location**: `.agor/snapshots/` directory only
 4. **Single Codeblock Format**: Required for processing
 5. **Complete Context**: Include all work, commits, and next steps
-(For a quick summary of guidelines, call `get_snapshot_guidelines_summary()` from `dev_tools.py`)
+   (For a quick summary of guidelines, call `get_snapshot_guidelines_summary()` from `dev_tools.py`)
 
 ### STEP 5: QUICK REFERENCE
 

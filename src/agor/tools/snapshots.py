@@ -67,19 +67,34 @@ class HandoffRequest:
 
 
 def create_snapshot(
-    title: str, context: str, next_steps: list = None, agent_id: str = None, custom_branch: str = None
+    title: str,
+    context: str,
+    next_steps: list = None,
+    agent_id: str = None,
+    custom_branch: str = None,
 ) -> bool:
-    """Create development snapshot in agent's directory within main memory branch.
-
+    """
+    Creates a development snapshot file in the agent's directory within the main memory branch.
+    
+    The snapshot includes metadata, development context, next steps, and git status, and is committed to the specified memory branch without switching branches. Returns True if the snapshot was successfully committed, otherwise False.
+    
     Args:
-        title: Title for the snapshot
-        context: Development context and description
-        next_steps: List of next steps for continuing the work (required)
-        agent_id: Optional agent ID
-        custom_branch: Optional custom memory branch
+        title: The title of the snapshot.
+        context: Description of the current development context.
+        next_steps: List of actionable next steps for continuing the work. Must not be None.
+        agent_id: Optional agent identifier; generated if not provided.
+        custom_branch: Optional custom memory branch name.
+    
+    Returns:
+        True if the snapshot was successfully committed to the memory branch, otherwise False.
+    
+    Raises:
+        ValueError: If next_steps is not provided.
     """
     if next_steps is None:
-        raise ValueError("next_steps parameter is required - agents must provide meaningful next steps")
+        raise ValueError(
+            "next_steps parameter is required - agents must provide meaningful next steps"
+        )
     # Import all required functions at the top to avoid per-call overhead
     from agor.tools.dev_tools import (
         generate_agent_id,
@@ -471,21 +486,25 @@ def generate_mandatory_session_end_prompt(
 
 def create_snapshot_legacy(title: str, context: str, next_steps: list = None) -> bool:
     """
-    Create development snapshot using legacy format.
-
-    This function maintains compatibility with older snapshot creation patterns
-    while using the new modular architecture.
-
+    Creates a development snapshot using the legacy format for backward compatibility.
+    
+    Generates a markdown snapshot file containing metadata, development context, next steps, and git status, then commits and pushes it using the legacy workflow. Requires a non-empty list of next steps.
+    
     Args:
-        title: Snapshot title
-        context: Snapshot context
-        next_steps: List of next steps for continuing the work (required)
-
+        title: The title of the snapshot.
+        context: Description of the current development context.
+        next_steps: List of actionable next steps for continuing the work.
+    
     Returns:
-        True if successful, False otherwise
+        True if the snapshot was successfully committed and pushed, False otherwise.
+    
+    Raises:
+        ValueError: If next_steps is not provided.
     """
     if next_steps is None:
-        raise ValueError("next_steps parameter is required - agents must provide meaningful next steps")
+        raise ValueError(
+            "next_steps parameter is required - agents must provide meaningful next steps"
+        )
     from agor.tools.dev_testing import detect_environment
 
     # Generate agent ID for legacy compatibility

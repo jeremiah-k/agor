@@ -639,12 +639,14 @@ Use the 'Select Development Strategy' function to analyze your project and get s
 (For a quick summary of snapshot guidelines, call `get_snapshot_guidelines_summary()` from `dev_tools.py`)
 
 You can get a quick reminder of snapshot best practices by calling:
+
 ```python
 # Make sure your environment is set up to import AGOR tools
 # (e.g., sys.path.insert(0, 'src') if running from AGOR root)
 from agor.tools.dev_tools import get_snapshot_guidelines_summary
 get_snapshot_guidelines_summary() # This will print the summary
 ```
+
 ...
 **Creating a Snapshot**
 ... 3. **AGOR generates**:
@@ -739,6 +741,7 @@ Memory files in `.agor/` are handled by the Memory Synchronization System.
 (To display a summary of the memory architecture, call `display_memory_architecture_info()` from `dev_tools.py`)
 
 You can get a quick reminder of memory architecture by calling:
+
 ```python
 # Make sure your environment is set up to import AGOR tools
 # (e.g., sys.path.insert(0, 'src') if running from AGOR root)

@@ -25,11 +25,13 @@ ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
 
 # Feedback type to label mapping
 FEEDBACK_TYPE_LABELS = {
-    'bug': 'bug',
-    'enhancement': 'enhancement',
-    'workflow_issue': 'workflow',
-    'success_story': 'success',
-    'general': 'feedback'
+    "bug": "bug",
+    "enhancement": "enhancement",
+    "workflow_issue": "workflow",
+    "success_story": "feedback",
+    "documentation": "documentation",
+    "performance": "performance",
+    "usability": "UX",
 }
 
 
@@ -211,17 +213,9 @@ class FeedbackManager:
         component: str = "general",
     ) -> str:
         """
-        Generate formatted meta feedback for AGOR improvement.
-
-        Args:
-            feedback_type: Type of feedback
-            feedback_content: Main feedback content
-            suggestions: List of improvement suggestions
-            severity: Severity level
-            component: Component affected
-
-        Returns:
-            Formatted meta feedback content
+        Generates a formatted meta feedback report for AGOR improvement.
+        
+        Collects feedback details, stores them, and returns a structured report with feedback type, content, suggestions, severity, component, timestamp, and submission instructions for creating a GitHub issue.
         """
         # Collect the feedback
         entry = self.collect_feedback(
@@ -240,7 +234,7 @@ class FeedbackManager:
             "severity": severity,
             "component": component,
             "timestamp": entry.timestamp,
-            "type_label": FEEDBACK_TYPE_LABELS.get(feedback_type, 'feedback'),
+            "type_label": FEEDBACK_TYPE_LABELS.get(feedback_type, "feedback"),
         }
 
         template = """# 🔄 AGOR Meta Feedback
@@ -300,24 +294,15 @@ Priority: {{ severity }}
 
     def create_github_issue_content(self, config: GitHubIssueConfig) -> str:
         """
-        Create GitHub issue content from feedback configuration.
-
+        Generates a formatted GitHub issue body from the provided feedback configuration.
+        
         Args:
-            config: GitHub issue configuration
-
+            config: Structured feedback data for issue creation.
+        
         Returns:
-            Formatted GitHub issue content
+            A string containing the rendered GitHub issue content, including title, component, severity, description, reproduction steps, expected and actual behavior (for bugs), suggested solutions, and appropriate labels.
         """
-        # Map feedback types to GitHub labels
-        type_labels = {
-            "bug": "bug",
-            "enhancement": "enhancement",
-            "workflow_issue": "workflow",
-            "success_story": "feedback",
-            "documentation": "documentation",
-            "performance": "performance",
-            "usability": "UX",
-        }
+        # Use global feedback type labels mapping
 
         severity_labels = {
             "low": "priority: low",
@@ -336,7 +321,7 @@ Priority: {{ severity }}
             "expected_behavior": config.expected_behavior,
             "actual_behavior": config.actual_behavior,
             "suggestions": config.suggestions,
-            "type_label": type_labels.get(config.feedback_type, "feedback"),
+            "type_label": FEEDBACK_TYPE_LABELS.get(config.feedback_type, "feedback"),
             "severity_label": severity_labels.get(config.severity, "priority: medium"),
         }
 

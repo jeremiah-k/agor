@@ -98,7 +98,7 @@ def validate_feedback_input(
     """
     Validates feedback input for type, severity, content quality, and component.
     
-    Checks whether the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and provides suggestions for improvement based on the feedback type and content. Returns a dictionary with validation status, detected issues, suggestions, and normalized values for type, severity, and component.
+    Checks that the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and provides suggestions for improvement based on the feedback type and content. Returns a dictionary with validation status, detected issues, suggestions, and normalized values for type, severity, and component.
     """
     validation = {
         "is_valid": True,
@@ -328,9 +328,9 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generates a structured markdown prompt for handing off an AGOR agent session.
+    Generates a markdown-formatted prompt for handing off an AGOR agent session.
     
-    Summarizes completed work, current project status, instructions for the next agent, critical context, and files modified. The prompt includes environment setup commands, coordination protocol instructions, and immediate next steps. Content is processed to ensure safe codeblock rendering for agent-to-agent communication.
+    Summarizes completed work, current status, next agent instructions, critical context, and files modified. The prompt includes environment setup commands, coordination protocol steps, and immediate next actions, with content processed to prevent codeblock rendering issues during agent communication.
     
     Args:
         work_completed: List of completed work items for the session.
@@ -340,7 +340,7 @@ def generate_handoff_prompt_only(
         files_modified: List of files modified during the session.
     
     Returns:
-        A markdown-formatted handoff prompt with processed codeblocks for seamless agent coordination.
+        A markdown-formatted handoff prompt with processed codeblocks for agent coordination.
     """
     # Validate required inputs
     if not isinstance(work_completed, list):
