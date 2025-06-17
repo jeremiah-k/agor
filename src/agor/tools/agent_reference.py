@@ -560,7 +560,12 @@ def generate_deployment_prompt(platform: Optional[str] = None,
         project_type = detect_project_type()
     
     # Resolve paths with fallback to defaults
-    default_paths = resolve_agor_paths(project_type, custom_base_path)
+    # Only use custom_base_path if custom_paths is not provided
+    if custom_paths:
+        default_paths = resolve_agor_paths(project_type)  # Get environment-derived defaults
+    else:
+        default_paths = resolve_agor_paths(project_type, custom_base_path)
+
     # Guard against None values and unknown keys in custom_paths
     if custom_paths:
         valid_keys = set(default_paths)

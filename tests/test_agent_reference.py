@@ -122,12 +122,17 @@ class TestPathResolution(unittest.TestCase):
         paths = resolve_agor_paths('agor_development')
 
         # Should use absolute paths for consistency (fixed in latest version)
-        self.assertTrue(paths['tools_path'].endswith('/src/agor/tools'))
-        self.assertTrue(paths['readme_ai'].endswith('/src/agor/tools/README_ai.md'))
-        self.assertTrue(paths['instructions'].endswith('/src/agor/tools/AGOR_INSTRUCTIONS.md'))
+        # Use Path operations for cross-platform compatibility
+        from pathlib import Path
+        tools_path = Path(paths['tools_path'])
+        readme_path = Path(paths['readme_ai'])
+        instructions_path = Path(paths['instructions'])
+
+        self.assertEqual(tools_path.parts[-3:], ('src', 'agor', 'tools'))
+        self.assertEqual(readme_path.parts[-4:], ('src', 'agor', 'tools', 'README_ai.md'))
+        self.assertEqual(instructions_path.parts[-4:], ('src', 'agor', 'tools', 'AGOR_INSTRUCTIONS.md'))
 
         # All paths should be absolute
-        from pathlib import Path
         self.assertTrue(Path(paths['tools_path']).is_absolute())
         self.assertTrue(Path(paths['readme_ai']).is_absolute())
         self.assertTrue(Path(paths['instructions']).is_absolute())
