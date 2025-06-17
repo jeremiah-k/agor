@@ -67,9 +67,19 @@ class HandoffRequest:
 
 
 def create_snapshot(
-    title: str, context: str, agent_id: str = None, custom_branch: str = None
+    title: str, context: str, next_steps: list = None, agent_id: str = None, custom_branch: str = None
 ) -> bool:
-    """Create development snapshot in agent's directory within main memory branch."""
+    """Create development snapshot in agent's directory within main memory branch.
+
+    Args:
+        title: Title for the snapshot
+        context: Development context and description
+        next_steps: List of next steps for continuing the work (required)
+        agent_id: Optional agent ID
+        custom_branch: Optional custom memory branch
+    """
+    if next_steps is None:
+        raise ValueError("next_steps parameter is required - agents must provide meaningful next steps")
     # Import all required functions at the top to avoid per-call overhead
     from agor.tools.dev_tools import (
         generate_agent_id,
@@ -123,7 +133,7 @@ def create_snapshot(
 {context}
 
 ## 📋 Next Steps
-[To be filled by continuing agent]
+{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}
@@ -459,7 +469,7 @@ def generate_mandatory_session_end_prompt(
     return handoff_prompt
 
 
-def create_snapshot_legacy(title: str, context: str) -> bool:
+def create_snapshot_legacy(title: str, context: str, next_steps: list = None) -> bool:
     """
     Create development snapshot using legacy format.
 
@@ -469,10 +479,13 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
     Args:
         title: Snapshot title
         context: Snapshot context
+        next_steps: List of next steps for continuing the work (required)
 
     Returns:
         True if successful, False otherwise
     """
+    if next_steps is None:
+        raise ValueError("next_steps parameter is required - agents must provide meaningful next steps")
     from agor.tools.dev_testing import detect_environment
 
     # Generate agent ID for legacy compatibility
@@ -520,7 +533,7 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
 {context}
 
 ## 📋 Next Steps
-[To be filled by continuing agent]
+{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}

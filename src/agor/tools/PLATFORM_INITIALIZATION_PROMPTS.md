@@ -118,32 +118,18 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install dependencies and test development tools
-pip install -r requirements.txt
-
-# Install additional dependencies for memory manager types
-pip install pydantic pydantic-settings || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    else
-        echo "❌ No .pyenv directory found, creating virtual environment"
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-        pip install pydantic pydantic-settings
-    fi
-}
+# Install AGOR agent development dependencies
+python3 -m pip install -r src/agor/tools/agent-requirements.txt
 
 # Test AGOR development tools
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_tooling, get_timestamp
+from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
 
 # Verify tooling works
-test_tooling()
-print(f'Session started at: {get_timestamp()}')
+test_all_tools()
+print(f'Session started at: {get_current_timestamp_formatted()}')
 "
 
 # Review agent startup guide

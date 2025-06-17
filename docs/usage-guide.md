@@ -40,7 +40,7 @@ _This gives the agent direct access to all AGOR documentation and tools_
 
 - In Augment Chat, click the **Context menu** or use **@-mention**
 - Select **User Guidelines**
-- Copy and paste the complete User Guidelines from: [docs/augment_user_guidelines.md](docs/augment_user_guidelines.md)
+- Copy and paste the complete User Guidelines from: [augment_user_guidelines.md](augment_user_guidelines.md)
 
 _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 
@@ -71,6 +71,35 @@ After reading these files, help me initialize AGOR for this project and select t
 # <--- Add your detailed step-by-step instructions below --->
 ```
 
+**Step 6: Local Environment Setup (For Development Tools)**
+
+**If you need to use AGOR development tools locally:**
+
+```bash
+# Navigate to AGOR directory
+cd ~/agor
+
+# Create virtual environment for AGOR dependencies
+python3 -m venv .venv
+
+# Activate virtual environment
+source .venv/bin/activate
+
+# Install AGOR agent development dependencies
+python3 -m pip install -r src/agor/tools/agent-requirements.txt
+
+# Test that everything works
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import test_all_tools
+test_all_tools()
+print('✅ AGOR development tools ready!')
+"
+```
+
+**Note**: This step is only needed when working with AGOR development tools locally. Remote agents have different setup requirements.
+
 **Workflow:**
 
 1. Agent reads AGOR protocol from your local Sources
@@ -96,7 +125,7 @@ After reading these files, help me initialize AGOR for this project and select t
 - Real-time collaboration possible
 - Direct commits if agent has commit access, copy-paste fallback otherwise
 
-**Note: First copy and paste the User Guidelines from [docs/augment_user_guidelines.md](docs/augment_user_guidelines.md) into your AugmentCode extension, if you have not already, then proceed with the rest.**
+**Note: First copy and paste the User Guidelines from [augment_user_guidelines.md](augment_user_guidelines.md) into your AugmentCode extension, if you have not already, then proceed with the rest.**
 
 **Agent Initialization Prompt (Copy & Paste to Remote Agent):**
 
@@ -111,19 +140,8 @@ cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 # Load protocol and return to project
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 
-# Install ONLY the dependencies needed for agent dev tools (NOT requirements.txt)
-python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-    else
-        echo "❌ No .pyenv directory found, creating virtual environment"
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-    fi
-    # Install dependencies after environment is ready
-    python3 -m pip install -r src/agor/tools/agent-requirements.txt
-}
+# Install AGOR agent development dependencies
+python3 -m pip install -r src/agor/tools/agent-requirements.txt
 
 # Test AGOR development tools
 python3 -c "
@@ -284,50 +302,7 @@ AGOR is a fork of the innovative [AgentGrunt](https://github.com/nikvdp/agentgru
 4. Multiple agents can work on the same repository simultaneously
 5. Full git history and branch management available
 
-**Example Workflow:**
 
-```bash
-# Clone AGOR to temporary location
-cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
-
-# Load protocol and return to your project
-cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
-
-# Install ONLY the dependencies needed for agent dev tools (NOT requirements.txt)
-python3 -m pip install -r src/agor/tools/agent-requirements.txt || {
-    echo "⚠️ pip install failed, trying .pyenv venv fallback"
-    if [ -d ".pyenv" ]; then
-        source .pyenv/bin/activate
-    else
-        echo "❌ No .pyenv directory found, creating virtual environment"
-        python3 -m venv .pyenv
-        source .pyenv/bin/activate
-    fi
-    # Install dependencies after environment is ready
-    python3 -m pip install -r src/agor/tools/agent-requirements.txt
-}
-
-# Test AGOR development tools
-python3 -c "
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted, get_available_functions_reference
-
-# Verify tooling works
-test_all_tools()
-print(f'Session started at: {get_current_timestamp_formatted()}')
-
-# Show all available functions for agent reference
-print('\n📋 Available AGOR Functions:')
-print(get_available_functions_reference())
-"
-
-# Review development guide
-cat docs/agor-development-guide.md
-cat src/agor/tools/agent-start-here.md
-
-# Now return to your project's directory with AGOR initialized
-```
 
 ### 📦 Bundled Mode (Upload-Based Platforms)
 
