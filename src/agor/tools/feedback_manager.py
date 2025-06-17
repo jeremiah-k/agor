@@ -6,7 +6,6 @@ offering better organization and maintainability for meta feedback collection.
 
 Key Features:
 - Structured feedback collection
-- GitHub issue generation
 - Feedback statistics and analysis
 - Template-based feedback formatting
 - Feedback validation and processing
@@ -23,6 +22,15 @@ from agor.tools.template_engine import TemplateEngine
 
 # Define allowed severity levels
 ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
+
+# Feedback type to label mapping
+FEEDBACK_TYPE_LABELS = {
+    'bug': 'bug',
+    'enhancement': 'enhancement',
+    'workflow_issue': 'workflow',
+    'success_story': 'success',
+    'general': 'feedback'
+}
 
 
 @dataclass
@@ -232,6 +240,7 @@ class FeedbackManager:
             "severity": severity,
             "component": component,
             "timestamp": entry.timestamp,
+            "type_label": FEEDBACK_TYPE_LABELS.get(feedback_type, 'feedback'),
         }
 
         template = """# 🔄 AGOR Meta Feedback
@@ -264,6 +273,24 @@ class FeedbackManager:
 This feedback was generated during AGOR usage to help improve the platform.
 Component: {{ component }}
 Priority: {{ severity }}
+
+---
+
+## 📞 FEEDBACK SUBMISSION INSTRUCTIONS
+
+**IMPORTANT**: Copy the content above and manually create a GitHub issue:
+
+1. **Go to**: https://github.com/jeremiah-k/agor/issues/new
+2. **Title**: Use the feedback type and brief description
+3. **Body**: Paste the entire feedback content from above
+4. **Labels**: Add `meta-feedback` and appropriate component labels
+5. **Submit**: Click "Submit new issue"
+
+## 🏷️ SUGGESTED LABELS
+- `meta-feedback` (always include)
+- `{{ type_label }}` (feedback type)
+- `component: {{ component }}` (if not general)
+- `priority: {{ severity }}` (severity level)
 
 ---
 

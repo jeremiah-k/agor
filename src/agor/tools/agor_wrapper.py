@@ -16,8 +16,8 @@ Usage:
 This addresses the critical meta feedback about tool integration issues.
 """
 
-import sys
 import argparse
+import sys
 from pathlib import Path
 
 
@@ -25,43 +25,47 @@ def main():
     """Main wrapper function with command-line interface."""
     parser = argparse.ArgumentParser(
         description="AGOR Tools Wrapper for External Projects",
-        epilog="Addresses tool integration issues for external project usage"
+        epilog="Addresses tool integration issues for external project usage",
     )
-    
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
-    
+
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
     # Status command
-    subparsers.add_parser('status', help='Check AGOR integration status')
-    
+    subparsers.add_parser("status", help="Check AGOR integration status")
+
     # Test command
-    subparsers.add_parser('test', help='Test all AGOR tools')
-    
+    subparsers.add_parser("test", help="Test all AGOR tools")
+
     # PR description command
-    pr_parser = subparsers.add_parser('pr', help='Generate PR description')
-    pr_parser.add_argument('content', help='PR description content')
-    
+    pr_parser = subparsers.add_parser("pr", help="Generate PR description")
+    pr_parser.add_argument("content", help="PR description content")
+
     # Handoff command
-    handoff_parser = subparsers.add_parser('handoff', help='Generate handoff prompt')
-    handoff_parser.add_argument('content', help='Handoff content')
-    
+    handoff_parser = subparsers.add_parser("handoff", help="Generate handoff prompt")
+    handoff_parser.add_argument("content", help="Handoff content")
+
     # Snapshot command
-    snapshot_parser = subparsers.add_parser('snapshot', help='Create development snapshot')
-    snapshot_parser.add_argument('title', help='Snapshot title')
-    snapshot_parser.add_argument('context', help='Snapshot context')
-    snapshot_parser.add_argument('--agent-id', help='Optional agent ID')
-    
+    snapshot_parser = subparsers.add_parser(
+        "snapshot", help="Create development snapshot"
+    )
+    snapshot_parser.add_argument("title", help="Snapshot title")
+    snapshot_parser.add_argument("context", help="Snapshot context")
+    snapshot_parser.add_argument("--agent-id", help="Optional agent ID")
+
     # Commit command
-    commit_parser = subparsers.add_parser('commit', help='Quick commit and push')
-    commit_parser.add_argument('message', help='Commit message')
-    commit_parser.add_argument('--emoji', default='🔧', help='Commit emoji (default: 🔧)')
-    
+    commit_parser = subparsers.add_parser("commit", help="Quick commit and push")
+    commit_parser.add_argument("message", help="Commit message")
+    commit_parser.add_argument(
+        "--emoji", default="🔧", help="Commit emoji (default: 🔧)"
+    )
+
     # Parse arguments
     args = parser.parse_args()
-    
+
     if not args.command:
         parser.print_help()
         return 1
-    
+
     # Initialize AGOR tools
     try:
         # Add current directory to path for development environment
@@ -81,6 +85,7 @@ def main():
             sys.path.insert(0, str(current_dir))
 
         from agor.tools._commands import execute_command
+
         return execute_command(args)
     except ImportError as e:
         print(f"❌ Failed to import AGOR command handlers: {e}")
@@ -90,17 +95,16 @@ def main():
         return 1
 
 
-
 def install_wrapper():
     """Install wrapper script to a convenient location."""
     import shutil
-    
+
     script_path = Path(__file__).resolve()
-    
+
     # Try to install to user's local bin
-    local_bin = Path.home() / '.local' / 'bin'
+    local_bin = Path.home() / ".local" / "bin"
     if local_bin.exists():
-        target = local_bin / 'agor-tools'
+        target = local_bin / "agor-tools"
         try:
             shutil.copy2(script_path, target)
             target.chmod(0o755)
@@ -110,7 +114,7 @@ def install_wrapper():
             return True
         except Exception as e:
             print(f"⚠️  Failed to install to {target}: {e}")
-    
+
     # Fallback: suggest manual installation
     print("💡 Manual installation:")
     print(f"   cp {script_path} ~/.local/bin/agor-tools")
@@ -121,7 +125,8 @@ def install_wrapper():
 
 def show_usage_examples():
     """Show usage examples for the wrapper."""
-    print("""
+    print(
+        """
 🛠️  AGOR Wrapper Usage Examples:
 
 ## Development Usage (from source):
@@ -168,23 +173,24 @@ agor-tools commit "Implement OAuth authentication" --emoji "✨"
 python agor_wrapper.py --install
 
 📚 For complete documentation, see EXTERNAL_INTEGRATION_GUIDE.md
-""")
+"""
+    )
 
 
 if __name__ == "__main__":
     # Handle special arguments
     if len(sys.argv) > 1:
-        if sys.argv[1] == '--install':
+        if sys.argv[1] == "--install":
             install_wrapper()
             sys.exit(0)
-        elif sys.argv[1] == '--examples':
+        elif sys.argv[1] == "--examples":
             show_usage_examples()
             sys.exit(0)
-        elif sys.argv[1] in ['--help', '-h'] and len(sys.argv) == 2:
+        elif sys.argv[1] in ["--help", "-h"] and len(sys.argv) == 2:
             # Show enhanced help
             main()
             show_usage_examples()
             sys.exit(0)
-    
+
     # Run main function
     sys.exit(main())

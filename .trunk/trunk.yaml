@@ -29,11 +29,11 @@ lint:
     - actionlint@1.7.7
     - bandit@1.8.3
     - black@25.1.0
-    - checkov@3.2.441
+    - checkov@3.2.442
     - git-diff-check
     - isort@6.0.1
     - markdownlint@0.45.0
-    - osv-scanner@2.0.2
+    - osv-scanner@2.0.3
     - prettier@3.5.3
     - ruff@0.11.13
     - taplo@0.9.3

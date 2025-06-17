@@ -9,7 +9,7 @@ This guide addresses the critical integration issues identified in meta feedback
 When AGOR is installed separately from the project being worked on (e.g., Augment local agent working on an external project with AGOR installed elsewhere), agents encounter:
 
 1. **Tool Location Issues**: Cannot find AGOR tools in separate directory
-2. **Module Import Failures**: Internal dependencies fail even when path is found  
+2. **Module Import Failures**: Internal dependencies fail even when path is found
 3. **Missing Integration Pattern**: No standardized workflow for external usage
 4. **Documentation Gap**: Unclear how to integrate AGOR with external projects
 
@@ -35,6 +35,7 @@ tools.quick_commit_and_push("Implement feature X")
 #### 1. Environment Setup
 
 **Option A: Automatic Detection (Recommended)**
+
 ```python
 from agor.tools.external_integration import AgorExternalTools
 
@@ -47,15 +48,18 @@ tools.print_status()  # Check what was detected
 ```
 
 **Option B: Explicit Path**
+
 ```python
 # If you know where AGOR is installed
 tools = AgorExternalTools(agor_path="/path/to/agor")
 ```
 
 **Option C: Environment Variable**
+
 ```bash
 export AGOR_PATH="/path/to/agor"
 ```
+
 ```python
 import os
 tools = AgorExternalTools(agor_path=os.getenv('AGOR_PATH'))
@@ -108,15 +112,15 @@ print(f"Project status: {status}")
 
 ### Core Development Functions
 
-| Function | Purpose | Fallback Behavior |
-|----------|---------|-------------------|
+| Function                           | Purpose                | Fallback Behavior                     |
+| ---------------------------------- | ---------------------- | ------------------------------------- |
 | `generate_pr_description_output()` | Format PR descriptions | Manual deticking + codeblock wrapping |
-| `generate_handoff_prompt_output()` | Format agent handoffs | Manual deticking + codeblock wrapping |
-| `generate_release_notes_output()` | Format release notes | Manual deticking + codeblock wrapping |
-| `create_development_snapshot()` | Create work snapshots | Logging with context summary |
-| `quick_commit_and_push()` | Git commit and push | Direct git commands |
-| `get_workspace_status()` | Project status info | Basic fallback status |
-| `test_all_tools()` | Test functionality | Integration status check |
+| `generate_handoff_prompt_output()` | Format agent handoffs  | Manual deticking + codeblock wrapping |
+| `generate_release_notes_output()`  | Format release notes   | Manual deticking + codeblock wrapping |
+| `create_development_snapshot()`    | Create work snapshots  | Logging with context summary          |
+| `quick_commit_and_push()`          | Git commit and push    | Direct git commands                   |
+| `get_workspace_status()`           | Project status info    | Basic fallback status                 |
+| `test_all_tools()`                 | Test functionality     | Integration status check              |
 
 ### Status and Debugging
 
@@ -138,6 +142,7 @@ print(f"Functions Available: {len(status['functions_available'])}")
 #### Issue 1: "ModuleNotFoundError: No module named 'agor'"
 
 **Solution**: Use external integration system instead of direct imports
+
 ```python
 # ❌ Don't do this in external projects
 from agor.tools.dev_tools import generate_pr_description_output
@@ -151,12 +156,15 @@ tools.generate_pr_description_output("content")
 #### Issue 2: "AGOR tools not found"
 
 **Solutions**:
+
 1. **Specify explicit path**:
+
    ```python
    tools = AgorExternalTools(agor_path="/explicit/path/to/agor")
    ```
 
 2. **Check common locations**:
+
    ```bash
    # Look for AGOR in these locations:
    ls ~/agor/src/agor/tools/
@@ -187,6 +195,7 @@ if not tools.agor_available:
 ### Debugging Steps
 
 1. **Test the integration**:
+
    ```python
    from agor.tools.external_integration import get_agor_tools
    tools = get_agor_tools()
@@ -194,10 +203,11 @@ if not tools.agor_available:
    ```
 
 2. **Check search paths**:
+
    ```python
    import sys
    print("Python path:", sys.path)
-   
+
    from pathlib import Path
    common_paths = [Path.home() / "agor", Path.home() / "dev" / "agor"]
    for path in common_paths:
@@ -224,16 +234,18 @@ When setting up AGOR external integration:
 ## 🚀 Best Practices
 
 ### 1. Always Use External Integration System
+
 ```python
 # ✅ Correct approach for external projects
 from agor.tools.external_integration import get_agor_tools
 tools = get_agor_tools()
 
-# ❌ Avoid direct imports in external projects  
+# ❌ Avoid direct imports in external projects
 # from agor.tools.dev_tools import create_development_snapshot
 ```
 
 ### 2. Check Status Before Critical Operations
+
 ```python
 tools = get_agor_tools()
 if tools.agor_available:
@@ -246,6 +258,7 @@ else:
 ```
 
 ### 3. Handle Both Success and Fallback Scenarios
+
 ```python
 # Generate outputs that work in both modes
 pr_output = tools.generate_pr_description_output(content)
@@ -259,6 +272,7 @@ else:
 ```
 
 ### 4. Use Environment Variables for Team Consistency
+
 ```bash
 # In your project's setup documentation
 export AGOR_PATH="/team/standard/agor/location"

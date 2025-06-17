@@ -77,7 +77,9 @@ except ImportError:
 # ===================================
 
 
-def create_development_snapshot(title: str, context: str, agent_id: str = None, custom_branch: str = None) -> bool:
+def create_development_snapshot(
+    title: str, context: str, agent_id: str = None, custom_branch: str = None
+) -> bool:
     """Create development snapshot in agent's directory within main memory branch."""
     return create_snapshot(title, context, agent_id, custom_branch)
 
@@ -150,10 +152,11 @@ def test_development_tools() -> bool:
     This function will be removed in a future version.
     """
     import warnings
+
     warnings.warn(
         "test_development_tools() is deprecated. Use test_all_tools() instead.",
         DeprecationWarning,
-        stacklevel=2
+        stacklevel=2,
     )
     return test_tooling()
 
@@ -433,7 +436,9 @@ def get_or_create_agent_id_file(agent_id: str = None) -> str:
 
         print(f"📝 Created new agent ID file: {agent_id_file}")
         print(f"🆔 Agent ID: {sanitized_id}")
-        print("⚠️  Note: Agent identification has limitations and should not be relied upon heavily")
+        print(
+            "⚠️  Note: Agent identification has limitations and should not be relied upon heavily"
+        )
 
         return sanitized_id
 
@@ -467,7 +472,9 @@ def generate_unique_agent_id() -> str:
     import uuid
 
     # Create truly unique identifier using multiple sources
-    full_timestamp = str(int(time.time()))  # full epoch seconds for proper datetime conversion
+    full_timestamp = str(
+        int(time.time())
+    )  # full epoch seconds for proper datetime conversion
     random_component = str(uuid.uuid4())[:8]  # random component
     process_id = str(os.getpid())  # process ID
 
@@ -508,18 +515,20 @@ def get_main_memory_branch(custom_branch: str = None) -> str:
 
 def get_agent_directory_path(agent_id: str) -> str:
     """
-    Get the agent's directory path within the memory branch.
+    Get the agent's directory path within the .agor directory on memory branches.
 
     Args:
         agent_id: Agent identifier
 
     Returns:
-        A string path like 'agents/agent_{hash}_{timestamp}/' for the agent's directory.
+        A string path like '.agor/agents/agent_{hash}_{timestamp}/' for the agent's directory.
     """
-    return f"agents/{agent_id}/"
+    return f".agor/agents/{agent_id}/"
 
 
-def initialize_agent_workspace(agent_id: str = None, custom_branch: str = None) -> tuple[bool, str, str]:
+def initialize_agent_workspace(
+    agent_id: str = None, custom_branch: str = None
+) -> tuple[bool, str, str]:
     """
     Initialize agent workspace in the main memory branch with directory structure.
 
@@ -557,9 +566,9 @@ This agent's workspace contains:
 ## Coordination
 
 - **Main Memory Branch**: {memory_branch}
-- **Shared Coordination**: `shared/agentconvo.md`
-- **Handoffs**: `handoffs/pending/` and `handoffs/completed/`
-- **Agent Directory**: `{agent_dir}`
+- **Agent Directory**: {agent_dir}
+- **Shared Coordination**: .agor/agentconvo.md
+- **Project Memory**: .agor/memory.md
 
 ## Session Guidelines
 
@@ -583,22 +592,18 @@ This agent's workspace contains:
 
 Use this file for cross-agent communication and coordination.
 
-## Agent Directory Structure
+## Memory Branch Structure
 
 ```
-{memory_branch}/
+{memory_branch}/.agor/
 ├── agents/
 │   ├── {agent_id}/
 │   │   ├── snapshots/
 │   │   ├── work_log.md
 │   │   └── agent_info.md
-├── shared/
-│   ├── agentconvo.md (this file)
-│   └── project_status.md
-└── handoffs/
-    ├── pending/
-    ├── completed/
-    └── archive/
+├── agentconvo.md (shared communication)
+├── memory.md (project memory)
+└── strategy-active.md (current strategy)
 ```
 """
 
@@ -613,7 +618,7 @@ Use this file for cross-agent communication and coordination.
         # Commit shared coordination structure
         shared_success = commit_to_memory_branch(
             file_content=shared_agentconvo_content,
-            file_name="shared/agentconvo.md",
+            file_name=".agor/agentconvo.md",
             branch_name=memory_branch,
             commit_message=f"Update shared coordination for agent {agent_id}",
         )
@@ -637,7 +642,7 @@ def cleanup_agent_directories(
     days_old: int = None,
     agent_pattern: str = None,
     custom_branch: str = None,
-    current_agent_id: str = None
+    current_agent_id: str = None,
 ) -> bool:
     """
     Intelligently clean up agent directories in the main memory branch.
@@ -676,7 +681,7 @@ def cleanup_agent_directories(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
             capture_output=True,
             text=True,
-            cwd="."
+            cwd=".",
         )
 
         if original_branch_result.returncode != 0:
@@ -692,7 +697,7 @@ def cleanup_agent_directories(
                 ["git", "checkout", memory_branch],
                 capture_output=True,
                 text=True,
-                cwd="."
+                cwd=".",
             )
 
             if checkout_result.returncode != 0:
@@ -706,7 +711,9 @@ def cleanup_agent_directories(
                 return True
 
             directories_removed = 0
-            removed_directories = []  # Track removed directories for specific git staging
+            removed_directories = (
+                []
+            )  # Track removed directories for specific git staging
 
             for agent_dir in os.listdir(agents_dir):
                 agent_path = os.path.join(agents_dir, agent_dir)
@@ -721,7 +728,9 @@ def cleanup_agent_directories(
                     continue
 
                 # Check pattern matching
-                if agent_pattern and not agent_dir.startswith(agent_pattern.replace("*", "")):
+                if agent_pattern and not agent_dir.startswith(
+                    agent_pattern.replace("*", "")
+                ):
                     continue
 
                 # Check age if specified
@@ -741,6 +750,7 @@ def cleanup_agent_directories(
 
                 # Remove the directory
                 import shutil
+
                 try:
                     shutil.rmtree(agent_path)
                     print(f"✅ Removed agent directory: {agent_dir}")
@@ -757,15 +767,22 @@ def cleanup_agent_directories(
                         ["git", "rm", "-r", "--cached", removed_dir],
                         cwd=".",
                     )
-                subprocess.run([
-                    "git", "commit", "-m",
-                    f"🧹 Cleanup: Removed {directories_removed} agent directories"
-                ], cwd=".")
+                subprocess.run(
+                    [
+                        "git",
+                        "commit",
+                        "-m",
+                        f"🧹 Cleanup: Removed {directories_removed} agent directories",
+                    ],
+                    cwd=".",
+                )
 
                 # Push the cleanup
                 subprocess.run(["git", "push", "origin", memory_branch], cwd=".")
 
-            print(f"🧹 Cleanup complete: Removed {directories_removed} agent directories")
+            print(
+                f"🧹 Cleanup complete: Removed {directories_removed} agent directories"
+            )
             return True
 
         finally:
@@ -775,14 +792,18 @@ def cleanup_agent_directories(
                     ["git", "checkout", original_branch],
                     capture_output=True,
                     text=True,
-                    cwd="."
+                    cwd=".",
                 )
                 if restore_result.returncode == 0:
                     print(f"🔒 Restored original branch: {original_branch}")
                 else:
-                    print(f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}")
+                    print(
+                        f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}"
+                    )
             except Exception as restore_error:
-                print(f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}")
+                print(
+                    f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}"
+                )
 
     except Exception as e:
         print(f"❌ Error during cleanup: {e}")
@@ -810,7 +831,7 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
             capture_output=True,
             text=True,
-            cwd="."
+            cwd=".",
         )
 
         if original_branch_result.returncode != 0:
@@ -825,7 +846,7 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
                 ["git", "checkout", memory_branch],
                 capture_output=True,
                 text=True,
-                cwd="."
+                cwd=".",
             )
 
             if checkout_result.returncode != 0:
@@ -840,7 +861,7 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
 
             pending_handoffs = []
             for handoff_file in os.listdir(pending_dir):
-                if handoff_file.endswith('.md'):
+                if handoff_file.endswith(".md"):
                     pending_handoffs.append(os.path.join(pending_dir, handoff_file))
 
             if pending_handoffs:
@@ -859,12 +880,16 @@ def check_pending_handoffs(custom_branch: str = None) -> list:
                     ["git", "checkout", original_branch],
                     capture_output=True,
                     text=True,
-                    cwd="."
+                    cwd=".",
                 )
                 if restore_result.returncode != 0:
-                    print(f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}")
+                    print(
+                        f"⚠️  Failed to restore original branch {original_branch}: {restore_result.stderr}"
+                    )
             except Exception as restore_error:
-                print(f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}")
+                print(
+                    f"🚨 CRITICAL: Failed to restore original branch {original_branch}: {restore_error}"
+                )
 
     except Exception as e:
         print(f"❌ Error checking pending handoffs: {e}")
@@ -876,7 +901,7 @@ def create_handoff_prompt(
     title: str,
     work_summary: str,
     next_steps: list,
-    custom_branch: str = None
+    custom_branch: str = None,
 ) -> bool:
     """
     Create a handoff prompt in the pending handoffs directory.
@@ -939,7 +964,9 @@ def create_handoff_prompt(
 - Generate properly formatted outputs in single codeblocks
 """
 
-        handoff_filename = f"handoffs/pending/{timestamp_str}_{agent_id}_to_next_agent.md"
+        handoff_filename = (
+            f"handoffs/pending/{timestamp_str}_{agent_id}_to_next_agent.md"
+        )
 
         success = commit_to_memory_branch(
             file_content=handoff_content,
@@ -960,7 +987,9 @@ def create_handoff_prompt(
         return False
 
 
-def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool = True, current_agent_id: str = None) -> bool:
+def cleanup_agent_memory_branches(
+    keep_current: bool = True, cleanup_local: bool = True, current_agent_id: str = None
+) -> bool:
     """
     DEPRECATED: Clean up old agent memory branches from multi-branch era.
 
@@ -976,10 +1005,11 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
         True if cleanup was successful, False otherwise
     """
     import warnings
+
     warnings.warn(
         "cleanup_agent_memory_branches() is deprecated. Use cleanup_agent_directories() instead.",
         DeprecationWarning,
-        stacklevel=2
+        stacklevel=2,
     )
 
     try:
@@ -1003,15 +1033,19 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
                 ["git", "branch", "--list", "agor/mem/*"],
                 capture_output=True,
                 text=True,
-                cwd="."
+                cwd=".",
             )
 
             if local_result.returncode == 0 and local_result.stdout.strip():
-                for line in local_result.stdout.strip().split('\n'):
+                for line in local_result.stdout.strip().split("\n"):
                     if line.strip():
-                        branch = line.strip().replace('* ', '').strip()
+                        branch = line.strip().replace("* ", "").strip()
                         # Skip current agent's branch if keeping it
-                        if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                        if (
+                            keep_current
+                            and current_agent_id
+                            and f"agor/mem/{current_agent_id}" in branch
+                        ):
                             print(f"⏭️  Keeping current agent branch: {branch}")
                             continue
 
@@ -1020,7 +1054,7 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
                             ["git", "branch", "-D", branch],
                             capture_output=True,
                             text=True,
-                            cwd="."
+                            cwd=".",
                         )
                         if delete_result.returncode == 0:
                             print(f"✅ Deleted local memory branch: {branch}")
@@ -1034,15 +1068,19 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
             ["git", "branch", "-r", "--list", "origin/agor/mem/*"],
             capture_output=True,
             text=True,
-            cwd="."
+            cwd=".",
         )
 
         if remote_result.returncode == 0 and remote_result.stdout.strip():
-            for line in remote_result.stdout.strip().split('\n'):
+            for line in remote_result.stdout.strip().split("\n"):
                 if line.strip():
-                    branch = line.strip().replace('origin/', '')
+                    branch = line.strip().replace("origin/", "")
                     # Skip current agent's branch if keeping it
-                    if keep_current and current_agent_id and f"agor/mem/{current_agent_id}" in branch:
+                    if (
+                        keep_current
+                        and current_agent_id
+                        and f"agor/mem/{current_agent_id}" in branch
+                    ):
                         print(f"⏭️  Keeping current agent remote branch: {branch}")
                         continue
 
@@ -1051,7 +1089,7 @@ def cleanup_agent_memory_branches(keep_current: bool = True, cleanup_local: bool
                         ["git", "push", "origin", "--delete", branch],
                         capture_output=True,
                         text=True,
-                        cwd="."
+                        cwd=".",
                     )
                     if delete_result.returncode == 0:
                         print(f"✅ Deleted remote memory branch: {branch}")
@@ -1242,7 +1280,9 @@ def get_available_functions_reference() -> str:
     output = []
     output.append("# 🛠️ AGOR Development Tools Functions Reference")
     output.append("")
-    output.append("**MANDATORY READING: All available AGOR development tools functions**")
+    output.append(
+        "**MANDATORY READING: All available AGOR development tools functions**"
+    )
     output.append("")
     output.append("This reference is generated dynamically from actual code.")
     output.append("Call this function to see all available capabilities.")
@@ -1252,10 +1292,22 @@ def get_available_functions_reference() -> str:
     current_module = sys.modules[__name__]
 
     modules = [
-        ('dev_tools', current_module, 'Main development interface - START HERE'),
-        ('memory_manager', memory_manager, 'Memory branch operations - Cross-branch commits'),
-        ('git_operations', git_operations, 'Git command utilities - Safe git operations'),
-        ('snapshot_templates', snapshot_templates, 'Snapshot generation - Work state capture')
+        ("dev_tools", current_module, "Main development interface - START HERE"),
+        (
+            "memory_manager",
+            memory_manager,
+            "Memory branch operations - Cross-branch commits",
+        ),
+        (
+            "git_operations",
+            git_operations,
+            "Git command utilities - Safe git operations",
+        ),
+        (
+            "snapshot_templates",
+            snapshot_templates,
+            "Snapshot generation - Work state capture",
+        ),
     ]
 
     for module_name, module, description in modules:
@@ -1264,22 +1316,26 @@ def get_available_functions_reference() -> str:
 
         functions = []
         for name, obj in inspect.getmembers(module):
-            if (callable(obj) and
-                not name.startswith('_') and
-                hasattr(obj, '__doc__') and
-                obj.__doc__ and
-                name not in ['Optional', 'Path', 'Tuple', 'datetime']):
+            if (
+                callable(obj)
+                and not name.startswith("_")
+                and hasattr(obj, "__doc__")
+                and obj.__doc__
+                and name not in ["Optional", "Path", "Tuple", "datetime"]
+            ):
 
                 # Get first line of docstring
                 doc = obj.__doc__.strip()
-                first_line = doc.split('\n')[0].strip()
+                first_line = doc.split("\n")[0].strip()
 
                 # Skip type hints and imports
-                if (first_line and
-                    not first_line.startswith('Optional') and
-                    not first_line.startswith('Path') and
-                    not first_line.startswith('Tuple') and
-                    not first_line.startswith('datetime')):
+                if (
+                    first_line
+                    and not first_line.startswith("Optional")
+                    and not first_line.startswith("Path")
+                    and not first_line.startswith("Tuple")
+                    and not first_line.startswith("datetime")
+                ):
                     functions.append((name, first_line))
 
         # Sort functions alphabetically
@@ -1306,10 +1362,12 @@ def get_available_functions_reference() -> str:
     output.append("- detect_environment() - Environment detection")
     output.append("- test_all_tools() - Verify all functions work")
     output.append("")
-    output.append("**CRITICAL**: Always use these functions instead of manual git commands")
+    output.append(
+        "**CRITICAL**: Always use these functions instead of manual git commands"
+    )
     output.append("for memory operations and cross-branch commits.")
 
-    return '\n'.join(output)
+    return "\n".join(output)
 
 
 def test_all_tools() -> bool:
@@ -1347,7 +1405,7 @@ def generate_workflow_prompt_template(
         A formatted prompt template string ready for agent use.
     """
     if memory_branch is None:
-        memory_branch = generate_agent_memory_branch()
+        memory_branch = get_main_memory_branch()
 
     prompt_template = f"""# 🎯 AGOR Agent Task: {task_description}
 
@@ -1521,7 +1579,7 @@ def get_workflow_optimization_tips() -> str:
 - Include explicit handoff instructions
 
 ### 2. Memory Branch Strategy
-- Generate unique agent memory branch: `{generate_agent_memory_branch()}`
+- Generate unique agent memory branch: `{get_main_memory_branch()}`
 - Use for all snapshots and coordination
 - Reference in handoff prompts for continuity
 

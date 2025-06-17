@@ -385,6 +385,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 **CORRECT WORKFLOW - USE THESE FUNCTIONS**:
 
 **For External Projects (Augment Local Agents, etc.)**:
+
 ```python
 # ALWAYS use external integration for projects where AGOR is installed separately
 from agor.tools.external_integration import get_agor_tools
@@ -404,6 +405,7 @@ print(formatted_output)
 ```
 
 **For AGOR Development Projects Only**:
+
 ```python
 # Only use direct imports when working ON AGOR itself
 from agor.tools.dev_tools import generate_release_notes_output

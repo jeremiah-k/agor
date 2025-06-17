@@ -64,20 +64,24 @@ Snapshots are the core mechanism for work definition, snapshots, and context pre
 When an agent uses the `snapshot` hotkey:
 
 - AGOR gathers all relevant context.
-- A snapshot document is generated locally in `.agor/snapshots/`.
+- A snapshot document is generated locally in `.agor/agents/{agent_id}/snapshots/`.
 - The **Memory Synchronization System** then automatically commits this snapshot and related coordination files to the active memory branch.
 
 ### Snapshot Storage
 
-Snapshots are stored in `.agor/snapshots/` on memory branches by the Memory Synchronization System.
+Snapshots are stored in `.agor/agents/{agent_id}/snapshots/` on memory branches by the Memory Synchronization System.
 
 ```
 .agor/ (on a memory branch)
-├── snapshots/
-│   └── snapshot-YYYYMMDD-HHMMSS.md     # Snapshot document
+├── agents/
+│   ├── agent_abc123_1234567890/
+│   │   ├── snapshots/
+│   │   │   └── snapshot-YYYYMMDD-HHMMSS.md
+│   │   ├── work_log.md
+│   │   └── agent_info.md
 ├── agentconvo.md
 ├── memory.md                       # Main project memory / general strategy memory
-└── agent1-memory.md                # Individual agent memory
+└── strategy-active.md              # Current strategy details
 ```
 
 ### Snapshot Document Structure

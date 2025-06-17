@@ -71,12 +71,12 @@ def create_snapshot(
 ) -> bool:
     """Create development snapshot in agent's directory within main memory branch."""
     # Import all required functions at the top to avoid per-call overhead
-    from agor.utils import sanitize_slug
     from agor.tools.dev_tools import (
         generate_agent_id,
         get_agent_directory_path,
         get_main_memory_branch,
     )
+    from agor.utils import sanitize_slug
 
     timestamp_str = get_file_timestamp()
 
@@ -142,7 +142,7 @@ If you're picking up this work:
 **Remember**: Use quick_commit_push() for frequent commits during development.
 """
 
-    # Write snapshot file locally for reference
+    # Write snapshot file locally for reference (will be ignored by .gitignore)
     repo_path = Path.cwd()
     snapshot_path = repo_path / snapshot_file
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
@@ -474,17 +474,23 @@ def create_snapshot_legacy(title: str, context: str) -> bool:
         True if successful, False otherwise
     """
     from agor.tools.dev_testing import detect_environment
+
+    # Generate agent ID for legacy compatibility
+    from agor.tools.dev_tools import generate_agent_id, get_agent_directory_path
     from agor.tools.git_operations import (
         get_current_timestamp,
         get_file_timestamp,
         quick_commit_push,
         run_git_command,
     )
+    from agor.utils import sanitize_slug
+
+    agent_id = generate_agent_id()
+    agent_dir = get_agent_directory_path(agent_id)
 
     timestamp_str = get_file_timestamp()
-    snapshot_file = (
-        f".agor/snapshots/{timestamp_str}_{title.lower().replace(' ', '-')}_snapshot.md"
-    )
+    safe_title = sanitize_slug(title.lower())
+    snapshot_file = f"{agent_dir}snapshots/{timestamp_str}_{safe_title}_snapshot.md"
 
     # Get current git info
     success_branch, current_branch_val = run_git_command(["branch", "--show-current"])
