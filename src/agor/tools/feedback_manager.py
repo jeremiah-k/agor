@@ -25,13 +25,14 @@ ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
 
 # Feedback type to label mapping
 FEEDBACK_TYPE_LABELS = {
-        # Start with the canonical mapping and extend for extra labels
-        type_labels = {
-            **FEEDBACK_TYPE_LABELS,
-            "documentation": "documentation",
-            "performance": "performance",
-            "usability": "UX",
-        }
+    "bug": "bug",
+    "enhancement": "enhancement",
+    "workflow_issue": "workflow",
+    "success_story": "feedback",
+    "documentation": "documentation",
+    "performance": "performance",
+    "usability": "UX",
+}
 
 
 @dataclass
@@ -309,16 +310,7 @@ Priority: {{ severity }}
         Returns:
             Formatted GitHub issue content
         """
-        # Map feedback types to GitHub labels
-        type_labels = {
-            "bug": "bug",
-            "enhancement": "enhancement",
-            "workflow_issue": "workflow",
-            "success_story": "feedback",
-            "documentation": "documentation",
-            "performance": "performance",
-            "usability": "UX",
-        }
+        # Use global feedback type labels mapping
 
         severity_labels = {
             "low": "priority: low",
@@ -337,7 +329,7 @@ Priority: {{ severity }}
             "expected_behavior": config.expected_behavior,
             "actual_behavior": config.actual_behavior,
             "suggestions": config.suggestions,
-            "type_label": type_labels.get(config.feedback_type, "feedback"),
+            "type_label": FEEDBACK_TYPE_LABELS.get(config.feedback_type, "feedback"),
             "severity_label": severity_labels.get(config.severity, "priority: medium"),
         }
 
