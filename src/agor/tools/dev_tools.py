@@ -196,14 +196,29 @@ def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
 def commit_memory_to_branch(
     content: str, memory_type: str, agent_id: str = "dev"
 ) -> bool:
-    """Auto-commit memory wrapper."""
+    """
+    Commits the provided content to the specified memory branch for the given agent.
+    
+    Args:
+        content: The content to be committed to memory.
+        memory_type: The type or category of memory branch.
+        agent_id: Identifier for the agent (defaults to "dev").
+    
+    Returns:
+        True if the commit was successful, False otherwise.
+    """
     return auto_commit_memory(content, memory_type, agent_id)
 
 
 def get_snapshot_guidelines_summary(print_output: bool = True) -> str:
     """
     Returns a summary of AGOR snapshot guidelines and optionally prints it.
-    Content is sourced from a module-level constant.
+    
+    Args:
+        print_output: If True, prints the snapshot guidelines summary.
+    
+    Returns:
+        The AGOR snapshot guidelines summary as a string.
     """
     summary_string = _SNAPSHOT_GUIDELINES_TEXT
     if print_output:
@@ -213,8 +228,13 @@ def get_snapshot_guidelines_summary(print_output: bool = True) -> str:
 
 def display_memory_architecture_info(print_output: bool = True) -> str:
     """
-    Returns a summary of AGOR's memory architecture and optionally prints it.
-    Content is sourced from a module-level constant.
+    Returns a detailed summary of AGOR's memory architecture and optionally prints it.
+    
+    Args:
+        print_output: If True, prints the memory architecture summary.
+    
+    Returns:
+        The memory architecture summary as a string.
     """
     summary_string = _MEMORY_ARCH_SUMMARY_TEXT
     if print_output:
@@ -223,7 +243,15 @@ def display_memory_architecture_info(print_output: bool = True) -> str:
 
 
 def process_content_for_codeblock(content: str) -> str:
-    """Process content for safe codeblock embedding."""
+    """
+    Prepares content for safe embedding within codeblocks by removing conflicting backticks.
+    
+    Args:
+        content: The text to be processed for codeblock compatibility.
+    
+    Returns:
+        The content with backticks removed to prevent formatting issues in codeblocks.
+    """
     return detick_content(content)
 
 
@@ -411,17 +439,38 @@ def emergency_save(message: str = "Emergency commit - work in progress") -> bool
 
 
 def create_development_checklist(task_type: str = "general") -> str:
-    """Create development checklist for task type."""
+    """
+    Generates a development checklist tailored to the specified task type.
+    
+    Args:
+        task_type: The type of development task for which to generate a checklist.
+    
+    Returns:
+        A formatted checklist string relevant to the given task type.
+    """
     return generate_development_checklist(task_type)
 
 
 def create_agent_transition_checklist() -> str: # Renamed from create_handoff_checklist
-    """Create agent transition checklist."""
+    """
+    Generates a checklist to guide agent transitions during handoff processes.
+    
+    Returns:
+        A formatted checklist string outlining required steps for a successful agent transition.
+    """
     return _create_agent_transition_checklist_from_module() # Calls the aliased imported function
 
 
 def validate_workflow(checklist_items: List[str]) -> Dict[str, any]:
-    """Validate workflow completion against checklist."""
+    """
+    Validates workflow completion based on provided checklist items.
+    
+    Args:
+        checklist_items: A list of checklist item descriptions to validate.
+    
+    Returns:
+        A dictionary summarizing validation results, including completion status and details.
+    """
     return validate_workflow_completion(checklist_items)
 
 
@@ -1447,18 +1496,18 @@ def generate_workflow_prompt_template(
     include_explicit_requirements: bool = True,
 ) -> str:
     """
-    Generates an optimized workflow prompt template for AGOR agent tasks.
-
-    Creates a detailed prompt incorporating the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements (with example code), and success criteria. Supports options to include the bookend approach and explicit handoff requirements for seamless agent coordination.
-
+    Generates a comprehensive workflow prompt template for AGOR agent tasks.
+    
+    The template includes the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements with example code, and success criteria. Options allow inclusion of bookend requirements and explicit handoff/formatting instructions to ensure seamless agent coordination.
+    
     Args:
-        task_description: Description of the agent's task.
-        memory_branch: Optional memory branch name for context continuity; generated if not provided.
-        include_bookend: Whether to include session start and end requirements.
-        include_explicit_requirements: Whether to include explicit handoff and formatting requirements.
-
+        task_description: The description of the agent's assigned task.
+        memory_branch: Optional memory branch name for context; defaults to the main memory branch if not provided.
+        include_bookend: If True, includes session start and end requirements.
+        include_explicit_requirements: If True, includes explicit handoff and formatting requirements.
+    
     Returns:
-        A formatted prompt template string ready for agent use.
+        A formatted string containing the workflow prompt template for agent use.
     """
     if memory_branch is None:
         memory_branch = get_main_memory_branch()

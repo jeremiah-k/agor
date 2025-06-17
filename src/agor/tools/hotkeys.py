@@ -260,9 +260,9 @@ def generate_meta_feedback_hotkey(
     component: str = "general",
 ) -> str:
     """
-    Generates formatted meta feedback about AGOR for quick submission.
-
-    If no feedback content is provided, a default prompt is used. Returns an error message if feedback generation fails.
+    Generates formatted meta feedback for AGOR, suitable for quick submission.
+    
+    If no feedback content is provided, a default prompt is used. Returns an error message string if feedback generation fails.
     """
     try:
         # Lazy load generate_meta_feedback using lru_cache
@@ -282,7 +282,11 @@ def generate_meta_feedback_hotkey(
 
 @lru_cache(maxsize=1)
 def _get_generate_meta_feedback_func():
-    """Helper function to lazy-load and cache the generate_meta_feedback function."""
+    """
+    Lazily imports and caches the generate_meta_feedback function from agor.tools.agent_prompts.
+    
+    If the import fails, returns a function that raises ImportError when called.
+    """
     try:
         from agor.tools.agent_prompts import generate_meta_feedback
         return generate_meta_feedback
@@ -290,14 +294,18 @@ def _get_generate_meta_feedback_func():
         _msg = f"Could not import generate_meta_feedback: {import_err}"
 
         def _raiser(msg=_msg):
+            Raises an ImportError with the provided message.
+            
+            Args:
+                msg: The error message to include in the ImportError.
             raise ImportError(msg)
         return _raiser
 
 def system_health_check_hotkey() -> str:
     """
     Performs a comprehensive system health check and returns a detailed markdown report.
-
-    The report summarizes workspace health, project status, development tools, memory system availability, issues, warnings, and provides recommendations for maintaining optimal AGOR performance. Returns an error message if the health check fails.
+    
+    The report includes workspace health, project status, development tools status, memory system availability, environment detection, issues, warnings, and actionable recommendations for maintaining AGOR performance. Returns an error message if the health check fails.
     """
     try:
         # Get workspace health
