@@ -91,9 +91,9 @@ def generate_development_checklist(task_type: str = "general") -> str:
     return base_checklist
 
 
-def generate_handoff_checklist() -> str:
+def create_agent_transition_checklist() -> str:
     """
-    Generate a checklist for agent handoff procedures.
+    Generate a checklist for agent transition procedures.
 
     Returns:
         Formatted handoff checklist string.

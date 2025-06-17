@@ -60,15 +60,14 @@
 
 ### "I need to implement/execute a strategy"
 
-- **[strategy_protocols.py](strategy_protocols.py)** - Concrete strategy implementation
-  - Functions: initialize_parallel_divergent(), initialize_pipeline(), initialize_swarm()
-  - Creates: .agor/strategy-active.md, agent memory files, task queues
-  - Provides: Step-by-step execution protocols, automatic phase transitions
-- **[agent_coordination.py](agent_coordination.py)** - Agent role discovery
+- **[strategies/](strategies/)** - Directory containing concrete strategy implementations. Review individual files within for specific functions.
+- **[docs/strategies.md](../../../docs/strategies.md)** - Conceptual guide to the 5 coordination strategies and when to use them.
+- **[docs/multi-agent-protocols.md](../../../docs/multi-agent-protocols.md)** - Comprehensive protocols for implementing multi-agent strategies, session management, and role responsibilities.
+- **[agent_coordination.py](agent_coordination.py)** - Agent role discovery.
   - Functions: discover_my_role(), check_strategy_status()
-  - Provides: Concrete next actions, role assignment, current status
-- **[coordination-example.md](coordination-example.md)** - Complete implementation example
-  - Shows: Before/after coordination, concrete usage, file structure
+  - Provides: Concrete next actions, role assignment, current status.
+- **[coordination-example.md](coordination-example.md)** - Complete implementation example.
+  - Shows: Before/after coordination, concrete usage, file structure.
 
 ### "I need to create or use a work snapshot"
 
@@ -140,7 +139,7 @@
 | **[dev_tools.py](dev_tools.py)**                         | Main interface for dev utilities + secure agent identification                                  | sanitize_slug(), initialize_agent_workspace(), cleanup_agent_directories() | ~1500+ |
 | **[git_operations.py](git_operations.py)**               | Handles core Git command execution, safety checks (safe_git_push), and timestamp utilities.     | run_git_command, safe_git_push, get_current_timestamp                      | ~200   |
 | **[memory_manager.py](memory_manager.py)**               | Manages memory branch creation and commits (commit_to_memory_branch) ensuring clean separation. | commit_to_memory_branch, auto_commit_memory                                | ~300   |
-| **[agent_handoffs.py](agent_handoffs.py)**               | Provides utilities for agent coordination, including prompt generation and backtick processing. | generate_handoff_prompt_only, detick_content                               | ~150   |
+| **[agent_prompts.py](agent_prompts.py)**                 | Provides utilities for agent coordination, including prompt generation and backtick processing. | generate_handoff_prompt_only, detick_content                               | ~150   |
 | **[dev_testing.py](dev_testing.py)**                     | Contains environment detection logic and test functions for AGOR tooling.                       | detect_environment, test_tooling                                           | ~100   |
 | **[code_exploration.py](code_exploration.py)**           | Codebase analysis                                                                               | bfs_find, grep, tree, analyze_file_structure                               | ~300   |
 | **[code_exploration_docs.md](code_exploration_docs.md)** | Tool documentation                                                                              | Function reference, examples                                               | 179    |
@@ -150,7 +149,6 @@
 
 | **[agent_prompt_templates.py](agent_prompt_templates.py)** | Role prompts | Specialized agent prompts | ~200 |
 | **[project_planning_templates.py](project_planning_templates.py)** | Planning frameworks | Strategy templates | ~300 |
-| **[strategy_protocols.py](strategy_protocols.py)** | Strategy execution | Concrete implementation protocols | ~600 |
 | **[agent_coordination.py](agent_coordination.py)** | Agent coordination | Role discovery, status checking | ~400 |
 | **[AUGMENT_INITIALIZATION.md](AUGMENT_INITIALIZATION.md)** | Augment integration | Local setup, initialization prompts | ~150 |
 | **[CHAINABLE_PROMPTS.md](CHAINABLE_PROMPTS.md)** | Token efficiency | Chainable initialization prompts | ~200 |
@@ -202,7 +200,7 @@ Need snapshot? → ../../../docs/snapshots.md or snapshot_templates.py
 Code analysis? → code_exploration.py + code_exploration_docs.md
 Prompt templates? → agent_prompt_templates.py
 Planning frameworks? → project_planning_templates.py
-Strategy execution? → strategy_protocols.py + coordination-example.md
+Strategy execution? → strategies/ + coordination-example.md
 Agent coordination? → agent_coordination.py + README_ai.md Lines 318-322
 ```
 

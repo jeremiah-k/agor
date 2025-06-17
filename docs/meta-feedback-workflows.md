@@ -76,7 +76,7 @@ enhancement = quick_meta_feedback_enhancement(
 ### Scenario 3: Comprehensive Feedback with Details
 
 ```python
-from agor.tools.agent_handoffs import generate_meta_feedback
+from agor.tools.agent_prompts import generate_meta_feedback
 
 detailed_feedback = generate_meta_feedback(
     feedback_type="workflow_issue",
@@ -180,7 +180,7 @@ Implementation Ideas:
 The meta feedback system can generate GitHub-ready issue content:
 
 ```python
-from agor.tools.agent_handoffs import create_github_issue_content
+from agor.tools.agent_prompts import create_github_issue_content
 
 github_issue = create_github_issue_content(
     feedback_type="enhancement",

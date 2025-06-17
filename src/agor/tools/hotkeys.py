@@ -264,7 +264,7 @@ def generate_meta_feedback_hotkey(
     If no feedback content is provided, a default prompt is used. Returns an error message if feedback generation fails.
     """
     try:
-        from agor.tools.agent_handoffs import generate_meta_feedback
+        from agor.tools.agent_prompts import generate_meta_feedback
 
         if not feedback_content:
             feedback_content = "Please provide specific feedback about AGOR functionality, workflow, or user experience."

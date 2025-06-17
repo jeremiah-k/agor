@@ -1,7 +1,7 @@
 """
-Agent Handoffs Module for AGOR Development Tools
+Agent Prompts Module for AGOR Development Tools
 
-This module contains all agent coordination and handoff functionality
+This module contains all agent coordination and prompt generation functionality
 extracted from dev_tools.py for better organization and maintainability.
 
 Functions:
@@ -159,7 +159,7 @@ def validate_feedback_input(
         "coordination",
         "documentation",
         "git_operations",
-        "agent_handoffs",
+        "agent_prompts",
         "snapshots",
         "environment_detection",
         "workflow",
@@ -423,7 +423,7 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.agent_handoffs import generate_mandatory_session_end_prompt
+from agor.tools.agent_prompts import generate_mandatory_session_end_prompt
 
 outputs = generate_mandatory_session_end_prompt(
     work_completed=['List what you completed'],

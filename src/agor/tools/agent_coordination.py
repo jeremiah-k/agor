@@ -838,7 +838,7 @@ def check_strategy_status() -> str:
         """Initialize memory sync for agent workflows."""
         try:
             # Import and initialize MemorySyncManager for memory sync
-            from ..memory_sync import MemorySyncManager
+            from agor.memory_sync import MemorySyncManager
 
             # Initialize memory manager if .agor directory exists
             if self.agor_dir.exists():
@@ -869,7 +869,7 @@ def check_strategy_status() -> str:
         """Complete agent work with automatic memory sync."""
         try:
             # Import and use MemorySyncManager for completion sync
-            from ..memory_sync import MemorySyncManager
+            from agor.memory_sync import MemorySyncManager
 
             if self.agor_dir.exists():
                 memory_manager = MemorySyncManager(self.project_root)
@@ -913,7 +913,7 @@ def check_strategy_status() -> str:
 
 def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
     """Process hotkey and update internal checklist."""
-    # TODO: Implement checklist functions when needed
+    # TODO: Future: Integrate with a checklist system for more detailed hotkey effect tracking.
 
     # Map hotkeys to checklist items
     hotkey_mapping = {
@@ -951,7 +951,6 @@ def process_agent_hotkey(hotkey: str, context: str = "") -> dict:
 
 def detect_session_end(user_input: str) -> bool:
     """Detect if user is indicating session end and enforce procedures."""
-    # TODO: Implement enforce_session_end when needed
 
     end_indicators = [
         "thanks",

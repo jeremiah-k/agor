@@ -128,6 +128,47 @@ Each entry includes:
 
 ## Development Entries (Reverse Chronological)
 
+### 24. 2025-06-18 | v0.6.2-dev | Housekeeping: Documentation & Code Cleanup
+
+**Technical Focus**: Housekeeping: Documentation & Code Cleanup for Clarity and Maintainability.
+
+**Implementation Details**:
+
+- Consolidated `docs/usage-guide.md` by reducing redundancy in platform setup and role descriptions, linking to `README_ai.md` and `AGOR_INSTRUCTIONS.md` as primary sources.
+- Updated `src/agor/tools/index.md` to remove references to deleted `strategy_protocols.py` and ensure links are current.
+- Added new helper functions to `src/agor/tools/dev_tools.py`: `get_snapshot_guidelines_summary()` and `display_memory_architecture_info()` to provide dynamic information to agents. Updated `README_ai.md`, `AGOR_INSTRUCTIONS.md`, and `SNAPSHOT_SYSTEM_GUIDE.md` to reference these.
+- Renamed `src/agor/tools/agent_handoffs.py` to `src/agor/tools/agent_prompts.py` and updated all relevant imports and textual references (in `dev_tools.py`, `agent_prompts.py` itself, `hotkeys.py`, `snapshots.py`, `docs/agent-workflow-optimization.md`, `docs/meta-feedback-workflows.md`, `docs/agor-development-guide.md`, `docs/agor-development-log.md`, `feedback_manager.py`, `index.md`).
+- Renamed `checklist.py:generate_handoff_checklist()` to `create_agent_transition_checklist()` and updated its usage in `dev_tools.py`.
+- Removed deprecated functions from `dev_tools.py`: `test_development_tools()` and `cleanup_agent_memory_branches()`.
+- Refactored `src/agor/tools/agent_coordination.py` to use absolute imports for `MemorySyncManager` and clarified/removed minor TODOs.
+
+**Rationale**: To improve documentation clarity, reduce redundancy, enhance maintainability by shifting static documentation to dynamic code-based information, and align codebase with current best practices and terminology.
+
+**Impact**: Clearer onboarding for developers and AI agents, reduced risk of outdated documentation, more reliable information access for agents, and a cleaner codebase.
+
+**Lessons Learned**: Ongoing housekeeping is crucial for complex systems. Shifting information into callable functions makes guidance more robust. Consistent terminology improves understanding.
+
+**Files Modified**:
+
+- `docs/agor-development-log.md`
+- `docs/agor-development-guide.md`
+- `docs/usage-guide.md`
+- `src/agor/tools/index.md`
+- `src/agor/tools/dev_tools.py`
+- `src/agor/tools/agent_prompts.py` (formerly `agent_handoffs.py`)
+- `src/agor/tools/checklist.py`
+- `src/agor/tools/agent_coordination.py`
+- `src/agor/tools/README_ai.md`
+- `src/agor/tools/AGOR_INSTRUCTIONS.md`
+- `src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md`
+- `src/agor/tools/hotkeys.py`
+- `src/agor/tools/snapshots.py`
+- `docs/agent-workflow-optimization.md`
+- `docs/meta-feedback-workflows.md`
+- `src/agor/tools/feedback_manager.py`
+
+---
+
 ### 23. 2025-06-17 | v0.6.1 | Production-Ready External Integration System - Complete Meta Feedback Resolution
 
 **Technical Focus**: Finalized production-ready external project integration system with comprehensive robustness improvements, addressing all critical meta feedback and implementing enterprise-grade reliability features.
@@ -496,7 +537,7 @@ Each entry includes:
 - **Dev Tools Modularization**: Broke down 2500+ line `dev_tools.py` into focused modules
   - `git_operations.py` - Safe git operations and timestamps
   - `memory_manager.py` - Cross-branch memory management
-  - `agent_handoffs.py` - Agent coordination and detick processing
+  - `agent_prompts.py` - Agent coordination and prompt generation
   - `dev_testing.py` - Testing and environment detection
   - Maintained 100% backward compatibility
 - **Documentation Clarification**: Fixed critical misunderstanding about `.agor` directory
@@ -541,7 +582,7 @@ Each entry includes:
 
 - `src/agor/tools/git_operations.py` (NEW) - Git safety and operations
 - `src/agor/tools/memory_manager.py` (NEW) - Memory branch management
-- `src/agor/tools/agent_handoffs.py` (NEW) - Agent coordination utilities
+- `src/agor/tools/agent_prompts.py` (NEW) - Agent coordination utilities
 - `src/agor/tools/dev_testing.py` (NEW) - Testing and environment detection
 - `src/agor/tools/dev_tools.py` - Updated to import from modules with backward compatibility
 - `docs/multi-agent-protocols.md` - Enhanced PC role, clarified memory branch system

@@ -636,6 +636,7 @@ Use the 'Select Development Strategy' function to analyze your project and get s
 ### 3.6. Snapshot Procedures
 
 (Content remains largely the same, emphasizing that snapshots are stored and managed by the Memory Synchronization System)
+(For a quick summary of snapshot guidelines, call `get_snapshot_guidelines_summary()` from `dev_tools.py`)
 ...
 **Creating a Snapshot**
 ... 3. **AGOR generates**:
@@ -726,6 +727,8 @@ Memory files in `.agor/` are handled by the Memory Synchronization System.
 ## 6. Advanced Features & Memory Systems
 
 ### 6.1. Memory Synchronization System (Production Ready)
+
+(To display a summary of the memory architecture, call `display_memory_architecture_info()` from `dev_tools.py`)
 
 **AGOR's primary and recommended method for agent memory persistence is the automated Memory Synchronization System.** This system seamlessly integrates with agent workflows, providing robust and reliable memory management using markdown files stored in the `.agor/` directory on dedicated Git memory branches (e.g., `agor/mem/BRANCH_NAME`).
 

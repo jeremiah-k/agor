@@ -269,7 +269,7 @@ END: "Create handoff prompt now, deticked, in codeblock"
 ```python
 Use these functions:
 from agor.tools.dev_tools import create_development_snapshot
-from agor.tools.agent_handoffs import detick_content
+from agor.tools.agent_prompts import detick_content
 ```
 
 ## 📊 Meta Feedback Integration
