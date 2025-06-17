@@ -1,5 +1,5 @@
 # AGOR CRITICAL ARCHITECTURE ENFORCEMENT
-# .agor/ and agents/ directories must NEVER exist on working branches
+# .agor/ directories must NEVER exist on working branches
 # This forces agents to use memory branches via dev tools
 # Any .agor content belongs ONLY on memory branches (agor/mem/*)
 /.agor/
@@ -7,11 +7,6 @@
 **/.agor/
 .agor
 *.agor
-
-# Agent directories should only exist on memory branches
-/agents/
-agents/
-**/agents/
 
 .venv
 .pyenv

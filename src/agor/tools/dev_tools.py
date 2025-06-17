@@ -515,15 +515,15 @@ def get_main_memory_branch(custom_branch: str = None) -> str:
 
 def get_agent_directory_path(agent_id: str) -> str:
     """
-    Get the agent's directory path within the memory branch.
+    Get the agent's directory path within the .agor directory on memory branches.
 
     Args:
         agent_id: Agent identifier
 
     Returns:
-        A string path like 'agents/agent_{hash}_{timestamp}/' for the agent's directory.
+        A string path like '.agor/agents/agent_{hash}_{timestamp}/' for the agent's directory.
     """
-    return f"agents/{agent_id}/"
+    return f".agor/agents/{agent_id}/"
 
 
 def initialize_agent_workspace(
@@ -566,9 +566,9 @@ This agent's workspace contains:
 ## Coordination
 
 - **Main Memory Branch**: {memory_branch}
-- **Shared Coordination**: `shared/agentconvo.md`
-- **Handoffs**: `handoffs/pending/` and `handoffs/completed/`
-- **Agent Directory**: `{agent_dir}`
+- **Agent Directory**: {agent_dir}
+- **Shared Coordination**: .agor/agentconvo.md
+- **Project Memory**: .agor/memory.md
 
 ## Session Guidelines
 
@@ -592,22 +592,18 @@ This agent's workspace contains:
 
 Use this file for cross-agent communication and coordination.
 
-## Agent Directory Structure
+## Memory Branch Structure
 
 ```
-{memory_branch}/
+{memory_branch}/.agor/
 ├── agents/
 │   ├── {agent_id}/
 │   │   ├── snapshots/
 │   │   ├── work_log.md
 │   │   └── agent_info.md
-├── shared/
-│   ├── agentconvo.md (this file)
-│   └── project_status.md
-└── handoffs/
-    ├── pending/
-    ├── completed/
-    └── archive/
+├── agentconvo.md (shared communication)
+├── memory.md (project memory)
+└── strategy-active.md (current strategy)
 ```
 """
 
@@ -622,7 +618,7 @@ Use this file for cross-agent communication and coordination.
         # Commit shared coordination structure
         shared_success = commit_to_memory_branch(
             file_content=shared_agentconvo_content,
-            file_name="shared/agentconvo.md",
+            file_name=".agor/agentconvo.md",
             branch_name=memory_branch,
             commit_message=f"Update shared coordination for agent {agent_id}",
         )
