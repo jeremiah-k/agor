@@ -25,12 +25,13 @@ ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
 
 # Feedback type to label mapping
 FEEDBACK_TYPE_LABELS = {
-    "bug": "bug",
-    "enhancement": "enhancement",
-    "workflow_issue": "workflow",
-    "success_story": "success",
-    "general": "feedback",
-}
+        # Start with the canonical mapping and extend for extra labels
+        type_labels = {
+            **FEEDBACK_TYPE_LABELS,
+            "documentation": "documentation",
+            "performance": "performance",
+            "usability": "UX",
+        }
 
 
 @dataclass
