@@ -11,6 +11,8 @@ The snapshot system is AGOR's core mechanism for seamless agent transitions with
 - **Session Continuity** - Agents resume exactly where previous agents left off
 - **Primary Use Case** - Context limit handoffs when agents reach capacity
 
+(For a quick summary of these guidelines callable from your agent environment, use `get_snapshot_guidelines_summary()` from `dev_tools.py`.)
+
 ## 🚨 MANDATORY: End-of-Session Snapshot
 
 **EVERY agent session MUST end with a snapshot in a single codeblock.**

@@ -13,7 +13,7 @@ All functions use absolute imports for better reliability.
 from dataclasses import dataclass
 from pathlib import Path
 
-from agor.tools.agent_handoffs import detick_content
+from agor.tools.agent_prompts import detick_content
 from agor.tools.dev_testing import (
     detect_environment,
     get_agent_dependency_install_commands,

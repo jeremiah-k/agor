@@ -22,10 +22,8 @@ This section provides detailed setup instructions for initializing AGOR agents o
 #### Setup Steps:
 
 **Step 1: Clone AGOR Repository**
-
-```bash
-git clone https://github.com/jeremiah-k/agor.git ~/agor
-```
+Clone the AGOR repository to your local machine, for example:
+`git clone https://github.com/jeremiah-k/agor.git ~/agor`
 
 **Step 2: Add AGOR as Workspace Context**
 
@@ -44,18 +42,12 @@ _This gives the agent direct access to all AGOR documentation and tools_
 
 _This ensures the agent follows AGOR protocols and creates mandatory snapshots_
 
-**Step 4: Agent Initialization Requirements**
-
-**CRITICAL**: The agent must read these files before starting any work:
-
-- `src/agor/tools/README_ai.md` (role selection and initialization)
-- `src/agor/tools/AGOR_INSTRUCTIONS.md` (comprehensive operational guide)
-- `src/agor/tools/agent-start-here.md` (quick startup guide)
-- `src/agor/tools/index.md` (documentation index for efficient lookup)
+**Step 4: Preparing the Agent**
+To ensure your AI agent understands how to work with AGOR, you will provide it with an initialization prompt (see next step). This prompt will instruct the agent to read specific AGOR protocol files from the cloned repository. This is how the agent learns its capabilities and how to coordinate.
 
 **Step 5: Agent Initialization Prompt**
 
-**Copy and paste this initialization prompt to your agent:**
+**Provide the following prompt to your AI agent (e.g., in AugmentCode chat):**
 
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
@@ -71,34 +63,34 @@ After reading these files, help me initialize AGOR for this project and select t
 # <--- Add your detailed step-by-step instructions below --->
 ```
 
-**Step 6: Local Environment Setup (For Development Tools)**
-
-**If you need to use AGOR development tools locally:**
-
+**Step 6: Local Environment Setup (Optional - For Using AGOR's Python Tools Directly)**
+If you (the user) want to run AGOR's bundled Python development tools directly on your machine (e.g., for testing or advanced scripting), you'll need to set up a Python virtual environment:
 ```bash
-# Navigate to AGOR directory
+# Navigate to your cloned AGOR directory
 cd ~/agor
 
-# Create virtual environment for AGOR dependencies
+# Create a Python virtual environment
 python3 -m venv .venv
 
-# Activate virtual environment
+# Activate the virtual environment
+# On macOS and Linux:
 source .venv/bin/activate
+# On Windows (Git Bash or WSL):
+# source .venv/Scripts/activate
+# On Windows (Command Prompt):
+# .venv\Scripts\activate.bat
 
-# Install AGOR agent development dependencies
+# Install AGOR's agent development dependencies
 python3 -m pip install -r src/agor/tools/agent-requirements.txt
 
-# Test that everything works
-python3 -c "
-import sys
-sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_all_tools
-test_all_tools()
-print('✅ AGOR development tools ready!')
-"
-```
+# Test that the tools are accessible (optional)
+# This command attempts to import and test all tools.
+python3 -c "import sys; sys.path.insert(0, 'src'); from agor.tools.dev_tools import test_all_tools; test_all_tools(); print('AGOR development tools are ready!')"
 
-**Note**: This step is only needed when working with AGOR development tools locally. Remote agents have different setup requirements.
+# To deactivate the virtual environment when done:
+# deactivate
+```
+**Note**: This local Python environment setup is for users who want to directly execute AGOR's Python scripts. Your AI agent, especially in AugmentCode, typically interacts with these tools through its own means after reading the protocol files.
 
 **Workflow:**
 
@@ -339,82 +331,25 @@ agor bundle https://github.com/your-username/your-project
 
 ## 🎭 Role Selection Deep Dive
 
+AGOR defines distinct roles that agents (and by extension, users guiding them) can adopt based on the task at hand. Understanding these roles helps in structuring your work with AGOR.
+
 ### 🔍 Worker Agent
 
-**Primary Purpose:** Deep codebase analysis and implementation
+**Summary:** The Worker Agent focuses on deep codebase analysis, implementation, debugging, and solo development tasks. It excels at technical deep-dives and can manage complex tasks by preserving detailed progress and context across sessions using snapshots, even for individual use. It operates in both Standalone and Bundled modes.
 
-**Best For:**
-
-- Analyzing existing codebases
-- Implementing specific features
-- Debugging and troubleshooting
-- Solo development work
-- Technical deep-dives
-- Managing complex tasks by breaking them down with structured context.
-- Preserving detailed progress and context across multiple work sessions, especially when dealing with AI context window limitations.
-- Creating 'self-snapshots' to seamlessly resume work or switch between different AI models/assistants while maintaining full context.
-
-**Works in Both Modes:**
-
-- **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
-- **Bundled Mode**: Copy-paste codeblocks with full formatting preservation
-- **Independent operation** - no coordination overhead required
-- **Can be incorporated** into multi-agent teams when specialized analysis is needed
-
-**Key Capabilities:**
-
-- Comprehensive codebase analysis and exploration
-- Implementation and development work
-- Technical documentation and explanation
-- Development tooling for snapshots and handoffs
-
-**Typical Workflow:**
-
-1. Analyze codebase using detailed prompts and context
-2. Explore specific code areas based on requirements
-3. Implement changes or provide detailed explanations
-4. Use development tools for snapshots and documentation
-
-**Why Use AGOR as a Worker Agent?**
-
-While "Orchestrator" might suggest a multi-agent focus, AGOR provides significant benefits even for individual development work:
-
-- **Structured Work Management**: AGOR's protocols encourage a methodical approach to tasks. Even if you're the only "agent," thinking in terms of analysis, implementation, and (self-)snapshots can bring clarity to complex projects.
-- **Context Preservation**: AI assistants often have context window limits. Using AGOR's snapshot creation functionality (even if you're creating a snapshot for yourself for a later session or a different AI model) allows you to create a comprehensive snapshot of your current work, including code changes, analysis, and next steps. This means you can pick up exactly where you left off without losing valuable context.
-- **Tool Integration**: AGOR provides a consistent interface for interacting with your codebase, including integrated Git commands and analysis tools, all within the AI's workflow.
-- **Future Scalability**: If your solo project grows to involve more collaborators (human or AI), you'll already have a structured process in place.
-- **Team Integration**: When part of a team, the Worker Agent excels at executing specific tasks assigned by a Project Coordinator, often based on detailed work snapshots, and integrates smoothly into established multi-agent workflows.
+**Key Uses:**
+- Analyzing code, implementing features, debugging.
+- Solo development with structured context management (self-snapshots).
+- Executing specific tasks within a multi-agent team.
 
 ### 📋 PROJECT COORDINATOR
 
-**Primary Purpose:** Strategic planning and team orchestration
+**Summary:** The Project Coordinator is responsible for strategic planning, designing multi-agent workflows, breaking down complex requirements, and orchestrating team activities. It initializes coordination strategies and monitors team progress. It operates in both Standalone and Bundled modes.
 
-**Best For:**
-
-- Planning new features or projects
-- Designing multi-agent workflows
-- Breaking down complex requirements
-- Coordinating team activities
-
-**Works in Both Modes:**
-
-- **Standalone Mode**: Direct commits (if access available) or copy-paste fallback
-- **Bundled Mode**: Copy-paste codeblocks with strategic plans and coordination files
-- **Multi-agent coordination** capabilities available in both modes
-
-**Key Capabilities:**
-
-- Initialize various coordination strategies (e.g., Parallel Divergent, Pipeline, Swarm).
-- Create specialized agent teams.
-- Design snapshot procedures and prompts.
-- Monitor team progress and coordination
-
-**Typical Workflow:**
-
-1. Analyze project requirements.
-2. Select an optimal strategy.
-3. Create a specialized team.
-4. Initialize strategy and coordinate agents
+**Key Uses:**
+- Planning new features or projects.
+- Designing and initiating multi-agent coordination strategies.
+- Creating specialized agent teams and managing their workflow.
 
 ## 🎼 Multi-Agent Coordination Strategies
 

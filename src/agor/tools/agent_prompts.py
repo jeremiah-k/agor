@@ -1,14 +1,10 @@
 """
-Agent Handoffs Module for AGOR Development Tools
+AGOR Agent Prompts Module
 
-This module contains all agent coordination and handoff functionality
-extracted from dev_tools.py for better organization and maintainability.
-
-Functions:
-- generate_handoff_prompt_only: Generate handoff prompts for agent coordination
-- generate_mandatory_session_end_prompt: Session end coordination
-- detick_content/retick_content: Backtick processing for clean codeblocks
-- Snapshot generation and agent coordination utilities
+This module provides utilities for generating various structured prompts
+for agent coordination, feedback, and session transitions. It also includes
+text processing functions like detick/retick for ensuring clean codeblock
+formatting in agent communications.
 """
 
 import re
@@ -100,9 +96,9 @@ def validate_feedback_input(
     component: str = "general",
 ) -> dict:
     """
-    Validates meta feedback input for type, severity, content quality, and component.
-
-    Checks if the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and suggests improvements based on feedback type. Returns a dictionary indicating validity, detected issues, suggestions for improvement, and normalized values for type, severity, and component.
+    Validates feedback input for type, severity, content quality, and component.
+    
+    Checks whether the feedback type and severity are among allowed values, ensures the content is sufficiently descriptive, and provides suggestions for improvement based on the feedback type and content. Returns a dictionary with validation status, detected issues, suggestions, and normalized values for type, severity, and component.
     """
     validation = {
         "is_valid": True,
@@ -159,7 +155,7 @@ def validate_feedback_input(
         "coordination",
         "documentation",
         "git_operations",
-        "agent_handoffs",
+        "agent_prompts",
         "snapshots",
         "environment_detection",
         "workflow",
@@ -332,19 +328,19 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generates a formatted handoff prompt for agent coordination in AGOR development sessions.
-
-    Creates a structured prompt summarizing completed work, current status, instructions for the next agent, critical context, and files modified. Includes environment setup commands, coordination protocol instructions, and immediate next steps. Applies detick processing to ensure clean codeblock rendering for agent-to-agent communication.
-
+    Generates a structured markdown prompt for handing off an AGOR agent session.
+    
+    Summarizes completed work, current project status, instructions for the next agent, critical context, and files modified. The prompt includes environment setup commands, coordination protocol instructions, and immediate next steps. Content is processed to ensure safe codeblock rendering for agent-to-agent communication.
+    
     Args:
         work_completed: List of completed work items for the session.
         current_status: Description of the current project status.
         next_agent_instructions: Instructions or tasks for the next agent or session.
         critical_context: Essential context that must be preserved for continuity.
         files_modified: List of files modified during the session.
-
+    
     Returns:
-        A markdown-formatted handoff prompt with deticked content for seamless agent coordination.
+        A markdown-formatted handoff prompt with processed codeblocks for seamless agent coordination.
     """
     # Validate required inputs
     if not isinstance(work_completed, list):
@@ -423,7 +419,7 @@ python3 -m pip install -r src/agor/tools/agent-requirements.txt
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.agent_handoffs import generate_mandatory_session_end_prompt
+from agor.tools.agent_prompts import generate_mandatory_session_end_prompt
 
 outputs = generate_mandatory_session_end_prompt(
     work_completed=['List what you completed'],

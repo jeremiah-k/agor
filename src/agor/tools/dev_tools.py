@@ -9,7 +9,7 @@ It imports functionality from specialized modules for better organization:
 - checklist: Checklist generation and workflow validation
 - git_operations: Safe git operations and timestamp utilities
 - memory_manager: Cross-branch memory commits and branch management
-- agent_handoffs: Agent coordination and handoff utilities
+- agent_prompts: Agent coordination and prompt generation utilities
 - dev_testing: Testing utilities and environment detection
 
 Provides a clean API interface while keeping individual modules under 500 LOC.
@@ -17,12 +17,12 @@ Provides a clean API interface while keeping individual modules under 500 LOC.
 
 from typing import Dict, List, Tuple
 
-from agor.tools.agent_handoffs import detick_content, retick_content
+from agor.tools.agent_prompts import detick_content, retick_content
 from agor.tools.checklist import (
     check_git_workflow_status,
     generate_development_checklist,
     generate_git_workflow_report,
-    generate_handoff_checklist,
+    create_agent_transition_checklist as _create_agent_transition_checklist_from_module, # Renamed and aliased
     generate_progress_report,
     validate_workflow_completion,
 )
@@ -72,6 +72,54 @@ except ImportError:
 
     git_manager = FallbackGitManager()
 
+_SNAPSHOT_GUIDELINES_TEXT = """\
+# 📸 AGOR Snapshot Guidelines Summary
+Core Purpose: Ensure seamless agent transitions and context preservation.
+---
+Key Functions for Snapshots & Handoffs:
+  - `create_development_snapshot(title, context, next_steps)`: Creates the main snapshot document.
+  - `generate_session_end_prompt(task_description, brief_context)`: Generates the text prompt for handoff.
+  - `generate_project_handoff_prompt(...)`: Generates a more detailed project-level handoff prompt.
+  - `quick_commit_and_push(message, emoji)`: Useful for saving work before/after snapshot.
+  - `commit_memory_to_branch(content, memory_type, agent_id)`: For saving snapshot content to memory.
+---
+Critical Formatting Requirements for Handoff Prompts:
+  - Generated text (e.g., from `generate_session_end_prompt`) MUST be processed by `detick_content()`.
+  - The processed text MUST then be wrapped in a single codeblock (typically ```markdown ... ``` or using `` for AGOR output functions).
+  - Refer to `generate_formatted_output()` and its variants (`generate_pr_description_output`, `generate_handoff_prompt_output`) for the standard way to produce final formatted output.
+---
+Storage:
+  - Snapshots are stored in `.agor/snapshots/` (or agent-specific subdirectories like `.agor/agents/{agent_id}/snapshots/`).
+  - This directory is located on the relevant memory branch (e.g., `agor/mem/main`, `agor/mem/agent_...`), NOT the working branch.
+---
+REMEMBER: Always end your session with a snapshot and a correctly formatted handoff prompt.
+Refer to `SNAPSHOT_SYSTEM_GUIDE.md` for full details or call `get_available_functions_reference()`.
+"""
+
+_MEMORY_ARCH_SUMMARY_TEXT = """\
+# 🧠 AGOR Memory Architecture Summary
+Fundamental Rule: `.agor/` files ONLY exist on memory branches, NEVER on working branches.
+---
+Memory Branch Naming:
+  - Main project memory: `agor/mem/main`
+  - Agent-specific memory (older approach): `agor/mem/agent_...` (less common now)
+  - Snapshots and agent-specific work are often in subdirectories on `agor/mem/main` (e.g., `.agor/agents/AGENT_ID/snapshots/`)
+---
+Interpreting Dev Tool Messages:
+  - If a tool says 'snapshot committed to memory branch agor/mem/main':
+    The snapshot IS on `agor/mem/main` in a path like `.agor/snapshots/...` or `.agor/agents/AGENT_ID/snapshots/...`
+    It will NOT be directly visible on your current working branch's file system.
+  - Files in `.agor/` are generally ignored by the project's main `.gitignore` for working branches.
+---
+Key Dev Tools for Memory Interaction:
+  - `auto_commit_memory(content, memory_type, agent_id)`: Commits content to the standard memory branch (`agor/mem/main`).
+  - `commit_to_memory_branch(file_content, file_name, branch_name, commit_message)`: More general function for committing to specific memory branches/paths.
+  - `initialize_agent_workspace()`: Sets up agent-specific directories on the memory branch.
+  - `create_development_snapshot()`: Often handles committing its own output to the correct memory location.
+---
+Key Takeaway: Trust the dev tools. Memory operations are designed to happen on separate branches to keep your working branch clean.
+Refer to `AGOR_INSTRUCTIONS.md` (Memory System Understanding) for more details.
+"""
 
 # Main API Functions - Core Interface
 # ===================================
@@ -148,34 +196,62 @@ def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
 def commit_memory_to_branch(
     content: str, memory_type: str, agent_id: str = "dev"
 ) -> bool:
-    """Auto-commit memory wrapper."""
+    """
+    Commits the provided content to the specified memory branch for the given agent.
+    
+    Args:
+        content: The content to be committed to memory.
+        memory_type: The type or category of memory branch.
+        agent_id: Identifier for the agent (defaults to "dev").
+    
+    Returns:
+        True if the commit was successful, False otherwise.
+    """
     return auto_commit_memory(content, memory_type, agent_id)
 
 
-def test_development_tools() -> bool:
+def get_snapshot_guidelines_summary(print_output: bool = True) -> str:
     """
-    Test development tools wrapper.
-
-    DEPRECATED: Use test_all_tools() instead.
-    This function will be removed in a future version.
+    Returns a summary of AGOR snapshot guidelines and optionally prints it.
+    
+    Args:
+        print_output: If True, prints the snapshot guidelines summary.
+    
+    Returns:
+        The AGOR snapshot guidelines summary as a string.
     """
-    import warnings
-
-    warnings.warn(
-        "test_development_tools() is deprecated. Use test_all_tools() instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return test_tooling()
+    summary_string = _SNAPSHOT_GUIDELINES_TEXT
+    if print_output:
+        print(summary_string)
+    return summary_string
 
 
-def get_current_timestamp_formatted() -> str:
-    """Get formatted timestamp wrapper."""
-    return get_current_timestamp()
+def display_memory_architecture_info(print_output: bool = True) -> str:
+    """
+    Returns a detailed summary of AGOR's memory architecture and optionally prints it.
+    
+    Args:
+        print_output: If True, prints the memory architecture summary.
+    
+    Returns:
+        The memory architecture summary as a string.
+    """
+    summary_string = _MEMORY_ARCH_SUMMARY_TEXT
+    if print_output:
+        print(summary_string)
+    return summary_string
 
 
 def process_content_for_codeblock(content: str) -> str:
-    """Process content for safe codeblock embedding."""
+    """
+    Prepares content for safe embedding within codeblocks by removing conflicting backticks.
+    
+    Args:
+        content: The text to be processed for codeblock compatibility.
+    
+    Returns:
+        The content with backticks removed to prevent formatting issues in codeblocks.
+    """
     return detick_content(content)
 
 
@@ -363,17 +439,38 @@ def emergency_save(message: str = "Emergency commit - work in progress") -> bool
 
 
 def create_development_checklist(task_type: str = "general") -> str:
-    """Create development checklist for task type."""
+    """
+    Generates a development checklist tailored to the specified task type.
+    
+    Args:
+        task_type: The type of development task for which to generate a checklist.
+    
+    Returns:
+        A formatted checklist string relevant to the given task type.
+    """
     return generate_development_checklist(task_type)
 
 
-def create_handoff_checklist() -> str:
-    """Create agent handoff checklist."""
-    return generate_handoff_checklist()
+def create_agent_transition_checklist() -> str: # Renamed from create_handoff_checklist
+    """
+    Generates a checklist to guide agent transitions during handoff processes.
+    
+    Returns:
+        A formatted checklist string outlining required steps for a successful agent transition.
+    """
+    return _create_agent_transition_checklist_from_module() # Calls the aliased imported function
 
 
 def validate_workflow(checklist_items: List[str]) -> Dict[str, any]:
-    """Validate workflow completion against checklist."""
+    """
+    Validates workflow completion based on provided checklist items.
+    
+    Args:
+        checklist_items: A list of checklist item descriptions to validate.
+    
+    Returns:
+        A dictionary summarizing validation results, including completion status and details.
+    """
     return validate_workflow_completion(checklist_items)
 
 
@@ -1399,18 +1496,18 @@ def generate_workflow_prompt_template(
     include_explicit_requirements: bool = True,
 ) -> str:
     """
-    Generates an optimized workflow prompt template for AGOR agent tasks.
-
-    Creates a detailed prompt incorporating the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements (with example code), and success criteria. Supports options to include the bookend approach and explicit handoff requirements for seamless agent coordination.
-
+    Generates a comprehensive workflow prompt template for AGOR agent tasks.
+    
+    The template includes the task description, memory branch reference, session start requirements, development guidelines, mandatory session end requirements with example code, and success criteria. Options allow inclusion of bookend requirements and explicit handoff/formatting instructions to ensure seamless agent coordination.
+    
     Args:
-        task_description: Description of the agent's task.
-        memory_branch: Optional memory branch name for context continuity; generated if not provided.
-        include_bookend: Whether to include session start and end requirements.
-        include_explicit_requirements: Whether to include explicit handoff and formatting requirements.
-
+        task_description: The description of the agent's assigned task.
+        memory_branch: Optional memory branch name for context; defaults to the main memory branch if not provided.
+        include_bookend: If True, includes session start and end requirements.
+        include_explicit_requirements: If True, includes explicit handoff and formatting requirements.
+    
     Returns:
-        A formatted prompt template string ready for agent use.
+        A formatted string containing the workflow prompt template for agent use.
     """
     if memory_branch is None:
         memory_branch = get_main_memory_branch()
@@ -1459,7 +1556,7 @@ Your response MUST end with:
 ```python
 # Required session end code:
 from agor.tools.dev_tools import create_development_snapshot
-from agor.tools.agent_handoffs import generate_session_end_prompt, detick_content
+from agor.tools.agent_prompts import generate_session_end_prompt, detick_content
 
 # Create snapshot
 create_development_snapshot(

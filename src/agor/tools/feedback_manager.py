@@ -1,7 +1,7 @@
 """
 Feedback Management System for AGOR 0.5.1
 
-This module provides modularized feedback logic extracted from agent_handoffs.py,
+This module provides modularized feedback logic extracted from agent_prompts.py,
 offering better organization and maintainability for meta feedback collection.
 
 Key Features:

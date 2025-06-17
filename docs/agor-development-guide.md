@@ -133,7 +133,7 @@ This guide ensures consistency, quality, and proper protocol management when dev
   - `dev_tools.py`: Main interface for development utilities.
   - `git_operations.py`: Handles core Git command execution and safety.
   - `memory_manager.py`: Manages memory branch operations.
-  - `agent_handoffs.py`: Utilities for agent coordination and prompt generation.
+  - `agent_prompts.py`: Utilities for agent coordination and prompt generation.
   - `dev_testing.py`: Environment detection and test functions for AGOR tooling.
   - `snapshot_templates.py`: Generates various snapshot documents.
   - Other specialized scripts and templates.
@@ -238,11 +238,12 @@ ls .agor/ 2>/dev/null || echo "No .agor directory - not in coordination mode"
 # Test all development utilities
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
+from agor.tools.dev_tools import test_all_tools
+from agor.tools.git_operations import get_current_timestamp # Import directly
 
 # Verify tooling works
 test_all_tools()
-print(f"Session started at: {get_current_timestamp_formatted()}")
+print(f"Session started at: {get_current_timestamp()}") # Use direct import
 ```
 
 **Why this is essential:**
@@ -297,7 +298,7 @@ print(f"Session started at: {get_current_timestamp_formatted()}")
 
 ## 📊 Implementation Status Tracking
 
-**Last Updated**: 2024-07-16 | **AGOR Version**: 0.4.4 | **Protocol Version**: 0.4.0 | **Latest**: Elegant refresh protocols - added smooth navigation and reorientation mechanisms for longer AGOR sessions. (Updated 2024-07-16)
+**Last Updated**: 2025-06-18 | **AGOR Version**: v0.6.2-dev | **Protocol Version**: 0.4.0 | **Latest**: Housekeeping and shift of docs to code. (Updated 2025-06-18)
 
 > **🕐 Getting Current Date/Time Programmatically:**
 >
@@ -894,6 +895,7 @@ When working on AGOR, you're improving the platform you're using. This creates a
 - Document any pain points or inefficiencies you encounter
 - Suggest improvements to this development guide based on your experience
 - Test changes from the perspective of other AI agents who will use AGOR
+- Utilize new helper functions like `get_snapshot_guidelines_summary()` and `display_memory_architecture_info()` from `dev_tools.py` to quickly access key AGOR concepts.
 
 **Your development work on AGOR helps all AI agents coordinate better!** 🎼
 
