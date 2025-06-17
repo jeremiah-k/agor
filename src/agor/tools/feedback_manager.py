@@ -6,7 +6,6 @@ offering better organization and maintainability for meta feedback collection.
 
 Key Features:
 - Structured feedback collection
-- GitHub issue generation
 - Feedback statistics and analysis
 - Template-based feedback formatting
 - Feedback validation and processing
