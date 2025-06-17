@@ -65,6 +65,44 @@ class TestDetection(unittest.TestCase):
             project_type = detect_project_type()
             self.assertEqual(project_type, 'external_project')
 
+    def test_detect_project_type_nested_directory(self):
+        """Test project type detection from nested directory within AGOR project."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create AGOR project structure in temp directory
+            agor_root = Path(temp_dir) / 'agor-project'
+            agor_tools = agor_root / 'src' / 'agor' / 'tools'
+            agor_tools.mkdir(parents=True)
+
+            # Create nested subdirectory
+            nested_dir = agor_root / 'some' / 'nested' / 'directory'
+            nested_dir.mkdir(parents=True)
+
+            # Test from nested directory - should walk up and find AGOR indicators
+            with patch('pathlib.Path.cwd', return_value=nested_dir):
+                project_type = detect_project_type()
+                self.assertEqual(project_type, 'agor_development')
+
+    def test_detect_project_type_pyproject_in_parent(self):
+        """Test project type detection with pyproject.toml in parent directory."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create project structure
+            project_root = Path(temp_dir) / 'project'
+            project_root.mkdir()
+
+            # Create pyproject.toml with AGOR content in root
+            pyproject_file = project_root / 'pyproject.toml'
+            with open(pyproject_file, 'w') as f:
+                f.write('[build-system]\nrequires = ["setuptools"]\n\n[project]\nname = "agor"\n')
+
+            # Create nested subdirectory
+            nested_dir = project_root / 'deep' / 'nested' / 'path'
+            nested_dir.mkdir(parents=True)
+
+            # Test from nested directory - should find pyproject.toml in parent
+            with patch('pathlib.Path.cwd', return_value=nested_dir):
+                project_type = detect_project_type()
+                self.assertEqual(project_type, 'agor_development')
+
 
 class TestPathResolution(unittest.TestCase):
     """Test cases for path resolution functions."""
@@ -84,9 +122,14 @@ class TestPathResolution(unittest.TestCase):
             paths = resolve_agor_paths('external_project')
 
             # Should fallback to relative path or find existing AGOR installation
-            # Use Path for cross-platform path checking with ** wildcard for nested paths
-            tools_path = Path(paths['tools_path'])
-            self.assertTrue(tools_path.match('**/agor/tools') or tools_path.name == 'tools')
+            # Use safer containment check instead of brittle Path.match()
+            tools_path_str = paths['tools_path']
+            self.assertTrue(
+                tools_path_str.endswith('/agor/tools') or
+                tools_path_str.endswith('\\agor\\tools') or
+                tools_path_str.endswith('/tools') or
+                tools_path_str.endswith('\\tools')
+            )
 
     def test_resolve_agor_paths_custom(self):
         """Test path resolution with custom path."""

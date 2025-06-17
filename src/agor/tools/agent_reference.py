@@ -115,9 +115,9 @@ from agor.tools.external_integration import get_agor_tools
 def detect_platform() -> str:
     """
     Detect the current AI platform environment.
-    
+
     Returns:
-        Platform identifier: 'augment_local', 'augment_remote', 'chatgpt', 'claude', etc.
+        Platform identifier: 'augment_local', 'augment_remote', or 'unknown'
     """
     # Check for AugmentCode environment indicators
     if os.environ.get('AUGMENT_LOCAL'):
@@ -135,33 +135,40 @@ def detect_platform() -> str:
 def detect_project_type() -> str:
     """
     Detect if working on AGOR itself or external project.
-    
+
+    Walks upwards from current directory to filesystem root checking for AGOR indicators
+    at each level. This handles mono-repo and nested directory scenarios.
+
     Returns:
         'agor_development' or 'external_project'
     """
     current_dir = Path.cwd()
-    
-    # Check if we're in AGOR directory structure
+
+    # AGOR indicators to check for at each directory level
     agor_indicators = [
         'src/agor/tools',
         'docs/agor-development-guide.md',
     ]
-    
-    # Check pyproject.toml for AGOR-specific content
-    pyproject_file = current_dir / 'pyproject.toml'
-    if pyproject_file.exists():
-        try:
-            with open(pyproject_file, 'r', encoding='utf-8') as f:
-                pyproject_content = f.read()
-                if 'name = "agor"' in pyproject_content:
-                    agor_indicators.append('pyproject.toml')
-        except (IOError, UnicodeDecodeError):
-            pass
-    
-    for indicator in agor_indicators:
-        if (current_dir / indicator).exists():
-            return 'agor_development'
-    
+
+    # Walk upwards from current directory to filesystem root
+    for directory in [current_dir] + list(current_dir.parents):
+        # Check standard AGOR indicators
+        for indicator in agor_indicators:
+            if (directory / indicator).exists():
+                return 'agor_development'
+
+        # Check pyproject.toml for AGOR-specific content
+        pyproject_file = directory / 'pyproject.toml'
+        if pyproject_file.exists():
+            try:
+                with open(pyproject_file, 'r', encoding='utf-8') as f:
+                    pyproject_content = f.read()
+                    if 'name = "agor"' in pyproject_content:
+                        return 'agor_development'
+            except (IOError, UnicodeDecodeError):
+                # Continue checking other indicators if file read fails
+                continue
+
     return 'external_project'
 
 
@@ -178,7 +185,13 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
     """
     if custom_path:
         # Expand user home directory and resolve to absolute path
-        resolved_path = Path(custom_path).expanduser().resolve()
+        # Use absolute() for compatibility with Python < 3.10 when path doesn't exist
+        expanded_path = Path(custom_path).expanduser()
+        try:
+            resolved_path = expanded_path.resolve()
+        except (FileNotFoundError, OSError):
+            # Fallback for non-existent paths on older Python versions
+            resolved_path = expanded_path.absolute()
         base_path = resolved_path.as_posix()
     elif project_type == 'agor_development':
         base_path = 'src/agor'
