@@ -286,10 +286,11 @@ def _get_generate_meta_feedback_func():
     try:
         from agor.tools.agent_prompts import generate_meta_feedback
         return generate_meta_feedback
-    except ImportError as e:
-        # This makes the function return a function that will raise the import error if called
-        def _raiser():
-            raise ImportError(f"Could not import generate_meta_feedback: {e}")
+    except ImportError as import_err:
+        _msg = f"Could not import generate_meta_feedback: {import_err}"
+
+        def _raiser(msg=_msg):
+            raise ImportError(msg)
         return _raiser
 
 def system_health_check_hotkey() -> str:
