@@ -213,17 +213,9 @@ class FeedbackManager:
         component: str = "general",
     ) -> str:
         """
-        Generate formatted meta feedback for AGOR improvement.
-
-        Args:
-            feedback_type: Type of feedback
-            feedback_content: Main feedback content
-            suggestions: List of improvement suggestions
-            severity: Severity level
-            component: Component affected
-
-        Returns:
-            Formatted meta feedback content
+        Generates a formatted meta feedback report for AGOR improvement.
+        
+        Collects feedback details, stores them, and returns a structured report with feedback type, content, suggestions, severity, component, timestamp, and submission instructions for creating a GitHub issue.
         """
         # Collect the feedback
         entry = self.collect_feedback(
@@ -302,13 +294,13 @@ Priority: {{ severity }}
 
     def create_github_issue_content(self, config: GitHubIssueConfig) -> str:
         """
-        Create GitHub issue content from feedback configuration.
-
+        Generates a formatted GitHub issue body from the provided feedback configuration.
+        
         Args:
-            config: GitHub issue configuration
-
+            config: Structured feedback data for issue creation.
+        
         Returns:
-            Formatted GitHub issue content
+            A string containing the rendered GitHub issue content, including title, component, severity, description, reproduction steps, expected and actual behavior (for bugs), suggested solutions, and appropriate labels.
         """
         # Use global feedback type labels mapping
 
