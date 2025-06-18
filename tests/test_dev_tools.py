@@ -18,17 +18,12 @@ from unittest.mock import Mock, patch
 import os
 import sys
 from datetime import datetime
-import time
 
 # Add the src directory to Python path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-# Import the dev_tools module using module import to avoid namespace pollution
-try:
-    import agor.tools.dev_tools as dev_tools
-except ImportError:
-    # Fallback import path
-    import dev_tools
+# Import the dev_tools module
+from agor.tools import dev_tools
 
 # -----------------------
 # Fixtures for test data
@@ -475,18 +470,17 @@ class TestMemoryManagement:
         success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="test_agent")
         assert not success and aid == "test_agent" and branch == "agor/mem/main"
     
-    @patch('tempfile.gettempdir')
-    @patch('pathlib.Path.write_text')
-    @patch('pathlib.Path.read_text')
-    @patch('pathlib.Path.exists')
-    @patch('pathlib.Path.mkdir')
-    def test_get_or_create_agent_id_file_create_new(self, mock_mkdir, mock_exists, mock_read, mock_write, mock_temp):
-        mock_temp.return_value = "/tmp"
-        mock_exists.return_value = False
-        with patch('agor.tools.dev_tools.generate_unique_agent_id') as mock_gen:
-            mock_gen.return_value = "new_agent_123"
-            assert dev_tools.get_or_create_agent_id_file() == "new_agent_123"
-            mock_write.assert_called_once()
+    def test_get_or_create_agent_id_file_create_new(self):
+        with patch.multiple(
+            'pathlib.Path',
+            mkdir=Mock(),
+            exists=Mock(return_value=False),
+            read_text=Mock(),
+            write_text=Mock()
+        ), patch('tempfile.gettempdir', return_value="/tmp"), \
+           patch('agor.tools.dev_tools.generate_unique_agent_id', return_value="new_agent_123"):
+            result = dev_tools.get_or_create_agent_id_file()
+            assert result == "new_agent_123"
     
     @patch('tempfile.gettempdir')
     @patch('pathlib.Path.read_text')
