@@ -23,13 +23,15 @@ from agor.tools.hotkeys import (
 def hotkey_manager():
     """Fixture providing a clean HotkeyManager instance for each test.
 
-    Note: HotkeyManager should be created after patching KEYBOARD_AVAILABLE
-    to ensure it uses the correct flag value.
+    Creates HotkeyManager instances within a safe patch context to prevent
+    real keyboard module usage during testing.
     """
-    # Return a factory function instead of a pre-created instance
+    # Return a factory function that creates managers safely
     def _create_manager():
-        manager = HotkeyManager()
-        return manager
+        with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False), \
+             patch('agor.tools.hotkeys.keyboard'):
+            manager = HotkeyManager()
+            return manager
     yield _create_manager
 
 @pytest.fixture
@@ -58,9 +60,11 @@ class TestHotkeyManagerInit:
     
     def test_init_creates_empty_manager(self):
         """Test that new HotkeyManager starts with empty state."""
-        manager = HotkeyManager()
-        assert manager.get_registered_keys() == []
-        assert manager.is_active() is False
+        with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False), \
+             patch('agor.tools.hotkeys.keyboard'):
+            manager = HotkeyManager()
+            assert manager.get_registered_keys() == []
+            assert manager.is_active() is False
     
     def test_init_with_keyboard_unavailable(self):
         """Test initialization when keyboard module is unavailable."""
@@ -71,16 +75,18 @@ class TestHotkeyManagerInit:
     def test_thread_safety_initialization(self):
         """Test that multiple managers can be created concurrently."""
         managers = []
-        
+
         def create_manager():
-            managers.append(HotkeyManager())
-        
+            with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False), \
+                 patch('agor.tools.hotkeys.keyboard'):
+                managers.append(HotkeyManager())
+
         threads = [threading.Thread(target=create_manager) for _ in range(10)]
         for thread in threads:
             thread.start()
         for thread in threads:
             thread.join()
-        
+
         assert len(managers) == 10
         for manager in managers:
             assert isinstance(manager, HotkeyManager)
@@ -341,14 +347,15 @@ class TestHotkeyManagerLifecycle:
     def test_context_manager_exception_handling(self, mock_keyboard):
         """Test context manager handles exceptions properly."""
         callback = Mock()
-        
+
         try:
-            with HotkeyManager() as manager:
-                manager.register('a', callback)
-                raise ValueError("Test exception")
+            with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True):
+                with HotkeyManager() as manager:
+                    manager.register('a', callback)
+                    raise ValueError("Test exception")
         except ValueError:
             pass
-        
+
         # Manager should still be properly cleaned up
         assert manager.is_active() is False
 
@@ -459,7 +466,9 @@ class TestGlobalHotkeyFunctions:
         result = start_hotkey_manager()
         assert result is True
     
-    def test_stop_hotkey_manager_global(self, mock_logger):
+    @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False)
+    @patch('agor.tools.hotkeys.keyboard')
+    def test_stop_hotkey_manager_global(self, mock_keyboard, keyboard_available, mock_logger):
         """Test global stop_hotkey_manager function."""
         # Should not raise exception
         stop_hotkey_manager()
@@ -469,6 +478,7 @@ class TestGlobalHotkeyFunctions:
     def test_global_manager_isolation(self, mock_keyboard, keyboard_available):
         """Test that global manager operations don't interfere with instance managers."""
         callback = Mock()
+        # Create instance manager within the patched context
         instance_manager = HotkeyManager()
 
         # Register on global manager
@@ -492,6 +502,7 @@ class TestThreadSafety:
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     def test_concurrent_registration(self, keyboard_available, mock_keyboard):
         """Test concurrent hotkey registration is thread-safe."""
+        # Create manager within the patched context
         manager = HotkeyManager()
         callback = Mock()
         results = []
@@ -523,6 +534,7 @@ class TestThreadSafety:
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     def test_concurrent_registration_and_removal(self, keyboard_available, mock_keyboard):
         """Test concurrent registration and removal operations."""
+        # Create manager within the patched context
         manager = HotkeyManager()
         callback = Mock()
         
