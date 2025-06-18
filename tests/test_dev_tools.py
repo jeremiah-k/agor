@@ -188,7 +188,7 @@ class TestMainAPIFunctions:
     @patch('agor.tools.dev_tools.generate_agent_handoff_prompt')
     def test_generate_project_handoff_prompt(self, mock_prompt):
         mock_prompt.return_value = "Project handoff prompt generated"
-        result = generate_project_handoff_prompt(
+        result = dev_tools.generate_project_handoff_prompt(
             task_description="Complete project handoff",
             snapshot_content="Snapshot data",
             memory_branch="agor/mem/main",
@@ -235,19 +235,19 @@ class TestConvenienceFunctions:
     @patch('agor.tools.dev_tools.auto_commit_memory')
     def test_commit_memory_to_branch_success(self, mock_auto_commit):
         mock_auto_commit.return_value = True
-        result = commit_memory_to_branch(content="Memory content", memory_type="snapshot", agent_id="test_agent")
+        result = dev_tools.commit_memory_to_branch(content="Memory content", memory_type="snapshot", agent_id="test_agent")
         assert result is True
         mock_auto_commit.assert_called_once_with("Memory content", "snapshot", "test_agent")
     
     @patch('agor.tools.dev_tools.auto_commit_memory')
     def test_commit_memory_to_branch_with_defaults(self, mock_auto_commit):
         mock_auto_commit.return_value = True
-        result = commit_memory_to_branch(content="Default memory content", memory_type="log")
+        result = dev_tools.commit_memory_to_branch(content="Default memory content", memory_type="log")
         assert result is True
         mock_auto_commit.assert_called_once_with("Default memory content", "log", "dev")
     
     def test_get_snapshot_guidelines_summary_with_print(self, capsys):
-        result = get_snapshot_guidelines_summary(print_output=True)
+        result = dev_tools.get_snapshot_guidelines_summary(print_output=True)
         captured = capsys.readouterr()
         assert "AGOR Snapshot Guidelines Summary" in result
         assert "AGOR Snapshot Guidelines Summary" in captured.out
@@ -255,20 +255,20 @@ class TestConvenienceFunctions:
         assert "Key Functions for Snapshots" in result
     
     def test_get_snapshot_guidelines_summary_without_print(self, capsys):
-        result = get_snapshot_guidelines_summary(print_output=False)
+        result = dev_tools.get_snapshot_guidelines_summary(print_output=False)
         captured = capsys.readouterr()
         assert "AGOR Snapshot Guidelines Summary" in result
         assert captured.out == ""
     
     def test_display_memory_architecture_info_with_print(self, capsys):
-        result = display_memory_architecture_info(print_output=True)
+        result = dev_tools.display_memory_architecture_info(print_output=True)
         captured = capsys.readouterr()
         assert "AGOR Memory Architecture Summary" in result
         assert "AGOR Memory Architecture Summary" in captured.out
         assert "Memory Branch Naming" in result
     
     def test_display_memory_architecture_info_without_print(self, capsys):
-        result = display_memory_architecture_info(print_output=False)
+        result = dev_tools.display_memory_architecture_info(print_output=False)
         captured = capsys.readouterr()
         assert "AGOR Memory Architecture Summary" in result
         assert captured.out == ""
@@ -284,7 +284,7 @@ class TestContentProcessing:
     def test_process_content_for_codeblock(self, mock_detick):
         input_content = "Some content with ```code``` blocks"
         mock_detick.return_value = "Some content with code blocks"
-        result = process_content_for_codeblock(input_content)
+        result = dev_tools.process_content_for_codeblock(input_content)
         assert result == "Some content with code blocks"
         mock_detick.assert_called_once_with(input_content)
     
@@ -292,13 +292,13 @@ class TestContentProcessing:
     def test_restore_content_from_codeblock(self, mock_retick):
         input_content = "Some content with code blocks"
         mock_retick.return_value = "Some content with ```code``` blocks"
-        result = restore_content_from_codeblock(input_content)
+        result = dev_tools.restore_content_from_codeblock(input_content)
         assert result == "Some content with ```code``` blocks"
         mock_retick.assert_called_once_with(input_content)
     
     def test_validate_output_formatting_compliant_content(self):
         compliant_content = "This is clean content without issues"
-        result = validate_output_formatting(compliant_content)
+        result = dev_tools.validate_output_formatting(compliant_content)
         assert result["is_compliant"] is True
         assert result["has_codeblocks"] is False
         assert result["has_triple_backticks"] is False
@@ -307,7 +307,7 @@ class TestContentProcessing:
     
     def test_validate_output_formatting_with_codeblocks(self):
         content = "Content with ```python\ncode here\n``` blocks"
-        result = validate_output_formatting(content)
+        result = dev_tools.validate_output_formatting(content)
         assert result["has_codeblocks"] is True
         assert result["has_triple_backticks"] is True
         assert result["detick_needed"] is True
@@ -316,28 +316,28 @@ class TestContentProcessing:
     
     def test_validate_output_formatting_handoff_content(self):
         content = "This is a handoff prompt with ```code```"
-        result = validate_output_formatting(content)
+        result = dev_tools.validate_output_formatting(content)
         assert result["is_compliant"] is False
         assert "handoff prompts must be deticked" in str(result["issues"]).lower()
     
     @patch('agor.tools.dev_tools.detick_content')
     def test_apply_output_formatting(self, mock_detick):
         mock_detick.return_value = "Content with backticks"
-        result = apply_output_formatting("Content with ```backticks```", "test")
+        result = dev_tools.apply_output_formatting("Content with ```backticks```", "test")
         assert result == "``\nContent with backticks\n``"
         mock_detick.assert_called_once()
     
     @patch('agor.tools.dev_tools.apply_output_formatting')
     def test_generate_formatted_output(self, mock_apply):
         mock_apply.return_value = "``\nFormatted content\n``"
-        result = generate_formatted_output("Raw content", "general")
+        result = dev_tools.generate_formatted_output("Raw content", "general")
         assert result == "``\nFormatted content\n``"
         mock_apply.assert_called_once_with("Raw content", "general")
     
     @patch('agor.tools.dev_tools.generate_formatted_output')
     def test_generate_handoff_prompt_output(self, mock_generate):
         mock_generate.return_value = "``\nHandoff prompt\n``"
-        result = generate_handoff_prompt_output("Raw handoff content")
+        result = dev_tools.generate_handoff_prompt_output("Raw handoff content")
         assert result == "``\nHandoff prompt\n``"
         mock_generate.assert_called_once_with("Raw handoff content", "handoff_prompt")
 
@@ -358,13 +358,13 @@ class TestGitBranchOperations:
           remotes/origin/agor/mem/main
           remotes/origin/agor/mem/agent_456
         """
-        local, remote = _parse_git_branches(output)
+        local, remote = dev_tools._parse_git_branches(output)
         assert "agor/mem/main" in local and "agor/mem/agent_123" in local
         assert "agor/mem/main" in remote and "agor/mem/agent_456" in remote
         assert len(local) == 2 and len(remote) == 2
     
     def test_parse_git_branches_empty_output(self):
-        local, remote = _parse_git_branches("")
+        local, remote = dev_tools._parse_git_branches("")
         assert local == [] and remote == []
     
     def test_parse_git_branches_no_memory_branches(self):
@@ -374,21 +374,21 @@ class TestGitBranchOperations:
           remotes/origin/main
           remotes/origin/feature/test
         """
-        local, remote = _parse_git_branches(output)
+        local, remote = dev_tools._parse_git_branches(output)
         assert local == [] and remote == []
     
     @patch('agor.tools.dev_tools.run_git_command')
     def test_delete_local_branches_success(self, mock_git):
         mock_git.return_value = (True, "Branch deleted")
         results = {"deleted_local": [], "failed": []}
-        _delete_local_branches(["agor/mem/test1","agor/mem/test2"], results)
+        dev_tools._delete_local_branches(["agor/mem/test1","agor/mem/test2"], results)
         assert len(results["deleted_local"]) == 2 and not results["failed"]
     
     @patch('agor.tools.dev_tools.run_git_command')
     def test_delete_local_branches_failure(self, mock_git):
         mock_git.return_value = (False, "Permission denied")
         results = {"deleted_local": [], "failed": []}
-        _delete_local_branches(["agor/mem/test1"], results)
+        dev_tools._delete_local_branches(["agor/mem/test1"], results)
         assert not results["deleted_local"]
         assert "local:agor/mem/test1" in results["failed"]
     
@@ -396,14 +396,14 @@ class TestGitBranchOperations:
     def test_delete_remote_branches_success(self, mock_git):
         mock_git.return_value = (True, "Remote branch deleted")
         results = {"deleted_remote": [], "failed": []}
-        _delete_remote_branches(["agor/mem/remote1","agor/mem/remote2"], results)
+        dev_tools._delete_remote_branches(["agor/mem/remote1","agor/mem/remote2"], results)
         assert len(results["deleted_remote"]) == 2 and not results["failed"]
     
     @patch('agor.tools.dev_tools.run_git_command')
     def test_delete_remote_branches_permission_denied(self, mock_git):
         mock_git.return_value = (False, "Permission denied error")
         results = {"deleted_remote": [], "failed": []}
-        _delete_remote_branches(["agor/mem/remote1"], results)
+        dev_tools._delete_remote_branches(["agor/mem/remote1"], results)
         assert not results["deleted_remote"]
         assert "permission_denied" in results["failed"][0]
     
@@ -411,7 +411,7 @@ class TestGitBranchOperations:
     def test_delete_remote_branches_network_error(self, mock_git):
         mock_git.return_value = (False, "Network connection failed")
         results = {"deleted_remote": [], "failed": []}
-        _delete_remote_branches(["agor/mem/remote1"], results)
+        dev_tools._delete_remote_branches(["agor/mem/remote1"], results)
         assert not results["deleted_remote"]
         assert "network_error" in results["failed"][0]
 
@@ -423,28 +423,28 @@ class TestMemoryManagement:
     """Test suite for memory management and agent functions."""
     
     def test_generate_unique_agent_id_format(self):
-        agent_id = generate_unique_agent_id()
+        agent_id = dev_tools.generate_unique_agent_id()
         assert agent_id.startswith("agent_")
         parts = agent_id.split("_")
         assert len(parts) == 3 and len(parts[1]) == 8 and parts[2].isdigit()
     
     def test_generate_unique_agent_id_uniqueness(self):
-        assert generate_unique_agent_id() != generate_unique_agent_id()
+        assert dev_tools.generate_unique_agent_id() != dev_tools.generate_unique_agent_id()
     
     def test_generate_agent_id_calls_unique_generator(self):
         with patch('agor.tools.dev_tools.generate_unique_agent_id') as mock_unique:
             mock_unique.return_value = "test_agent_id"
-            assert generate_agent_id() == "test_agent_id"
+            assert dev_tools.generate_agent_id() == "test_agent_id"
             mock_unique.assert_called_once()
     
     def test_get_main_memory_branch_default(self):
-        assert get_main_memory_branch() == "agor/mem/main"
+        assert dev_tools.get_main_memory_branch() == "agor/mem/main"
     
     def test_get_main_memory_branch_custom(self):
-        assert get_main_memory_branch("custom/branch") == "custom/branch"
+        assert dev_tools.get_main_memory_branch("custom/branch") == "custom/branch"
     
     def test_get_agent_directory_path(self):
-        assert get_agent_directory_path("test_agent_123") == ".agor/agents/test_agent_123/"
+        assert dev_tools.get_agent_directory_path("test_agent_123") == ".agor/agents/test_agent_123/"
     
     @patch('agor.tools.dev_tools.generate_agent_id')
     @patch('agor.tools.dev_tools.get_current_timestamp')
@@ -453,26 +453,26 @@ class TestMemoryManagement:
         mock_gen.return_value = "test_agent_123"
         mock_ts.return_value = "2024-01-01T12:00:00Z"
         mock_commit.return_value = True
-        success, aid, branch = initialize_agent_workspace()
+        success, aid, branch = dev_tools.initialize_agent_workspace()
         assert success and aid == "test_agent_123" and branch == "agor/mem/main"
         assert mock_commit.call_count == 2
     
     @patch('agor.tools.dev_tools.commit_to_memory_branch')
     def test_initialize_agent_workspace_with_params(self, mock_commit):
         mock_commit.return_value = True
-        success, aid, branch = initialize_agent_workspace(agent_id="custom_agent", custom_branch="custom/branch")
+        success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="custom_agent", custom_branch="custom/branch")
         assert success and aid == "custom_agent" and branch == "custom/branch"
     
     @patch('agor.tools.dev_tools.commit_to_memory_branch')
     def test_initialize_agent_workspace_failure(self, mock_commit):
         mock_commit.return_value = False
-        success, aid, branch = initialize_agent_workspace(agent_id="test_agent")
+        success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="test_agent")
         assert not success and aid == "test_agent" and branch == "agor/mem/main"
     
     @patch('agor.tools.dev_tools.commit_to_memory_branch')
     def test_initialize_agent_workspace_exception(self, mock_commit):
         mock_commit.side_effect = Exception("Commit failed")
-        success, aid, branch = initialize_agent_workspace(agent_id="test_agent")
+        success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="test_agent")
         assert not success and aid == "test_agent" and branch == "agor/mem/main"
     
     @patch('tempfile.gettempdir')
@@ -485,7 +485,7 @@ class TestMemoryManagement:
         mock_exists.return_value = False
         with patch('agor.tools.dev_tools.generate_unique_agent_id') as mock_gen:
             mock_gen.return_value = "new_agent_123"
-            assert get_or_create_agent_id_file() == "new_agent_123"
+            assert dev_tools.get_or_create_agent_id_file() == "new_agent_123"
             mock_write.assert_called_once()
     
     @patch('tempfile.gettempdir')
@@ -495,7 +495,7 @@ class TestMemoryManagement:
         mock_temp.return_value = "/tmp"
         mock_exists.return_value = True
         mock_read.return_value = "existing_agent_456"
-        assert get_or_create_agent_id_file() == "existing_agent_456"
+        assert dev_tools.get_or_create_agent_id_file() == "existing_agent_456"
 
 # ------------------------------------------------
 # Tests for workflow prompts, validation & guides
@@ -509,28 +509,28 @@ class TestWorkflowAndValidation:
     def test_generate_workflow_prompt_template_minimal(self, mock_branch, mock_ts):
         mock_ts.return_value = "2024-01-01T12:00:00Z"
         mock_branch.return_value = "agor/mem/main"
-        result = generate_workflow_prompt_template("Test task")
+        result = dev_tools.generate_workflow_prompt_template("Test task")
         assert "# 🎯 AGOR Agent Task: Test task" in result
         assert "2024-01-01T12:00:00Z" in result
         assert "agor/mem/main" in result
     
     def test_generate_workflow_prompt_template_custom_branch(self):
-        result = generate_workflow_prompt_template("Custom task", memory_branch="custom/mem/branch")
+        result = dev_tools.generate_workflow_prompt_template("Custom task", memory_branch="custom/mem/branch")
         assert "custom/mem/branch" in result
         assert "# 🎯 AGOR Agent Task: Custom task" in result
     
     def test_generate_workflow_prompt_template_no_bookend(self):
-        result = generate_workflow_prompt_template("Test task", include_bookend=False)
+        result = dev_tools.generate_workflow_prompt_template("Test task", include_bookend=False)
         assert "Session Start Requirements" not in result
         assert "Development Guidelines" in result
     
     def test_generate_workflow_prompt_template_no_explicit_requirements(self):
-        result = generate_workflow_prompt_template("Test task", include_explicit_requirements=False)
+        result = dev_tools.generate_workflow_prompt_template("Test task", include_explicit_requirements=False)
         assert "MANDATORY SESSION END REQUIREMENTS" not in result
         assert "Success Criteria" in result
     
     def test_validate_agor_workflow_completion_complete(self):
-        result = validate_agor_workflow_completion(
+        result = dev_tools.validate_agor_workflow_completion(
             work_completed=["Task 1","Task 2"],
             files_modified=["file1.py","file2.md"],
             has_snapshot=True,
@@ -539,7 +539,7 @@ class TestWorkflowAndValidation:
         assert result["is_complete"] and result["score"] == 10
     
     def test_validate_agor_workflow_completion_incomplete(self):
-        result = validate_agor_workflow_completion(
+        result = dev_tools.validate_agor_workflow_completion(
             work_completed=[],
             files_modified=[],
             has_snapshot=False,
@@ -549,7 +549,7 @@ class TestWorkflowAndValidation:
         assert "Create development snapshot" in str(result["missing_requirements"])
     
     def test_validate_agor_workflow_completion_partial(self):
-        result = validate_agor_workflow_completion(
+        result = dev_tools.validate_agor_workflow_completion(
             work_completed=["Some work"],
             files_modified=["file.py"],
             has_snapshot=True,
@@ -560,15 +560,15 @@ class TestWorkflowAndValidation:
     @patch('agor.tools.dev_tools.get_current_timestamp')
     def test_get_workflow_optimization_tips(self, mock_ts):
         mock_ts.return_value = "2024-01-01T12:00:00Z"
-        result = get_workflow_optimization_tips()
+        result = dev_tools.get_workflow_optimization_tips()
         assert "AGOR Workflow Optimization Tips" in result
     
     def test_get_agor_initialization_guide(self):
-        result = get_agor_initialization_guide()
+        result = dev_tools.get_agor_initialization_guide()
         assert "AGOR INITIALIZATION GUIDE" in result
     
     def test_get_snapshot_requirements(self):
-        result = get_snapshot_requirements()
+        result = dev_tools.get_snapshot_requirements()
         assert "SNAPSHOT REQUIREMENTS" in result
 
 # ---------------------------------------
@@ -580,39 +580,39 @@ class TestEdgeCasesAndErrorHandling:
     
     def test_validate_output_formatting_edge_cases(self):
         with pytest.raises(AttributeError):
-            validate_output_formatting(None)
-        assert validate_output_formatting("")["is_compliant"]
-        assert validate_output_formatting("   \n\t  ")["is_compliant"]
-        assert validate_output_formatting("Special chars: @#$%^&*()")["is_compliant"]
+            dev_tools.validate_output_formatting(None)
+        assert dev_tools.validate_output_formatting("")["is_compliant"]
+        assert dev_tools.validate_output_formatting("   \n\t  ")["is_compliant"]
+        assert dev_tools.validate_output_formatting("Special chars: @#$%^&*()")["is_compliant"]
     
     def test_memory_branch_operations_with_invalid_input(self):
-        assert get_agent_directory_path("") == ".agor/agents//"
+        assert dev_tools.get_agent_directory_path("") == ".agor/agents//"
         with pytest.raises(TypeError):
-            get_agent_directory_path(None)
+            dev_tools.get_agent_directory_path(None)
     
     @patch('agor.tools.dev_tools.sanitize_slug')
     def test_agent_id_sanitization(self, mock_sanitize):
         mock_sanitize.return_value = "sanitized_agent_id"
         with patch('tempfile.gettempdir'), patch('pathlib.Path.mkdir'), patch('pathlib.Path.write_text'):
-            result = get_or_create_agent_id_file("unsafe@agent#id")
+            result = dev_tools.get_or_create_agent_id_file("unsafe@agent#id")
             mock_sanitize.assert_called_once()
             assert result == "sanitized_agent_id"
     
     @patch('agor.tools.dev_tools.test_tooling')
     def test_test_all_tools_success(self, mock_tooling):
         mock_tooling.return_value = True
-        assert test_all_tools() is True
+        assert dev_tools.test_all_tools() is True
     
     @patch('agor.tools.dev_tools.test_tooling')
     def test_test_all_tools_failure(self, mock_tooling):
         mock_tooling.return_value = False
-        assert test_all_tools() is False
+        assert dev_tools.test_all_tools() is False
     
     @patch('agor.tools.dev_tools.detect_environment')
     def test_detect_current_environment(self, mock_detect):
         expected = {"platform": "linux", "python_version": "3.9"}
         mock_detect.return_value = expected
-        assert detect_current_environment() == expected
+        assert dev_tools.detect_current_environment() == expected
 
 # ------------------------------
 # Integration-style test flows
@@ -628,9 +628,9 @@ class TestIntegrationScenarios:
         mock_snapshot.return_value = True
         mock_prompt.return_value = "Session end prompt"
         mock_format.return_value = "``\nFormatted prompt\n``"
-        assert create_development_snapshot(title="Test Session", context="Session context", next_steps=["Step 1","Step 2"])
-        assert generate_session_end_prompt(task_description="Test task", brief_context="Test context") == "Session end prompt"
-        assert apply_output_formatting("Session end prompt", "handoff") == "``\nFormatted prompt\n``"
+        assert dev_tools.create_development_snapshot(title="Test Session", context="Session context", next_steps=["Step 1","Step 2"])
+        assert dev_tools.generate_session_end_prompt(task_description="Test task", brief_context="Test context") == "Session end prompt"
+        assert dev_tools.apply_output_formatting("Session end prompt", "handoff") == "``\nFormatted prompt\n``"
 
 # ----------------------------------
 # Performance and stress scenarios
@@ -645,14 +645,14 @@ class TestPerformanceScenarios:
         with patch('agor.tools.dev_tools.detick_content') as mock_detick:
             mock_detick.return_value = large_content
             start = datetime.now()
-            result = apply_output_formatting(large_content, "test")
+            result = dev_tools.apply_output_formatting(large_content, "test")
             duration = (datetime.now() - start).total_seconds()
             assert duration < 5.0
             assert len(result) > len(large_content)
     
     def test_multiple_agent_id_generation_performance(self):
         start = datetime.now()
-        ids = [generate_unique_agent_id() for _ in range(100)]
+        ids = [dev_tools.generate_unique_agent_id() for _ in range(100)]
         duration = (datetime.now() - start).total_seconds()
         assert duration < 1.0
         assert len(set(ids)) == 100
