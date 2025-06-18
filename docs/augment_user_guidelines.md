@@ -7,52 +7,70 @@ _These guidelines enable the AugmentCode Local Agent to effectively utilize the 
 When working on development tasks, you are operating within the **AGOR (AgentOrchestrator)** framework - a sophisticated multi-agent development coordination platform. Your primary responsibilities:
 
 1. **Read AGOR Documentation**: Always start by reading the AGOR protocol files from workspace sources
-2. **Select Appropriate Role**: Choose the correct AGOR role based on task requirements
+2. **Use AGOR Dev Tools**: Always use the programmatic dev tools for all AGOR operations
 3. **Follow AGOR Protocols**: Use structured workflows, development tools, and coordination methods
-4. **Create Snapshots**: Always create snapshots before ending sessions using proper AGOR format
+4. **Create Snapshots**: Always create snapshots before ending sessions using AGOR dev tools
 5. **Maintain Context**: Use AGOR's memory and coordination systems for session continuity
+6. **Commit Frequently**: Use quick_commit_and_push() often to keep work synchronized
 
 ## 🚀 Initialization Protocol
 
-### Step 1: Read AGOR Documentation
+### Step 1: Initialize AGOR Dev Tools
 
 ```
-MANDATORY: Read these files from workspace sources before starting any development work:
+MANDATORY: Execute these functions to initialize the AGOR system:
+
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+If the above functions don't work, read these files as fallback:
 - src/agor/tools/README_ai.md (role selection and initialization)
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
-- src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
-
-Read as much AGOR documentation as necessary to maintain an effective workflow. Analyze the snapshot system and its templates. Understand memory branches and how they operate.
 ```
 
-### Step 2: Role Selection
+### Step 2: Understand Core AGOR Systems
 
-Choose your AGOR role based on the task:
+**🔧 Dev Tools (Primary Interface)**:
+- Always use AGOR dev tools for all operations
+- Never manually create or manage .agor files
+- All memory operations handled automatically by dev tools
 
-**🔍 Worker Agent** - For:
+**📸 Snapshot System**:
+- Snapshots saved to `.agor/agents/{agent_id}/snapshots/` on memory branches
+- Use `create_development_snapshot()` function only
+- Never manually create snapshot files
 
+**🧠 Memory Branch Architecture**:
+- Memory branches (e.g., `agor/mem/main`) store all .agor files
+- Working branches never contain .agor directories
+- Cross-branch commits handled automatically by dev tools
+
+### Step 3: Role Selection (Worker Agent Focus)
+
+You will typically operate as a **🔍 Worker Agent** for:
 - Codebase analysis and exploration
 - Feature implementation and debugging
 - Technical documentation and code explanation
-- Direct development work
-- Task execution and completion
+- Direct development work and task execution
 
-**📋 Project Coordinator** - For:
-
-- Strategic planning and architecture design
-- Multi-agent workflow coordination
-- Project breakdown and task assignment
-- Team management and strategy selection
-
-### Step 3: Environment Detection
-
-You are operating in **AugmentCode Local Agent** environment with:
-
-- Direct workspace access to AGOR documentation
-- Full file system access without upload limitations
-- Persistent User Guidelines across sessions
-- Enhanced memory through Augment system
+**Note**: Multi-agent coordination strategies are experimental and not recommended for production use. Focus on the mature snapshot/memory system and dev tools.
 
 ### Step 4: External Project Integration (CRITICAL)
 
@@ -77,9 +95,25 @@ tools.create_development_snapshot("title", "context")
 
 ## 🛠️ AGOR Development Tools
 
-### Available Functions
+### Core Dev Tools (Always Use These)
 
-AGOR provides powerful development functions. **Choose the correct access method**:
+**📸 Snapshot & Memory Management**:
+- `create_development_snapshot(title, context, next_steps)` - Create comprehensive work snapshots
+- `generate_session_end_prompt(task_description, brief_context)` - Generate handoff prompts
+- `generate_pr_description_output(content)` - Create PR descriptions (brief content only)
+- `generate_release_notes_output(content)` - Create release notes (brief content only)
+
+**⚡ Quick Development Workflow**:
+- `quick_commit_and_push(message, emoji)` - **USE FREQUENTLY** - Efficient commit and push
+- `get_workspace_status()` - Check project and git status
+- `test_all_tools()` - Verify all dev tools work correctly
+
+**🧠 Memory Operations (Automatic)**:
+- All memory operations happen automatically on separate memory branches
+- Never manually create or edit .agor files
+- Snapshots automatically saved to `.agor/agents/{agent_id}/snapshots/` on memory branches
+
+### Function Access Methods
 
 **For External Projects (Recommended)**:
 
@@ -87,14 +121,10 @@ AGOR provides powerful development functions. **Choose the correct access method
 from agor.tools.external_integration import get_agor_tools
 tools = get_agor_tools()
 
-# Available functions through tools object:
-tools.create_development_snapshot("title", "context")
-tools.generate_pr_description_output("content")  # Brief content only
-tools.generate_handoff_prompt_output("content")  # Can be full length
-tools.generate_release_notes_output("content")   # Brief content only
-tools.quick_commit_and_push("message", "emoji")
-tools.get_workspace_status()
-tools.test_all_tools()
+# Use functions through tools object:
+tools.create_development_snapshot("title", "context", ["next", "steps"])
+tools.quick_commit_and_push("message", "🔧")
+tools.generate_pr_description_output("content")
 ```
 
 **For AGOR Development Only**:
@@ -103,68 +133,42 @@ tools.test_all_tools()
 # Only use direct imports when working ON AGOR itself
 from agor.tools.dev_tools import (
     create_development_snapshot,
+    quick_commit_and_push,
     generate_pr_description_output,
-    # ... other functions
 )
 ```
 
-**OUTPUT FORMATTING**: ALL generated outputs MUST use the proper functions for formatting. These functions automatically handle deticking and codeblock wrapping. NEVER manually process or wrap content - ALWAYS use these functions.
+### Critical Workflow Requirements
+
+**🚨 MANDATORY Session End Process**:
+
+1. **Use quick_commit_and_push() frequently** during development to keep work synchronized
+2. **Create development snapshot** using `create_development_snapshot()` function
+3. **Generate handoff prompt** using `generate_session_end_prompt()` function
+4. **Never manually create .agor files** - all memory management is automatic
+
+**📍 Snapshot Storage (Automatic)**:
+- Snapshots automatically saved to `.agor/agents/{agent_id}/snapshots/` on memory branches
+- **Never manually interact with .agor directories** - use dev tools only
+- Memory branches (e.g., `agor/mem/main`) handle all coordination files automatically
 
 ### Agent Workflow Guidance
 
-Agents should proactively offer to generate deliverables as work nears completion:
-
 **End each response with suggestions like:**
+- "Would you like me to create a development snapshot and handoff prompt for this work?"
+- "I can generate PR notes using the dev tools if you're ready to create a pull request."
+- "Let me know if you'd like me to commit our progress using quick_commit_and_push()."
 
-- "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
-- "Would you like me to create a release notes summary for the changes we've made?"
-- "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
-
-**As we approach the end of our work in this branch, be prepared to use the dev tools as we finish. If asked, be prepared to create a PR summary and release notes using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting). You might also be expected to create a handoff prompt for another agent, containing full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable. Be prepared to give me these deliverables (each with its output/content wrapped in its own single codeblock) at the end of each series of changes, so I do not need to ask for everything individually.**
-
-### Snapshot Requirements (CRITICAL)
-
-**EVERY session MUST end with a snapshot in a single codeblock:**
-
-1. **Check Current Date**: Use `date` command to get correct date
-2. **Use AGOR Tools**: Use snapshot_templates.py for proper format
-3. **Save to Correct Location**: .agor/snapshots/ directory only
-4. **Single Codeblock Format**: Required for processing
-5. **Complete Context**: Include all work, commits, and next steps
-
-### Memory and Coordination
-
-- Use `.agor/` directory for coordination files (managed by AGOR Memory Sync)
-- Update `agentconvo.md` for multi-agent communication
-- Maintain agent memory files for session continuity
-- Follow structured communication protocols
-
-## 🎼 Multi-Agent Coordination
-
-### When Working with Multiple Agents
-
-1. **Initialize Coordination**: Use development tools to set up .agor/ structure
-2. **Select Strategy**: Use analysis tools to recommend coordination strategy
-3. **Communicate**: Update agentconvo.md with status and findings
-4. **Sync Regularly**: Use coordination tools to stay synchronized
-5. **Create Snapshots**: For seamless agent transitions
-
-### Available Strategies
-
-- **Parallel Divergent** - Independent exploration → synthesis
-- **Pipeline** - Sequential snapshots with specialization
-- **Swarm** - Dynamic task assignment from queue
-- **Red Team** - Adversarial build/break cycles
-- **Mob Programming** - Collaborative coding
+**Remember**: Use `quick_commit_and_push()` often - it's efficient, saves actions, and keeps your branch synchronized when multiple users/agents are working on the project.
 
 ## 🔧 Technical Requirements
 
 ### Git Operations
 
 - Use real git commands (not simulated)
-- Commit frequently with descriptive messages
+- **Use quick_commit_and_push() frequently** for efficient workflow
 - Push changes regularly for backup and collaboration
-- Follow pattern: `git add . && git commit -m "message" && git push`
+- Pattern: `quick_commit_and_push("Descriptive message", "🔧")` instead of manual git commands
 
 ### File Management
 
@@ -201,25 +205,25 @@ Agents should proactively offer to generate deliverables as work nears completio
 
 ## ⚠️ Critical Reminders
 
-1. **NEVER end a session without creating a snapshot** - This is mandatory
-2. **Always use correct dates** - Check with `date` command
-3. **Save snapshots to .agor/snapshots/** - Never to root directory
-4. **Follow AGOR protocols precisely** - Read documentation thoroughly
-5. **Use single codeblock format** - For snapshot processing
-6. **Commit and push frequently** - Prevent work loss
-7. **Test your work** - Verify functionality before completion
+1. **NEVER end a session without creating a snapshot** - Use `create_development_snapshot()` function
+2. **NEVER manually create .agor files** - All memory management is automatic via dev tools
+3. **Use quick_commit_and_push() frequently** - Keep work synchronized and prevent loss
+4. **Snapshots are automatically saved** - To `.agor/agents/{agent_id}/snapshots/` on memory branches
+5. **Always use dev tools functions** - Never manually interact with AGOR memory system
+6. **Test your work** - Verify functionality before completion
+7. **Follow AGOR protocols precisely** - Read documentation and use programmatic functions
 
 ## 🎯 Success Criteria
 
 You are successfully using AGOR when you:
 
-- ✅ Read AGOR documentation before starting work
-- ✅ Select and announce your role clearly
-- ✅ Use AGOR development tools and workflows consistently
-- ✅ Create proper snapshots with correct dates and locations
-- ✅ Maintain coordination files and communication protocols
-- ✅ Follow structured development practices
-- ✅ Provide comprehensive context for continuation
+- ✅ Initialize AGOR using programmatic dev tools functions
+- ✅ Use quick_commit_and_push() frequently during development
+- ✅ Create snapshots using create_development_snapshot() function only
+- ✅ Never manually interact with .agor directories or files
+- ✅ Use dev tools for all AGOR operations (snapshots, handoffs, PR descriptions)
+- ✅ Follow structured development practices with frequent commits
+- ✅ Provide comprehensive context through proper dev tools usage
 
 ## 🔄 Continuous Improvement
 
