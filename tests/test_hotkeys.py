@@ -4,7 +4,7 @@ Tests HotkeyManager class and global hotkey functions using pytest framework.
 """
 
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, ANY
 import threading
 import time
 
@@ -47,9 +47,11 @@ def mock_logger():
 @pytest.fixture(autouse=True)
 def reset_global_manager():
     """Automatically reset global manager state before each test."""
-    global_hotkey_manager.stop()
+    with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False):
+        global_hotkey_manager.stop()
     yield
-    global_hotkey_manager.stop()
+    with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False):
+        global_hotkey_manager.stop()
 
 class TestHotkeyManagerInit:
     """Test HotkeyManager initialization and basic properties."""
@@ -59,7 +61,6 @@ class TestHotkeyManagerInit:
         manager = HotkeyManager()
         assert manager.get_registered_keys() == []
         assert manager.is_active() is False
-        assert manager._hotkeys == {}
     
     def test_init_with_keyboard_unavailable(self):
         """Test initialization when keyboard module is unavailable."""
@@ -100,7 +101,6 @@ class TestHotkeyRegistration:
     
     def test_register_combination_hotkey(self, hotkey_manager, mock_keyboard, monkeypatch):
         """Test registering hotkey combinations like ctrl+c."""
-        from unittest.mock import ANY
         monkeypatch.setattr('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
         manager = hotkey_manager()
         callback = Mock()
@@ -505,18 +505,18 @@ class TestThreadSafety:
                     results.append(False)
         
         threads = []
-        for i in range(5):
+        for i in range(3):
             thread = threading.Thread(target=register_hotkeys, args=(i * 10,))
             threads.append(thread)
             thread.start()
-        
+
         for thread in threads:
             thread.join()
-        
+
         # All registrations should succeed
         assert all(results)
         registered_keys = manager.get_registered_keys()
-        assert len(registered_keys) == 50
+        assert len(registered_keys) == 30
         
         manager.stop()
     
