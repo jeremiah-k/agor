@@ -470,7 +470,7 @@ class TestThreadSafety:
                 try:
                     result = manager.register(f'key_{i}', callback)
                     results.append(result)
-                except Exception as e:
+                except Exception:
                     results.append(False)
         
         threads = []
@@ -540,7 +540,7 @@ class TestEdgeCases:
         unicode_keys = ['ñ', 'ü', '€']
         
         with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True):
-            with patch('agor.tools.hotkeys.keyboard') as mock_kb:
+            with patch('agor.tools.hotkeys.keyboard'):
                 for key in unicode_keys:
                     try:
                         result = hotkey_manager.register(key, callback)
@@ -572,7 +572,7 @@ class TestEdgeCases:
         very_long_key = 'ctrl+alt+shift+' + '+'.join([f'key{i}' for i in range(50)])
         
         with patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True):
-            with patch('agor.tools.hotkeys.keyboard') as mock_kb:
+            with patch('agor.tools.hotkeys.keyboard'):
                 # Should handle gracefully, either succeed or fail with appropriate error
                 try:
                     result = hotkey_manager.register(very_long_key, callback)
