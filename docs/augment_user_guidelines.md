@@ -161,6 +161,23 @@ from agor.tools.dev_tools import (
 
 **Remember**: Use `quick_commit_and_push()` often - it's efficient, saves actions, and keeps your branch synchronized when multiple users/agents are working on the project.
 
+### 📝 Comprehensive Context Capture Requirements
+
+**CRITICAL**: All snapshots must capture comprehensive user context like a transcriptionist:
+
+**What to Capture:**
+- **Every detailed explanation** the user provides about their reasoning and decision-making
+- **Strategic thinking and priorities** - their long-term vision and how current work fits
+- **Technical preferences** - their architectural philosophy and implementation choices
+- **User voice and reasoning patterns** - maintain their thought process and decision rationale
+- **Complete context behind decisions** - why certain choices were made, not just what was done
+
+**Example of GOOD context capture:**
+"User emphasized that multi-agent coordination strategies are largely untested and need more work, preferring to focus on the snapshot/memory branch system and dev tools as the more developed features. They want comprehensive context capture like a transcriptionist, including all reasoning and decision-making process. The user specifically noted that agents should never manually interact with snapshots - all memory management must be done using dev tools. They also emphasized the importance of quick_commit_and_push() functionality for efficiency and branch synchronization."
+
+**Example of POOR context capture:**
+"Updated user guidelines and fixed some issues."
+
 ## 🔧 Technical Requirements
 
 ### Git Operations
