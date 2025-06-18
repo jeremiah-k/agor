@@ -229,18 +229,27 @@ def bundle(
     ),
 ):
     """
-    [CLI] Bundle a git repository into an archive for AI assistant upload.
-
-    Creates a compressed archive containing your project plus AGOR's multi-agent
-    coordination tools. Supports ZIP (default), TAR.GZ, and TAR.BZ2 formats.
-
-    Examples:
-        agor bundle my-project                    # Bundle all branches as ZIP
-        agor bundle user/repo --format gz        # GitHub repo as TAR.GZ
-        agor bundle . -m --quiet                 # Main branch only, minimal output
-        agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
-        agor bundle . --prompt short             # Use classic short prompt
-        agor bundle . --prompt custom            # Use custom user-defined prompt
+    Bundles a git repository and AGOR tools into a compressed archive for AI assistant integration.
+    
+    Creates an archive (ZIP, TAR.GZ, or TAR.BZ2) containing the specified git repository and AGOR's multi-agent coordination tools, with options to control branch selection, history preservation, interactivity, output verbosity, and AI prompt style. The resulting archive is saved to a user-selected or default location, and an AI assistant prompt is generated in short, long, or custom format for use with the bundle.
+    
+    Parameters:
+        src_repo (str): Path or URL of the git repository to bundle. Supports local paths, full URLs, or GitHub user/repo shorthand.
+        format (str, optional): Archive format to use ('zip', 'gz', 'bz2'). Defaults to configuration or ZIP.
+        preserve_history (bool, optional): If True, includes full git history; otherwise, performs a shallow clone.
+        main_only (bool, optional): If True, bundles only the main/master branch.
+        all_branches (bool): Legacy flag for including all branches.
+        branches (List[str], optional): Specific branches to include in the bundle.
+        interactive (bool, optional): If False, disables interactive prompts for batch mode.
+        assume_yes (bool, optional): If True, automatically answers 'yes' to prompts.
+        quiet (bool, optional): If True, minimizes output to essential information.
+        prompt_style (str): AI prompt style to generate: 'short', 'long', or 'custom'.
+    
+    Returns:
+        None. The function saves the archive to disk and prints or copies the AI prompt as specified.
+    
+    Raises:
+        Exits the CLI with an error if the repository, archive format, or prompt style is invalid, or if archive creation fails.
     """
     # Apply configuration defaults with CLI overrides
     compression_format = format or config.get(
