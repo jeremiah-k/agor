@@ -22,6 +22,8 @@ MANDATORY: Read these files from workspace sources before starting any developme
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
+
+Read as much AGOR documentation as necessary to maintain an effective workflow. Analyze the snapshot system and its templates. Understand memory branches and how they operate.
 ```
 
 ### Step 2: Role Selection
@@ -117,6 +119,8 @@ Agents should proactively offer to generate deliverables as work nears completio
 - "In your next prompt, let me know if you'd like me to generate PR notes for our work in this branch."
 - "Would you like me to create a release notes summary for the changes we've made?"
 - "I can generate a comprehensive handoff snapshot if you're ready to transition this work."
+
+**As we approach the end of our work in this branch, be prepared to use the dev tools as we finish. If asked, be prepared to create a PR summary and release notes using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting). You might also be expected to create a handoff prompt for another agent, containing full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable. Be prepared to give me these deliverables (each with its output/content wrapped in its own single codeblock) at the end of each series of changes, so I do not need to ask for everything individually.**
 
 ### Snapshot Requirements (CRITICAL)
 
