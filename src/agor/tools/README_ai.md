@@ -116,12 +116,28 @@ Based on your environment detection:
 
 **CRITICAL**: Every session MUST end with a snapshot in a single codeblock:
 
-1. **Check Current Date**: Use `date` command to get correct date
-2. **Use AGOR Tools**: Use `snapshot_templates.py` for proper format
-3. **Save to Correct Location**: `.agor/snapshots/` directory only
-4. **Single Codeblock Format**: Required for processing
-5. **Complete Context**: Include all work, commits, and next steps
+1. **Use AGOR Dev Tools**: Use `create_development_snapshot()` function only
+2. **Comprehensive Context Capture**: Like a transcriptionist - capture ALL user reasoning, decision-making, and strategic thinking
+3. **User Voice Preservation**: Include their detailed explanations, priorities, and long-term vision
+4. **Complete Technical Context**: Include all work, commits, and next steps with full rationale
+5. **Single Codeblock Format**: Required for processing
+6. **Never Manual .agor Files**: All memory management through dev tools only
    (For a quick summary of guidelines, call `get_snapshot_guidelines_summary()` from `dev_tools.py`)
+
+### 📝 Critical Context Capture Requirements
+
+**Snapshots must capture the full essence of user input:**
+- Every detailed explanation and reasoning they provide
+- Their decision-making process and strategic thinking
+- Technical preferences and architectural philosophy
+- Priorities, emphasis, and long-term direction
+- Complete rationale behind every choice made
+
+**Example of GOOD context capture:**
+"User emphasized that multi-agent strategies are largely untested, preferring focus on mature snapshot/memory system and dev tools. They want comprehensive context capture like a transcriptionist, including all reasoning and decision-making process."
+
+**Example of POOR context capture:**
+"Updated some files and fixed issues."
 
 ### STEP 5: QUICK REFERENCE
 

@@ -13,25 +13,60 @@ These prompts are designed to be used at the beginning of a session, followed by
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
 You have access to my project bundle which includes:
 - Complete project codebase with git history
 - AGOR coordination tools and protocols
 - Comprehensive AI instructions
 
-Please start by reading these key files to understand the system:
-1. Read src/agor/tools/README_ai.md for role selection and initialization
-2. Read src/agor/tools/AGOR_INSTRUCTIONS.md for comprehensive instructions
-3. Read src/agor/tools/index.md for quick reference lookup
+Please extract the bundle and execute these functions in order to initialize the AGOR system:
 
-After reading these files, help me select the appropriate role:
-- Worker Agent: For code analysis, implementation, and technical work
-- Project Coordinator: For planning and multi-agent coordination
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+Examine the available dev tools, use these whenever possible for a more seamless workflow across agents.
+
+If the above functions don't work properly, use our fallback method of reading these files:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive instructions)
+- src/agor/tools/agent-start-here.md (quick startup guide)
+- src/agor/tools/index.md (documentation index for efficient lookup)
+- src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
+- src/agor/tools/meta-feedback-workflows.md (meta-feedback system for AGOR improvements)
 
 Environment: Google AI Studio Pro with Function Calling enabled
 Bundle Format: .zip
 Mode: Bundle Mode (copy-paste workflow)
 
 # <--- Add your specific project instructions and any snapshot below --->
+
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 ```
 
 ---
@@ -43,25 +78,60 @@ Mode: Bundle Mode (copy-paste workflow)
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
 You have access to my project bundle which includes:
 - Complete project codebase with git history
 - AGOR coordination tools and protocols
 - Comprehensive AI instructions
 
-Please start by reading these key files to understand the system:
-1. Read src/agor/tools/README_ai.md for role selection and initialization
-2. Read src/agor/tools/AGOR_INSTRUCTIONS.md for comprehensive instructions
-3. Read src/agor/tools/index.md for quick reference lookup
+Please extract the bundle and execute these functions in order to initialize the AGOR system:
 
-After reading these files, help me select the appropriate role:
-- Worker Agent: For code analysis, implementation, and technical work
-- Project Coordinator: For planning and multi-agent coordination
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+Examine the available dev tools, use these whenever possible for a more seamless workflow across agents.
+
+If the above functions don't work properly, use our fallback method of reading these files:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive instructions)
+- src/agor/tools/agent-start-here.md (quick startup guide)
+- src/agor/tools/index.md (documentation index for efficient lookup)
+- src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
+- src/agor/tools/meta-feedback-workflows.md (meta-feedback system for AGOR improvements)
 
 Environment: ChatGPT (classic interface, not Codex)
 Bundle Format: .tar.gz
 Mode: Bundle Mode (copy-paste workflow)
 
 # <--- Add your specific project instructions and any snapshot below --->
+
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 ```
 
 ---
@@ -85,20 +155,65 @@ When working on development projects, utilize the AGOR (AgentOrchestrator) frame
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
-AGOR is available in your workspace sources. Please:
-1. Read src/agor/tools/README_ai.md for role selection and initialization
-2. Read src/agor/tools/AGOR_INSTRUCTIONS.md for comprehensive instructions
-3. Check my User Guidelines for any project-specific AGOR preferences
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
 
-After reading these files, help me select the appropriate role:
-- Worker Agent: For code analysis, implementation, and technical work
-- Project Coordinator: For planning and multi-agent coordination
+AGOR is available in your workspace sources. Please:
+
+1. Create a venv in .venv and install the AGOR agent requirements:
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r {agor_path}/src/agor/tools/agent-requirements.txt
+
+The agor repo should be available to you somewhere in your workspace sources.
+
+2. Execute these functions in order to initialize the AGOR system:
+
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+3. Examine the available dev tools, use these whenever possible for a more seamless workflow across agents.
+
+4. Check my User Guidelines for any project-specific AGOR preferences
+
+If the above functions don't work properly, use our fallback method of reading these files:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive instructions)
+- src/agor/tools/agent-start-here.md (quick startup guide)
+- src/agor/tools/index.md (documentation index for efficient lookup)
+- src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
+- src/agor/tools/meta-feedback-workflows.md (meta-feedback system for AGOR improvements)
 
 Environment: AugmentCode Local Agent (VS Code extension)
 Mode: Local Integration (direct file access, persistent guidelines)
 Benefits: No upload limits, persistent User Guidelines, Augment Memories
 
 # <--- Add your specific project instructions and any snapshot below --->
+
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 ```
 
 ---
@@ -110,34 +225,42 @@ Benefits: No upload limits, persistent User Guidelines, Augment Memories
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
 Please execute these commands to initialize AGOR:
 
 # Clone AGOR to temporary location
 cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 
-# Load protocol and return to project
-cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
-
 # Install AGOR agent development dependencies
 python3 -m pip install -r src/agor/tools/agent-requirements.txt
 
-# Test AGOR development tools
+# Execute these functions in order to initialize the AGOR framework
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
 
-# Verify tooling works
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
 test_all_tools()
-print(f'Session started at: {get_current_timestamp_formatted()}')
+print('✅ AGOR initialization complete!')
 "
 
-# Review agent startup guide
-cat src/agor/tools/agent-start-here.md
-
-After initialization, help me select the appropriate role:
-- Worker Agent: For code analysis, implementation, and technical work
-- Project Coordinator: For planning and multi-agent coordination
+# If the above functions don't work properly, use our fallback method:
+# cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md && cat src/agor/tools/agent-start-here.md
 
 Environment: AugmentCode Remote Agent
 Mode: Standalone Mode (direct git access)
@@ -155,20 +278,40 @@ Benefits: Direct commits, real-time collaboration, no file size limits
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
-Please read these key files to understand the system:
-- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
-- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
-- https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
 
-After reading these files, help me select the appropriate role:
-- Worker Agent: For code analysis, implementation, and technical work
-- Project Coordinator: For planning and multi-agent coordination
+First, install the AGOR agent requirements:
+pip install -r https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/agent-requirements.txt
+
+Since you cannot clone repositories, please read these key files directly to understand the AGOR system:
+
+# Core initialization files (read these in order)
+curl -s https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/README_ai.md
+curl -s https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/AGOR_INSTRUCTIONS.md
+curl -s https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/agent-start-here.md
+curl -s https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/index.md
+curl -s https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md
+curl -s https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/meta-feedback-workflows.md
+
+# Alternative: Use wget if curl is not available
+wget -qO- https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/README_ai.md
+wget -qO- https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/AGOR_INSTRUCTIONS.md
+wget -qO- https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/agent-start-here.md
+wget -qO- https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/index.md
+wget -qO- https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md
+wget -qO- https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/meta-feedback-workflows.md
 
 Environment: Jules by Google
 Mode: Standalone Mode (direct URL access to files)
 Limitations: Cannot clone repositories not selected during environment creation
 
 # <--- Add your specific project instructions and any snapshot below --->
+
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using available tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+When generating a handoff prompt, include full initialization instructions and how to access the documentation with the rest of the context, if applicable.
 ```
 
 ---

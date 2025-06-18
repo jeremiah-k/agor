@@ -222,18 +222,34 @@ def bundle(
         "-q",
         help="Minimal output mode",
     ),
+    prompt_style: str = typer.Option(
+        "long",
+        "--prompt",
+        help="AI prompt style: 'short' (classic), 'long' (comprehensive), or 'custom' (user-defined)",
+    ),
 ):
     """
-    [CLI] Bundle a git repository into an archive for AI assistant upload.
-
-    Creates a compressed archive containing your project plus AGOR's multi-agent
-    coordination tools. Supports ZIP (default), TAR.GZ, and TAR.BZ2 formats.
-
-    Examples:
-        agor bundle my-project                    # Bundle all branches as ZIP
-        agor bundle user/repo --format gz        # GitHub repo as TAR.GZ
-        agor bundle . -m --quiet                 # Main branch only, minimal output
-        agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
+    Bundles a git repository and AGOR tools into a compressed archive for AI assistant integration.
+    
+    Creates an archive (ZIP, TAR.GZ, or TAR.BZ2) containing the specified git repository and AGOR's multi-agent coordination tools, with options to control branch selection, history preservation, interactivity, output verbosity, and AI prompt style. The resulting archive is saved to a user-selected or default location, and an AI assistant prompt is generated in short, long, or custom format for use with the bundle.
+    
+    Parameters:
+        src_repo (str): Path or URL of the git repository to bundle. Supports local paths, full URLs, or GitHub user/repo shorthand.
+        format (str, optional): Archive format to use ('zip', 'gz', 'bz2'). Defaults to configuration or ZIP.
+        preserve_history (bool, optional): If True, includes full git history; otherwise, performs a shallow clone.
+        main_only (bool, optional): If True, bundles only the main/master branch.
+        all_branches (bool): Legacy flag for including all branches.
+        branches (List[str], optional): Specific branches to include in the bundle.
+        interactive (bool, optional): If False, disables interactive prompts for batch mode.
+        assume_yes (bool, optional): If True, automatically answers 'yes' to prompts.
+        quiet (bool, optional): If True, minimizes output to essential information.
+        prompt_style (str): AI prompt style to generate: 'short', 'long', or 'custom'.
+    
+    Returns:
+        None. The function saves the archive to disk and prints or copies the AI prompt as specified.
+    
+    Raises:
+        Exits the CLI with an error if the repository, archive format, or prompt style is invalid, or if archive creation fails.
     """
     # Apply configuration defaults with CLI overrides
     compression_format = format or config.get(
@@ -252,6 +268,13 @@ def bundle(
     )
     auto_yes = assume_yes if assume_yes is not None else config.get("assume_yes", False)
     quiet_mode = quiet if quiet is not None else config.get("quiet", False)
+
+    # Validate prompt style
+    valid_prompt_styles = ["short", "long", "custom"]
+    if prompt_style not in valid_prompt_styles:
+        print(f"❌ Invalid prompt style: {prompt_style}")
+        print(f"   Valid options: {', '.join(valid_prompt_styles)}")
+        raise typer.Exit(1)
 
     # Validate compression format
     try:
@@ -416,12 +439,73 @@ def bundle(
         print("🤖 AI ASSISTANT PROMPT")
         print("=" * 60)
 
-    ai_prompt = (
-        f"Extract the {compression_format.upper()} archive I've uploaded, "
-        "read agor_tools/README_ai.md completely, "
-        "and execute the AgentOrchestrator initialization protocol. "
-        "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
-    )
+    # Generate AI prompt based on style
+    if prompt_style == "short":
+        ai_prompt = (
+            f"Extract the {compression_format.upper()} archive I've uploaded, "
+            "read agor_tools/README_ai.md completely, "
+            "and execute the AgentOrchestrator initialization protocol. "
+            "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
+        )
+    elif prompt_style == "custom":
+        # Check if user has set a custom prompt in config
+        custom_prompt = config.get("custom_prompt", None)
+        if custom_prompt:
+            ai_prompt = custom_prompt.format(
+                compression_format=compression_format.upper(),
+                archive_format=compression_format.upper()
+            )
+        else:
+            print("❌ No custom prompt configured.")
+            print("   Set a custom prompt with: agor config set custom_prompt 'Your prompt here'")
+            print("   Use {compression_format} or {archive_format} as placeholders for the archive format")
+            raise typer.Exit(1)
+    else:  # long (default)
+        ai_prompt = f"""I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
+Please extract the {compression_format.upper()} archive I've uploaded and execute these functions in order to initialize the AGOR system:
+
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+Examine the available dev tools, use these whenever possible for a more seamless workflow across agents.
+
+If the above functions don't work properly, use our fallback method of reading these files:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive instructions)
+- src/agor/tools/agent-start-here.md (quick startup guide)
+- src/agor/tools/index.md (documentation index for efficient lookup)
+- src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
+- src/agor/tools/meta-feedback-workflows.md (meta-feedback system for AGOR improvements)
+
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+# <--- Add your specific project instructions below --->"""
 
     if not quiet_mode:
         print(ai_prompt)
@@ -440,8 +524,8 @@ def bundle(
             if not quiet_mode:
                 print(f"\n{message}")
 
-        # Offer to reveal file in system explorer
-        if not auto_yes:
+        # Offer to reveal file in system explorer (skip for Termux as it doesn't work)
+        if not auto_yes and not is_termux():
             reveal = typer.confirm("Open file location?")
             if reveal:
                 if reveal_file_in_explorer(destination):

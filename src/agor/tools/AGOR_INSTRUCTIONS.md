@@ -435,6 +435,21 @@ Every session MUST end with a handoff prompt that is:
 3. **Wrapped in a single codeblock with triple backticks**
 4. **Ready for immediate copy-paste by user**
 
+**COMPREHENSIVE CONTEXT CAPTURE - CRITICAL REQUIREMENT**:
+All snapshots and handoff prompts MUST capture comprehensive user context:
+
+1. **Like a transcriptionist** - Capture the full essence of user reasoning, ideally word-for-word
+2. **Complete decision-making process** - Include ALL user explanations and strategic thinking
+3. **User philosophy and priorities** - Their long-term vision, emphasis, and direction
+4. **Technical rationale** - Full reasoning behind every architectural and implementation choice
+5. **Strategic context** - How current work fits into larger goals and user preferences
+
+**Example of GOOD context capture:**
+"User emphasized that multi-agent coordination strategies are largely untested and need more work, preferring to focus on the snapshot/memory branch system and dev tools as the more developed features. They want users to understand these mature features and how to use them effectively. The user specifically noted that agents should never manually interact with snapshots - all memory management must be done using dev tools."
+
+**Example of POOR context capture:**
+"Updated some files and made improvements."
+
 **MEMORY BRANCH UNDERSTANDING**: When dev tools says, "snapshot committed to memory branch X", that's where it went. Don't expect .agor files on your working branch - they're in .gitignore intentionally.
 
 Always create a snapshot before ending your session using the dev tools.
