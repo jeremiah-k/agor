@@ -176,7 +176,7 @@ class TestHotkeyRegistration:
             manager.register('a', callback2)
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False)
-    def test_register_keyboard_unavailable(self, hotkey_manager, mock_logger):
+    def test_register_keyboard_unavailable(self, keyboard_available, hotkey_manager, mock_logger):
         """Test registration when keyboard module is unavailable."""
         manager = hotkey_manager()
         callback = Mock()
@@ -186,7 +186,7 @@ class TestHotkeyRegistration:
         mock_logger.warning.assert_called()
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_register_keyboard_exception(self, hotkey_manager, mock_keyboard, mock_logger):
+    def test_register_keyboard_exception(self, keyboard_available, hotkey_manager, mock_keyboard, mock_logger):
         """Test registration handles keyboard module exceptions."""
         manager = hotkey_manager()
         callback = Mock()
@@ -201,7 +201,7 @@ class TestHotkeyUnregistration:
     """Test hotkey unregistration functionality."""
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_unregister_existing_hotkey(self, hotkey_manager, mock_keyboard):
+    def test_unregister_existing_hotkey(self, keyboard_available, hotkey_manager, mock_keyboard):
         """Test unregistering an existing hotkey."""
         manager = hotkey_manager()
         callback = Mock()
@@ -222,14 +222,14 @@ class TestHotkeyUnregistration:
         assert result is False
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False)
-    def test_unregister_keyboard_unavailable(self, hotkey_manager):
+    def test_unregister_keyboard_unavailable(self, keyboard_available, hotkey_manager):
         """Test unregistration when keyboard module is unavailable."""
         manager = hotkey_manager()
         result = manager.unregister('a')
         assert result is False
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_unregister_keyboard_exception(self, hotkey_manager, mock_keyboard, mock_logger):
+    def test_unregister_keyboard_exception(self, keyboard_available, hotkey_manager, mock_keyboard, mock_logger):
         """Test unregistration handles keyboard module exceptions."""
         manager = hotkey_manager()
         callback = Mock()
@@ -242,7 +242,7 @@ class TestHotkeyUnregistration:
         mock_logger.error.assert_called()
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_clear_all_hotkeys(self, hotkey_manager, mock_keyboard):
+    def test_clear_all_hotkeys(self, keyboard_available, hotkey_manager, mock_keyboard):
         """Test clearing all registered hotkeys."""
         manager = hotkey_manager()
         callback1, callback2 = Mock(), Mock()
@@ -255,7 +255,7 @@ class TestHotkeyUnregistration:
         assert mock_keyboard.remove_hotkey.call_count == 2
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False)
-    def test_clear_all_keyboard_unavailable(self, hotkey_manager):
+    def test_clear_all_keyboard_unavailable(self, keyboard_available, hotkey_manager):
         """Test clear_all when keyboard module is unavailable."""
         manager = hotkey_manager()
         # Should not raise exception
@@ -263,7 +263,7 @@ class TestHotkeyUnregistration:
         assert len(manager.get_registered_keys()) == 0
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_clear_all_with_exceptions(self, hotkey_manager, mock_keyboard, mock_logger):
+    def test_clear_all_with_exceptions(self, keyboard_available, hotkey_manager, mock_keyboard, mock_logger):
         """Test clear_all handles exceptions during removal."""
         manager = hotkey_manager()
         callback = Mock()
@@ -279,7 +279,7 @@ class TestHotkeyManagerLifecycle:
     """Test hotkey manager start/stop and state management."""
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_start_manager(self, hotkey_manager, mock_logger):
+    def test_start_manager(self, keyboard_available, hotkey_manager, mock_logger):
         """Test starting the hotkey manager."""
         manager = hotkey_manager()
         result = manager.start()
@@ -289,7 +289,7 @@ class TestHotkeyManagerLifecycle:
         mock_logger.info.assert_called()
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', False)
-    def test_start_manager_keyboard_unavailable(self, hotkey_manager, mock_logger):
+    def test_start_manager_keyboard_unavailable(self, keyboard_available, hotkey_manager, mock_logger):
         """Test starting manager when keyboard is unavailable."""
         manager = hotkey_manager()
         result = manager.start()
@@ -299,7 +299,7 @@ class TestHotkeyManagerLifecycle:
         mock_logger.warning.assert_called()
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_stop_manager(self, hotkey_manager, mock_keyboard, mock_logger):
+    def test_stop_manager(self, keyboard_available, hotkey_manager, mock_keyboard, mock_logger):
         """Test stopping the hotkey manager."""
         manager = hotkey_manager()
         callback = Mock()
@@ -325,7 +325,7 @@ class TestHotkeyManagerLifecycle:
             assert manager.is_active() is False
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_context_manager_usage(self, mock_keyboard, mock_logger):
+    def test_context_manager_usage(self, keyboard_available, mock_keyboard, mock_logger):
         """Test hotkey manager as context manager."""
         callback = Mock()
         
@@ -356,7 +356,7 @@ class TestCallbackExecution:
     """Test hotkey callback execution and error handling."""
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_callback_execution(self, hotkey_manager, mock_keyboard):
+    def test_callback_execution(self, keyboard_available, hotkey_manager, mock_keyboard):
         """Test that callbacks are properly wrapped and can be executed."""
         manager = hotkey_manager()
         callback = Mock()
@@ -372,7 +372,7 @@ class TestCallbackExecution:
         callback.assert_called_once()
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_callback_with_arguments(self, hotkey_manager, mock_keyboard):
+    def test_callback_with_arguments(self, keyboard_available, hotkey_manager, mock_keyboard):
         """Test callback execution with arguments."""
         manager = hotkey_manager()
         callback = Mock()
@@ -389,7 +389,7 @@ class TestCallbackExecution:
         callback.assert_called_once_with('test_arg', key='value')
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_callback_exception_handling(self, hotkey_manager, mock_keyboard, mock_logger):
+    def test_callback_exception_handling(self, keyboard_available, hotkey_manager, mock_keyboard, mock_logger):
         """Test that exceptions in callbacks are handled gracefully."""
         manager = hotkey_manager()
         def failing_callback():
@@ -415,7 +415,7 @@ class TestGlobalHotkeyFunctions:
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     @patch('agor.tools.hotkeys.keyboard')
-    def test_register_hotkey_global(self, mock_keyboard):
+    def test_register_hotkey_global(self, mock_keyboard, keyboard_available):
         """Test global register_hotkey function."""
         callback = Mock()
         result = register_hotkey('a', callback)
@@ -425,7 +425,7 @@ class TestGlobalHotkeyFunctions:
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     @patch('agor.tools.hotkeys.keyboard')
-    def test_unregister_hotkey_global(self, mock_keyboard):
+    def test_unregister_hotkey_global(self, mock_keyboard, keyboard_available):
         """Test global unregister_hotkey function."""
         callback = Mock()
         register_hotkey('a', callback)
@@ -442,7 +442,7 @@ class TestGlobalHotkeyFunctions:
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     @patch('agor.tools.hotkeys.keyboard')
-    def test_clear_all_hotkeys_global(self, mock_keyboard):
+    def test_clear_all_hotkeys_global(self, mock_keyboard, keyboard_available):
         """Test global clear_all_hotkeys function."""
         callback = Mock()
         register_hotkey('a', callback)
@@ -454,7 +454,7 @@ class TestGlobalHotkeyFunctions:
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     @patch('agor.tools.hotkeys.keyboard')
-    def test_start_hotkey_manager_global(self, mock_keyboard):
+    def test_start_hotkey_manager_global(self, mock_keyboard, keyboard_available):
         """Test global start_hotkey_manager function."""
         result = start_hotkey_manager()
         assert result is True
@@ -466,7 +466,7 @@ class TestGlobalHotkeyFunctions:
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     @patch('agor.tools.hotkeys.keyboard')
-    def test_global_manager_isolation(self, mock_keyboard):
+    def test_global_manager_isolation(self, mock_keyboard, keyboard_available):
         """Test that global manager operations don't interfere with instance managers."""
         callback = Mock()
         instance_manager = HotkeyManager()
@@ -490,7 +490,7 @@ class TestThreadSafety:
     """Test thread safety of hotkey operations."""
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_concurrent_registration(self, mock_keyboard):
+    def test_concurrent_registration(self, keyboard_available, mock_keyboard):
         """Test concurrent hotkey registration is thread-safe."""
         manager = HotkeyManager()
         callback = Mock()
@@ -521,7 +521,7 @@ class TestThreadSafety:
         manager.stop()
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_concurrent_registration_and_removal(self, mock_keyboard):
+    def test_concurrent_registration_and_removal(self, keyboard_available, mock_keyboard):
         """Test concurrent registration and removal operations."""
         manager = HotkeyManager()
         callback = Mock()
@@ -584,7 +584,7 @@ class TestEdgeCases:
                         assert isinstance(e, (ValueError, TypeError))
     
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
-    def test_maximum_hotkeys_stress_test(self, hotkey_manager, mock_keyboard):
+    def test_maximum_hotkeys_stress_test(self, keyboard_available, hotkey_manager, mock_keyboard):
         """Test behavior with many registered hotkeys."""
         manager = hotkey_manager()
         callback = Mock()
