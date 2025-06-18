@@ -443,7 +443,7 @@ class TestMemoryManagement:
     
     @patch('agor.tools.dev_tools.generate_agent_id')
     @patch('agor.tools.dev_tools.get_current_timestamp')
-    @patch('agor.tools.dev_tools.commit_to_memory_branch')
+    @patch('agor.tools.dev_tools.commit_memory_to_branch')
     def test_initialize_agent_workspace_success(self, mock_commit, mock_ts, mock_gen):
         mock_gen.return_value = "test_agent_123"
         mock_ts.return_value = "2024-01-01T12:00:00Z"
@@ -452,19 +452,19 @@ class TestMemoryManagement:
         assert success and aid == "test_agent_123" and branch == "agor/mem/main"
         assert mock_commit.call_count == 2
     
-    @patch('agor.tools.dev_tools.commit_to_memory_branch')
+    @patch('agor.tools.dev_tools.commit_memory_to_branch')
     def test_initialize_agent_workspace_with_params(self, mock_commit):
         mock_commit.return_value = True
         success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="custom_agent", custom_branch="custom/branch")
         assert success and aid == "custom_agent" and branch == "custom/branch"
     
-    @patch('agor.tools.dev_tools.commit_to_memory_branch')
+    @patch('agor.tools.dev_tools.commit_memory_to_branch')
     def test_initialize_agent_workspace_failure(self, mock_commit):
         mock_commit.return_value = False
         success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="test_agent")
         assert not success and aid == "test_agent" and branch == "agor/mem/main"
     
-    @patch('agor.tools.dev_tools.commit_to_memory_branch')
+    @patch('agor.tools.dev_tools.commit_memory_to_branch')
     def test_initialize_agent_workspace_exception(self, mock_commit):
         mock_commit.side_effect = Exception("Commit failed")
         success, aid, branch = dev_tools.initialize_agent_workspace(agent_id="test_agent")
