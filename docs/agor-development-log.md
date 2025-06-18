@@ -4,6 +4,95 @@
 
 ---
 
+### 28. 2025-06-18 | v0.6.3-dev | Comprehensive Deployment Instructions Refinement & Bundle Prompt Options
+
+**Status**: Complete | **Version**: v0.6.3-dev | **Completed**: 2025-06-18
+
+### 🚀 **MAJOR ENHANCEMENT**: Comprehensive Deployment Instructions Refinement
+
+**Programmatic Documentation Integration Across All Platforms**:
+- **Replaced markdown file reading** with programmatic AGOR function execution for more reliable initialization
+- **Enhanced all platform deployment instructions** with comprehensive function-based setup workflows
+- **Added fallback documentation reading** for reliability when programmatic functions fail
+- **Integrated meta-feedback system** into all initialization prompts for AGOR improvement workflows
+- **Moved meta-feedback-workflows.md** from docs/ to src/agor/tools/ for better agent tool organization
+
+### 🎯 **Platform-Specific Optimizations Delivered**
+
+**AugmentCode Local Agent**:
+- Added virtual environment setup with proper path handling (`python3 -m venv .venv && source .venv/bin/activate`)
+- Comprehensive programmatic function execution with dev tools emphasis
+- Enhanced snapshot and handoff requirements with clear workflow guidance
+
+**AugmentCode Remote Agents**:
+- Streamlined initialization with programmatic functions replacing cat commands
+- Maintained git access capabilities with enhanced dev tools integration
+- Added comprehensive fallback support for reliability
+
+**Jules by Google**:
+- **Smart platform adaptation**: Used direct GitHub URLs with curl/wget instead of cloning (platform limitation)
+- Provided both curl and wget options for maximum compatibility
+- Maintained comprehensive documentation access through direct file URLs
+
+**Bundle Mode (Google AI Studio & ChatGPT)**:
+- Enhanced bundle extraction prompts with function-based initialization
+- **Added CLI prompt options**: `--prompt short` (classic), `--prompt long` (comprehensive), `--prompt custom` (user-defined)
+- Updated CLI-generated prompts in main.py with comprehensive dev tools integration
+- **Fixed Termux issue**: Removed non-functional "Open file location?" prompt while keeping clipboard functionality
+
+### 🔧 **CLI Enhancements & User Experience Improvements**
+
+**New Bundle Command Options**:
+- `--prompt short`: Classic short initialization prompt for quick setup
+- `--prompt long`: Comprehensive initialization with full function execution (default)
+- `--prompt custom`: User-defined custom prompt with format placeholders
+- Enhanced help text with examples of new prompt options
+
+**Termux Platform Fixes**:
+- Removed non-functional file location opening prompt that doesn't work in Termux
+- Maintained clipboard functionality which works well across all platforms
+- Improved user experience by eliminating failed operations
+
+### 📋 **Enhanced Agent Experience Features**
+
+**Initialization Improvements**:
+- Agents start in Worker Agent role without heavy role selection focus
+- Mandatory dev tools usage emphasized for seamless workflows across agents
+- Comprehensive snapshot requirements and handoff instructions integrated
+- Meta-feedback system integration for continuous AGOR improvement
+
+**Key Features Highlighted**:
+- Always use dev tools instead of manual operations for consistency
+- Never manually create snapshots - use dev tools for proper formatting and memory branch commits
+- Comprehensive memory branch integration with cross-agent coordination
+- Clear separation between AGOR initialization and main project work focus
+
+### 📊 **Technical Implementation Details**
+
+**Files Modified**:
+- `docs/usage-guide.md`: Applied user improvements and enhanced with programmatic functions
+- `src/agor/tools/PLATFORM_INITIALIZATION_PROMPTS.md`: Comprehensive platform updates with function-based initialization
+- `src/agor/main.py`: Added prompt style options and fixed Termux file location issue
+- `docs/meta-feedback-workflows.md` → `src/agor/tools/meta-feedback-workflows.md`: Moved for better organization
+
+**Robust Fallback System**:
+- **Primary**: Programmatic function execution for reliable documentation delivery
+- **Fallback**: Traditional markdown file reading if functions fail
+- **Platform-aware**: Adapted approaches based on platform capabilities and limitations
+
+### 🎯 **Benefits Delivered**
+
+1. **More Reliable Initialization**: Programmatic functions provide consistent documentation delivery across platforms
+2. **Reduced Instruction Skipping**: Explicit function calls are harder to ignore than file reading instructions
+3. **Better Platform Integration**: Each platform optimized for its specific capabilities and limitations
+4. **Enhanced User Experience**: Comprehensive, robust workflows for all deployment scenarios with flexible prompt options
+5. **Improved Agent Workflows**: Emphasis on dev tools usage and proper AGOR integration patterns
+6. **Meta-Feedback Integration**: Agents now aware of AGOR improvement workflows and feedback systems
+
+**Impact**: Deployment instructions are now comprehensive, robust, and ready for real-world testing across all supported platforms. The new approach provides higher success rates for agent initialization, better integration with AGOR dev tools and memory systems, and more consistent experiences across different AI platforms.
+
+---
+
 ### 27. 2025-06-18 | v0.6.3-dev | Complete CodeRabbit Cleanup and Test Suite Reliability
 
 **Status**: Complete | **Version**: v0.6.3-dev | **Completed**: 2025-06-18

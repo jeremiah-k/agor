@@ -222,6 +222,11 @@ def bundle(
         "-q",
         help="Minimal output mode",
     ),
+    prompt_style: str = typer.Option(
+        "long",
+        "--prompt",
+        help="AI prompt style: 'short' (classic), 'long' (comprehensive), or 'custom' (user-defined)",
+    ),
 ):
     """
     [CLI] Bundle a git repository into an archive for AI assistant upload.
@@ -234,6 +239,8 @@ def bundle(
         agor bundle user/repo --format gz        # GitHub repo as TAR.GZ
         agor bundle . -m --quiet                 # Main branch only, minimal output
         agor bundle /path/to/repo -f zip -y      # ZIP format, assume yes to prompts
+        agor bundle . --prompt short             # Use classic short prompt
+        agor bundle . --prompt custom            # Use custom user-defined prompt
     """
     # Apply configuration defaults with CLI overrides
     compression_format = format or config.get(
@@ -252,6 +259,13 @@ def bundle(
     )
     auto_yes = assume_yes if assume_yes is not None else config.get("assume_yes", False)
     quiet_mode = quiet if quiet is not None else config.get("quiet", False)
+
+    # Validate prompt style
+    valid_prompt_styles = ["short", "long", "custom"]
+    if prompt_style not in valid_prompt_styles:
+        print(f"❌ Invalid prompt style: {prompt_style}")
+        print(f"   Valid options: {', '.join(valid_prompt_styles)}")
+        raise typer.Exit(1)
 
     # Validate compression format
     try:
@@ -416,7 +430,29 @@ def bundle(
         print("🤖 AI ASSISTANT PROMPT")
         print("=" * 60)
 
-    ai_prompt = f"""I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+    # Generate AI prompt based on style
+    if prompt_style == "short":
+        ai_prompt = (
+            f"Extract the {compression_format.upper()} archive I've uploaded, "
+            "read agor_tools/README_ai.md completely, "
+            "and execute the AgentOrchestrator initialization protocol. "
+            "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
+        )
+    elif prompt_style == "custom":
+        # Check if user has set a custom prompt in config
+        custom_prompt = config.get("custom_prompt", None)
+        if custom_prompt:
+            ai_prompt = custom_prompt.format(
+                compression_format=compression_format.upper(),
+                archive_format=compression_format.upper()
+            )
+        else:
+            print("❌ No custom prompt configured.")
+            print("   Set a custom prompt with: agor config set custom_prompt 'Your prompt here'")
+            print("   Use {compression_format} or {archive_format} as placeholders for the archive format")
+            raise typer.Exit(1)
+    else:  # long (default)
+        ai_prompt = f"""I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
 You will start in the Worker Agent role, but don't focus on that heavily at the moment.
 
@@ -479,8 +515,8 @@ When asked, be prepared to create a PR summary, release notes, and or a handoff 
             if not quiet_mode:
                 print(f"\n{message}")
 
-        # Offer to reveal file in system explorer
-        if not auto_yes:
+        # Offer to reveal file in system explorer (skip for Termux as it doesn't work)
+        if not auto_yes and not is_termux():
             reveal = typer.confirm("Open file location?")
             if reveal:
                 if reveal_file_in_explorer(destination):
