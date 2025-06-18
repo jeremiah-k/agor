@@ -13,6 +13,7 @@ import functools
 import importlib.util
 import os
 import re
+import warnings
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, Optional
@@ -474,7 +475,6 @@ def resolve_agor_paths(project_type: str, custom_path: Optional[str] = None) -> 
 
         # Check if the custom path exists and warn if it doesn't
         if not resolved_path.exists():
-            import warnings
             warnings.warn(
                 f"Custom AGOR path '{resolved_path}' does not exist. "
                 f"This may lead to file-not-found errors when accessing AGOR documentation.",

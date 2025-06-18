@@ -122,12 +122,17 @@ class TestPathResolution(unittest.TestCase):
         paths = resolve_agor_paths('agor_development')
 
         # Should use absolute paths for consistency (fixed in latest version)
-        self.assertTrue(paths['tools_path'].endswith('/src/agor/tools'))
-        self.assertTrue(paths['readme_ai'].endswith('/src/agor/tools/README_ai.md'))
-        self.assertTrue(paths['instructions'].endswith('/src/agor/tools/AGOR_INSTRUCTIONS.md'))
+        # Use Path operations for cross-platform compatibility
+        from pathlib import Path
+        tools_path = Path(paths['tools_path'])
+        readme_path = Path(paths['readme_ai'])
+        instructions_path = Path(paths['instructions'])
+
+        self.assertEqual(tools_path.parts[-3:], ('src', 'agor', 'tools'))
+        self.assertEqual(readme_path.parts[-4:], ('src', 'agor', 'tools', 'README_ai.md'))
+        self.assertEqual(instructions_path.parts[-4:], ('src', 'agor', 'tools', 'AGOR_INSTRUCTIONS.md'))
 
         # All paths should be absolute
-        from pathlib import Path
         self.assertTrue(Path(paths['tools_path']).is_absolute())
         self.assertTrue(Path(paths['readme_ai']).is_absolute())
         self.assertTrue(Path(paths['instructions']).is_absolute())
@@ -153,8 +158,13 @@ class TestPathResolution(unittest.TestCase):
         custom_path = '/custom/agor/path'
         paths = resolve_agor_paths('external_project', custom_path)
 
-        self.assertEqual(paths['tools_path'], f'{custom_path}/tools')
-        self.assertEqual(paths['readme_ai'], f'{custom_path}/tools/README_ai.md')
+        # Use Path objects for cross-platform compatibility
+        from pathlib import Path
+        expected_tools_path = Path(custom_path) / 'tools'
+        expected_readme_path = Path(custom_path) / 'tools' / 'README_ai.md'
+
+        self.assertEqual(Path(paths['tools_path']), expected_tools_path)
+        self.assertEqual(Path(paths['readme_ai']), expected_readme_path)
 
     def test_get_platform_specific_instructions(self):
         """Test platform-specific instruction generation."""
@@ -289,10 +299,15 @@ class TestDeploymentPrompt(unittest.TestCase):
             # Ensure guide has meaningful content structure
             self.assertTrue(len(guide.strip()) > 0, "Guide should not be empty")
 
-    def test_deployment_prompt_contains_all_sections(self):
+    @patch('agor.tools.agent_reference.detect_platform')
+    @patch('agor.tools.agent_reference.detect_project_type')
+    @patch.dict(os.environ, {}, clear=True)
+    def test_deployment_prompt_contains_all_sections(self, mock_detect_project, mock_detect_platform):
         """
         Verifies that the generated deployment prompt includes all essential sections and identifiers required for AGOR agent deployment.
         """
+        mock_detect_platform.return_value = 'test_platform'
+        mock_detect_project.return_value = 'external_project'
         prompt = generate_deployment_prompt()
         
         required_sections = [
@@ -782,5 +797,5 @@ class TestErrorHandlingAndRobustness(unittest.TestCase):
             pass
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and os.getenv('AGOR_STANDALONE_TESTS'):
     unittest.main()

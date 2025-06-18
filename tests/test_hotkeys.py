@@ -4,7 +4,9 @@ Tests HotkeyManager class and global hotkey functions using pytest framework.
 """
 
 import pytest
+from unittest.mock import Mock, patch
 import threading
+import time
 import sys
 import os
 
@@ -20,7 +22,6 @@ from agor.tools.hotkeys import (
     start_hotkey_manager,
     stop_hotkey_manager,
     global_hotkey_manager,
-    KEYBOARD_AVAILABLE,
 )
 
 @pytest.fixture
