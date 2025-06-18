@@ -52,9 +52,9 @@ def mock_logger():
 @pytest.fixture(autouse=True)
 def reset_global_manager():
     """Automatically reset global manager state before each test."""
-    global_manager.stop()
+    global_hotkey_manager.stop()
     yield
-    global_manager.stop()
+    global_hotkey_manager.stop()
 
 class TestHotkeyManagerInit:
     """Test HotkeyManager initialization and basic properties."""
@@ -131,7 +131,6 @@ class TestHotkeyRegistration:
     def test_register_hotkey_empty_string(self, hotkey_manager):
         """Test registration fails with empty hotkey string."""
         manager = hotkey_manager()
-        manager = hotkey_manager()
         callback = Mock()
 
         with pytest.raises(ValueError, match="Hotkey cannot be empty"):
@@ -139,7 +138,6 @@ class TestHotkeyRegistration:
     
     def test_register_hotkey_whitespace_only(self, hotkey_manager):
         """Test registration fails with whitespace-only hotkey."""
-        manager = hotkey_manager()
         manager = hotkey_manager()
         callback = Mock()
 
@@ -459,13 +457,11 @@ class TestGlobalHotkeyFunctions:
     @patch('agor.tools.hotkeys.KEYBOARD_AVAILABLE', True)
     def test_start_hotkey_manager_global(self, mock_logger):
         """Test global start_hotkey_manager function."""
-        manager = hotkey_manager()
         result = start_hotkey_manager()
         assert result is True
     
     def test_stop_hotkey_manager_global(self, mock_logger):
         """Test global stop_hotkey_manager function."""
-        manager = hotkey_manager()
         # Should not raise exception
         stop_hotkey_manager()
     
