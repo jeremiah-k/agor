@@ -23,14 +23,14 @@ This section provides detailed setup instructions for initializing AGOR agents o
 
 **Step 1: Clone AGOR Repository**
 Clone the AGOR repository to your local machine, for example:
-`git clone https://github.com/jeremiah-k/agor.git ~/agor`
+`git clone https://github.com/jeremiah-k/agor.git ~/dev/agor`
 
 **Step 2: Add AGOR as Workspace Context**
 
 - Open VS Code with Augment extension installed
 - Click the folder icon in the Augment sidebar panel
 - Click **+ Add more...** at the bottom of Source Folders
-- Select the `~/agor` directory and click **Add Source Folder**
+- Select the `~/dev/agor` directory and click **Add Source Folder**
 
 _This gives the agent direct access to all AGOR documentation and tools_
 
@@ -52,15 +52,56 @@ To ensure your AI agent understands how to work with AGOR, you will provide it w
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
-Please read these key files from the workspace sources to understand the system:
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
+First, create a venv in .venv and install the AGOR agent requirements:
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r {agor_path}/src/agor/tools/agent-requirements.txt
+
+The agor repo should be available to you somewhere in your workspace sources.
+
+Then execute these functions in order to initialize the AGOR system:
+
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+Examine the available dev tools, use these whenever possible for a more seamless workflow across agents.
+
+If the above functions don't work properly, use our fallback method of reading these markdown files:
 - src/agor/tools/README_ai.md (role selection and initialization)
 - src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive operational guide)
 - src/agor/tools/agent-start-here.md (quick startup guide)
 - src/agor/tools/index.md (documentation index for efficient lookup)
+- src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator) based on the task requirements.
+# <--- Add your detailed step-by-step instructions here --->
 
-# <--- Add your detailed step-by-step instructions below --->
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 ```
 
 **Step 6: Local Environment Setup (Optional - For Using AGOR's Python Tools Directly)**
@@ -126,40 +167,44 @@ python3 -c "import sys; sys.path.insert(0, 'src'); from agor.tools.dev_tools imp
 ```
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
 Please execute these commands to initialize AGOR:
 
 # Clone AGOR to temporary location
 cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 
-# Load protocol and return to project
-cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
-
 # Install AGOR agent development dependencies
 python3 -m pip install -r src/agor/tools/agent-requirements.txt
 
-# Test AGOR development tools
+# Execute these functions in order to initialize the AGOR framework
 python3 -c "
 import sys
 sys.path.insert(0, 'src')
-from agor.tools.dev_tools import test_all_tools, get_current_timestamp_formatted, get_available_functions_reference
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
 
-# Verify tooling works
-test_all_tools()
-print(f'Session started at: {get_current_timestamp_formatted()}')
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
 
-# Show all available functions for agent reference
-print('\n📋 Available AGOR Functions:')
+print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
 print(get_available_functions_reference())
+
+print('\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
 "
 
-# Review agent startup guide
-cat src/agor/tools/agent-start-here.md
+# If the above functions don't work properly, use our fallback method:
+# cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md && cat src/agor/tools/agent-start-here.md
 
 # Now return to your project's directory with AGOR initialized
-
-After initialization, select your role based on the task:
-- Worker Agent: Code analysis, implementation, debugging, task execution
-- Project Coordinator: Planning, architecture, multi-agent coordination
 
 # <--- Add your detailed step-by-step instructions below --->
 ```
@@ -176,19 +221,53 @@ After initialization, select your role based on the task:
 Use this initialization prompt with Jules:
 
 ```
-
 I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
 
-Please read these key files to understand the system:
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
 
+First, install the AGOR agent requirements:
+pip install -r https://raw.githubusercontent.com/jeremiah-k/agor/main/src/agor/tools/agent-requirements.txt
+
+Then execute these functions in order to initialize the AGOR framework:
+
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+import subprocess
+import tempfile
+import os
+
+# Clone AGOR to temporary location for function access
+with tempfile.TemporaryDirectory() as temp_dir:
+    subprocess.run(['git', 'clone', 'https://github.com/jeremiah-k/agor.git', temp_dir], check=True)
+    sys.path.insert(0, os.path.join(temp_dir, 'src'))
+
+    from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+    print('🚀 AGOR INITIALIZATION')
+    print('=' * 50)
+    print(get_agor_initialization_guide())
+
+    print('\n📋 AVAILABLE FUNCTIONS REFERENCE')
+    print('=' * 50)
+    print(get_available_functions_reference())
+
+    print('\n🧠 MEMORY ARCHITECTURE')
+    print('=' * 50)
+    display_memory_architecture_info()
+
+    print('\n🧪 TESTING TOOLS')
+    print('=' * 50)
+    test_all_tools()
+    print('✅ AGOR initialization complete!')
+"
+
+If the above functions don't work properly, use our fallback method of reading these files:
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/README_ai.md (role selection)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive guide)
 - https://github.com/jeremiah-k/agor/blob/main/src/agor/tools/agent-start-here.md (startup guide)
 
-After reading these files, help me initialize AGOR for this project and select the appropriate role (Worker Agent or Project Coordinator).
-
 # <--- Add your detailed step-by-step instructions below --->
-
 ```
 
 **Note:** Jules cannot clone repositories that weren't selected during environment creation, so direct URL access to documentation is required.
@@ -416,8 +495,19 @@ AGOR is exploring several advanced strategies for multi-agent collaboration. Whi
 
 ### "Agent doesn't understand the protocol"
 
-**Solution:** Ensure the agent has loaded both instruction files:
+**Solution:** Ensure the agent has executed the AGOR initialization functions:
 
+```python
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference
+print(get_agor_initialization_guide())
+print(get_available_functions_reference())
+"
+```
+
+**Fallback:** If functions don't work, use markdown files:
 ```bash
 cat src/agor/tools/AGOR_INSTRUCTIONS.md && cat src/agor/tools/README_ai.md
 ```
