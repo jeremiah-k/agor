@@ -416,12 +416,51 @@ def bundle(
         print("🤖 AI ASSISTANT PROMPT")
         print("=" * 60)
 
-    ai_prompt = (
-        f"Extract the {compression_format.upper()} archive I've uploaded, "
-        "read agor_tools/README_ai.md completely, "
-        "and execute the AgentOrchestrator initialization protocol. "
-        "You are now running AgentOrchestrator (AGOR), a multi-agent development coordination platform."
-    )
+    ai_prompt = f"""I'm working with the AGOR (AgentOrchestrator) framework for multi-agent development coordination.
+
+You will start in the Worker Agent role, but don't focus on that heavily at the moment.
+
+Please extract the {compression_format.upper()} archive I've uploaded and execute these functions in order to initialize the AGOR system:
+
+# Initialize and display comprehensive setup guide
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from agor.tools.dev_tools import get_agor_initialization_guide, get_available_functions_reference, display_memory_architecture_info, test_all_tools
+
+print('🚀 AGOR INITIALIZATION')
+print('=' * 50)
+print(get_agor_initialization_guide())
+
+print('\\n📋 AVAILABLE FUNCTIONS REFERENCE')
+print('=' * 50)
+print(get_available_functions_reference())
+
+print('\\n🧠 MEMORY ARCHITECTURE')
+print('=' * 50)
+display_memory_architecture_info()
+
+print('\\n🧪 TESTING TOOLS')
+print('=' * 50)
+test_all_tools()
+print('✅ AGOR initialization complete!')
+"
+
+Examine the available dev tools, use these whenever possible for a more seamless workflow across agents.
+
+If the above functions don't work properly, use our fallback method of reading these files:
+- src/agor/tools/README_ai.md (role selection and initialization)
+- src/agor/tools/AGOR_INSTRUCTIONS.md (comprehensive instructions)
+- src/agor/tools/agent-start-here.md (quick startup guide)
+- src/agor/tools/index.md (documentation index for efficient lookup)
+- src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
+- src/agor/tools/meta-feedback-workflows.md (meta-feedback system for AGOR improvements)
+
+As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+# <--- Add your specific project instructions below --->"""
 
     if not quiet_mode:
         print(ai_prompt)
