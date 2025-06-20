@@ -66,7 +66,7 @@ When asked, be prepared to create a PR summary, release notes, and or a handoff 
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -131,7 +131,7 @@ When asked, be prepared to create a PR summary, release notes, and or a handoff 
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -214,7 +214,7 @@ When asked, be prepared to create a PR summary, release notes, and or a handoff 
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -276,7 +276,7 @@ When asked, be prepared to create a PR summary, release notes, and or a handoff 
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -315,7 +315,7 @@ Environment: Jules by Google
 Mode: Standalone Mode (direct URL access to files)
 Limitations: Cannot clone repositories not selected during environment creation
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 
 As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
 
@@ -342,7 +342,7 @@ Expected Mode: Standalone Mode with enhanced capabilities
 
 For now, please refer to the AugmentCode Remote Agents initialization above as a similar approach.
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
