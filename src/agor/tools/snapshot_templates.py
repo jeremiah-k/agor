@@ -99,7 +99,25 @@ def generate_snapshot_document(
     estimated_completion: str = "Unknown",
     agent_id: str = None,
 ) -> str:
-    """Generate a comprehensive snapshot document for agent transitions or context saving."""
+    """
+    Generate a comprehensive markdown snapshot document capturing the full state, progress, and context of agent work for seamless transitions or context preservation.
+    
+    Parameters:
+        problem_description (str): A clear statement of the problem or task being addressed.
+        work_completed (List[str]): List of completed work items or milestones.
+        commits_made (List[str]): List of commit hashes or messages relevant to the work.
+        current_status (str): Summary of the current progress or state.
+        next_steps (List[str]): Ordered list of recommended next actions.
+        files_modified (List[str]): List of files changed during the work session.
+        context_notes (str): CRITICAL—must contain a complete, detailed record of user context, including all reasoning, decision-making, strategic thinking, technical preferences, user voice, and the rationale behind every decision to ensure seamless agent handoff.
+        agent_role (str): The role or designation of the agent creating the snapshot.
+        snapshot_reason (str): The reason for creating the snapshot (e.g., handoff, savepoint).
+        estimated_completion (str, optional): Estimated time or percentage to completion. Defaults to "Unknown".
+        agent_id (str, optional): Unique identifier for the agent. If not provided, one is generated.
+    
+    Returns:
+        str: A markdown-formatted snapshot document containing all provided information, technical Git context, and detailed instructions for receiving agents.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()

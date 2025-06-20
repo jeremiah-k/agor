@@ -60,13 +60,13 @@ Environment: Google AI Studio Pro with Function Calling enabled
 Bundle Format: .zip
 Mode: Bundle Mode (copy-paste workflow)
 
-# <--- Add your specific project instructions and any snapshot below --->
-
-As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+As you get close to the end of your work, finish every set of actions by generating a detailed, comprehensive snapshot of the work that you have completed, with all important context and user reasoning included, so that the next agent can seamlessly pick up where you left off if necessary.
 
 When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
+
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -125,13 +125,13 @@ Environment: ChatGPT (classic interface, not Codex)
 Bundle Format: .tar.gz
 Mode: Bundle Mode (copy-paste workflow)
 
-# <--- Add your specific project instructions and any snapshot below --->
-
-As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+As you get close to the end of your work, finish every set of actions by generating a detailed, comprehensive snapshot of the work that you have completed, with all important context and user reasoning included, so that the next agent can seamlessly pick up where you left off if necessary.
 
 When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
+
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -159,11 +159,12 @@ You will start in the Worker Agent role, but don't focus on that heavily at the 
 
 AGOR is available in your workspace sources. Please:
 
-1. Create a venv in .venv and install the AGOR agent requirements:
+1. Navigate to the AGOR source directory and create a venv there (typically ~/dev/agor):
+cd ~/dev/agor  # or wherever your AGOR source is located
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r {agor_path}/src/agor/tools/agent-requirements.txt
+pip install -r src/agor/tools/agent-requirements.txt
 
-The agor repo should be available to you somewhere in your workspace sources.
+This ensures the venv is created in the AGOR directory, not in your project directory.
 
 2. Execute these functions in order to initialize the AGOR system:
 
@@ -207,13 +208,13 @@ Environment: AugmentCode Local Agent (VS Code extension)
 Mode: Local Integration (direct file access, persistent guidelines)
 Benefits: No upload limits, persistent User Guidelines, Augment Memories
 
-# <--- Add your specific project instructions and any snapshot below --->
-
-As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
+As you get close to the end of your work, finish every set of actions by generating a detailed, comprehensive snapshot of the work that you have completed, with all important context and user reasoning included, so that the next agent can seamlessly pick up where you left off if necessary.
 
 When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
+
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -229,11 +230,14 @@ You will start in the Worker Agent role, but don't focus on that heavily at the 
 
 Please execute these commands to initialize AGOR:
 
-# Clone AGOR to temporary location
+# Clone AGOR to temporary location and create venv there
 cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
 
+# Create venv in the AGOR directory to avoid committing it to project repos
+python3 -m venv .venv && source .venv/bin/activate
+
 # Install AGOR agent development dependencies
-python3 -m pip install -r src/agor/tools/agent-requirements.txt
+pip install -r src/agor/tools/agent-requirements.txt
 
 # Execute these functions in order to initialize the AGOR framework
 python3 -c "
@@ -266,7 +270,13 @@ Environment: AugmentCode Remote Agent
 Mode: Standalone Mode (direct git access)
 Benefits: Direct commits, real-time collaboration, no file size limits
 
-# <--- Add your specific project instructions and any snapshot below --->
+As you get close to the end of your work, finish every set of actions by generating a detailed, comprehensive snapshot of the work that you have completed, with all important context and user reasoning included, so that the next agent can seamlessly pick up where you left off if necessary.
+
+When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
+
+When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
+
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---
@@ -305,7 +315,7 @@ Environment: Jules by Google
 Mode: Standalone Mode (direct URL access to files)
 Limitations: Cannot clone repositories not selected during environment creation
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 
 As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
 
@@ -332,7 +342,7 @@ Expected Mode: Standalone Mode with enhanced capabilities
 
 For now, please refer to the AugmentCode Remote Agents initialization above as a similar approach.
 
-# <--- Add your specific project instructions and any snapshot below --->
+# <--- Add your specific project instructions and any snapshot (if applicable) below --->
 ```
 
 ---

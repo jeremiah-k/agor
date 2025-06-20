@@ -192,14 +192,22 @@ DEV_TOOLS_REFERENCE_CONTENT = """
 
 📋 USAGE EXAMPLES:
 ```python
-# Create snapshot with proper next steps
+# Create snapshot with comprehensive context capture (transcriptionist-level detail)
 create_development_snapshot(
     title="Implement user authentication",
-    context="Added JWT auth with bcrypt hashing...",
+    context="User requested JWT authentication implementation with specific security requirements. "
+           "They emphasized using bcrypt for password hashing due to security best practices and "
+           "mentioned the importance of rate limiting for production deployment. The user's strategic "
+           "thinking focused on building a robust authentication system that can scale with the application. "
+           "They specifically noted that the authentication should integrate with the existing user "
+           "management system and maintain backward compatibility with current API endpoints. "
+           "Technical implementation: Added JWT token generation with 24-hour expiration, "
+           "implemented bcrypt password hashing with salt rounds of 12, created middleware for "
+           "token validation, and updated user model to include authentication timestamps.",
     next_steps=[
-        "Test authentication with edge cases",
-        "Add rate limiting to login endpoint",
-        "Update API documentation"
+        "Test authentication with edge cases including expired tokens and invalid credentials",
+        "Add rate limiting to login endpoint as per user's security requirements",
+        "Update API documentation to reflect new authentication endpoints and requirements"
     ]
 )
 
