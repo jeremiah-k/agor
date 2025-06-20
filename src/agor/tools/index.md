@@ -72,10 +72,14 @@
 ### "I need to create or use a work snapshot"
 
 - **[SNAPSHOT_SYSTEM_GUIDE.md](SNAPSHOT_SYSTEM_GUIDE.md)** - Essential guide for all agents (MANDATORY reading)
+  - **CRITICAL**: Emphasizes comprehensive context capture like a transcriptionist
+  - Includes full user reasoning, decision-making process, and strategic thinking
+  - Examples of good vs poor context capture for agent guidance
 - **[docs/snapshots.md](../../../docs/snapshots.md)** - Comprehensive system for snapshots (for multi-agent and solo context management)
 - **[snapshot_templates.py](snapshot_templates.py)** - Snapshot generation code
   - Functions: generate_snapshot_document(), get_git_context(), get_agor_version()
   - Captures: problem, progress, commits, files, next steps, git state, AGOR version
+  - **Enhanced**: Now includes comprehensive context capture requirements in docstrings
 
 ### "I need to analyze code or explore the codebase"
 

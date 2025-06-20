@@ -99,7 +99,23 @@ def generate_snapshot_document(
     estimated_completion: str = "Unknown",
     agent_id: str = None,
 ) -> str:
-    """Generate a comprehensive snapshot document for agent transitions or context saving."""
+    """
+    Generate a comprehensive snapshot document for agent transitions or context saving.
+
+    CRITICAL: The context_notes parameter should contain comprehensive user context
+    like a transcriptionist record - capturing the full essence of user reasoning,
+    decision-making process, strategic thinking, and detailed explanations.
+
+    Include ALL user context:
+    - Every detailed explanation the user provides
+    - Their decision-making process and rationale
+    - Strategic thinking and long-term vision
+    - Technical preferences and architectural philosophy
+    - User voice and reasoning patterns
+    - Complete context behind every decision made
+
+    This ensures seamless agent transitions with full user context preservation.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
