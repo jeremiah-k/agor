@@ -329,16 +329,19 @@ def generate_handoff_prompt_only(
 ) -> str:
     """
     Generates a markdown-formatted prompt for handing off an AGOR agent session.
-    
+
     Summarizes completed work, current status, next agent instructions, critical context, and files modified. The prompt includes environment setup commands, coordination protocol steps, and immediate next actions, with content processed to prevent codeblock rendering issues during agent communication.
-    
+
+    Note: This function maintains List[str] parameters for backward compatibility.
+    For a more intuitive string-based interface, use generate_handoff_prompt_output() in dev_tools.
+
     Args:
         work_completed: List of completed work items for the session.
         current_status: Description of the current project status.
         next_agent_instructions: Instructions or tasks for the next agent or session.
         critical_context: Essential context that must be preserved for continuity.
         files_modified: List of files modified during the session.
-    
+
     Returns:
         A markdown-formatted handoff prompt with processed codeblocks for agent coordination.
     """

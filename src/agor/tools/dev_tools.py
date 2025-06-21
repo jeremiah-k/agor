@@ -1368,16 +1368,57 @@ def generate_pr_description_output(pr_content: str) -> str:
     return generate_formatted_output(pr_content, "pr_description")
 
 
-def generate_handoff_prompt_output(handoff_content: str) -> str:
+def generate_handoff_prompt_output(
+    work_completed: str = None,
+    current_status: str = None,
+    next_agent_instructions: str = None,
+    critical_context: str = None,
+    files_modified: str = None,
+    task_description: str = "Agent handoff",
+) -> str:
     """
-    Generate properly formatted handoff prompt for copy-paste.
+    Generate properly formatted handoff prompt for copy-paste with intuitive parameters.
 
     Args:
-        handoff_content: Raw handoff prompt content
+        work_completed: String describing completed work items. Agents can format as they prefer.
+        current_status: Current status of the project or task.
+        next_agent_instructions: String containing instructions for the next agent. Agents can number them if desired.
+        critical_context: Important context that must be preserved.
+        files_modified: String listing files that were modified. Agents can format as they prefer.
+        task_description: Description of the task being handed off.
 
     Returns:
-        Formatted handoff prompt wrapped in codeblock
+        Formatted handoff prompt wrapped in codeblock, ready for copy-paste.
     """
+    # Import the handoff prompt generation function
+    from agor.tools.agent_prompts import generate_handoff_prompt_only
+
+    # Set defaults for None values
+    if work_completed is None:
+        work_completed = "Work session completed"
+    if current_status is None:
+        current_status = "Ready for handoff"
+    if next_agent_instructions is None:
+        next_agent_instructions = "Continue with next tasks as appropriate"
+    if critical_context is None:
+        critical_context = "No specific critical context provided"
+    if files_modified is None:
+        files_modified = "No files specified"
+
+    # Convert strings to lists for compatibility with existing function
+    work_completed_list = [work_completed] if work_completed else []
+    next_agent_instructions_list = [next_agent_instructions] if next_agent_instructions else []
+    files_modified_list = [files_modified] if files_modified else []
+
+    # Generate the handoff prompt content
+    handoff_content = generate_handoff_prompt_only(
+        work_completed=work_completed_list,
+        current_status=current_status,
+        next_agent_instructions=next_agent_instructions_list,
+        critical_context=critical_context,
+        files_modified=files_modified_list,
+    )
+
     return generate_formatted_output(handoff_content, "handoff_prompt")
 
 
