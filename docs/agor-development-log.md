@@ -4,6 +4,143 @@
 
 ---
 
+### 29. 2025-06-21 | v0.6.4-dev | Architectural Cleanup: Function Deduplication and Signature Standardization
+
+**Status**: Complete | **Version**: v0.6.4-dev | **Completed**: 2025-06-21
+
+### 🔧 **MAJOR ARCHITECTURAL CLEANUP**: Function Deduplication and Signature Standardization
+
+**Critical Issues Addressed**:
+- **Function Signature Inconsistencies**: Fixed snapshot functions requiring lists when agents naturally provide strings
+- **Massive Function Duplication**: Removed duplicate functions across modules, keeping single working implementations
+- **dev_tools.py Bloat**: Removed wrapper functions and moved core functions to appropriate specialized modules
+- **CLI vs Agent Tools Confusion**: Clarified separation between CLI package and agent tools
+
+### 🎯 **Function Signature Standardization**
+
+**Snapshot Functions Fixed**:
+- Changed all `next_steps` parameters from `List[str]` to `str` across all snapshot functions
+- Updated `create_snapshot()`, `generate_snapshot_document()`, `create_seamless_handoff()`, `create_snapshot_legacy()`
+- Agents can now provide natural text strings instead of being forced into list format
+- Removed list processing code (`enumerate`, `join`) from templates
+
+**Handoff Prompt Functions Rationalized**:
+- Replaced confusing `generate_handoff_prompt_output(handoff_content: str)` with intuitive parameter-based interface
+- New signature: `generate_handoff_prompt_output(work_completed, current_status, next_agent_instructions, critical_context, files_modified, task_description)`
+- Moved function to `agent_prompts.py` where it logically belongs
+- Agents can now call with expected parameters instead of pre-formatted content
+
+### 🧹 **Function Deduplication Systematic Removal**
+
+**Wrapper Functions Eliminated**:
+- Removed `create_development_snapshot()` wrapper → use `create_snapshot()` directly
+- Removed `quick_commit_and_push()` wrapper → use `quick_commit_push()` directly
+- Removed `get_workspace_status()` wrapper → use `get_project_status()` directly
+- Removed `display_workspace_status()` wrapper → use `display_project_status()` directly
+- Removed `detect_current_environment()` wrapper → use `detect_environment()` directly
+- Removed `test_all_tools()` wrapper → use `test_tooling()` directly
+- Removed `process_content_for_codeblock()` wrapper → use `detick_content()` directly
+
+**Functions Moved to Proper Modules**:
+- `generate_handoff_prompt_output()` → moved to `agent_prompts.py`
+- `generate_pr_description_output()` → moved to new `output_formatting.py`
+- `provide_agor_feedback()` → moved to `feedback_manager.py`
+- Output formatting functions → consolidated in new `output_formatting.py`
+
+### 📦 **New Module Architecture**
+
+**Created `src/agor/tools/output_formatting.py`**:
+- `apply_output_formatting()` - Core formatting logic
+- `generate_formatted_output()` - Main function for agents
+- `generate_pr_description_output()` - PR description formatting
+- `generate_release_notes_output()` - Release notes formatting
+- Single source of truth for all output formatting
+
+**Enhanced Existing Modules**:
+- `agent_prompts.py` - Added intuitive handoff prompt function
+- `feedback_manager.py` - Added complete feedback function with validation
+- All modules now have focused, non-overlapping responsibilities
+
+### 🎯 **CLI vs Agent Tools Separation Clarified**
+
+**The Architecture (Critical Understanding)**:
+- **CLI Tools**: Installed package (`pip install agor`) for end users bundling projects
+- **Agent Tools**: Direct source access (`sys.path.insert(0, 'src')`) for AI agents doing development
+- **Different Dependencies**: CLI needs web frameworks, agents need minimal deps
+- **Different Access Patterns**: CLI installed globally, agents access source directly
+
+**Correct Agent Initialization**:
+```bash
+# For remote agents
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r src/agor/tools/agent-requirements.txt
+
+# For local agents (Augment)
+# Add AGOR directory as source in Augment settings
+# No installation needed - direct source access
+```
+
+### 📊 **Impact and Benefits**
+
+**Single Working Functions**:
+- Eliminated confusion about which function to use
+- Removed maintenance burden of keeping duplicates in sync
+- Clear single source of truth for each capability
+
+**Intuitive Function Signatures**:
+- Agents can call functions with natural parameters
+- No more forcing strings into lists or pre-formatting content
+- Function signatures match agent expectations
+
+**Proper Module Organization**:
+- Functions in their logical homes
+- No more dumping ground for new functions
+- Clear separation of concerns
+- Modules stay under 500 LOC target
+
+**Architectural Clarity**:
+- Clear separation between CLI and agent tools
+- Proper dependency management
+- No more installation confusion for agents
+
+### 🔧 **Technical Implementation**
+
+**Files Modified**:
+- `src/agor/tools/snapshots.py` - Fixed all snapshot functions to accept strings
+- `src/agor/tools/snapshot_templates.py` - Updated templates to use string parameters
+- `src/agor/tools/agent_prompts.py` - Added intuitive handoff prompt function
+- `src/agor/tools/feedback_manager.py` - Added complete feedback function
+- `src/agor/tools/output_formatting.py` (NEW) - Consolidated output formatting
+- `src/agor/tools/dev_tools.py` - Removed all wrapper functions and duplicates
+
+**Validation and Testing**:
+- All function signature changes tested for backward compatibility
+- Import paths verified across all modules
+- Output formatting consistency validated
+- Agent initialization workflows tested
+
+### 🎯 **Benefits for All AI Deployment Environments**
+
+**Universal Compatibility**:
+- Single, working, efficient functions across all platforms
+- Consistent behavior in ChatGPT, AugmentCode, Google AI Studio, etc.
+- No platform-specific workarounds needed
+
+**Improved Developer Experience**:
+- Intuitive function signatures that match expectations
+- Clear documentation of what each function does
+- No confusion about which function to use
+
+**Maintainability**:
+- Single source of truth for each capability
+- No duplicate code to maintain
+- Clear module boundaries and responsibilities
+
+**Impact**: AGOR now has a clean, efficient architecture with single working functions that behave consistently across all AI deployment environments. The function signature standardization and deduplication eliminate confusion and provide a solid foundation for future development.
+
+---
+
 ### 28. 2025-06-18 | v0.6.3-dev | Comprehensive Deployment Instructions Refinement & Bundle Prompt Options
 
 **Status**: Complete | **Version**: v0.6.3-dev | **Completed**: 2025-06-18
