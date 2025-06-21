@@ -499,7 +499,16 @@ def get_feedback_statistics() -> Dict[str, Any]:
 def collect_feedback(
     feedback_type: str, feedback_content: str, **kwargs
 ) -> FeedbackEntry:
-    """Collect feedback using the global feedback manager."""
+    """
+    Collects a feedback entry using the global feedback manager and returns the created FeedbackEntry object.
+    
+    Parameters:
+        feedback_type (str): The type of feedback being submitted.
+        feedback_content (str): The main content or description of the feedback.
+    
+    Returns:
+        FeedbackEntry: The structured feedback entry that was created and stored.
+    """
     return _feedback_manager.collect_feedback(feedback_type, feedback_content, **kwargs)
 
 
@@ -512,23 +521,21 @@ def provide_agor_feedback(
     agent_id: str = None,
 ) -> str:
     """
-    Generates and formats an AGOR meta-feedback report.
-
-    This function uses the feedback_manager to create a structured feedback report,
-    then formats it using AGOR's standard output formatting for easy display
-    and copy-pasting by the user (e.g., into a GitHub issue).
-
-    Args:
-        feedback_type: Type of feedback (e.g., "bug", "enhancement").
-        feedback_content: The main content of the feedback.
-        suggestions: Optional list of suggestions for improvement.
-        severity: Severity of the issue (e.g., "low", "medium", "high").
-        component: AGOR component the feedback relates to (e.g., "dev_tools", "memory_system").
-        agent_id: Optional identifier of the agent providing feedback.
-
+    Generates a validated and formatted AGOR meta-feedback report for user submission.
+    
+    Validates feedback type, content, and severity, then creates a structured feedback report and applies AGOR's standard output formatting. Returns the formatted report as a string, or an error message if generation fails.
+    
+    Parameters:
+        feedback_type (str): The category of feedback, such as "bug" or "enhancement".
+        feedback_content (str): The main feedback text provided by the user.
+        suggestions (List[str], optional): Suggestions for improvement; defaults to an empty list if not provided.
+        severity (str, optional): The severity level of the feedback; must be one of "low", "medium", "high", or "critical".
+        component (str, optional): The AGOR component related to the feedback; defaults to "general".
+        agent_id (str, optional): Identifier for the agent providing feedback (reserved for future use).
+    
     Returns:
-        A string containing the formatted meta-feedback report, ready for display.
-
+        str: The formatted meta-feedback report, ready for display or submission.
+    
     Raises:
         ValueError: If feedback_type, feedback_content, or severity are invalid.
     """

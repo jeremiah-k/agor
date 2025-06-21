@@ -186,21 +186,16 @@ def safe_git_push(
 
 def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     """
-    Quick commit and push with timestamp and safety checks.
-
-    NOTE: For snapshots, agents should use commit_to_memory_branch() instead
-    of this function to ensure proper cross-branch memory system operation.
-
-    IMPORTANT: PR descriptions, handoff prompts, release notes, etc. all need to be
-    run through dev tools to remove triple backticks in codeblocks and then
-    WRAPPED into a single codeblock so the user can copy & paste.
-
-    Args:
-        message: Commit message
-        emoji: Emoji prefix for commit
-
+    Stages all changes, commits with a timestamped message prefixed by an emoji, and safely pushes to the remote repository.
+    
+    This function automates the typical workflow of adding, committing, and pushing changes, incorporating safety checks to prevent accidental overwrites or force pushes to protected branches. It provides detailed feedback at each step and handles common edge cases, such as attempting to commit with no changes.
+    
+    Parameters:
+        message (str): The commit message to use.
+        emoji (str): An emoji to prefix the commit message. Defaults to "🔧".
+    
     Returns:
-        True if successful, False otherwise
+        bool: True if all steps (add, commit, push) succeed; False otherwise.
     """
     timestamp = get_current_timestamp()
     full_message = f"{emoji} {message} - {timestamp}"

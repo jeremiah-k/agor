@@ -100,23 +100,23 @@ def generate_snapshot_document(
     agent_id: str = None,
 ) -> str:
     """
-    Generate a comprehensive markdown snapshot document capturing the full state, progress, and context of agent work for seamless transitions or context preservation.
-
+    Generate a markdown-formatted snapshot document that captures the complete state, progress, and context of an agent's work for seamless handoff or archival.
+    
     Parameters:
-        problem_description (str): A clear statement of the problem or task being addressed.
-        work_completed (str): String describing completed work items or milestones. Agents can format as they prefer.
-        commits_made (str): String listing commit hashes or messages relevant to the work. Agents can format as they prefer.
+        problem_description (str): Description of the problem or task being addressed.
+        work_completed (str): Summary of completed work items or milestones, formatted as desired by the agent.
+        commits_made (str): List or summary of relevant commits, formatted as desired by the agent.
         current_status (str): Summary of the current progress or state.
-        next_steps (str): String containing recommended next actions. Agents can number them if desired.
-        files_modified (str): String listing files changed during the work session. Agents can format as they prefer.
-        context_notes (str): CRITICAL—must contain a complete, detailed record of user context, including all reasoning, decision-making, strategic thinking, technical preferences, user voice, and the rationale behind every decision to ensure seamless agent handoff.
-        agent_role (str): The role or designation of the agent creating the snapshot.
-        snapshot_reason (str): The reason for creating the snapshot (e.g., handoff, savepoint).
+        next_steps (str): Recommended next actions, formatted as desired by the agent.
+        files_modified (str): List of files changed during the work session, formatted as desired by the agent.
+        context_notes (str): Detailed record of user context, reasoning, decision-making, and rationale to ensure seamless agent handoff.
+        agent_role (str): Role or designation of the agent creating the snapshot.
+        snapshot_reason (str): Reason for creating the snapshot (e.g., handoff, savepoint).
         estimated_completion (str, optional): Estimated time or percentage to completion. Defaults to "Unknown".
         agent_id (str, optional): Unique identifier for the agent. If not provided, one is generated.
-
+    
     Returns:
-        str: A markdown-formatted snapshot document containing all provided information, technical Git context, and detailed instructions for receiving agents.
+        str: A comprehensive markdown snapshot document including all provided information, technical Git context, and detailed instructions for receiving agents.
     """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -465,7 +465,24 @@ def generate_completion_report(
     issues_encountered: str = "None",
     recommendations: str = "None",
 ) -> str:
-    """Generate a completion report document (can be a form of snapshot) to return to coordinator."""
+    """
+    Generate a markdown-formatted completion report summarizing the outcome of a task for coordinator review.
+    
+    Parameters:
+        original_task (str): Description of the original task assigned.
+        work_completed (str): Markdown-formatted summary of work performed.
+        commits_made (str): Markdown-formatted list or summary of commits included in the completion.
+        final_status (str): Final status of the task (e.g., completed, blocked).
+        files_modified (str): Markdown-formatted list or summary of files changed.
+        results_summary (str): Summary of the results achieved.
+        agent_role (str): Role or identifier of the agent completing the task.
+        coordinator_id (str): Identifier of the coordinator to whom the report is addressed.
+        issues_encountered (str, optional): Description of any issues encountered during the task.
+        recommendations (str, optional): Recommendations for future work or improvements.
+    
+    Returns:
+        str: A markdown document containing the completion report, including task details, work performed, results, issues, recommendations, and technical Git context.
+    """
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     git_context = get_git_context()
