@@ -138,27 +138,7 @@ Refer to `AGOR_INSTRUCTIONS.md` (Memory System Understanding) for more details.
 # ===================================
 
 
-def create_development_snapshot(
-    title: str,
-    context: str,
-    next_steps: list = None,
-    agent_id: str = None,
-    custom_branch: str = None,
-) -> bool:
-    """
-    Creates a development snapshot in the agent's directory on the main memory branch.
-    
-    Args:
-        title: The title of the snapshot.
-        context: Description of the development context.
-        next_steps: List of next steps for continuing the work.
-        agent_id: Optional identifier for the agent.
-        custom_branch: Optional custom memory branch name.
-    
-    Returns:
-        True if the snapshot was created successfully, otherwise False.
-    """
-    return create_snapshot(title, context, next_steps, agent_id, custom_branch)
+
 
 
 def generate_seamless_agent_handoff(
@@ -209,9 +189,7 @@ def generate_project_handoff_prompt(
 # ===================================
 
 
-def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push wrapper."""
-    return quick_commit_push(message, emoji)
+
 
 
 def commit_memory_to_branch(
@@ -263,17 +241,7 @@ def display_memory_architecture_info(print_output: bool = True) -> str:
     return summary_string
 
 
-def process_content_for_codeblock(content: str) -> str:
-    """
-    Removes conflicting backticks from content to ensure safe embedding within codeblocks.
-    
-    Args:
-        content: The text to sanitize for codeblock compatibility.
-    
-    Returns:
-        The content with all backticks removed to prevent codeblock formatting issues.
-    """
-    return detick_content(content)
+
 
 
 def restore_content_from_codeblock(content: str) -> str:
@@ -425,14 +393,7 @@ def cleanup_memory_branches(
 # =================================
 
 
-def get_workspace_status() -> dict:
-    """Get comprehensive workspace status."""
-    return get_project_status()
 
-
-def display_workspace_status() -> str:
-    """Display formatted workspace status."""
-    return display_project_status()
 
 
 def get_quick_status() -> str:
@@ -1352,157 +1313,20 @@ def generate_release_notes_output(release_notes_content: str) -> str:
     return generate_formatted_output(release_notes_content, "release_notes")
 
 
-def generate_pr_description_output(pr_content: str) -> str:
-    """
-    Generate properly formatted PR description for copy-paste.
-
-    NOTE: Keep PR description content BRIEF to avoid processing errors.
-    Long content can cause the formatting process to fail.
-
-    Args:
-        pr_content: Raw PR description content (keep brief)
-
-    Returns:
-        Formatted PR description wrapped in codeblock
-    """
-    return generate_formatted_output(pr_content, "pr_description")
 
 
-def generate_handoff_prompt_output(
-    work_completed: str = None,
-    current_status: str = None,
-    next_agent_instructions: str = None,
-    critical_context: str = None,
-    files_modified: str = None,
-    task_description: str = "Agent handoff",
-) -> str:
-    """
-    Generate properly formatted handoff prompt for copy-paste with intuitive parameters.
-
-    Args:
-        work_completed: String describing completed work items. Agents can format as they prefer.
-        current_status: Current status of the project or task.
-        next_agent_instructions: String containing instructions for the next agent. Agents can number them if desired.
-        critical_context: Important context that must be preserved.
-        files_modified: String listing files that were modified. Agents can format as they prefer.
-        task_description: Description of the task being handed off.
-
-    Returns:
-        Formatted handoff prompt wrapped in codeblock, ready for copy-paste.
-    """
-    # Import the handoff prompt generation function
-    from agor.tools.agent_prompts import generate_handoff_prompt_only
-
-    # Set defaults for None values
-    if work_completed is None:
-        work_completed = "Work session completed"
-    if current_status is None:
-        current_status = "Ready for handoff"
-    if next_agent_instructions is None:
-        next_agent_instructions = "Continue with next tasks as appropriate"
-    if critical_context is None:
-        critical_context = "No specific critical context provided"
-    if files_modified is None:
-        files_modified = "No files specified"
-
-    # Convert strings to lists for compatibility with existing function
-    work_completed_list = [work_completed] if work_completed else []
-    next_agent_instructions_list = [next_agent_instructions] if next_agent_instructions else []
-    files_modified_list = [files_modified] if files_modified else []
-
-    # Generate the handoff prompt content
-    handoff_content = generate_handoff_prompt_only(
-        work_completed=work_completed_list,
-        current_status=current_status,
-        next_agent_instructions=next_agent_instructions_list,
-        critical_context=critical_context,
-        files_modified=files_modified_list,
-    )
-
-    return generate_formatted_output(handoff_content, "handoff_prompt")
 
 
-def provide_agor_feedback(
-    feedback_type: str,
-    feedback_content: str,
-    suggestions: List[str] = None, # Python <3.9 Optional[List[str]]
-    severity: str = "medium",
-    component: str = "general",
-    agent_id: str = None, # Python <3.9 Optional[str]
-) -> str:
-    """
-    Generates and formats an AGOR meta-feedback report.
 
-    This function uses the feedback_manager to create a structured feedback report,
-    then formats it using AGOR's standard output formatting for easy display
-    and copy-pasting by the user (e.g., into a GitHub issue).
 
-    Args:
-        feedback_type: Type of feedback (e.g., "bug", "enhancement").
-        feedback_content: The main content of the feedback.
-        suggestions: Optional list of suggestions for improvement.
-        severity: Severity of the issue (e.g., "low", "medium", "high").
-        component: AGOR component the feedback relates to (e.g., "dev_tools", "memory_system").
-        agent_id: Optional identifier of the agent providing feedback.
 
-    Returns:
-        A string containing the formatted meta-feedback report, ready for display.
-
-    Raises:
-        ValueError: If feedback_type, feedback_content, or severity are invalid.
-    """
-    # Validate required parameters
-    if not feedback_type or not feedback_type.strip():
-        raise ValueError("feedback_type cannot be empty")
-
-    if not feedback_content or not feedback_content.strip():
-        raise ValueError("feedback_content cannot be empty")
-
-    # Validate severity
-    allowed_severities = {"low", "medium", "high", "critical"}
-    if severity not in allowed_severities:
-        raise ValueError(f"severity must be one of: {', '.join(sorted(allowed_severities))}")
-
-    # Validate feedback_type
-    allowed_feedback_types = {"bug", "enhancement", "workflow_issue", "success_story", "documentation", "performance", "usability"}
-    if feedback_type not in allowed_feedback_types:
-        raise ValueError(f"feedback_type must be one of: {', '.join(sorted(allowed_feedback_types))}")
-
-    try:
-        from agor.tools.feedback_manager import generate_meta_feedback as fm_generate_meta_feedback
-    except ImportError as e:
-        print(f"⚠️ Failed to import feedback_manager: {e}")
-        return f"Error: Could not generate feedback report due to import failure: {e}"
-
-    # Ensure suggestions is a list if None, for feedback_manager compatibility
-    if suggestions is None:
-        suggestions = []
-
-    try:
-        raw_feedback_text = fm_generate_meta_feedback(
-            feedback_type=feedback_type,
-            feedback_content=feedback_content,
-            suggestions=suggestions,
-            severity=severity,
-            component=component,
-            # Note: agent_id is collected but not passed to fm_generate_meta_feedback
-            # as the current implementation doesn't support it directly.
-            # This is intentional - agent_id is reserved for future enhancement.
-        )
-        # apply_output_formatting is used by generate_formatted_output
-        return apply_output_formatting(raw_feedback_text, "meta_feedback")
-    except Exception as e:
-        print(f"❌ Failed to generate meta feedback: {e}")
-        return f"Error: Could not generate feedback report: {e}"
 
 
 # Utility Functions
 # =================
 
 
-def detect_current_environment() -> dict:
-    """Detect current development environment."""
-    return detect_environment()
+
 
 
 def get_available_functions_reference() -> str:
@@ -1711,14 +1535,7 @@ def get_snapshot_requirements() -> str:
     return requirements
 
 
-def test_all_tools() -> bool:
-    """
-    Runs comprehensive tests on all development tools components.
 
-    Returns:
-        True if all tests pass successfully, otherwise False.
-    """
-    return test_tooling()
 
 
 # Workflow Optimization Functions
