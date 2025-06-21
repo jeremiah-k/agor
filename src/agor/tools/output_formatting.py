@@ -43,19 +43,26 @@ def apply_output_formatting(content: str, output_type: str) -> str:
 def generate_formatted_output(content: str, output_type: str) -> str:
     """
     Generate properly formatted output wrapped in codeblock for copy-paste.
-    
+
     This is the main function agents should use for all formatted output.
     It ensures consistent formatting across all AI deployment environments.
-    
+
     Args:
         content: Raw content to format
         output_type: Type of output for appropriate formatting
-    
+
     Returns:
         Content wrapped in codeblock with proper formatting
+
+    Raises:
+        ValueError: If content is empty or None
     """
+    # Validate input
+    if not content or not content.strip():
+        raise ValueError("content cannot be empty")
+
     formatted_content = apply_output_formatting(content, output_type)
-    
+
     # Wrap in codeblock using double backticks (AGOR standard)
     return f"``\n{formatted_content}\n``"
 

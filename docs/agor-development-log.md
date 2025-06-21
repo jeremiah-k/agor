@@ -4,7 +4,7 @@
 
 ---
 
-### 29. 2025-06-21 | v0.6.4-dev | Architectural Cleanup: Function Deduplication and Signature Standardization
+## 29. 2025-06-21 | v0.6.4-dev | Architectural Cleanup: Function Deduplication and Signature Standardization
 
 **Status**: Complete | **Version**: v0.6.4-dev | **Completed**: 2025-06-21
 
@@ -141,7 +141,7 @@ pip install -r src/agor/tools/agent-requirements.txt
 
 ---
 
-### 28. 2025-06-18 | v0.6.3-dev | Comprehensive Deployment Instructions Refinement & Bundle Prompt Options
+## 28. 2025-06-18 | v0.6.3-dev | Comprehensive Deployment Instructions Refinement & Bundle Prompt Options
 
 **Status**: Complete | **Version**: v0.6.3-dev | **Completed**: 2025-06-18
 

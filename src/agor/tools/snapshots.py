@@ -469,8 +469,8 @@ def generate_mandatory_session_end_prompt(
     # Create a basic snapshot for the session
     snapshot_content = generate_handoff_snapshot(
         task_description=task_description,
-        work_completed="Session work completed",
-        next_steps="1. Review session output\n2. Continue with next tasks",
+        work_completed=f"Completed session: {task_description}",
+        next_steps="1. Review session output and any artifacts created\n2. Validate session completion\n3. Continue with follow-up tasks",
         context_notes=brief_context,
     )
 
