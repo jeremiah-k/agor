@@ -71,24 +71,125 @@
 - But agents should access source directly
 - Unclear separation between CLI tools and agent tools
 
-## Recommended Migration Plan
+## Detailed Migration Plan for dev_tools.py
 
-### Phase 1: Fix Data Types
-1. Change all `next_steps` parameters from `List[str]` to `str`
-2. Update function signatures to be intuitive
-3. Fix handoff prompt functions to have consistent, expected signatures
+### Current State Analysis (1943 lines - WAY over 500 LOC target)
 
-### Phase 2: Consolidate Duplications
-1. Keep one implementation of each function in the most appropriate module
-2. Remove wrapper functions and duplicates
-3. Update all imports to point to canonical implementations
+**Functions that are just imports/wrappers (REMOVE):**
+- `create_development_snapshot()` → wrapper around `snapshots.create_snapshot()`
+- `quick_commit_and_push()` → wrapper around `git_operations.quick_commit_push()`
+- `get_workspace_status()` → wrapper around `hotkeys.get_project_status()`
+- `display_workspace_status()` → wrapper around `hotkeys.display_project_status()`
+- `test_all_tools()` → wrapper around `dev_testing.test_tooling()`
+- `detect_current_environment()` → wrapper around `dev_testing.detect_environment()`
 
-### Phase 3: Migrate from dev_tools.py
-1. Move remaining functions to appropriate specialized modules
-2. Either empty dev_tools.py or remove it entirely
-3. Update all imports across the codebase
+**Functions that should be moved to appropriate modules:**
+- `generate_handoff_prompt_output()` → move to `agent_prompts.py` (handoff functionality)
+- `generate_pr_description_output()` → move to `agent_prompts.py` (output formatting)
+- `provide_agor_feedback()` → move to `feedback_manager.py` (feedback functionality)
+- `cleanup_agent_directories()` → move to `memory_manager.py` (memory management)
+- `generate_session_end_prompt()` → move to `agent_prompts.py` (prompt generation)
 
-### Phase 4: Clarify CLI vs Agent Separation
-1. Document which tools are for CLI vs agents
-2. Remove agent dependency on installed packages
-3. Ensure agents can access tools directly from source
+**Functions that are utility/formatting (consolidate into utils module):**
+- `process_content_for_codeblock()` → wrapper around `agent_prompts.detick_content()`
+- `apply_output_formatting()` → move to new `output_formatting.py` module
+- `generate_formatted_output()` → move to new `output_formatting.py` module
+
+**Documentation/reference functions (move to dedicated module):**
+- `get_available_functions_reference()` → move to new `agent_reference.py` module
+- `get_agor_initialization_guide()` → move to new `agent_reference.py` module
+- `get_snapshot_requirements()` → move to new `agent_reference.py` module
+- `display_memory_architecture_info()` → move to new `agent_reference.py` module
+
+**Workflow functions (move to workflow module):**
+- `generate_workflow_prompt_template()` → move to new `workflow_templates.py` module
+- `validate_agor_workflow_completion()` → move to new `workflow_templates.py` module
+- `get_workflow_optimization_tips()` → move to new `workflow_templates.py` module
+
+### Migration Strategy
+
+#### Phase 1: Create New Specialized Modules
+1. Create `src/agor/tools/output_formatting.py` for output formatting functions
+2. Create `src/agor/tools/agent_reference.py` for documentation/reference functions
+3. Create `src/agor/tools/workflow_templates.py` for workflow template functions
+
+#### Phase 2: Move Functions to Appropriate Modules
+1. Move handoff/prompt functions to `agent_prompts.py`
+2. Move feedback functions to `feedback_manager.py`
+3. Move memory cleanup functions to `memory_manager.py`
+4. Move formatting functions to `output_formatting.py`
+5. Move reference functions to `agent_reference.py`
+6. Move workflow functions to `workflow_templates.py`
+
+#### Phase 3: Remove Wrapper Functions
+1. Remove all wrapper functions that just call other modules
+2. Update imports across codebase to point directly to source modules
+3. Update documentation to reference correct modules
+
+#### Phase 4: Empty or Remove dev_tools.py
+1. Either leave dev_tools.py as an empty file with a deprecation notice
+2. Or remove it entirely and update all imports
+3. Update agent initialization to not reference dev_tools.py
+
+#### Phase 5: Update Documentation and Imports
+1. Update all documentation to reference correct modules
+2. Update agent initialization guides
+3. Update function reference documentation
+4. Test all imports work correctly
+
+### Expected Outcome
+- dev_tools.py either empty or removed entirely
+- Functions in their logical homes
+- No more dumping ground for new functions
+- Clear separation of concerns
+- Modules stay under 500 LOC target
+
+## CLI vs Agent Tools Separation - CRITICAL UNDERSTANDING
+
+### The Architecture (User was RIGHT - I was WRONG)
+
+**CLI Tools (Installed Package):**
+- `pyproject.toml` defines the CLI package with `agor = "agor.main:app"`
+- `requirements.txt` contains CLI dependencies (FastAPI, Typer, etc.)
+- Installed via `pip install agor` or `pipx install agor`
+- Used for: `agor bundle`, `agor init`, etc. - command line operations
+- For: End users who want to bundle projects for ChatGPT
+
+**Agent Tools (Direct Source Access):**
+- `src/agor/tools/agent-requirements.txt` contains minimal agent dependencies
+- Only needs: pydantic, pydantic-settings, platformdirs, jinja2, httpx, tqdm
+- Agents access tools directly from source: `sys.path.insert(0, 'src')`
+- No installation required - just clone repo and import from source
+- For: AI agents doing development work
+
+### The Problem I Created
+I installed the CLI package (`pip install -e .`) when agents should:
+1. Clone the AGOR repo
+2. Create venv in AGOR directory (not project directory)
+3. Install only `agent-requirements.txt`
+4. Import directly from source with `sys.path.insert(0, 'src')`
+
+### Correct Agent Initialization
+```bash
+# For remote agents
+cd /tmp && git clone https://github.com/jeremiah-k/agor.git && cd agor
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r src/agor/tools/agent-requirements.txt
+
+# For local agents (Augment)
+# Add AGOR directory as source in Augment settings
+# No installation needed - direct source access
+```
+
+### Why This Separation Matters
+1. **CLI tools** are for users bundling projects
+2. **Agent tools** are for AI agents doing development
+3. **Different dependencies** - CLI needs web framework, agents need minimal deps
+4. **Different access patterns** - CLI is installed globally, agents access source directly
+5. **Prevents conflicts** - agents don't pollute project environments with CLI deps
+
+### Documentation Updates Needed
+- Update all agent initialization guides to NOT install CLI package
+- Clarify the separation in documentation
+- Remove references to installing AGOR package for agents
+- Emphasize direct source access for agents
