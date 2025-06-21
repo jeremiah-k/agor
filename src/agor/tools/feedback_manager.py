@@ -499,5 +499,82 @@ def get_feedback_statistics() -> Dict[str, Any]:
 def collect_feedback(
     feedback_type: str, feedback_content: str, **kwargs
 ) -> FeedbackEntry:
-    """Collect feedback using the global feedback manager."""
+    """
+    Collects a feedback entry using the global feedback manager and returns the created FeedbackEntry object.
+    
+    Parameters:
+        feedback_type (str): The type of feedback being submitted.
+        feedback_content (str): The main content or description of the feedback.
+    
+    Returns:
+        FeedbackEntry: The structured feedback entry that was created and stored.
+    """
     return _feedback_manager.collect_feedback(feedback_type, feedback_content, **kwargs)
+
+
+def provide_agor_feedback(
+    feedback_type: str,
+    feedback_content: str,
+    suggestions: List[str] = None,
+    severity: str = "medium",
+    component: str = "general",
+    agent_id: str = None,
+) -> str:
+    """
+    Generates a validated and formatted AGOR meta-feedback report for user submission.
+    
+    Validates feedback type, content, and severity, then creates a structured feedback report and applies AGOR's standard output formatting. Returns the formatted report as a string, or an error message if generation fails.
+    
+    Parameters:
+        feedback_type (str): The category of feedback, such as "bug" or "enhancement".
+        feedback_content (str): The main feedback text provided by the user.
+        suggestions (List[str], optional): Suggestions for improvement; defaults to an empty list if not provided.
+        severity (str, optional): The severity level of the feedback; must be one of "low", "medium", "high", or "critical".
+        component (str, optional): The AGOR component related to the feedback; defaults to "general".
+        agent_id (str, optional): Identifier for the agent providing feedback (reserved for future use).
+    
+    Returns:
+        str: The formatted meta-feedback report, ready for display or submission.
+    
+    Raises:
+        ValueError: If feedback_type, feedback_content, or severity are invalid.
+    """
+    from agor.tools.output_formatting import apply_output_formatting
+
+    # Validate required parameters
+    if not feedback_type or not feedback_type.strip():
+        raise ValueError("feedback_type cannot be empty")
+
+    if not feedback_content or not feedback_content.strip():
+        raise ValueError("feedback_content cannot be empty")
+
+    # Validate severity
+    allowed_severities = {"low", "medium", "high", "critical"}
+    if severity not in allowed_severities:
+        raise ValueError(f"severity must be one of: {', '.join(sorted(allowed_severities))}")
+
+    # Validate feedback_type
+    allowed_feedback_types = {"bug", "enhancement", "workflow_issue", "success_story", "documentation", "performance", "usability"}
+    if feedback_type not in allowed_feedback_types:
+        raise ValueError(f"feedback_type must be one of: {', '.join(sorted(allowed_feedback_types))}")
+
+    # Ensure suggestions is a list if None, for feedback_manager compatibility
+    if suggestions is None:
+        suggestions = []
+
+    try:
+        raw_feedback_text = generate_meta_feedback(
+            feedback_type=feedback_type,
+            feedback_content=feedback_content,
+            suggestions=suggestions,
+            severity=severity,
+            component=component,
+            # Note: agent_id is collected but not passed to generate_meta_feedback
+            # as the current implementation doesn't support it directly.
+            # This is intentional - agent_id is reserved for future enhancement.
+        )
+        # apply_output_formatting is used by generate_formatted_output
+        return apply_output_formatting(raw_feedback_text, "meta_feedback")
+    except Exception as e:
+        print(f"❌ Failed to generate meta feedback: {e}")
+        return f"Error: Could not generate feedback report: {e}"

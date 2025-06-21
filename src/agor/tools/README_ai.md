@@ -24,11 +24,10 @@ from agor.tools.external_integration import get_agor_tools
 tools = get_agor_tools()
 tools.print_status()  # Check what was detected
 
-# Test functionality
-tools.test_all_tools()
-
 # Get environment info
 status = tools.get_workspace_status()
+# Test functionality
+tools.test_all_tools()
 print(f"Integration Status: {status}")
 ```
 
@@ -109,8 +108,10 @@ Based on your environment detection:
 
 **AugmentCode Local/Remote** (integrated environments):
 
-- Read `PLATFORM_INITIALIZATION_PROMPTS.md` for platform-specific setup
-- Enhanced memory and context preservation
+- Read `PLATFORM_INITIALIZATION_PROMPTS.md` for platform-specific setup.
+- Remote and integrated agents should focus on understanding AGOR protocols for memory management (snapshots on memory branches via dev tools like `create_development_snapshot`), and handoff procedures.
+- **For a focused guide on using AGOR with external projects, see `REMOTE_AGENT_QUICKSTART.md`.**
+- Enhanced memory and context preservation is a key feature for these modes.
 
 ### STEP 4: MANDATORY SNAPSHOT REQUIREMENTS
 

@@ -69,24 +69,24 @@ class HandoffRequest:
 def create_snapshot(
     title: str,
     context: str,
-    next_steps: list = None,
+    next_steps: str = None,
     agent_id: str = None,
     custom_branch: str = None,
 ) -> bool:
     """
-    Creates a development snapshot file in the agent's directory within the main memory branch.
+    Create a development snapshot markdown file in the agent's directory on the main memory branch.
     
-    The snapshot includes metadata, development context, next steps, and git status, and is committed to the specified memory branch without switching branches. Returns True if the snapshot was successfully committed, otherwise False.
+    The snapshot includes metadata, development context, actionable next steps (as a formatted string), and git status. It is committed to the specified memory branch without switching branches. Returns True if the snapshot is successfully committed; otherwise, returns False.
     
-    Args:
-        title: The title of the snapshot.
-        context: Description of the current development context.
-        next_steps: List of actionable next steps for continuing the work. Must not be None.
-        agent_id: Optional agent identifier; generated if not provided.
-        custom_branch: Optional custom memory branch name.
+    Parameters:
+        title (str): Title of the snapshot.
+        context (str): Description of the current development context.
+        next_steps (str): Preformatted string of actionable next steps; must not be None.
+        agent_id (str, optional): Agent identifier; generated if not provided.
+        custom_branch (str, optional): Custom memory branch name.
     
     Returns:
-        True if the snapshot was successfully committed to the memory branch, otherwise False.
+        bool: True if the snapshot was successfully committed to the memory branch, otherwise False.
     
     Raises:
         ValueError: If next_steps is not provided.
@@ -148,7 +148,7 @@ def create_snapshot(
 {context}
 
 ## 📋 Next Steps
-{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
+{next_steps}
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}
@@ -303,35 +303,35 @@ Remember: Always create a snapshot before ending your session using the dev tool
 
 def create_seamless_handoff(
     task_description: str,
-    work_completed: list = None,
-    next_steps: list = None,
-    files_modified: list = None,
+    work_completed: str = None,
+    next_steps: str = None,
+    files_modified: str = None,
     context_notes: str = None,
     brief_context: str = None,
 ) -> tuple[str, str]:
     """
-    Generates a comprehensive agent handoff by creating a project snapshot and a formatted handoff prompt.
-
-    This function automates the agent handoff process by generating a detailed snapshot of the current work, attempting to commit it to a dedicated memory branch with a safe fallback, and producing a ready-to-use handoff prompt with formatting safeguards. Both the snapshot content and the prompt are returned for immediate use.
-
-    Args:
-        task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
-        context_notes: Additional context notes.
-        brief_context: Brief verbal background for quick orientation.
-
+    Automates agent handoff by generating a detailed project snapshot and a formatted handoff prompt.
+    
+    Creates a comprehensive snapshot of the current work state, attempts to commit it to the main memory branch, and produces a ready-to-use handoff prompt for the next agent. Returns both the snapshot content and the handoff prompt as strings.
+    
+    Parameters:
+        task_description (str): Description of the task being handed off.
+        work_completed (str, optional): Description of completed work items, formatted as desired.
+        next_steps (str, optional): Next steps for the receiving agent, formatted as desired.
+        files_modified (str, optional): List of modified files, formatted as desired.
+        context_notes (str, optional): Additional context notes.
+        brief_context (str, optional): Brief background for quick orientation.
+    
     Returns:
-        Tuple of (snapshot_content, handoff_prompt) both ready for immediate use.
+        tuple[str, str]: A tuple containing the snapshot content and the formatted handoff prompt.
     """
     # Set defaults for optional parameters
     if work_completed is None:
-        work_completed = []
+        work_completed = ""
     if next_steps is None:
-        next_steps = []
+        next_steps = ""
     if files_modified is None:
-        files_modified = []
+        files_modified = ""
     if context_notes is None:
         context_notes = ""
     if brief_context is None:
@@ -396,33 +396,33 @@ def create_seamless_handoff(
 
 def generate_handoff_snapshot(
     task_description: str,
-    work_completed: list = None,
-    next_steps: list = None,
-    files_modified: list = None,
+    work_completed: str = None,
+    next_steps: str = None,
+    files_modified: str = None,
     context_notes: str = None,
     agent_id: str = None,
 ) -> str:
     """
-    Generate a comprehensive handoff snapshot using the snapshot template system.
-
-    Args:
-        task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
-        context_notes: Additional context notes.
-        agent_id: Optional agent ID. If not provided, generates a new one.
-
+    Generates a formatted handoff snapshot summarizing task details, completed work, next steps, modified files, and context notes for agent coordination.
+    
+    Parameters:
+        task_description (str): Description of the task being handed off.
+        work_completed (str, optional): Description of completed work items, formatted as desired.
+        next_steps (str, optional): Next steps for the receiving agent, formatted as desired.
+        files_modified (str, optional): List or description of modified files, formatted as desired.
+        context_notes (str, optional): Additional context notes.
+        agent_id (str, optional): Agent ID to associate with the snapshot; a new one is generated if not provided.
+    
     Returns:
-        Formatted snapshot content ready for use.
+        str: The formatted snapshot content ready for use in agent handoff.
     """
     # Set defaults for optional parameters
     if work_completed is None:
-        work_completed = []
+        work_completed = ""
     if next_steps is None:
-        next_steps = []
+        next_steps = ""
     if files_modified is None:
-        files_modified = []
+        files_modified = ""
     if context_notes is None:
         context_notes = ""
 
@@ -454,23 +454,15 @@ def generate_mandatory_session_end_prompt(
     brief_context: str = "Work session completed",
 ) -> str:
     """
-    Generate a mandatory session end prompt for agent coordination.
-
-    This function creates a standardized prompt that agents must use when ending sessions,
-    ensuring proper handoff and coordination protocols are followed.
-
-    Args:
-        task_description: Description of the completed task.
-        brief_context: Brief context about the session.
-
-    Returns:
-        Formatted session end prompt ready for use.
+    Generate a standardized session end prompt for agent handoff and coordination.
+    
+    Creates a formatted prompt summarizing session completion, embedding a snapshot of completed work and recommended next steps for review and validation. Returns the session end prompt as a string.
     """
     # Create a basic snapshot for the session
     snapshot_content = generate_handoff_snapshot(
         task_description=task_description,
-        work_completed=["Session work completed"],
-        next_steps=["Review session output", "Continue with next tasks"],
+        work_completed=f"Completed session: {task_description}",
+        next_steps="1. Review session output and any artifacts created\n2. Validate session completion\n3. Continue with follow-up tasks",
         context_notes=brief_context,
     )
 
@@ -484,24 +476,24 @@ def generate_mandatory_session_end_prompt(
     return handoff_prompt
 
 
-def create_snapshot_legacy(title: str, context: str, next_steps: list = None) -> bool:
+def create_snapshot_legacy(title: str, context: str, next_steps: str = None) -> bool:
     """
-    Creates a development snapshot using the legacy format for backward compatibility.
+    Create a development snapshot using the legacy format and commit it to the repository.
     
-    Generates a markdown snapshot file containing metadata, development context, next steps, and git status, then commits and pushes it using the legacy workflow. Requires a non-empty list of next steps.
+    Generates a markdown snapshot file containing metadata, development context, next steps, and git status, then commits and pushes it using the legacy workflow. Requires a non-empty string for next steps; raises ValueError if not provided.
     
-    Args:
-        title: The title of the snapshot.
-        context: Description of the current development context.
-        next_steps: List of actionable next steps for continuing the work.
+    Parameters:
+        title (str): The title of the snapshot.
+        context (str): Description of the current development context.
+        next_steps (str): Actionable next steps for continuing the work, formatted as a string.
     
     Returns:
-        True if the snapshot was successfully committed and pushed, False otherwise.
+        bool: True if the snapshot was successfully committed and pushed, False otherwise.
     
     Raises:
-        ValueError: If next_steps is not provided.
+        ValueError: If next_steps is not provided or is empty.
     """
-    if next_steps is None:
+    if next_steps is None or not next_steps.strip():
         raise ValueError(
             "next_steps parameter is required - agents must provide meaningful next steps"
         )
@@ -552,7 +544,7 @@ def create_snapshot_legacy(title: str, context: str, next_steps: list = None) ->
 {context}
 
 ## 📋 Next Steps
-{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
+{next_steps}
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}

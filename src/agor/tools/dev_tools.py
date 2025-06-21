@@ -138,27 +138,7 @@ Refer to `AGOR_INSTRUCTIONS.md` (Memory System Understanding) for more details.
 # ===================================
 
 
-def create_development_snapshot(
-    title: str,
-    context: str,
-    next_steps: list = None,
-    agent_id: str = None,
-    custom_branch: str = None,
-) -> bool:
-    """
-    Creates a development snapshot in the agent's directory on the main memory branch.
-    
-    Args:
-        title: The title of the snapshot.
-        context: Description of the development context.
-        next_steps: List of next steps for continuing the work.
-        agent_id: Optional identifier for the agent.
-        custom_branch: Optional custom memory branch name.
-    
-    Returns:
-        True if the snapshot was created successfully, otherwise False.
-    """
-    return create_snapshot(title, context, next_steps, agent_id, custom_branch)
+
 
 
 def generate_seamless_agent_handoff(
@@ -169,7 +149,15 @@ def generate_seamless_agent_handoff(
     context_notes: str = None,
     brief_context: str = None,
 ) -> tuple[str, str]:
-    """Generate seamless agent handoff - main API function."""
+    """
+    Generate a seamless agent handoff prompt summarizing the task, completed work, next steps, modified files, and context.
+    
+    Parameters:
+        task_description (str): Description of the current task for the agent handoff.
+    
+    Returns:
+        tuple[str, str]: A tuple containing the formatted handoff prompt and a summary for agent transition.
+    """
     return create_seamless_handoff(
         task_description=task_description,
         work_completed=work_completed,
@@ -209,24 +197,22 @@ def generate_project_handoff_prompt(
 # ===================================
 
 
-def quick_commit_and_push(message: str, emoji: str = "🔧") -> bool:
-    """Quick commit and push wrapper."""
-    return quick_commit_push(message, emoji)
+
 
 
 def commit_memory_to_branch(
     content: str, memory_type: str, agent_id: str = "dev"
 ) -> bool:
     """
-    Commits content to a specified memory branch for an agent.
+    Commit content to a specified memory branch for a given agent.
     
-    Args:
-        content: The data to store in the memory branch.
-        memory_type: The category or type of memory branch.
-        agent_id: The agent's identifier (defaults to "dev").
+    Parameters:
+        content (str): The data to be committed to the memory branch.
+        memory_type (str): The type or category of the memory branch.
+        agent_id (str, optional): Identifier for the agent. Defaults to "dev".
     
     Returns:
-        True if the commit succeeds, False otherwise.
+        bool: True if the commit is successful, False otherwise.
     """
     return auto_commit_memory(content, memory_type, agent_id)
 
@@ -249,13 +235,13 @@ def get_snapshot_guidelines_summary(print_output: bool = True) -> str:
 
 def display_memory_architecture_info(print_output: bool = True) -> str:
     """
-    Returns a summary of AGOR's memory architecture and optionally prints it.
+    Return a summary of AGOR's memory architecture, optionally printing it.
     
-    Args:
-        print_output: If True, prints the memory architecture summary.
+    Parameters:
+        print_output (bool): If True, print the memory architecture summary.
     
     Returns:
-        The memory architecture summary as a string.
+        str: The memory architecture summary.
     """
     summary_string = _MEMORY_ARCH_SUMMARY_TEXT
     if print_output:
@@ -263,21 +249,19 @@ def display_memory_architecture_info(print_output: bool = True) -> str:
     return summary_string
 
 
-def process_content_for_codeblock(content: str) -> str:
-    """
-    Removes conflicting backticks from content to ensure safe embedding within codeblocks.
-    
-    Args:
-        content: The text to sanitize for codeblock compatibility.
-    
-    Returns:
-        The content with all backticks removed to prevent codeblock formatting issues.
-    """
-    return detick_content(content)
+
 
 
 def restore_content_from_codeblock(content: str) -> str:
-    """Restore content from codeblock processing."""
+    """
+    Restores original content by removing codeblock formatting.
+    
+    Parameters:
+        content (str): The content string potentially wrapped in codeblock formatting.
+    
+    Returns:
+        str: The content with codeblock formatting removed.
+    """
     return retick_content(content)
 
 
@@ -425,18 +409,13 @@ def cleanup_memory_branches(
 # =================================
 
 
-def get_workspace_status() -> dict:
-    """Get comprehensive workspace status."""
-    return get_project_status()
 
-
-def display_workspace_status() -> str:
-    """Display formatted workspace status."""
-    return display_project_status()
 
 
 def get_quick_status() -> str:
-    """Get quick status summary."""
+    """
+    Returns a brief summary of the current workspace status.
+    """
     return quick_status_check()
 
 
@@ -1338,66 +1317,41 @@ def generate_formatted_output(content: str, content_type: str = "general") -> st
 
 def generate_release_notes_output(release_notes_content: str) -> str:
     """
-    Generate properly formatted release notes for copy-paste.
-
-    NOTE: Keep release notes content BRIEF to avoid processing errors.
-    Long content can cause the formatting process to fail.
-
-    Args:
-        release_notes_content: Raw release notes content (keep brief)
-
+    Format release notes content for copy-paste by wrapping it in a codeblock.
+    
+    Parameters:
+        release_notes_content (str): The release notes text to be formatted. It is recommended to keep this content brief to prevent formatting errors.
+    
     Returns:
-        Formatted release notes wrapped in codeblock
+        str: The formatted release notes, wrapped for safe copy-paste.
     """
     return generate_formatted_output(release_notes_content, "release_notes")
 
 
-def generate_pr_description_output(pr_content: str) -> str:
-    """
-    Generate properly formatted PR description for copy-paste.
-
-    NOTE: Keep PR description content BRIEF to avoid processing errors.
-    Long content can cause the formatting process to fail.
-
-    Args:
-        pr_content: Raw PR description content (keep brief)
-
-    Returns:
-        Formatted PR description wrapped in codeblock
-    """
-    return generate_formatted_output(pr_content, "pr_description")
 
 
-def generate_handoff_prompt_output(handoff_content: str) -> str:
-    """
-    Generate properly formatted handoff prompt for copy-paste.
 
-    Args:
-        handoff_content: Raw handoff prompt content
 
-    Returns:
-        Formatted handoff prompt wrapped in codeblock
-    """
-    return generate_formatted_output(handoff_content, "handoff_prompt")
+
+
+
 
 
 # Utility Functions
 # =================
 
 
-def detect_current_environment() -> dict:
-    """Detect current development environment."""
-    return detect_environment()
+
 
 
 def get_available_functions_reference() -> str:
     """
-    Generates a dynamically assembled reference guide of all available AGOR development tools functions.
+    Generate a dynamically assembled reference guide listing all public AGOR development tools functions and their summaries.
     
-    Inspects core AGOR modules to list all public functions with their descriptions, providing agents with a comprehensive overview of available capabilities. The output includes key workflow, memory, and analysis functions, and is intended as a mandatory reference for agents using AGOR tools.
+    Inspects core AGOR modules to collect and format the names and first-line docstrings of all available public functions, providing agents with a comprehensive overview of AGOR tool capabilities. The output includes key workflow, memory, and analysis functions, and serves as a mandatory reference for agents.
     
     Returns:
-        str: Formatted reference guide listing all functions and their summaries.
+        str: Formatted reference guide of available functions and their descriptions.
     """
     import inspect
     import sys
@@ -1551,9 +1505,9 @@ Run test_all_tools() to verify everything works correctly.
 
 def get_snapshot_requirements() -> str:
     """
-    Returns the critical requirements and guidelines for agent snapshot creation.
+    Return the critical requirements and guidelines for agent snapshot creation.
     
-    Provides a detailed, formatted summary of mandatory steps, formatting rules, and best practices that agents must follow when creating session snapshots, including next steps completion and memory branch usage.
+    Provides a formatted summary outlining mandatory steps, formatting rules, and best practices agents must follow when creating session snapshots, including next steps completion and memory branch usage.
     """
     requirements = textwrap.dedent("""
         📸 SNAPSHOT REQUIREMENTS - CRITICAL FOR ALL AGENTS
@@ -1596,14 +1550,7 @@ def get_snapshot_requirements() -> str:
     return requirements
 
 
-def test_all_tools() -> bool:
-    """
-    Runs comprehensive tests on all development tools components.
 
-    Returns:
-        True if all tests pass successfully, otherwise False.
-    """
-    return test_tooling()
 
 
 # Workflow Optimization Functions

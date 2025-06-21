@@ -43,59 +43,71 @@ The enhanced AGOR Meta Feedback System enables agents to provide structured, act
 
 ## 🛠️ Quick Start Workflows
 
-### Scenario 1: Reporting a Bug
+### Scenario 1: Providing Feedback (Recommended Method)
+
+Use the `provide_agor_feedback` function from `dev_tools`. This function handles both generation and formatting of the feedback report.
 
 ```python
-# Using the enhanced meta feedback system
-from agor.tools.dev_tools import quick_meta_feedback_bug
+from agor.tools.dev_tools import provide_agor_feedback # Recommended
 
-# Report a bug with structured information
-bug_report = quick_meta_feedback_bug(
-    bug_description="Memory branch creation fails when repository has no initial commits",
+# Example: Reporting a bug
+bug_report_formatted = provide_agor_feedback(
+    feedback_type="bug",
+    feedback_content="Memory branch creation fails when repository has no initial commits.",
+    suggestions=["Ensure git init is called and an initial commit exists before memory operations."],
+    severity="high",
     component="memory_system"
+    # For more detailed bug reports, you might prepare the content string for feedback_content
+    # by including reproduction_steps, expected_behavior, actual_behavior details within it.
+    # The underlying feedback_manager.generate_meta_feedback currently doesn't take these as separate params.
 )
+print(bug_report_formatted)
 
-# The system automatically:
-# - Validates input
-# - Adds severity and type metadata
-# - Formats for GitHub integration
-# - Applies detick processing for codeblock safety
-```
-
-### Scenario 2: Suggesting an Enhancement
-
-```python
-from agor.tools.dev_tools import quick_meta_feedback_enhancement
-
-enhancement = quick_meta_feedback_enhancement(
-    enhancement_idea="Add auto-completion for development tools to improve agent efficiency",
+# Example: Suggesting an enhancement
+enhancement_report_formatted = provide_agor_feedback(
+    feedback_type="enhancement",
+    feedback_content="Add auto-completion for development tool function names and parameters.",
+    suggestions=[
+        "Integrate with common shell completion frameworks.",
+        "Provide a command to generate completion scripts."
+    ],
+    severity="medium",
     component="dev_tools"
 )
+print(enhancement_report_formatted)
+
+# The provide_agor_feedback function (from dev_tools) uses feedback_manager internally and ensures:
+# - Feedback is structured and collected.
+# - Report is generated with GitHub issue link and suggested labels.
+# - Output is deticked and wrapped in a code block for easy copy-pasting.
 ```
 
-### Scenario 3: Comprehensive Feedback with Details
+### Scenario 2: Direct Usage of Feedback Manager (Advanced)
+
+If you need more direct control or are working outside the context where `dev_tools` is easily accessible, you can use `feedback_manager` directly. You would then be responsible for formatting the output for display.
 
 ```python
-from agor.tools.agent_prompts import generate_meta_feedback
+from agor.tools.feedback_manager import generate_meta_feedback
+from agor.tools.dev_tools import generate_formatted_output # For formatting the output
 
-detailed_feedback = generate_meta_feedback(
+# Example: Workflow Issue
+detailed_feedback_raw = generate_meta_feedback(
     feedback_type="workflow_issue",
-    feedback_content="Agent handoff process requires too many manual steps",
+    feedback_content="Agent handoff process requires too many manual steps, especially concerning environment variable propagation and context capture. For instance, ensuring the PYTHONPATH is correctly set for subsequent agents or tools can be error-prone.",
     suggestions=[
-        "Automate environment detection",
-        "Pre-populate common handoff templates",
-        "Add one-click handoff generation"
+        "Automate environment variable capture and restoration during handoff.",
+        "Provide a dev tool to explicitly set/propagate critical env vars for AGOR.",
+        "Enhance snapshot capabilities to include more environment details by default."
     ],
     severity="high",
-    component="agent_handoffs",
-    reproduction_steps=[
-        "Start agent handoff process",
-        "Notice multiple manual configuration steps",
-        "Observe time consumption and potential errors"
-    ],
-    expected_behavior="Handoff should be mostly automated with minimal manual input",
-    actual_behavior="Requires extensive manual configuration and is error-prone"
+    component="agent_handoffs"
+    # Note: reproduction_steps, expected_behavior, actual_behavior are not direct params
+    # of feedback_manager.generate_meta_feedback. They would need to be part of the
+    # feedback_content string or collected differently if feedback_manager is used this way.
 )
+
+formatted_detailed_feedback = generate_formatted_output(detailed_feedback_raw, "meta_feedback")
+print(formatted_detailed_feedback)
 ```
 
 ## 🏥 System Health Monitoring
@@ -177,20 +189,31 @@ Implementation Ideas:
 
 ### GitHub Issue Creation
 
-The meta feedback system can generate GitHub-ready issue content:
+The meta feedback system can generate GitHub-ready issue content. This is typically for more direct integration if an agent were to programmatically prepare content for a GitHub issue.
 
 ```python
-from agor.tools.agent_prompts import create_github_issue_content
+from agor.tools.feedback_manager import create_github_issue_content, GitHubIssueConfig # Ensure GitHubIssueConfig is imported
 
-github_issue = create_github_issue_content(
+# Create a configuration object for the feedback
+issue_config = GitHubIssueConfig(
     feedback_type="enhancement",
-    feedback_content="Improve agent coordination with real-time status updates",
-    suggestions=["Add WebSocket support", "Create status dashboard"],
+    feedback_content="Improve agent coordination with real-time status updates.",
+    suggestions=["Add WebSocket support for real-time updates.", "Create a shared status dashboard viewable by all agents."],
     severity="medium",
-    component="coordination"
+    component="coordination_module"
+    # For bugs, you would also include:
+    # reproduction_steps=["step 1", "step 2"],
+    # expected_behavior="This should happen.",
+    # actual_behavior="This actually happened."
 )
 
-# Output includes:
+# Generate the content for the GitHub issue body
+github_issue_body_text = create_github_issue_content(config=issue_config)
+
+print("### GitHub Issue Body Preview ###")
+print(github_issue_body_text)
+
+# The output of create_github_issue_content includes:
 # - Proper GitHub formatting
 # - Suggested labels
 # - Component categorization
