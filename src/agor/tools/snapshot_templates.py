@@ -88,11 +88,11 @@ def get_agor_version() -> str:
 
 def generate_snapshot_document(
     problem_description: str,
-    work_completed: List[str],
-    commits_made: List[str],
+    work_completed: str,
+    commits_made: str,
     current_status: str,
-    next_steps: List[str],
-    files_modified: List[str],
+    next_steps: str,
+    files_modified: str,
     context_notes: str,
     agent_role: str,
     snapshot_reason: str,  # Renamed parameter
@@ -101,20 +101,20 @@ def generate_snapshot_document(
 ) -> str:
     """
     Generate a comprehensive markdown snapshot document capturing the full state, progress, and context of agent work for seamless transitions or context preservation.
-    
+
     Parameters:
         problem_description (str): A clear statement of the problem or task being addressed.
-        work_completed (List[str]): List of completed work items or milestones.
-        commits_made (List[str]): List of commit hashes or messages relevant to the work.
+        work_completed (str): String describing completed work items or milestones. Agents can format as they prefer.
+        commits_made (str): String listing commit hashes or messages relevant to the work. Agents can format as they prefer.
         current_status (str): Summary of the current progress or state.
-        next_steps (List[str]): Ordered list of recommended next actions.
-        files_modified (List[str]): List of files changed during the work session.
+        next_steps (str): String containing recommended next actions. Agents can number them if desired.
+        files_modified (str): String listing files changed during the work session. Agents can format as they prefer.
         context_notes (str): CRITICAL—must contain a complete, detailed record of user context, including all reasoning, decision-making, strategic thinking, technical preferences, user voice, and the rationale behind every decision to ensure seamless agent handoff.
         agent_role (str): The role or designation of the agent creating the snapshot.
         snapshot_reason (str): The reason for creating the snapshot (e.g., handoff, savepoint).
         estimated_completion (str, optional): Estimated time or percentage to completion. Defaults to "Unknown".
         agent_id (str, optional): Unique identifier for the agent. If not provided, one is generated.
-    
+
     Returns:
         str: A markdown-formatted snapshot document containing all provided information, technical Git context, and detailed instructions for receiving agents.
     """
@@ -173,19 +173,19 @@ def generate_snapshot_document(
 
 ## ✅ Work Completed
 
-{chr(10).join(f"- {item}" for item in work_completed)}
+{work_completed}
 
 ## 📝 Commits Made
 
-{chr(10).join(f"- `{commit}`" for commit in commits_made)}
+{commits_made}
 
 ## 📁 Files Modified
 
-{chr(10).join(f"- `{file}`" for file in files_modified)}
+{files_modified}
 
 ## 🔄 Next Steps
 
-{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
+{next_steps}
 
 ## 🧠 Context & Important Notes
 
@@ -215,7 +215,7 @@ def generate_snapshot_document(
 ```
 
 ### Key Files to Review
-{chr(10).join(f"- `{file}` - Review recent changes and understand current state" for file in files_modified[:5])}
+{files_modified}
 
 ## 🎯 Snapshot Instructions for Receiving Agent (If Applicable)
 
@@ -240,7 +240,7 @@ git status
 git log --oneline -10
 
 # Examine modified files
-{chr(10).join(f"# Review {file}" for file in files_modified[:3])}
+# Review files listed in the Files Modified section above
 ```
 
 ### 3. Verify Understanding
@@ -455,10 +455,10 @@ def update_snapshot_index(filename: str, problem_summary: str, status: str):
 
 def generate_completion_report(
     original_task: str,
-    work_completed: List[str],
-    commits_made: List[str],
+    work_completed: str,
+    commits_made: str,
     final_status: str,
-    files_modified: List[str],
+    files_modified: str,
     results_summary: str,
     agent_role: str,
     coordinator_id: str,
@@ -509,13 +509,13 @@ Task completion report for: {original_task}
 {original_task}
 
 ## Work Completed
-{chr(10).join(f"- {item}" for item in work_completed)}
+{work_completed}
 
 ## Files Modified
-{chr(10).join(f"- `{file}` - [Description of changes]" for file in files_modified)}
+{files_modified}
 
 ## Commits Made
-{chr(10).join(f"- `{commit}`" for commit in commits_made)}
+{commits_made}
 
 ## Results Summary
 {results_summary}

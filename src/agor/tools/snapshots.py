@@ -69,19 +69,19 @@ class HandoffRequest:
 def create_snapshot(
     title: str,
     context: str,
-    next_steps: list = None,
+    next_steps: str = None,
     agent_id: str = None,
     custom_branch: str = None,
 ) -> bool:
     """
     Creates a development snapshot file in the agent's directory within the main memory branch.
-    
+
     The snapshot includes metadata, development context, next steps, and git status, and is committed to the specified memory branch without switching branches. Returns True if the snapshot was successfully committed, otherwise False.
-    
+
     Args:
         title: The title of the snapshot.
         context: Description of the current development context.
-        next_steps: List of actionable next steps for continuing the work. Must not be None.
+        next_steps: String containing actionable next steps for continuing the work. Agents can number them if desired. Must not be None.
         agent_id: Optional agent identifier; generated if not provided.
         custom_branch: Optional custom memory branch name.
     
@@ -148,7 +148,7 @@ def create_snapshot(
 {context}
 
 ## 📋 Next Steps
-{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
+{next_steps}
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}
@@ -303,9 +303,9 @@ Remember: Always create a snapshot before ending your session using the dev tool
 
 def create_seamless_handoff(
     task_description: str,
-    work_completed: list = None,
-    next_steps: list = None,
-    files_modified: list = None,
+    work_completed: str = None,
+    next_steps: str = None,
+    files_modified: str = None,
     context_notes: str = None,
     brief_context: str = None,
 ) -> tuple[str, str]:
@@ -316,9 +316,9 @@ def create_seamless_handoff(
 
     Args:
         task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
+        work_completed: String describing completed work items. Agents can format as they prefer.
+        next_steps: String containing next steps for the receiving agent. Agents can number them if desired.
+        files_modified: String listing files that were modified. Agents can format as they prefer.
         context_notes: Additional context notes.
         brief_context: Brief verbal background for quick orientation.
 
@@ -327,11 +327,11 @@ def create_seamless_handoff(
     """
     # Set defaults for optional parameters
     if work_completed is None:
-        work_completed = []
+        work_completed = ""
     if next_steps is None:
-        next_steps = []
+        next_steps = ""
     if files_modified is None:
-        files_modified = []
+        files_modified = ""
     if context_notes is None:
         context_notes = ""
     if brief_context is None:
@@ -396,9 +396,9 @@ def create_seamless_handoff(
 
 def generate_handoff_snapshot(
     task_description: str,
-    work_completed: list = None,
-    next_steps: list = None,
-    files_modified: list = None,
+    work_completed: str = None,
+    next_steps: str = None,
+    files_modified: str = None,
     context_notes: str = None,
     agent_id: str = None,
 ) -> str:
@@ -407,9 +407,9 @@ def generate_handoff_snapshot(
 
     Args:
         task_description: Description of the task being handed off.
-        work_completed: List of completed work items.
-        next_steps: List of next steps for the receiving agent.
-        files_modified: List of files that were modified.
+        work_completed: String describing completed work items. Agents can format as they prefer.
+        next_steps: String containing next steps for the receiving agent. Agents can number them if desired.
+        files_modified: String listing files that were modified. Agents can format as they prefer.
         context_notes: Additional context notes.
         agent_id: Optional agent ID. If not provided, generates a new one.
 
@@ -418,11 +418,11 @@ def generate_handoff_snapshot(
     """
     # Set defaults for optional parameters
     if work_completed is None:
-        work_completed = []
+        work_completed = ""
     if next_steps is None:
-        next_steps = []
+        next_steps = ""
     if files_modified is None:
-        files_modified = []
+        files_modified = ""
     if context_notes is None:
         context_notes = ""
 
@@ -469,8 +469,8 @@ def generate_mandatory_session_end_prompt(
     # Create a basic snapshot for the session
     snapshot_content = generate_handoff_snapshot(
         task_description=task_description,
-        work_completed=["Session work completed"],
-        next_steps=["Review session output", "Continue with next tasks"],
+        work_completed="Session work completed",
+        next_steps="1. Review session output\n2. Continue with next tasks",
         context_notes=brief_context,
     )
 
@@ -484,24 +484,24 @@ def generate_mandatory_session_end_prompt(
     return handoff_prompt
 
 
-def create_snapshot_legacy(title: str, context: str, next_steps: list = None) -> bool:
+def create_snapshot_legacy(title: str, context: str, next_steps: str = None) -> bool:
     """
     Creates a development snapshot using the legacy format for backward compatibility.
-    
-    Generates a markdown snapshot file containing metadata, development context, next steps, and git status, then commits and pushes it using the legacy workflow. Requires a non-empty list of next steps.
-    
+
+    Generates a markdown snapshot file containing metadata, development context, next steps, and git status, then commits and pushes it using the legacy workflow. Requires meaningful next steps.
+
     Args:
         title: The title of the snapshot.
         context: Description of the current development context.
-        next_steps: List of actionable next steps for continuing the work.
-    
+        next_steps: String containing actionable next steps for continuing the work. Agents can number them if desired.
+
     Returns:
         True if the snapshot was successfully committed and pushed, False otherwise.
-    
+
     Raises:
         ValueError: If next_steps is not provided.
     """
-    if next_steps is None:
+    if next_steps is None or not next_steps.strip():
         raise ValueError(
             "next_steps parameter is required - agents must provide meaningful next steps"
         )
@@ -552,7 +552,7 @@ def create_snapshot_legacy(title: str, context: str, next_steps: list = None) ->
 {context}
 
 ## 📋 Next Steps
-{chr(10).join(f"{i+1}. {step}" for i, step in enumerate(next_steps))}
+{next_steps}
 
 ## 🔄 Git Status
 - **Current Branch**: {current_branch}
