@@ -1381,6 +1381,54 @@ def generate_handoff_prompt_output(handoff_content: str) -> str:
     return generate_formatted_output(handoff_content, "handoff_prompt")
 
 
+def provide_agor_feedback(
+    feedback_type: str,
+    feedback_content: str,
+    suggestions: List[str] = None, # Python <3.9 Optional[List[str]]
+    severity: str = "medium",
+    component: str = "general",
+    agent_id: str = None, # Python <3.9 Optional[str]
+) -> str:
+    """
+    Generates and formats an AGOR meta-feedback report.
+
+    This function uses the feedback_manager to create a structured feedback report,
+    then formats it using AGOR's standard output formatting for easy display
+    and copy-pasting by the user (e.g., into a GitHub issue).
+
+    Args:
+        feedback_type: Type of feedback (e.g., "bug", "enhancement").
+        feedback_content: The main content of the feedback.
+        suggestions: Optional list of suggestions for improvement.
+        severity: Severity of the issue (e.g., "low", "medium", "high").
+        component: AGOR component the feedback relates to (e.g., "dev_tools", "memory_system").
+        agent_id: Optional identifier of the agent providing feedback.
+
+    Returns:
+        A string containing the formatted meta-feedback report, ready for display.
+    """
+    from agor.tools.feedback_manager import generate_meta_feedback as fm_generate_meta_feedback
+
+    # Ensure suggestions is a list if None, for feedback_manager compatibility
+    if suggestions is None:
+        suggestions = []
+
+    raw_feedback_text = fm_generate_meta_feedback(
+        feedback_type=feedback_type,
+        feedback_content=feedback_content,
+        suggestions=suggestions,
+        severity=severity,
+        component=component,
+        # agent_id=agent_id, # feedback_manager.generate_meta_feedback doesn't take agent_id directly
+                           # but collect_feedback does. The current fm_generate_meta_feedback
+                           # collects with a fixed set of params.
+                           # If agent_id is needed here, fm_generate_meta_feedback must be updated or called differently.
+                           # For now, aligning with existing fm_generate_meta_feedback signature.
+    )
+    # apply_output_formatting is used by generate_formatted_output
+    return apply_output_formatting(raw_feedback_text, "meta_feedback")
+
+
 # Utility Functions
 # =================
 

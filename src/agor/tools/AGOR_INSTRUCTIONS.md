@@ -375,7 +375,7 @@ This section details standard AGOR operational procedures, hotkey actions, and s
 - **Quick Commit and Push**: Quick commit and push with timestamp. Usage: provide commit message (emoji will be added automatically)
 - **Test All Dev Tools**: Test all dev tools functions to ensure they work properly. No parameters required.
 - **Show Environment Info**: Show current environment detection, AGOR version, and platform information. No parameters required.
-- **Provide AGOR Feedback**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor-meta/issues/new>.
+- **Provide AGOR Feedback**: Generate AGOR feedback for continuous improvement. Usage: provide current project name, issues encountered, suggested improvements, workflow friction points, and positive experiences. Submit feedback via <https://github.com/jeremiah-k/agor/issues/new>.
 - **Initiate Session End Procedure**: MANDATORY session end prompt for agent coordination. Usage: provide work completed, current status, next agent instructions, critical context, and files modified. MUST be called before ending any session to ensure proper coordination.
 
 **CRITICAL OUTPUT FORMATTING REQUIREMENTS**:

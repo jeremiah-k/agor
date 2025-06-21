@@ -208,25 +208,45 @@ def quick_commit_push(message: str, emoji: str = "🔧") -> bool:
     print(f"🚀 Quick commit/push: {emoji} {message}")
 
     # Add all changes
+    print("🔄 Adding all changes to staging area...")
     success, output = run_git_command(["add", "."])
     if not success:
-        print(f"❌ Failed to add files: {output}")
+        print(f"❌ Failed to add files.")
+        if output and output.strip():
+            print(f"   Error details: {output.strip()}")
+        print(f"   Hint: Ensure there are changes to add and check file permissions.")
         return False
+    print("✅ Files added to staging.")
 
     # Commit
+    print(f"📝 Committing with message: \"{full_message}\"...")
     success, output = run_git_command(["commit", "-m", full_message])
     if not success:
         # Check if it's just "nothing to commit"
-        if "nothing to commit" in output.lower():
-            print("✅ No changes to commit (working directory clean)")
-            return True
-        print(f"❌ Failed to commit: {output}")
-        return False
+        if "nothing to commit" in output.lower() or "no changes added to commit" in output.lower():
+            print("✅ No changes to commit (working directory clean or no changes staged).")
+            # If add was successful but commit says nothing to commit, it's a success for this function's purpose.
+            # We still might want to push if the remote is different.
+            print("   Proceeding to check if push is needed for existing commits...")
+        else:
+            print(f"❌ Failed to commit.")
+            if output and output.strip():
+                print(f"   Error details: {output.strip()}")
+            # Attempt to provide more context on commit failure
+            status_success, status_output = run_git_command(["status", "--short"])
+            if status_success and not status_output.strip() and "nothing to commit" not in output.lower():
+                 print("   Hint: Git status is clean, but commit failed. This is unusual. Check git hooks or repo state.")
+            elif status_success:
+                print(f"   Current git status:\n{status_output}")
+            return False
+    else:
+        print("✅ Changes committed locally.")
 
     # Safe push
-    if not safe_git_push():
-        print("❌ Safe push failed")
+    print(" Pushing changes using safe_git_push...")
+    if not safe_git_push(): # safe_git_push has its own detailed prints
+        print("❌ Safe push failed. See details from safe_git_push above.")
         return False
 
-    print(f"✅ Successfully committed and pushed at {timestamp}")
+    print(f"🎉 Successfully committed and pushed at {timestamp}")
     return True

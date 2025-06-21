@@ -85,11 +85,11 @@ def commit_to_memory_branch(
     print("🛡️  Safe memory commit: staying on current branch")
 
     # Get current branch to stay on it
-    success, current_branch = run_git_command(["branch", "--show-current"])
+    success, current_branch_output = run_git_command(["branch", "--show-current"])
     if not success:
-        print("❌ Cannot determine current branch")
+        print(f"❌ Cannot determine current branch. Error: {current_branch_output}")
         return False
-    current_branch = current_branch.strip()
+    current_branch = current_branch_output.strip()
 
     # Generate branch name if not provided
     if not branch_name:
@@ -116,7 +116,7 @@ def commit_to_memory_branch(
             empty_tree_hash = get_empty_tree_hash()
 
             # Create initial commit with empty tree
-            success, initial_commit = run_git_command(
+            success, initial_commit_output = run_git_command(
                 [
                     "commit-tree",
                     empty_tree_hash,
@@ -125,16 +125,16 @@ def commit_to_memory_branch(
                 ]
             )
             if not success:
-                print("❌ Failed to create initial commit for memory branch")
+                print(f"❌ Failed to create initial commit for memory branch. Error: {initial_commit_output}")
                 return False
-            initial_commit = initial_commit.strip()
+            initial_commit = initial_commit_output.strip()
 
             # Create branch reference pointing to initial empty commit
-            success, _ = run_git_command(
+            success, update_ref_output = run_git_command(
                 ["update-ref", f"refs/heads/{branch_name}", initial_commit]
             )
             if not success:
-                print("❌ Failed to create branch reference")
+                print(f"❌ Failed to create branch reference. Error: {update_ref_output}")
                 return False
 
             print(
@@ -152,17 +152,25 @@ def commit_to_memory_branch(
                 f.write(file_content)
 
             # Step 3: Add file to git index for the memory branch
-            success, blob_hash = run_git_command(["hash-object", "-w", str(temp_file)])
+            print(f"   Hashing file content for {file_name}...")
+            success, blob_hash_output = run_git_command(["hash-object", "-w", str(temp_file)])
             if not success:
-                print("❌ Failed to create blob object")
+                print(f"❌ Failed to create blob object from temp file. Error: {blob_hash_output}")
                 return False
-            blob_hash = blob_hash.strip()
+            blob_hash = blob_hash_output.strip()
+            print(f"   Blob hash created: {blob_hash[:12]}")
 
             # Step 4: Get current tree of memory branch
-            success, tree_hash = run_git_command(
+            print(f"   Getting current tree for memory branch {branch_name}...")
+            success, tree_hash_output = run_git_command(
                 ["rev-parse", f"{branch_name}^{{tree}}"]
             )
-            tree_hash = get_empty_tree_hash() if not success else tree_hash.strip()
+            if not success:
+                print(f"   Warning: Could not parse tree for {branch_name}. Assuming empty tree. Error: {tree_hash_output}")
+                tree_hash = get_empty_tree_hash()
+            else:
+                tree_hash = tree_hash_output.strip()
+            print(f"   Using tree hash: {tree_hash[:12]}")
 
             # Step 5: Create new tree with our file
             # Create a temporary index file
@@ -178,13 +186,16 @@ def commit_to_memory_branch(
                 env["GIT_INDEX_FILE"] = str(temp_index_file)
 
                 # Initialize index (always read tree, even if empty)
+                print(f"   Reading tree {tree_hash[:12]} into temporary index...")
                 success, rt_output = run_git_command(["read-tree", tree_hash], env=env)
                 if not success:
-                    print(f"❌ `git read-tree` failed for {tree_hash}: {rt_output}")
+                    print(f"❌ `git read-tree` failed for tree {tree_hash}. Error: {rt_output}")
                     return False
+                print(f"   Tree read successfully.")
 
                 # Add our file to index
                 # Note: file_name should already include .agor/ prefix if needed
+                print(f"   Adding file {file_name} (blob {blob_hash[:12]}) to temporary index...")
                 success, ui_output = run_git_command(
                     [
                         "update-index",
@@ -197,15 +208,18 @@ def commit_to_memory_branch(
                     env=env,
                 )
                 if not success:
-                    print(f"❌ Failed to update index: {ui_output}")
+                    print(f"❌ Failed to update index with file {file_name}. Error: {ui_output}")
                     return False
+                print(f"   Index updated successfully with {file_name}.")
 
                 # Write new tree
-                success, new_tree_hash = run_git_command(["write-tree"], env=env)
+                print(f"   Writing new tree from temporary index...")
+                success, new_tree_hash_output = run_git_command(["write-tree"], env=env)
                 if not success:
-                    print("❌ Failed to write tree")
+                    print(f"❌ Failed to write new tree. Error: {new_tree_hash_output}")
                     return False
-                new_tree_hash = new_tree_hash.strip()
+                new_tree_hash = new_tree_hash_output.strip()
+                print(f"   New tree created: {new_tree_hash[:12]}")
 
             finally:
                 # Clean up temporary index
@@ -213,13 +227,16 @@ def commit_to_memory_branch(
                     temp_index_file.unlink()
 
             # Step 6: Create commit on memory branch
-            success, parent_commit = run_git_command(["rev-parse", branch_name])
+            print(f"   Getting parent commit for branch {branch_name}...")
+            success, parent_commit_output = run_git_command(["rev-parse", branch_name])
             if not success:
-                print("❌ Failed to get parent commit")
+                print(f"❌ Failed to get parent commit for {branch_name}. Error: {parent_commit_output}")
                 return False
-            parent_commit = parent_commit.strip()
+            parent_commit = parent_commit_output.strip()
+            print(f"   Parent commit: {parent_commit[:12]}")
 
-            success, new_commit = run_git_command(
+            print(f"   Creating new commit with tree {new_tree_hash[:12]} and parent {parent_commit[:12]}...")
+            success, new_commit_output = run_git_command(
                 [
                     "commit-tree",
                     new_tree_hash,
@@ -230,16 +247,18 @@ def commit_to_memory_branch(
                 ]
             )
             if not success:
-                print("❌ Failed to create commit")
+                print(f"❌ Failed to create new commit object. Error: {new_commit_output}")
                 return False
-            new_commit = new_commit.strip()
+            new_commit = new_commit_output.strip()
+            print(f"   New commit created: {new_commit[:12]}")
 
             # Step 7: Update branch reference
-            success, _ = run_git_command(
+            print(f"   Updating branch reference {branch_name} to point to new commit {new_commit[:12]}...")
+            success, update_ref_output_final = run_git_command(
                 ["update-ref", f"refs/heads/{branch_name}", new_commit]
             )
             if not success:
-                print("❌ Failed to update branch reference")
+                print(f"❌ Failed to update branch reference {branch_name}. Error: {update_ref_output_final}")
                 return False
 
             # Step 8: Push memory branch (optional, don't fail if this doesn't work)
