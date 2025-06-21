@@ -10,17 +10,16 @@ from agor.tools.agent_prompts import detick_content
 
 def apply_output_formatting(content: str, output_type: str) -> str:
     """
-    Apply AGOR's standard output formatting to content.
+    Format content with an AGOR-standard header based on the specified output type.
     
-    This function processes content to ensure it's properly formatted for
-    copy-paste workflows across all AI deployment environments.
+    Removes conflicting backticks from the content and prepends a context-specific header for consistent display across AI deployment environments.
     
-    Args:
-        content: The raw content to format
-        output_type: Type of output (e.g., "handoff_prompt", "pr_description", "meta_feedback")
+    Parameters:
+        content (str): The raw content to be formatted.
+        output_type (str): The type of output, which determines the header (e.g., "handoff_prompt", "pr_description", "meta_feedback", "release_notes").
     
     Returns:
-        Formatted content ready for display
+        str: The formatted content with the appropriate header.
     """
     # Remove conflicting backticks to prevent codeblock issues
     processed_content = detick_content(content)
@@ -42,20 +41,13 @@ def apply_output_formatting(content: str, output_type: str) -> str:
 
 def generate_formatted_output(content: str, output_type: str) -> str:
     """
-    Generate properly formatted output wrapped in codeblock for copy-paste.
-
-    This is the main function agents should use for all formatted output.
-    It ensures consistent formatting across all AI deployment environments.
-
-    Args:
-        content: Raw content to format
-        output_type: Type of output for appropriate formatting
-
-    Returns:
-        Content wrapped in codeblock with proper formatting
-
+    Format content with an appropriate header and wrap it in a double-backtick codeblock for AGOR tools.
+    
     Raises:
-        ValueError: If content is empty or None
+        ValueError: If the content is empty or contains only whitespace.
+    
+    Returns:
+        The formatted content, including a header based on output_type, wrapped in a double-backtick codeblock.
     """
     # Validate input
     if not content or not content.strip():
@@ -69,28 +61,25 @@ def generate_formatted_output(content: str, output_type: str) -> str:
 
 def generate_pr_description_output(pr_content: str) -> str:
     """
-    Generate properly formatted PR description for copy-paste.
-
-    NOTE: Keep PR description content BRIEF to avoid processing errors.
-    Long content can cause the formatting process to fail.
-
-    Args:
-        pr_content: Raw PR description content (keep brief)
-
+    Generate a formatted pull request description wrapped in a codeblock for copy-paste workflows.
+    
+    Parameters:
+        pr_content (str): The raw content of the pull request description.
+    
     Returns:
-        Formatted PR description wrapped in codeblock
+        str: The formatted PR description, including a header and codeblock wrapping.
     """
     return generate_formatted_output(pr_content, "pr_description")
 
 
 def generate_release_notes_output(release_content: str) -> str:
     """
-    Generate properly formatted release notes for copy-paste.
-
-    Args:
-        release_content: Raw release notes content
-
+    Generate formatted release notes wrapped in a codeblock for copy-paste workflows.
+    
+    Parameters:
+        release_content (str): The raw content of the release notes.
+    
     Returns:
-        Formatted release notes wrapped in codeblock
+        str: The formatted release notes, including a header and codeblock wrapping.
     """
     return generate_formatted_output(release_content, "release_notes")

@@ -69,18 +69,18 @@ def commit_to_memory_branch(
     commit_message: Optional[str] = None,
 ) -> bool:
     """
-    Commits content to a memory branch without switching from the current branch.
-
-    Creates or updates a memory branch, storing the provided file content under the `.agor/` directory. If the memory branch does not exist, it is initialized with an empty commit. The function ensures the current working branch remains unchanged and attempts to push the memory branch after committing.
-
-    Args:
-        file_content: The content to be committed to the memory branch.
-        file_name: The name of the file to create or update within the `.agor/` directory.
-        branch_name: The target memory branch name. If None, a name is auto-generated.
-        commit_message: The commit message. If None, a message is auto-generated.
-
+    Commit file content to a memory branch in the Git repository without switching branches.
+    
+    Creates or updates a memory branch under the `.agor/` directory, initializing the branch with an empty commit if it does not exist. The function writes the provided file content to the specified file within the memory branch, creates a new commit, and updates the branch reference. The current working branch remains unchanged throughout the operation. Attempts to push the memory branch after committing, but push failures do not cause the operation to fail.
+    
+    Parameters:
+        file_content (str): Content to be committed to the memory branch.
+        file_name (str): Name of the file to create or update within the memory branch.
+        branch_name (Optional[str]): Target memory branch name. If not provided, a name is auto-generated.
+        commit_message (Optional[str]): Commit message. If not provided, a message is auto-generated.
+    
     Returns:
-        True if the commit operation succeeds, False otherwise.
+        bool: True if the commit operation succeeds, False otherwise.
     """
     print("🛡️  Safe memory commit: staying on current branch")
 

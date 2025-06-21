@@ -328,22 +328,21 @@ def generate_handoff_prompt_only(
     files_modified: List[str] = None,
 ) -> str:
     """
-    Generates a markdown-formatted prompt for handing off an AGOR agent session.
-
-    Summarizes completed work, current status, next agent instructions, critical context, and files modified. The prompt includes environment setup commands, coordination protocol steps, and immediate next actions, with content processed to prevent codeblock rendering issues during agent communication.
-
-    Note: This function maintains List[str] parameters for backward compatibility.
-    For a more intuitive string-based interface, use generate_handoff_prompt_output() in dev_tools.
-
-    Args:
-        work_completed: List of completed work items for the session.
-        current_status: Description of the current project status.
-        next_agent_instructions: Instructions or tasks for the next agent or session.
-        critical_context: Essential context that must be preserved for continuity.
-        files_modified: List of files modified during the session.
-
+    Generate a markdown-formatted prompt for handing off an AGOR agent session, summarizing completed work, current status, next agent instructions, critical context, and files modified.
+    
+    The prompt includes environment setup commands, coordination protocol steps, and immediate next actions. Content is processed to prevent codeblock rendering issues during agent communication.
+    
+    Note: Accepts List[str] parameters for backward compatibility. For a string-based interface, use `generate_handoff_prompt_output()`.
+    
+    Parameters:
+        work_completed (List[str]): Completed work items for the session.
+        current_status (str): Description of the current project status.
+        next_agent_instructions (List[str]): Instructions or tasks for the next agent or session.
+        critical_context (str): Essential context to preserve for continuity.
+        files_modified (List[str], optional): Files modified during the session.
+    
     Returns:
-        A markdown-formatted handoff prompt with processed codeblocks for agent coordination.
+        str: Markdown-formatted handoff prompt with processed codeblocks for agent coordination.
     """
     # Validate required inputs
     if not isinstance(work_completed, list):
@@ -762,19 +761,17 @@ def generate_agent_handoff_prompt_extended(
     brief_context: str = None,
 ) -> str:
     """
-    Generates a comprehensive agent handoff prompt with environment, task, and context details.
-
-    The prompt includes environment information, setup instructions, memory branch access commands, task overview, optional brief context, and previous work context if provided. It is formatted for seamless agent transitions and applies backtick processing to ensure safe embedding within single codeblocks.
-
-    Args:
-        task_description: Description of the task for the next agent.
-        snapshot_content: Optional summary of previous agent work.
-        memory_branch: Optional name of the memory branch for coordination.
-        environment: Optional environment details; auto-detected if not provided.
-        brief_context: Optional brief background for quick orientation.
-
+    Generate a comprehensive agent handoff prompt containing environment details, task overview, setup instructions, memory branch access, and optional context for seamless agent transitions.
+    
+    Parameters:
+        task_description (str): Description of the task for the next agent.
+        snapshot_content (str, optional): Summary of previous agent work.
+        memory_branch (str, optional): Name of the memory branch for coordination.
+        environment (dict, optional): Environment details; auto-detected if not provided.
+        brief_context (str, optional): Brief background for quick orientation.
+    
     Returns:
-        A formatted prompt string ready for use in a single codeblock.
+        str: A formatted prompt string, processed to avoid codeblock rendering issues, ready for use in a single codeblock.
     """
     if environment is None:
         from agor.tools.dev_testing import detect_environment
@@ -878,18 +875,18 @@ def generate_handoff_prompt_output(
     task_description: str = "Agent handoff",
 ) -> str:
     """
-    Generate properly formatted handoff prompt for copy-paste with intuitive parameters.
-
-    Args:
-        work_completed: String describing completed work items. Agents can format as they prefer.
-        current_status: Current status of the project or task.
-        next_agent_instructions: String containing instructions for the next agent. Agents can number them if desired.
-        critical_context: Important context that must be preserved.
-        files_modified: String listing files that were modified. Agents can format as they prefer.
-        task_description: Description of the task being handed off.
-
+    Generate a formatted agent handoff prompt using string-based parameters for easy copy-paste.
+    
+    Parameters:
+        work_completed (str, optional): Description of completed work items. Defaults to a generic message if not provided.
+        current_status (str, optional): Current status of the project or task. Defaults to a generic status if not provided.
+        next_agent_instructions (str, optional): Instructions for the next agent. Defaults to a generic instruction if not provided.
+        critical_context (str, optional): Important context to be preserved. Defaults to a generic message if not provided.
+        files_modified (str, optional): List or description of files modified. Defaults to a generic message if not provided.
+        task_description (str, optional): Description of the task being handed off. Defaults to "Agent handoff".
+    
     Returns:
-        Formatted handoff prompt wrapped in codeblock, ready for copy-paste.
+        str: A codeblock-wrapped, formatted handoff prompt suitable for copy-paste.
     """
     from agor.tools.output_formatting import generate_formatted_output
 
