@@ -84,12 +84,11 @@ def commit_to_memory_branch(
     """
     print("🛡️  Safe memory commit: staying on current branch")
 
-    # Get current branch to stay on it
+    # Verify we can determine current branch (for safety, but don't store it)
     success, current_branch_output = run_git_command(["branch", "--show-current"])
     if not success:
         print(f"❌ Cannot determine current branch. Error: {current_branch_output}")
         return False
-    current_branch = current_branch_output.strip()
 
     # Generate branch name if not provided
     if not branch_name:

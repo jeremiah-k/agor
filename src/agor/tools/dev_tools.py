@@ -1406,27 +1406,53 @@ def provide_agor_feedback(
 
     Returns:
         A string containing the formatted meta-feedback report, ready for display.
+
+    Raises:
+        ValueError: If feedback_type, feedback_content, or severity are invalid.
     """
-    from agor.tools.feedback_manager import generate_meta_feedback as fm_generate_meta_feedback
+    # Validate required parameters
+    if not feedback_type or not feedback_type.strip():
+        raise ValueError("feedback_type cannot be empty")
+
+    if not feedback_content or not feedback_content.strip():
+        raise ValueError("feedback_content cannot be empty")
+
+    # Validate severity
+    allowed_severities = {"low", "medium", "high", "critical"}
+    if severity not in allowed_severities:
+        raise ValueError(f"severity must be one of: {', '.join(sorted(allowed_severities))}")
+
+    # Validate feedback_type
+    allowed_feedback_types = {"bug", "enhancement", "workflow_issue", "success_story", "documentation", "performance", "usability"}
+    if feedback_type not in allowed_feedback_types:
+        raise ValueError(f"feedback_type must be one of: {', '.join(sorted(allowed_feedback_types))}")
+
+    try:
+        from agor.tools.feedback_manager import generate_meta_feedback as fm_generate_meta_feedback
+    except ImportError as e:
+        print(f"⚠️ Failed to import feedback_manager: {e}")
+        return f"Error: Could not generate feedback report due to import failure: {e}"
 
     # Ensure suggestions is a list if None, for feedback_manager compatibility
     if suggestions is None:
         suggestions = []
 
-    raw_feedback_text = fm_generate_meta_feedback(
-        feedback_type=feedback_type,
-        feedback_content=feedback_content,
-        suggestions=suggestions,
-        severity=severity,
-        component=component,
-        # agent_id=agent_id, # feedback_manager.generate_meta_feedback doesn't take agent_id directly
-                           # but collect_feedback does. The current fm_generate_meta_feedback
-                           # collects with a fixed set of params.
-                           # If agent_id is needed here, fm_generate_meta_feedback must be updated or called differently.
-                           # For now, aligning with existing fm_generate_meta_feedback signature.
-    )
-    # apply_output_formatting is used by generate_formatted_output
-    return apply_output_formatting(raw_feedback_text, "meta_feedback")
+    try:
+        raw_feedback_text = fm_generate_meta_feedback(
+            feedback_type=feedback_type,
+            feedback_content=feedback_content,
+            suggestions=suggestions,
+            severity=severity,
+            component=component,
+            # Note: agent_id is collected but not passed to fm_generate_meta_feedback
+            # as the current implementation doesn't support it directly.
+            # This is intentional - agent_id is reserved for future enhancement.
+        )
+        # apply_output_formatting is used by generate_formatted_output
+        return apply_output_formatting(raw_feedback_text, "meta_feedback")
+    except Exception as e:
+        print(f"❌ Failed to generate meta feedback: {e}")
+        return f"Error: Could not generate feedback report: {e}"
 
 
 # Utility Functions
