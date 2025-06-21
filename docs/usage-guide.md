@@ -95,13 +95,13 @@ If the above functions don't work properly, use our fallback method of reading t
 - src/agor/tools/index.md (documentation index for efficient lookup)
 - src/agor/tools/SNAPSHOT_SYSTEM_GUIDE.md (snapshot requirements and templates, must understand this system in full)
 
-# <--- Add your detailed step-by-step instructions here --->
-
 As you get close to the end of your work, finish every set of actions by generating a detailed snapshot of the work that you have completed, with any important context included, so that the next agent can seamlessly pick up where you left off if necessary.
 
 When asked, be prepared to create a PR summary, release notes, and or a handoff prompt using the dev tools, wrapping the output of each in a single codeblock (for easy copying & pasting).
 
 When generating a handoff prompt, include full initialization instructions and how to use the dev tools to read the snapshot with the rest of the context, if applicable.
+
+# <--- Add your detailed step-by-step instructions here --->
 ```
 
 **Step 6: Local Environment Setup (Optional - For Using AGOR's Python Tools Directly)**
