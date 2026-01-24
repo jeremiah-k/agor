@@ -110,7 +110,7 @@ Based on your environment detection:
 
 - Read `PLATFORM_INITIALIZATION_PROMPTS.md` for platform-specific setup.
 - Remote and integrated agents should focus on understanding AGOR protocols for memory management (snapshots on memory branches via dev tools like `create_development_snapshot`), and handoff procedures.
-- **For a focused guide on using AGOR with external projects, see `REMOTE_AGENT_QUICKSTART.md`.**
+- **For a focused guide on using AGOR with external projects, see `EXTERNAL_INTEGRATION_GUIDE.md`.**
 - Enhanced memory and context preservation is a key feature for these modes.
 
 ### STEP 4: MANDATORY SNAPSHOT REQUIREMENTS

@@ -212,7 +212,7 @@ class StrategyManager:
 
 ## Team Configuration
 - Agents: {agents}
-- Initialized: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- Initialized: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## Key Decisions
 - Strategy coordination initialized
@@ -334,7 +334,7 @@ class StrategyManager:
 `{branch_name}`
 
 ## Strategy: Parallel Divergent
-You are working **independently** with {agents-1} other agents on the same problem.
+You are working **independently** with {agents - 1} other agents on the same problem.
 
 ### Phase 1: Divergent Execution (Current)
 1. **Switch to your branch**: `git checkout {branch_name}`
@@ -399,7 +399,9 @@ You are working **independently** with {agents-1} other agents on the same probl
                 status_icon = (
                     "🟢"
                     if status == "completed"
-                    else "🟡" if status == "in-progress" else "⚪"
+                    else "🟡"
+                    if status == "in-progress"
+                    else "⚪"
                 )
                 print(f"   {status_icon} {agent}: {status}")
 
@@ -593,29 +595,10 @@ You are working **independently** with {agents-1} other agents on the same probl
     def _show_memory_sync_status(self) -> None:
         """Show current memory sync status."""
         try:
-            if (
-                hasattr(self.memory_manager, "memory_sync_manager")
-                and self.memory_manager.memory_sync_manager
-            ):
-                active_branch = self.memory_manager.get_active_memory_branch()
-                if active_branch:
-                    print(f"🧠 Memory Sync: Active on branch '{active_branch}'")
-
-                    # Show available memory branches
-                    memory_sync = self.memory_manager.memory_sync_manager
-                    local_branches = memory_sync.list_memory_branches(remote=False)
-                    remote_branches = memory_sync.list_memory_branches(remote=True)
-
-                    if local_branches or remote_branches:
-                        all_branches = sorted(
-                            list(set(local_branches + remote_branches)), reverse=True
-                        )
-                        print(
-                            f"   Available memory branches: {', '.join(all_branches[:3])}{'...' if len(all_branches) > 3 else ''}"
-                        )
-                else:
-                    print("🧠 Memory Sync: Initialized (no active branch)")
+            active_branch = self.memory_manager.get_active_memory_branch()
+            if active_branch:
+                print(f"🧠 Memory Sync: Active on branch '{active_branch}'")
             else:
-                print("⚠️ Memory Sync: Not available")
+                print("🧠 Memory Sync: Initialized (no active branch)")
         except Exception as e:
-            print(f"⚠️ Memory Sync: Error - {e}")
+            print(f"⚠️  Memory Sync: Error - {e}")
